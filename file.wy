@@ -1,0 +1,11 @@
+###### Walley File Library ######
+class file:
+    def init(self,file_name):
+        #file mode is 'r' or 'w'
+        self.file_name=file_name
+        #self.file_mode=file_mode
+    def readlines(self):
+        output=file_readlines(self.file_name)
+        return output
+    def writelines(self,lines):
+        file_writelines(self.file_name,lines)

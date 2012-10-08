@@ -1,0 +1,9 @@
+#Temp File In Order To Run goto
+a=3
+b=4
+##Finish Init Params
+
+print(a)
+
+print(b)
+

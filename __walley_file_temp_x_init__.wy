@@ -1,0 +1,10 @@
+#Temp File In Order To Run goto
+file_name="experiment.wy"
+##Finish Init Params
+
+#file mode is 'r' or 'w'
+
+x.file_name=file_name
+
+#x.file_mode=file_mode
+

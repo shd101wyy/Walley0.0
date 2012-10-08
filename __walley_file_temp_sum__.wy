@@ -1,0 +1,10 @@
+#Temp File In Order To Run goto
+num1=1
+num2=3
+##Finish Init Params
+
+print(num1)
+
+print(num2)
+
+#FIND RETURN

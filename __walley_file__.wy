@@ -1,0 +1,26 @@
+#Temp File In Order To Run goto
+class rohit:
+    def init(self):
+        self.age = 18
+    def showage(self):
+        print(self.age)
+    def setage(self,age):
+        self.age = age
+        print("change to ")
+        print(str(self.age))
+smallr is rohit()
+#Begin to define class...
+def smallr.init():
+    smallr.age = 18
+def smallr.showage():
+    print(smallr.age)
+def smallr.setage(age):
+    smallr.age = age
+    print("change to ")
+    print(str(smallr.age))
+
+smallr.init()
+print(smallr.age)
+smallr.setage(12)
+#end
+x=input("---->")

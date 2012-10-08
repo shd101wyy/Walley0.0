@@ -1,0 +1,22 @@
+#~
+smallr.init:None:
+#~Begin
+#### Parameters  are None ####
+smallr.age = 18
+#~End
+
+smallr.showage:None:
+#~Begin
+#### Parameters  are None ####
+print(smallr.age)
+#~End
+
+smallr.setage:age:
+#~Begin
+age=
+##Finish Init Params
+smallr.age = age
+print("change to ")
+print(str(smallr.age))
+#~End
+

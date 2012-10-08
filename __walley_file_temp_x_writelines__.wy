@@ -1,0 +1,6 @@
+#Temp File In Order To Run goto
+lines="Hello2"
+##Finish Init Params
+
+file_writelines(x.file_name,lines)
+

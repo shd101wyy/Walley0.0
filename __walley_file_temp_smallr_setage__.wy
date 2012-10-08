@@ -1,0 +1,10 @@
+#Temp File In Order To Run goto
+age=12
+##Finish Init Params
+
+smallr.age = age
+
+print("change to ")
+
+print(str(smallr.age))
+

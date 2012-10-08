@@ -1,0 +1,86 @@
+##### Walley Math Library ####
+define an idea called cot with num:
+    return 1/tan(num)
+#end define cot
+
+define an idea called sec with num:
+    return 1/cos(num)
+#end define sec
+
+define an idea called csc with num3:
+    return 1/sin(num3)
+#end define csc
+   
+define an idea called factorial with num:
+    i=1
+    output=1
+    while i<=num:
+        output=output*i
+        i=i+1
+    #here is some mistake
+    return output
+#end define factorial
+
+define an idea called range with num1 and num2:
+    x=[]
+    while num1<num2:
+        x.append(num1)
+        num1=num1+1
+    #here is some mistake 
+    return x
+#end define range
+
+define an idea called matrix with row and col:
+    x=[] 
+    y=[]
+    i=0
+    j=0
+    while i<row:
+        y=[]
+        j=0
+        while j<col:
+            y.append(0)
+            j=j+1
+        x.append(y)
+        i=i+1
+    return x
+#end define matrix
+
+# matrix_str("[1,2;3,2]")
+define an idea called matrix_str with mat:
+    output="["
+    i=0
+    length=mat.length()
+    while i<length:
+        if mat[i]==';':
+            output=output+'],['
+        else:
+            output=output+mat[i]
+        i=i+1
+    output=output+"]"
+    return nstr(output)
+
+
+#log(2,8)---->3
+define an idea called log with base and num:
+    return log10(num)/log10(base)
+#end define log
+
+#this function can not run now
+#need Walley_Run_Fourth_Generation
+define an idea called ln with num1:
+    x=log(exp(1),num1)
+    return x
+#end define ln
+
+#ceil of 2.3 is 3.0
+#ceil of 3.8 is 4.0
+#ceil of -2.3 is -2.0
+#ceil of -3.8 is -3.0
+define an idea called ceil with num:
+    if num>0:
+        num=int(num)+1
+    else:
+        num=int(num)
+    return num
+

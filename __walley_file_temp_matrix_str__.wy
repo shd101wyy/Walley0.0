@@ -1,0 +1,109 @@
+#Temp File In Order To Run goto
+mat="['hi',2;3,4]"
+##Finish Init Params
+
+output="["
+
+i=0
+
+length=mat.length()
+
+while i<length:
+
+    if mat[i]==';':
+
+        output=output+'],['
+
+    else:
+
+        output=output+mat[i]
+
+    i=i+1
+
+output=output+"]"
+#While
+if mat[i]==';':
+    output=output+'],['
+else:
+    output=output+mat[i]
+i=i+1
+
+#While
+if mat[i]==';':
+    output=output+'],['
+else:
+    output=output+mat[i]
+i=i+1
+
+#While
+if mat[i]==';':
+    output=output+'],['
+else:
+    output=output+mat[i]
+i=i+1
+
+#While
+if mat[i]==';':
+    output=output+'],['
+else:
+    output=output+mat[i]
+i=i+1
+
+#While
+if mat[i]==';':
+    output=output+'],['
+else:
+    output=output+mat[i]
+i=i+1
+
+#While
+if mat[i]==';':
+    output=output+'],['
+else:
+    output=output+mat[i]
+i=i+1
+
+#While
+if mat[i]==';':
+    output=output+'],['
+else:
+    output=output+mat[i]
+i=i+1
+
+#While
+if mat[i]==';':
+    output=output+'],['
+else:
+    output=output+mat[i]
+i=i+1
+
+#While
+if mat[i]==';':
+    output=output+'],['
+else:
+    output=output+mat[i]
+i=i+1
+
+#While
+if mat[i]==';':
+    output=output+'],['
+else:
+    output=output+mat[i]
+i=i+1
+
+#While
+if mat[i]==';':
+    output=output+'],['
+else:
+    output=output+mat[i]
+i=i+1
+
+#While
+if mat[i]==';':
+    output=output+'],['
+else:
+    output=output+mat[i]
+i=i+1
+
+
+#FIND RETURN
