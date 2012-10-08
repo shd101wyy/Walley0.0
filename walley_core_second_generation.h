@@ -1421,12 +1421,15 @@ char *Walley_Substitue_Var_And_Function_Return_Value_From_File_Second_Generation
                 bool instance_existed=checkWhetherSameInstanceExisted(file_var_name,user);
                 bool var_existed = checkWhetherSameVarNameExistsFromFile(file_var_name,user);
                 
+                char *user_value=Walley_Substitue_Var_And_Function_Return_Value_From_File_Second_Generation(user, file_var_name);
+                char *function_temp=replace_not_in_string(function, user, user_value);
+                
                 if (strcmp(variableValueType(user), "string")==0||strcmp(variableValueType(user), "list")==0) {
                     var_existed=TRUE;
                 }
                 
                 if(instance_existed==FALSE && var_existed==TRUE)
-                        return_value =Walley_Run_Special_Function(function,file_var_name);
+                        return_value =Walley_Run_Special_Function(function_temp,file_var_name);
                 else{
                     printf("FIND INSTANCE, THIS IS A CLASS FUNCTION\n");
                     return_value=Walley_Run_One_Function_And_Return_Value_Second_Generation(function,"__walley__.wy");
@@ -1559,6 +1562,15 @@ char *Walley_Substitue_Var_And_Function_Return_Value_From_File_Second_Generation
             } else {
                 printf("It is slice\n");
                 int index_of_rect = find_from_index_not_in_string(input_str, "]", i + 1);
+                
+                // case like x[0:1].toupper()
+                if (input_str[index_of_rect+1]=='.') {
+                    printf("Find . after ]");
+                    find_alpha=TRUE;
+                    find_function=FALSE;
+                    continue;
+                }
+                
                 char *slice_str = substr(input_str, i, index_of_rect + 1);
                 char *value_of_var ;//= getValueFromValueName(file_var_name, func_name);
                 if (checkWhetherSameVarNameExistsFromFile(file_var_name, func_name)==TRUE) {
