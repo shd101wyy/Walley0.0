@@ -19,8 +19,8 @@
  * sliceIncludeBothSide("'hello'",0,2)--->"'hel'"
  */
 char *sliceIncludeBothSides(char *input_str,int left,int right){
-    printf("#### sliceIncludeBothSides ####\n");
-    printf("|%s|  |%d|  |%d|\n",input_str,left,right);
+   //// printf("#### sliceIncludeBothSides ####\n");
+   //// printf("|%s|  |%d|  |%d|\n",input_str,left,right);
     input_str=trim(input_str);
     if(strcmp("string",variableValueType(input_str))==0){
         //printf("it is string\n");
@@ -78,8 +78,8 @@ char *sliceOnlyIncludeRightSide(char *input_str, int left, int right) {
  * slice("[1,2,3,4,5]","[1,2]")--->[2,3]
  */
 char *slice(char *input_str, char *slice) {
-    printf("#### slice ####\n");
-    printf("|%s| \n|%s|\n",input_str,slice);
+   //// printf("#### slice ####\n");
+   //// printf("|%s| \n|%s|\n",input_str,slice);
     slice = trim(slice);
     char left = slice[0];
     char right = slice[(int) strlen(slice) - 1];
@@ -146,8 +146,8 @@ char *slice(char *input_str, char *slice) {
  * like python slice
  */
 char *old_slice(char *input_str, char *slice){
-    printf("#### old_slice ####\n");
-    printf("|%s| \n|%s|\n",input_str,slice);
+   //// printf("#### old_slice ####\n");
+   //// printf("|%s| \n|%s|\n",input_str,slice);
     slice = trim(slice);
     char left = slice[0];
     char right = slice[(int) strlen(slice) - 1];
@@ -236,25 +236,26 @@ char *old_slice(char *input_str, char *slice){
         int num=atoi(Walley_Eval(num_str));
             
         if (strcmp("string", variableValueType(input_str)) == 0) {
-            printf("it is string\n");
-            printf("num is %d\n",num);
+           //// printf("it is string\n");
+           //// printf("num is %d\n",num);
             input_str = toCString(input_str);
             char *output = substr(input_str, num, num + 1);
-            printf("return is %s\n",toString(output));
+           //// printf("return is %s\n",toString(output));
             return toString(output);
         } else if (strcmp("list", variableValueType(input_str)) == 0) {
-            printf("it is list\n");
+           //// printf("it is list\n");
             char output[10000] = "";
             //strcat(output, "[");
-            char temp[100];
-            sprintf(temp, "%d", num);
-            char *index_str = malloc(sizeof (char) *(3 + (int) strlen(temp)));
-            strcat(index_str, "[");
-            strcat(index_str, temp);
-            strcat(index_str, "]");
-            index_str[(int) strlen(index_str)] = 0;
+            //char temp[100];
+            //sprintf(temp, "%d", num);
+            //char *index_str = malloc(sizeof (char) *(3 + (int) strlen(temp)));
+            //strcat(index_str, "[");
+            //strcat(index_str, temp);
+            //strcat(index_str, "]");
+            //index_str[(int) strlen(index_str)] = 0;
             //printf("->%s\n", index_str);
-            char *value_at_index = valueOfListAtIndexString(input_str, index_str);
+            //char *value_at_index = valueOfListAtIndexString(input_str, index_str);
+            char *value_at_index = valueOfListAtIndexString(input_str, slice);
             strcat(output, value_at_index);
 
 

@@ -16,9 +16,10 @@
 int main(int argc, char *argv[]){
     
     
-    char cwd[1000];
-    getcwd(cwd, sizeof (cwd));
-    printf("Current Working Directory%s\n",cwd);
+    ////char cwd[1000];
+    ////getcwd(cwd, sizeof (cwd));
+    ////printf("Current Working Directory%s\n\n\n\n\n",cwd);
+    ////printf("############################################################################\n\n");
     FILE *fp;
     bool path_file_existed=TRUE;
     fp=fopen("__walley_path__.wy", "r");

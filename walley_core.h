@@ -158,20 +158,20 @@ void Walley_Initialize_Var_File(char *file_var_name){
 
 void Walley_Run_For_Appointed_File(char* file_name,char *setting_file,char* temp_file_name,char* input_str) {
     
-    printf("############ Run Function Walley_Run_For_Appointed_File ##############\n");
+   //// printf("############ Run Function Walley_Run_For_Appointed_File ##############\n");
     
         bool now_in_annotation = atoi(getValueFromValueName(setting_file, "now_in_annotation"));
     char *judge_annotation_string=trim(input_str);
     int length_of_judge_annotation_string=(int)strlen(judge_annotation_string);
     if (judge_annotation_string[length_of_judge_annotation_string-1]=='#' && judge_annotation_string[length_of_judge_annotation_string-2]=='~'){
-        printf("Now End Long Annotation");
+       //// printf("Now End Long Annotation");
         now_in_annotation = 0;
         char temp4[100];
         sprintf(temp4, "%d", now_in_annotation);
         changeTheVarValueFromItsInitialOneFromFile(setting_file, "now_in_annotation", (char*) temp4, "int");
     }
     else if (judge_annotation_string[0] == '#' && judge_annotation_string[1] == '~') {
-        printf("Now Begin Long Annotation");
+       //// printf("Now Begin Long Annotation");
         now_in_annotation = 1;
         char temp4[100];
         sprintf(temp4, "%d", now_in_annotation);
@@ -213,7 +213,7 @@ void Walley_Run_For_Appointed_File(char* file_name,char *setting_file,char* temp
     char *last_if_sentence=getValueFromValueName(setting_file,"last_if_sentence");
     
     int current_space=numOfSpaceAheadString(input_str);
-    printf("-------Now input is |%s|\n",input_str);
+   //// printf("-------Now input is |%s|\n",input_str);
     //printf("-------Now input length is %d\n",(int)strlen(input_str));
     //printf("-------Now Ahead Space is %d\n",current_space);
     //printf("-------Now writting in function is %d\n",now_writting_function);
@@ -241,7 +241,7 @@ void Walley_Run_For_Appointed_File(char* file_name,char *setting_file,char* temp
 
     //############### Now Writting Function In Progress #####################
     if (now_writting_function == TRUE) {
-        printf("//############### Now Writting Function In Progress #####################\n");
+       //// printf("//############### Now Writting Function In Progress #####################\n");
         //printf("//############### %s #############\n",input_str);
         //printf("Input_Str is :%s\n",input_str);
         //printf("3---------------\n%s---------------\n",getStringFromFile("__walley_function__.wy"));
@@ -375,7 +375,7 @@ void Walley_Run_For_Appointed_File(char* file_name,char *setting_file,char* temp
         
         //############### Run Function ############################
         else if ((strcmp(var_value_type,"function")!=0)){
-          printf("This is Function\n");  
+          printf("This is Function\n");
         }
         
         //############## Unknown ###############################
@@ -399,9 +399,9 @@ void Walley_Run_For_Appointed_File(char* file_name,char *setting_file,char* temp
     //#####################  Mistake  ###################
             else {
                 if (strcmp(input_str, "None") != 0) {
-                    printf("Not None\n");
+                   //// printf("Not None\n");
                     Walley_Eval_With_Variable_From_File(file_name, input_str);
-                    printf("Mistake May occurred which calling function Walley_Run_For_Appointed_File;\nThis Language is under development");
+                   //// printf("Mistake May occurred which calling function Walley_Run_For_Appointed_File;\nThis Language is under development");
                 }
             }
             //printf("\nRequired space num is %d\n",space);
@@ -421,14 +421,14 @@ void Walley_Run_For_Appointed_File(char* file_name,char *setting_file,char* temp
                 
         if(continue_run==TRUE ){
             //printf("continue run\n");
-            printf("temp input str is |%s|\n",temp_input_str);
-            printf("removeAheadSpace(input_str) is |%s|\n",removeAheadSpace(input_str));
+           //// printf("temp input str is |%s|\n",temp_input_str);
+           //// printf("removeAheadSpace(input_str) is |%s|\n",removeAheadSpace(input_str));
             if(find_gang_gang==TRUE){
-                printf("find \\\n");
+               //// printf("find \\\n");
                 Walley_Run_For_Appointed_File(file_name,setting_file,temp_file_name,substr(temp_input_str,find(temp_input_str,"\\n")+2,(int)strlen(temp_input_str)));
 
             } else {
-                printf("did not find \\\n");
+               //// printf("did not find \\\n");
                 Walley_Run_For_Appointed_File(file_name,setting_file,temp_file_name,substr(temp_input_str,find(temp_input_str,"\n")+1,(int)strlen(temp_input_str)));
             }
         }
@@ -437,7 +437,7 @@ void Walley_Run_For_Appointed_File(char* file_name,char *setting_file,char* temp
 }
 
 void Walley_Run_For_Default(char* input_str) {
-    printf("#### Walley_Run_For_Default ####\n");
+   //// printf("#### Walley_Run_For_Default ####\n");
     Walley_Run_For_Appointed_File("__walley__.wy","__walley_settings__.wy","__walley_file__.wy",input_str);
    }
 
@@ -476,39 +476,49 @@ void Walley_Initialize(){
         fputs("#Temp File In Order To Run goto\n",fp);
         fclose(fp);
     }
-    printf("###### Walley Initailize! ######\n###### Version 1.0 ######\n");
+   //// printf("###### Walley Initailize! ######\n###### Version 1.0 ######\n");
     int int_size = sizeof (int);
     int double_size = sizeof (double);
     int char_size = sizeof (char);
-    printf("int size :%d\n", int_size);
-    printf("double size :%d\n", double_size);
-    printf("char size :%d\n", char_size);
-    char cwd[1000];
-    getcwd(cwd, sizeof (cwd));
-    printf("Current Working Directory%s\n",cwd);
+    //// printf("int size :%d\n", int_size);
+    //// printf("double size :%d\n", double_size);
+    //// printf("char size :%d\n\n", char_size);
+    ////char cwd[1000];
+    ////getcwd(cwd, sizeof (cwd));
+    ////printf("Current Working Directory%s\n\n\n\n",cwd);
 }
 
 void Walley_Finalize(){
-    if(remove("__walley__.wy"))
+    if(remove("__walley__.wy")){
         printf("Can not finalize\n");
-    else
-        printf("\n\n###### Finalize ######");
+        exit(0);
+    }
+    ////else
+    ////    printf("\n\n###### Finalize ######");
     
-    if(remove("__walley_function__.wy"))
+    if(remove("__walley_function__.wy")){
         printf("Can not finalize Function\n");
-    else
-        printf("\n\n###### Finalize Function ######");
+        exit(1);
+    }
+    ////else
+    ////    printf("\n\n###### Finalize Function ######");
     
-    if(remove("__walley_settings__.wy"))
+    if(remove("__walley_settings__.wy")){
         printf("Can not finalize Settings\n");
-    else
-        printf("\n\n###### Finalize Settings ######");
+        exit(2);
+    }
+    ////else
+    ////    printf("\n\n###### Finalize Settings ######");
     
-    if(remove("__walley_file__.wy"))
-        printf("Can not finalize File\n");
-    else
-        printf("\n\n##### Finalize File #####");
+    if(remove("__walley_file__.wy")){
+       printf("Can not finalize File\n");
+        exit(3);
+    }
+    ////else
+    ////    printf("\n\n##### Finalize File #####");
     //Walley_Initialize();
+    ////printf("\n############################################################################\n\n");
+    ////printf("\nDone!\n");
     
 }
 
@@ -536,7 +546,7 @@ char *Walley_Run_One_Function(char *input_str){
     
     
     
-    printf("#### Walley_Run_One_Function ####\n");
+   //// printf("#### Walley_Run_One_Function ####\n");
     input_str=removeBackSpace(input_str);
     input_str=removeAheadSpace(input_str);
     char *temp=malloc(sizeof(char)*(int)strlen(input_str)+sizeof(char)*1);
@@ -578,7 +588,7 @@ char *Walley_Run_One_Function(char *input_str){
     file_var_temp_name[(int)strlen(file_var_temp_name)]=0;
     //fp=fopen("__walley_temp__.wy","w");
     Walley_Initialize_Var_File(file_var_temp_name);
-    printf("==== file_var_temp_name %s\n",file_var_temp_name);
+   //// printf("==== file_var_temp_name %s\n",file_var_temp_name);
     
     char *file_settings_temp_name=malloc(sizeof(char)*((int)strlen("__walley_settings_temp___.wy")+(int)strlen(func_name)));
     strcat(file_settings_temp_name,"__walley_settings_temp_");
@@ -600,7 +610,7 @@ char *Walley_Run_One_Function(char *input_str){
         fclose(fp);
     }**/
     Walley_Initialize_Settings_File(file_settings_temp_name);
-    printf("==== file_settings_temp_name %s\n",file_settings_temp_name);
+   //// printf("==== file_settings_temp_name %s\n",file_settings_temp_name);
     
     char *file_file_temp_name=malloc(sizeof(char)*((int)strlen(func_name)+(int)strlen("__walley_file_temp___.wy")));
     strcat(file_file_temp_name,"__walley_file_temp_");
@@ -614,7 +624,7 @@ char *Walley_Run_One_Function(char *input_str){
         fputs("#Temp File In Order To Run goto\n",fp);
         fclose(fp);
     }  
-    printf("file_file_temp_name %s\n",file_file_temp_name); 
+   //// printf("file_file_temp_name %s\n",file_file_temp_name);
     
     
     bool find_function=FALSE;
@@ -642,11 +652,11 @@ char *Walley_Run_One_Function(char *input_str){
         //char one_line[1000];
         
         if(find(arr,temp_temp)!=-1){
-            printf("Find Function\n");
+           //// printf("Find Function\n");
             find_function=TRUE;
         }
         if(find_function==TRUE && find(arr,"#~End\n")!=-1){
-            printf("Find End\n");
+           //// printf("Find End\n");
             finish=TRUE;
         }
         
@@ -723,16 +733,16 @@ char *Walley_Run_One_Function(char *input_str){
 }
 
 void Walley_Remove_Variable_And_Value_From_File(char* file_var_name, char *var_name) {
-    printf("#### Walley_Remove_Variable_And_Value_From_File ####\n");
+   //// printf("#### Walley_Remove_Variable_And_Value_From_File ####\n");
     bool existed = checkWhetherSameVarNameExistsFromFile(file_var_name, var_name);
-    printf("%d\n",existed);
+   //// printf("%d\n",existed);
     if (existed == TRUE) {
         char *var_value = getValueFromValueName(file_var_name, var_name);
         char *var_value_type = variableValueType(var_value);
         bool delete_only_one_row = TRUE;
         if (strcmp(var_value_type, "list") == 0 || strcmp(var_value_type, "dictionary") == 0) {
             delete_only_one_row = FALSE;
-            printf("It is list or dictionary\n");
+           //// printf("It is list or dictionary\n");
         }
         char *end_sentence=malloc(sizeof(char)*((int)strlen("#~End::\n")+(int)strlen(var_name)));//#~End:__temp__:
         strcat(end_sentence,"#~End:");
@@ -782,7 +792,7 @@ void Walley_Remove_Variable_And_Value_From_File(char* file_var_name, char *var_n
 // If var existed, then replace
 // else create new one.
 void Walley_Update_Var_And_Var_Value_To_File(char *file_var_name, char *var_name, char *var_value){
-    printf("#### Walley_Update_Var_And_Var_Value_To_File ####\n");
+   //// printf("#### Walley_Update_Var_And_Var_Value_To_File ####\n");
     char *var_value_type = variableValueType(var_value);
     bool has_same_var_name = checkWhetherSameVarNameExistsFromFile(file_var_name, var_name);
     
@@ -816,7 +826,7 @@ void Walley_Update_Var_And_Var_Value_To_File(char *file_var_name, char *var_name
             }
                 // Eg a{"Hello"} is one element of dictionary
             else if (find_not_in_string(var_name, "{") != -1 && find_not_in_string(var_name, "}") != -1) {
-                printf("&&&&&&& Enter Here 1 \n");
+               //// printf("&&&&&&& Enter Here 1 \n");
                 changeTheOneVarValueFromItsInitialOneFromFileOrAddVarNameAndValueForDictionary(file_var_name, var_name, var_value);
 
             } else {
@@ -846,12 +856,12 @@ void Walley_Update_Var_And_Var_Value_To_File(char *file_var_name, char *var_name
         }
             // Initialize Dictionary
         else if (strcmp(var_value_type, "dictionary") == 0) {
-            printf("Find Dictionary Type Value");
+           //// printf("Find Dictionary Type Value");
             writeVarNameAndVarValueIntoAppointedFileForDictionary(file_var_name, var_name, var_value);
 
         }            // Eg a{"Hello"} is one element of dictionary
         else if (find_not_in_string(var_name, "{") != -1 && find_not_in_string(var_name, "}") != -1) {
-            printf("&&&&&&& Enter Here 1 \n");
+           //// printf("&&&&&&& Enter Here 1 \n");
             changeTheOneVarValueFromItsInitialOneFromFileOrAddVarNameAndValueForDictionary(file_var_name, var_name, var_value);
 
         }            // Initialize simple value
@@ -872,10 +882,10 @@ void Walley_Update_Var_And_Var_Value_To_File(char *file_var_name, char *var_name
  */
 //char *Walley_Run_One_Function_And_Return_Value(char *input_str){
 char *Walley_Run_One_Function_And_Return_Value(char *input_str,char *get_var_from_file_name){
-    printf("\n#### Walley_Run_One_Function_And_Return_Value ####\n");
+   //// printf("\n#### Walley_Run_One_Function_And_Return_Value ####\n");
     char* return_var_name="None";
     char* return_value;
-    printf("Function is |%s|\n",input_str);
+   //// printf("Function is |%s|\n",input_str);
     
     
     input_str=removeBackSpace(input_str);
@@ -896,10 +906,10 @@ char *Walley_Run_One_Function_And_Return_Value(char *input_str,char *get_var_fro
     char *func_name=substr(input_str,0,find(input_str,"("));
     func_name=trim(func_name);    
 
-    printf("here\n");
-    printf("%s\n",input_str);
+   //// printf("here\n");
+   //// printf("%s\n",input_str);
     char *parameter_str=substr(input_str, find(input_str,"(")+1,find(input_str,")"));
-    printf("here\n");
+   //// printf("here\n");
     //printf("#### parameter_str is %s ####\n",parameter_str);
     parameter_str=removeAheadSpace(parameter_str);
     //printf("#### parameter_str is %s ####\n",parameter_str);
@@ -928,7 +938,7 @@ char *Walley_Run_One_Function_And_Return_Value(char *input_str,char *get_var_fro
     file_var_temp_name[(int)strlen(file_var_temp_name)]=0;
     //fp=fopen("__walley_temp__.wy","w");
     Walley_Initialize_Var_File(file_var_temp_name);
-    printf("==== file_var_temp_name %s\n",file_var_temp_name);
+   //// printf("==== file_var_temp_name %s\n",file_var_temp_name);
     
     char *file_settings_temp_name=malloc(sizeof(char)*((int)strlen("__walley_settings_temp___.wy")+(int)strlen(func_name)+1));
     strcat(file_settings_temp_name,"__walley_settings_temp_");
@@ -951,7 +961,7 @@ char *Walley_Run_One_Function_And_Return_Value(char *input_str,char *get_var_fro
         fclose(fp);
     }**/
     Walley_Initialize_Settings_File(file_settings_temp_name);
-    printf("==== file_settings_temp_name %s\n",file_settings_temp_name);
+   //// printf("==== file_settings_temp_name %s\n",file_settings_temp_name);
     
     char *file_file_temp_name=malloc(sizeof(char)*((int)strlen(func_name)+(int)strlen("__walley_file_temp___.wy")+1));
     strcat(file_file_temp_name,"__walley_file_temp_");
@@ -966,7 +976,7 @@ char *Walley_Run_One_Function_And_Return_Value(char *input_str,char *get_var_fro
         fputs("#Temp File In Order To Run goto\n",fp);
         fclose(fp);
     }  
-    printf("file_file_temp_name %s\n",file_file_temp_name); 
+   //// printf("file_file_temp_name %s\n",file_file_temp_name);
     
     
     bool find_function=FALSE;
@@ -998,7 +1008,7 @@ char *Walley_Run_One_Function_And_Return_Value(char *input_str,char *get_var_fro
         if(find_function==TRUE && strcmp("return",substr(removeBackSpace(removeAheadSpace(arr)),0,6))==0){
             
             //find_return=TRUE;
-            printf("--------Find Return--------");
+           //// printf("--------Find Return--------");
             Walley_Run_For_Appointed_File(file_var_temp_name, file_settings_temp_name,file_file_temp_name,"#FIND RETURN");
             finish=TRUE;
             return_var_name=substr(arr,find(arr,"return")+7,(int)strlen(arr));
@@ -1037,11 +1047,11 @@ char *Walley_Run_One_Function_And_Return_Value(char *input_str,char *get_var_fro
                 printf("%s\n", Walley_Run_One_Function_And_Return_Value(temp, file_var_temp_name));
             }
             else {
-                printf("*************** GO THERE ***************");
+               //// printf("*************** GO THERE ***************");
                 // if is_instance_value is true, save like Rohit.age to __walley__.wy 
                 bool is_instance_value = FALSE;
                 if (isExpression(arr)) {
-                    printf("********* %s IT IS EXPRESSION ********\n", arr);
+                   //// printf("********* %s IT IS EXPRESSION ********\n", arr);
                     char *var_name2 = variableName(arr);
                     char *user;
                     if (find_not_in_string(var_name2, ".") != -1) {
@@ -1057,8 +1067,8 @@ char *Walley_Run_One_Function_And_Return_Value(char *input_str,char *get_var_fro
                 if (is_instance_value == FALSE) {
                     Walley_Run_For_Appointed_File(file_var_temp_name, file_settings_temp_name, file_file_temp_name, arr);
                 } else {
-                    printf("************ IT IS INSTANCE VALUE ************");
-                    printf("************ %s **********\n", arr);
+                   //// printf("************ IT IS INSTANCE VALUE ************");
+                   //// printf("************ %s **********\n", arr);
                     Walley_Run_For_Appointed_File(file_var_temp_name, file_settings_temp_name, file_file_temp_name, arr);
                     char *var_name3 = variableName(arr);
                     char *var_value3 = getValueFromValueName(file_var_temp_name, var_name3);
@@ -1143,7 +1153,7 @@ char *Walley_Run_One_Function_And_Return_Value(char *input_str,char *get_var_fro
             
             if (find_not_in_string(removeAheadSpace(arr_arr), "##Finish Init Params")==0) {
                 finish_init_param=TRUE;
-                printf("finish_init_param\n");
+               //// printf("finish_init_param\n");
                 continue;
             }
             
@@ -1156,7 +1166,7 @@ char *Walley_Run_One_Function_And_Return_Value(char *input_str,char *get_var_fro
             }
             
             if (strcmp(parameter_str, "None,") == 0) {
-                printf("Params is None\n");
+               //// printf("Params is None\n");
                 //finish_init_param = TRUE;
                 continue;
             }
@@ -1192,7 +1202,7 @@ char *Walley_Run_One_Function_And_Return_Value(char *input_str,char *get_var_fro
             strcat(output, substr(parameter_str, from_index, find_from_index_not_in_string(parameter_str, ",", from_index + 1)));
             strcat(output, "\n");
             
-            printf("------->%s\n",arr_arr);
+           //// printf("------->%s\n",arr_arr);
             
             //Walley_Run(arr_arr);
             //Walley_Run_For_Appointed_File("__walley_temp__.wy","__walley_settings_temp__.wy",arr_arr);
@@ -1218,7 +1228,7 @@ char *Walley_Run_One_Function_And_Return_Value(char *input_str,char *get_var_fro
     }
     
     if(strcmp(return_var_name,"None")==0){
-        printf("------Return None------\n");
+       //// printf("------Return None------\n");
         return_value="None";
     } else {
         //printf("Enter Else\n");
@@ -1242,7 +1252,7 @@ char *Walley_Run_One_Function_And_Return_Value(char *input_str,char *get_var_fro
 }
 
 char *Walley_Substitue_Var_And_Function_Return_Value_From_File(char* input_str, char *file_var_name) {//, char *file_function_name){
-    printf("#### Walley_Substitue_Var_And_Function_Return_Value_From_File ####\n");
+   //// printf("#### Walley_Substitue_Var_And_Function_Return_Value_From_File ####\n");
     //printf("%s, %s\n",input_str,file_var_name);
     //######### replace the thing inside the {} and []
     //substitueValueInDictionaryAndList(input_str,file_var_name);
@@ -1305,8 +1315,8 @@ char *Walley_Substitue_Var_And_Function_Return_Value_From_File(char* input_str, 
 
 
     }
-    printf("AFTER REPLACE THE THING IN [] AND {}\nTHE INPUT IS |%s|\n", input_str);
-    printf("input str is :%s\nlength is %d\n", input_str, (int) strlen(input_str));
+   //// printf("AFTER REPLACE THE THING IN [] AND {}\nTHE INPUT IS |%s|\n", input_str);
+   //// printf("input str is :%s\nlength is %d\n", input_str, (int) strlen(input_str));
     //printf("Required File is %s\n",file_var_name);
     bool find_alpha = FALSE;
     bool finish_find_var = FALSE;
@@ -1352,7 +1362,7 @@ char *Walley_Substitue_Var_And_Function_Return_Value_From_File(char* input_str, 
          * add input_str[i]=='_' in order for __temp_while__.append()......
          */
         if(find_alpha==FALSE && (isalpha(input_str[i])||input_str[i]=='_'||input_str[i]=='"'||input_str[i]=='\''||input_str[i]=='[' )&& charIsInString(input_str,i)==FALSE){
-            printf("Find alpha\n");
+           //// printf("Find alpha\n");
             //printf("--End this loop, output is %s\n",output);
             find_alpha=TRUE;
             begin=i;
@@ -1384,14 +1394,14 @@ char *Walley_Substitue_Var_And_Function_Return_Value_From_File(char* input_str, 
             find_function = FALSE;
             //printf("@@@@@ Enter Find Function @@@@@\n");
             char *func_name = substr(input_str, begin, i);
-            printf("Func_Name is %s\n", func_name);
+           //// printf("Func_Name is %s\n", func_name);
             bool it_is_slice=FALSE;// = checkWhetherSameVarNameExistsFromFile(file_var_name, func_name);
             if (checkWhetherSameVarNameExistsFromFile(file_var_name, func_name)==TRUE||
                 strcmp(variableValueType(func_name),"string")==0||
                 strcmp(variableValueType(func_name), "list")==0) {
                 it_is_slice=TRUE;
             }
-            printf("it is function %d\n", it_is_slice);
+           //// printf("it is function %d\n", it_is_slice);
             if (it_is_slice == FALSE) {
                 find_function = FALSE;
                 char *temp = substr(input_str, i, (int) strlen(input_str));
@@ -1418,7 +1428,7 @@ char *Walley_Substitue_Var_And_Function_Return_Value_From_File(char* input_str, 
                 /*
                  * eg x="Hello"-----> x.find("He")----->0
                  */
-                printf("#### First Generation FUNCTION is |%s| ####\n", function);
+               //// printf("#### First Generation FUNCTION is |%s| ####\n", function);
                 if (find(substr(function, 0, find(function, "(")), ".") != -1 && charIsInString(function, find(function, ".")) == FALSE) {
                     char *user = substr(function, 0, find(function, "."));
                     bool instance_existed = checkWhetherSameInstanceExisted(file_var_name, user);
@@ -1432,7 +1442,7 @@ char *Walley_Substitue_Var_And_Function_Return_Value_From_File(char* input_str, 
                     }
                     
                     if (instance_existed == FALSE && var_existed == TRUE) {
-                        printf("function is %s\nfile_var_name is %s\n", function, file_var_name);
+                       //// printf("function is %s\nfile_var_name is %s\n", function, file_var_name);
                         return_value = Walley_Run_Special_Function(function_temp, file_var_name);
                     } else {
                         return_value = Walley_Run_One_Function_And_Return_Value(function, "__walley__.wy");
@@ -1491,7 +1501,7 @@ char *Walley_Substitue_Var_And_Function_Return_Value_From_File(char* input_str, 
                     char *temp_value = Walley_Substitue_Var_And_Function_Return_Value_From_File(temp1, file_var_name);
                     temp_value = Walley_Eval_With_Variable_From_File(file_var_name, temp_value);
                     return_value = var_value_type(temp_value);
-                    printf("Find type() and return value is %s\n", return_value);
+                   //// printf("Find type() and return value is %s\n", return_value);
                 } else if (find(function, "num(") == 0) {
                     char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
                     char *temp_value = Walley_Substitue_Var_And_Function_Return_Value_From_File(temp1, file_var_name);
@@ -1561,12 +1571,15 @@ char *Walley_Substitue_Var_And_Function_Return_Value_From_File(char* input_str, 
                 finish_find_var = FALSE;
                 continue;
             } else {
-                printf("It is slice\n");
-                int index_of_rect = find_from_index_not_in_string(input_str, "]", i + 1);
-                
+               //// printf("It is slice\n");
+                //int index_of_rect = find_from_index_not_in_string(input_str, "]", i + 1);
+                int index_of_rect = find_from_index_not_in_str_list_dict_parenthesis(input_str, "]", i + 1);
+                while (input_str[index_of_rect+1]=='[') {
+                    index_of_rect= find_from_index_not_in_str_list_dict_parenthesis(input_str, "]", index_of_rect+ 1);
+                }
                 // case like x[0:1].toupper()
                 if (input_str[index_of_rect+1]=='.') {
-                    printf("Find . after ]");
+                   //// printf("Find . after ]");
                     find_alpha=TRUE;
                     find_function=FALSE;
                     continue;
@@ -1673,28 +1686,35 @@ char *Walley_Substitue_Var_And_Function_Return_Value_From_File(char* input_str, 
     //    return input_str;
     //}
     output=Walley_Eval_All_From_File(file_var_name, output);
-    printf("Walley_Substitue_Var_And_Function_Return_Value_From_File !!!!!!output is %s\n", output);
+   //// printf("Walley_Substitue_Var_And_Function_Return_Value_From_File !!!!!!output is %s\n", output);
     return output;
 }
 
 char *Walley_Print(char *var_in_file_name, char *input_str){
-    printf("#### Walley_Print ####\n");
+   //// printf("#### Walley_Print ####\n");
     input_str=Walley_Substitue_Var_And_Function_Return_Value_From_File(input_str,var_in_file_name);
     //printf("%s\n",input_str);
-    return Walley_Eval_With_Variable_From_File(var_in_file_name,input_str);
+    char *output=toCString(Walley_Eval_With_Variable_From_File(var_in_file_name,input_str));
+    if (find(output, "\\n")!=-1) {
+        output=replace(output, "\\n", "\n");
+    }
+    return output;
 }
 char *Walley_Println(char *var_in_file_name, char *input_str){
-    printf("#### Walley_Println ####\n");
+   //// printf("#### Walley_Println ####\n");
+    /*
     input_str=Walley_Substitue_Var_And_Function_Return_Value_From_File(input_str,var_in_file_name);
     char *input= Walley_Eval_With_Variable_From_File(var_in_file_name,input_str);
+    input=toCString(input);
     char *output=malloc(sizeof(char)*(int)strlen(input));
     strcat(output,input);
     strcat(output,"\n");
-    return output;
+    return output;*/
+    return append(Walley_Print(var_in_file_name,input_str), "\n");
 }
 
 bool Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(char *input_str, char *var_in_file_name){
-    printf("#### Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function ####\n");
+   //// printf("#### Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function ####\n");
     // I did not consider the situation when and or or is in string
     //printf("%d\n",find(input_str," and "));
     input_str=cleanJudgeSentence(input_str);
@@ -1747,10 +1767,10 @@ bool Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(char *
     if(find(input_str,"*****")!=-1){
         input_str=replace(input_str,"*****","not ");
     }
-    printf("####----->%s\n",input_str);
-    printf("Here\n");
+   //// printf("####----->%s\n",input_str);
+   //// printf("Here\n");
     bool output=judgeWithAndAndOrWithParenthesis(input_str);
-    printf("#### Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function #### output is %d\n",output);
+   //// printf("#### Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function #### output is %d\n",output);
     return output;
 }
 
@@ -1848,25 +1868,25 @@ void Walley_Update_Var_And_Var_Value_To_File(char *file_var_name, char *var_name
 
 void Walley_Eval_And_Update_Var_And_Value_To_File(char* file_var_name,char* input_str) {
     //else if (isExpression(input_str)==TRUE){
-    printf("#### Walley_Eval_And_Update_Var_And_Value_To_File ####\n");
+   //// printf("#### Walley_Eval_And_Update_Var_And_Value_To_File ####\n");
     char *var_name = variableName(input_str);
     char *var_value = variableValue(input_str);
     char *var_value_type = variableValueType(var_value);
-    printf("#### The Variable Name is :%s\n",var_name);
-    printf("#### The Variable Value is :%s\n", var_value);
-    printf("#### The Variable Value Type is :%s\n", var_value_type);
+   //// printf("#### The Variable Name is :%s\n",var_name);
+   //// printf("#### The Variable Value is :%s\n", var_value);
+   //// printf("#### The Variable Value Type is :%s\n", var_value_type);
     //Walley_Substitue_Var_And_Function_Return_Value_From_File AND Walley_Eval_With_Variable_From_File
     //Do not support operation of list and dictionary now
     if(strcmp("list",var_value_type)!=0 && strcmp("dictionary",var_value_type)!=0){
-        printf("var value type is not list or dictionary\n");
+       //// printf("var value type is not list or dictionary\n");
         var_value = Walley_Substitue_Var_And_Function_Return_Value_From_File(var_value, file_var_name);
     }
     var_value = Walley_Eval_With_Variable_From_File(file_var_name, var_value);
     var_value_type = variableValueType(var_value);
     
-    printf("#### The Variable Name is :%s\n", var_name);
-    printf("#### The Variable Value is :%s\n", var_value);
-    printf("#### The Variable Value Type is :%s\n", var_value_type);
+   //// printf("#### The Variable Name is :%s\n", var_name);
+   //// printf("#### The Variable Value is :%s\n", var_value);
+   //// printf("#### The Variable Value Type is :%s\n", var_value_type);
     //printf("The Variable Value after put known Variable in is :%s\n",putKnownVariableIntoExpression(var_value));
 
 
@@ -1877,7 +1897,7 @@ void Walley_Eval_And_Update_Var_And_Value_To_File(char* file_var_name,char* inpu
 
 
 void Walley_Judge_Run_Anotation_For_While_Def_Class(char *file_var_name,char *setting_file,char *input_str) {
-    printf("Walley_Judge_Run_Anotation_For_While_Def_Class----->|%s|,|%s|,|%s|\n",file_var_name,setting_file,input_str);
+   //// printf("Walley_Judge_Run_Anotation_For_While_Def_Class----->|%s|,|%s|,|%s|\n",file_var_name,setting_file,input_str);
     input_str = removeAheadSpace(input_str);
     
     int space = atoi(getValueFromValueName(setting_file, "space"));
@@ -1901,14 +1921,15 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(char *file_var_name,char *se
     int space_of_first_class_sentence = atoi(getValueFromValueName(setting_file,"space_of_first_def_sentence"));
     
     int current_space=atoi(getValueFromValueName(setting_file,"current_space"));
-    printf("current_space is %d\n",current_space);
+   //// printf("current_space is %d\n",current_space);
 
     //#####################  Anotation  ###################    
     if (input_str[0] == '#') {
-        printf("This is one anatation %s\n", removeAheadSpace(input_str));
+        //printf("This is one anatation %s\n", removeAheadSpace(input_str));
+        printf("");
     }
     else if (find(input_str,"class ")==0){
-        printf("#### begin to define a class ####\n");
+       //// printf("#### begin to define a class ####\n");
         now_writting_class=TRUE;
         space_of_first_class_sentence=space;
         space=space+4;
@@ -1924,18 +1945,18 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(char *file_var_name,char *se
         __string_in_temp_class__=dictionaryAddKeyAndValue(__string_in_temp_class__,toString(class_name),toString("#Begin to define class...\\n"));
         
         
-        printf("__string_in_temp_class__ is %s\n",__string_in_temp_class__);
+       //// printf("__string_in_temp_class__ is %s\n",__string_in_temp_class__);
         changeTheWholeVarValueFromItsInitialOneFromFileForDictionary(file_var_name,"__string_in_temp_class__",__string_in_temp_class__);
         
         
-        printf("class_name is %s, class extends %s\n",class_name,class_mother);
+       //// printf("class_name is %s, class extends %s\n",class_name,class_mother);
         
         changeTheVarValueFromItsInitialOneFromFile(file_var_name,"__temp_class_name_now_writting__",toString(class_name),"string");
         
     }
     // ##############  Function  ##############################
     else if (find(input_str, "def ") == 0) {
-        printf("\n###### begin to define a function######\n");
+       //// printf("\n###### begin to define a function######\n");
         space_of_first_def_sentence = space;
         space = space + 4;
         //printf("Now Space is %d\n",space);
@@ -1957,7 +1978,7 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(char *file_var_name,char *se
             //writeStringToFIle("__walley_function__.wy","Begin\n");
 
             if (strcmp(func_param_str, "None") == 0) {
-                printf("This Function has no Parameter\n");
+               //// printf("This Function has no Parameter\n");
                 writeStringToFile("__walley_function__.wy","#### Parameters  are None ####\n");
                 writeStringToFile("__walley_function__.wy", "##Finish Init Params\n");
             } else {
@@ -1968,18 +1989,18 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(char *file_var_name,char *se
         }
     }//################## Judge Whether this whether an if sentence ##########################
     else if (find(input_str, "if ") == 0 || find(input_str, "elif ") == 0 || find(input_str, "else") == 0) {
-        printf("now judge if sentence\n");
+       //// printf("now judge if sentence\n");
         char *sentence = "";
         char *temp_for_sentence = removeAheadSpace(removeBackSpace(input_str));
         bool can_run=TRUE;
         space=current_space;
         
         if (find(input_str, "if ") == 0) {
-            printf("Find If\n");
+           //// printf("Find If\n");
             sentence = substr(temp_for_sentence, find(temp_for_sentence, "if ") + 3, (int) strlen(temp_for_sentence) - 1);
             last_if_sentence = sentence;
             can_run = Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(sentence, file_var_name);
-            printf("++++++can run is %d\n",can_run);
+           //// printf("++++++can run is %d\n",can_run);
             
             // if can run.
             // Write last_if_sentence to __temp_if__
@@ -2005,7 +2026,7 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(char *file_var_name,char *se
                 char *previous = valueOfListAtIndex(__temp_if_space__, num_of_temp_if_space - 2);
                 char *now = valueOfListAtIndex(__temp_if_space__, num_of_temp_if_space - 1);
                 if (atoi(previous) == atoi(now)) {
-                    printf("--------Find Another If--------\n");
+                   //// printf("--------Find Another If--------\n");
                     char temp_length[100];
                     int index = num_of_temp_if_space - 2;
                     sprintf(temp_length, "%d", index);
@@ -2026,7 +2047,7 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(char *file_var_name,char *se
             changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name,"__temp_if_space__",__temp_if_space__);
             
         } else if (find(input_str, "elif ") == 0) {
-            printf("Find elif\n");
+           //// printf("Find elif\n");
             //sentence = substr(temp_for_sentence, find(temp_for_sentence, "elif ") + 5, (int) strlen(temp_for_sentence) - 1);
             //int length_of_temp = (int) strlen("not ( ") + 1 + (int) strlen(" ) and (  )")+(int) strlen(last_if_sentence)+(int) strlen(sentence);
             //char *temp_for_sentence2 = malloc(sizeof (char) *length_of_temp);
@@ -2046,7 +2067,7 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(char *file_var_name,char *se
             char *__temp_if_space__=getValueFromValueName(file_var_name,"__temp_if_space__");
             for(i=0;i<length;i++){
                 int number=atoi(valueOfListAtIndex(__temp_if_space__,i));
-                printf("number is %d\n",number);
+               //// printf("number is %d\n",number);
                 if(number==current_space){
                     index=i;
                     break;
@@ -2090,7 +2111,7 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(char *file_var_name,char *se
             changeTheOneVarValueFromItsInitialOneFromFileForList(file_var_name, var_name_str, sentence);
             //}
             if(has_run_if==TRUE){
-                printf("********* HAS RUN IF **********");
+               //// printf("********* HAS RUN IF **********");
                 can_run=FALSE;
             } else if (can_run==TRUE){
                 int length_of_has_run_if__=valueNumOfList(__has_run_if__);
@@ -2108,7 +2129,7 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(char *file_var_name,char *se
         
         
         else if (find(input_str, "else") == 0) {
-            printf("Find else\n");
+           //// printf("Find else\n");
             
             char *__temp_if__=getValueFromValueName(file_var_name,"__temp_if__");
             int length=valueNumOfList(__temp_if__);
@@ -2121,10 +2142,10 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(char *file_var_name,char *se
             char *__temp_if_space__=getValueFromValueName(file_var_name,"__temp_if_space__");
             for(i=0;i<length;i++){
                 int number=atoi(valueOfListAtIndex(__temp_if_space__,i));
-                printf("number is %d\n",number);
-                printf("current space is %d\n",current_space);
+               //// printf("number is %d\n",number);
+               //// printf("current space is %d\n",current_space);
                 if(number==current_space){
-                    printf("number is %d, current_space is %d\n",number,current_space);
+                   //// printf("number is %d, current_space is %d\n",number,current_space);
                     index=i;
                     break;
                 }
@@ -2139,11 +2160,11 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(char *file_var_name,char *se
             last_if_sentence=valueOfListAtIndexString(__temp_if__,index_str);
             bool has_run_if=atoi(valueOfListAtIndexString(__has_run_if__,index_str));
             
-            printf("last is sentence is %s\n", last_if_sentence);
+           //// printf("last is sentence is %s\n", last_if_sentence);
 
             //if(strcmp("None",last_if_sentence)!=0){
             can_run = Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(last_if_sentence, file_var_name);
-            printf("can_run is %d\n", can_run);
+           //// printf("can_run is %d\n", can_run);
             if (can_run == 1)
                 can_run = 0;
             else
@@ -2154,7 +2175,7 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(char *file_var_name,char *se
             last_if_sentence = "\"None\"";
             
             //Delete the final __temp_if__ in file
-            printf("index str is %s\n",index_str);
+           //// printf("index str is %s\n",index_str);
             __temp_if__=listRemoveOneElementAtOneIndex(__temp_if__,index_str);
             changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name,"__temp_if__",__temp_if__);
             
@@ -2164,23 +2185,23 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(char *file_var_name,char *se
             __has_run_if__=listRemoveOneElementAtOneIndex(__has_run_if__,index_str);
             changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name,"__has_run_if__",__has_run_if__);
             if(has_run_if==TRUE){
-                printf("********* HAS RUN IF **********");
+               //// printf("********* HAS RUN IF **********");
                 can_run=FALSE;
             }
                 
             
         }
-        printf("Enter here\n");
-        printf("Sentence is |%s|\nLength is %d\n", sentence, (int) strlen(sentence));
+       //// printf("Enter here\n");
+       //// printf("Sentence is |%s|\nLength is %d\n", sentence, (int) strlen(sentence));
         //bool can_run = Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(sentence, file_name);
         if (can_run) {
             now_run_if = TRUE;
-            printf("\n\n\n\n\n\n!!!!!Can Run!!!!!\n");
+           //// printf("\n\n\n\n\n\n!!!!!Can Run!!!!!\n");
             space = space + 4;
             //last_if_sentence=sentence;
         } else {
             now_run_if = FALSE;
-            printf("\n\n\n\n\n\n!!!!!! Can not run !!!!!!\n");
+           //// printf("\n\n\n\n\n\n!!!!!! Can not run !!!!!!\n");
             
         }
     }//#################### While Sentence ##################################
@@ -2192,11 +2213,11 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(char *file_var_name,char *se
 
         bool can_run_while = Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(last_while_sentence, file_var_name);
         if (can_run_while == FALSE) {
-            printf("Can Not Run While");
+           //// printf("Can Not Run While");
             now_writting_while = FALSE;
             last_while_sentence = "None";
         } else {
-            printf("Can Run While\n");
+           //// printf("Can Run While\n");
             now_writting_while = TRUE;
             space_of_first_while_sentence = space;
             space = space + 4;
@@ -2215,7 +2236,7 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(char *file_var_name,char *se
         }
     }        //#################### For Sentence #####################################
     else if (find(input_str, "for ") == 0) {// && removeBackSpace(input_str)[(int) strlen(removeBackSpace(input_str)) - 1] == ':') {
-        printf("#### Find For ####\n");
+       //// printf("#### Find For ####\n");
         temp_i = substr(input_str, find(input_str, "for ") + 4, find(input_str, " in"));
         temp_i = removeAheadSpace(removeBackSpace(temp_i));
         char *in_what = substr(input_str, find(input_str, " in ") + 4, (int) strlen(removeBackSpace(input_str)) - 1);
@@ -2226,7 +2247,7 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(char *file_var_name,char *se
         //temp_i_in_for_sentence=getValueFromValueName(file_name,in_what);
         temp_i_in_for_sentence = in_what;
         if (strcmp(variableValueType(temp_i_in_for_sentence), "string") == 0) {
-            printf("It is string\n");
+           //// printf("It is string\n");
             temp_i_in_for_sentence = changeStringToList(temp_i_in_for_sentence);
         }
         //printf("i is |%s|\n", temp_i_in_for_sentence);
@@ -2242,7 +2263,7 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(char *file_var_name,char *se
             //printf("####$$$$$ %s\n",temp_for_var_value);
             changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name,"__temp_for__",temp_for_var_value);
             
-            printf("@@@@@@@@@@@@HERE\n");
+           //// printf("@@@@@@@@@@@@HERE\n");
             
             char *__temp_i__=getValueFromValueName(file_var_name,"__temp_i__");
             __temp_i__=listAppendOneElement(__temp_i__,temp_i);
@@ -2256,7 +2277,7 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(char *file_var_name,char *se
     
     
 //#################### Set Settigns ################################
-    printf("#### Set Settings ####\n\n\n");
+   //// printf("#### Set Settings ####\n\n\n");
     char temp2[100];
     sprintf(temp2, "%d", space);
     changeTheVarValueFromItsInitialOneFromFile(setting_file, "space", (char*) temp2, "int");

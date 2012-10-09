@@ -6,7 +6,7 @@
  */
 #include "walley_agent.h"
 void Walley_Run(char *input_str){
-    printf("#### Walley Run ####\n");
+   //// printf("#### Walley Run ####\n");
     char *file_name = "__walley__.wy";
     char *setting_file = "__walley_settings__.wy";
     char *temp_file_name="__walley_file__.wy";
@@ -15,7 +15,7 @@ void Walley_Run(char *input_str){
     Walley_Run_Fourth_Generation(file_name,setting_file,temp_file_name,existing_file,input_str);
 }
 void Walley_Agent_Run(char *input_str){
-    printf("#### Walley_Agent_Run ####\n");
+   //// printf("#### Walley_Agent_Run ####\n");
     //char *brain_path="/Users/shd101wyy/Documents/workspace/xcode/Walley/Walley/";
     char *brain_path=toCString(getValueFromValueName("__walley_path__.wy", "__walley_path__"));
     char *walley_language_file=append(brain_path, "__walley_language__.wy");
@@ -77,7 +77,7 @@ void Walley_Run_File(char *file_name){
             if(stringIsEmpty(arr) || strcmp("",removeAheadSpace(removeBackSpace(arr)))==0 ||(int)strlen(arr)==0)
                 continue;
             else{
-                printf("arr----> |%s|\n");
+               //// printf("arr----> |%s|\n");
                 //strcat(output,arr);
                 if((int)strlen(arr)==0)
                     continue;
@@ -99,7 +99,7 @@ void Walley_Run_File(char *file_name){
                 
                 //Walley_Run(temp_str);
                 //if(stringIsEmpty(temp_str)==FALSE)
-                printf("temp_str---->|%s|\n",temp_str);
+               //// printf("temp_str---->|%s|\n",temp_str);
                 //Walley_Run_Third_Generation("__walley__.wy","__walley_settings__.wy","__walley_file__.wy",file_name,temp_str);
                 Walley_Run_Fourth_Generation("__walley__.wy","__walley_settings__.wy","__walley_file__.wy",file_name,temp_str);
             }
@@ -124,14 +124,14 @@ void Walley_Agent_Run_File(char *file_name) {
 
     file_name = removeBackSpace(file_name);
     if (strcmp("wy", substr(file_name, (int) strlen(file_name) - 2, (int) strlen(file_name))) == 0) {
-        printf("#### Walley_Run_File ####\n");
+       //// printf("#### Walley_Run_File ####\n");
         Walley_Run_File(file_name);
     }
     else if (strcmp("wi", substr(file_name, (int) strlen(file_name) - 2, (int) strlen(file_name))) != 0) {
         printf("File format wrong\n");
         exit(1);
     } else {
-        printf("#### Walley_Agent_Run_File ####\n");
+       //// printf("#### Walley_Agent_Run_File ####\n");
         FILE *fp = fopen(file_name, "r");
         if (fp == NULL) {
             printf("Failed to initialize\n");
@@ -201,7 +201,7 @@ void Walley_Agent_Run_File(char *file_name) {
 }
 
 void Walley_Agent_Recall(char *file_name) {
-    printf("#### Walley_Agent_Recall ####\n");
+   //// printf("#### Walley_Agent_Recall ####\n");
     //char *brain_path="/Users/shd101wyy/Documents/workspace/xcode/Walley/Walley/";
     char *brain_path=toCString(getValueFromValueName("__walley_path__.wy", "__walley_path__"));
     char *walley_language_file=append(brain_path, "__walley_language__.wy");
@@ -210,7 +210,7 @@ void Walley_Agent_Recall(char *file_name) {
 
     file_name = removeBackSpace(file_name);
     if (strcmp("wy", substr(file_name, (int) strlen(file_name) - 2, (int) strlen(file_name))) == 0 || strcmp("wi", substr(file_name, (int) strlen(file_name) - 2, (int) strlen(file_name))) == 0) {
-        printf("#### Walley_Agent_Run_File ####\n");
+       //// printf("#### Walley_Agent_Run_File ####\n");
         FILE *fp = fopen(file_name, "r");
         if (fp == NULL) {
             printf("Failed to initialize\n");

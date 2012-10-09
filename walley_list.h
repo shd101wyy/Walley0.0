@@ -147,8 +147,8 @@ char *valueOfListAtIndexString(char *list,char *index_str){
 //#################### valueOfListAtIndexStringAndReturnBeginAndEnd("[1,[2],3,4]","[1][0]")---->4
 void valueOfListAtIndexStringAndReturnBeginAndEnd(int begin_end[],char *list,char *index_str){
     //printf("1");
-    printf("#### valueOfListAtIndexStringAndReturnBeginAndEnd ####\n");
-    printf("list %s\n,index_str %s\n",list,index_str);
+   //// printf("#### valueOfListAtIndexStringAndReturnBeginAndEnd ####\n");
+   //// printf("list %s\n,index_str %s\n",list,index_str);
     //begin_end[0]=0;
     //begin_end[1]=0;
     
@@ -176,7 +176,7 @@ void valueOfListAtIndexStringAndReturnBeginAndEnd(int begin_end[],char *list,cha
                    [1,[2,3],3]--->,1,[2,3],3*/
     
     list=temp;
-    printf("list is %s\nIndex is %d\n",list,index);
+   //// printf("list is %s\nIndex is %d\n",list,index);
     
     int num_of_comma=count_str(list,",");
     //printf("comma is %d\n",num_of_comma);
@@ -229,7 +229,7 @@ void valueOfListAtIndexStringAndReturnBeginAndEnd(int begin_end[],char *list,cha
             //printf("end is |%d|\n",end);
             
             if(end == -1){
-                printf("end!=-1");
+               //// printf("end!=-1");
                 end=(int)strlen(list);
                 break;
             } 
@@ -256,12 +256,12 @@ void valueOfListAtIndexStringAndReturnBeginAndEnd(int begin_end[],char *list,cha
             char *temp_temp=substr(index_str,find(index_str,"]")+1,(int)strlen(index_str));
             //printf("After change, it is %s\n",temp_temp);
             //printf("output is %s, index_str is %s",output,temp_temp);
-            printf("Find another list\n");
-            printf("%%%%begin %d, end %d\n",begin_end[0],begin_end[1]);
+           //// printf("Find another list\n");
+           //// printf("%%%%begin %d, end %d\n",begin_end[0],begin_end[1]);
             valueOfListAtIndexStringAndReturnBeginAndEnd(begin_end,output,temp_temp);         
         }
     }
-    printf("%%%%begin %d, end %d\n",begin_end[0],begin_end[1]);
+   //// printf("%%%%begin %d, end %d\n",begin_end[0],begin_end[1]);
 }
 
 
@@ -378,7 +378,7 @@ a[1][1]:2:int:
 #~End:a:
 */
 char *formatStringForListInOrderToWtiteFile(char *var_name,char *var_value){
-    printf("#### formatStringForListInOrderToWtiteFile ####\n");
+   //// printf("#### formatStringForListInOrderToWtiteFile ####\n");
     char input_message[100000] = "";
     //strcat(input_message, "\n");
     strcat(input_message, var_name);
@@ -462,7 +462,7 @@ char *formatStringForListInOrderToWtiteFile(char *var_name,char *var_value){
         output[a]=input_message[a];
     }
     //return input_message;
-    printf("#### FINISH formatStringForListInOrderToWtiteFile ####\n");
+   //// printf("#### FINISH formatStringForListInOrderToWtiteFile ####\n");
     return output;
 }
 
@@ -483,8 +483,8 @@ void writeVarNameAndVarValueIntoAppointedFileForList(char *file_name,char *var_n
 //########## Use this function only when the same var name list exits ########
 /*This function will change the whole value of the list*/
 void changeTheWholeVarValueFromItsInitialOneFromFileForList(char *file_name, char *var_name, char *var_value){
-    printf("#### changeTheWholeVarValueFromItsInitialOneFromFileForList ####\n");
-    printf("#### %s, %s, %s ####\n",file_name,var_name,var_value);
+   //// printf("#### changeTheWholeVarValueFromItsInitialOneFromFileForList ####\n");
+   //// printf("#### %s, %s, %s ####\n",file_name,var_name,var_value);
     FILE *fp;
     char ch;
     char arr[1000]="";
@@ -556,7 +556,7 @@ void changeTheWholeVarValueFromItsInitialOneFromFileForList(char *file_name, cha
  * will change the value of a[0]
  */
 void changeTheOneVarValueFromItsInitialOneFromFileForList(char *file_name, char *change_var_name, char *to_var_value){
-    printf("###### changeTheOneVarValueFromItsInitialOneFromFileForList ######\n");
+   //// printf("###### changeTheOneVarValueFromItsInitialOneFromFileForList ######\n");
     change_var_name=removeBackSpace(change_var_name);
     change_var_name=removeAheadSpace(change_var_name);
     char *var_name=substr(change_var_name,0,find_not_in_string(change_var_name,"["));
@@ -584,8 +584,8 @@ void changeTheOneVarValueFromItsInitialOneFromFileForList(char *file_name, char 
         }        
         char *var_name_in_file = substr(arr, 0, find_not_in_string(arr, ":"));
         if(strcmp(var_name_in_file, var_name) == 0){
-            printf("#######Find Var Name\n------%s------\n",arr);
-            printf("arr %s\n",arr);
+           //// printf("#######Find Var Name\n------%s------\n",arr);
+           //// printf("arr %s\n",arr);
             var_value=malloc(sizeof(char)*((int)strlen(substr(arr,find(arr,":")+1,find_from_index_not_in_string(arr,":",find(arr,":")+1)))));
             strcat(var_value,substr(arr,find_not_in_string(arr,":")+1,find_from_index_not_in_string(arr,":",find(arr,":")+1)));
             //var_value=substr(arr,find(arr,":")+1,find_from_index(arr,":",find(arr,":")+1));
@@ -601,11 +601,11 @@ void changeTheOneVarValueFromItsInitialOneFromFileForList(char *file_name, char 
     int begin_end[2];
     begin_end[0]=0;
     begin_end[1]=0;
-    printf("var value is %s\nindex is %s\nto_var_value is %s\n",var_value,index,to_var_value);
+   //// printf("var value is %s\nindex is %s\nto_var_value is %s\n",var_value,index,to_var_value);
     valueOfListAtIndexStringAndReturnBeginAndEnd(begin_end,var_value,index);
     int begin=begin_end[0];
     int end=begin_end[1];
-    printf("begin is %d\nend is %d\n",begin,end);
+   //// printf("begin is %d\nend is %d\n",begin,end);
     char *change_change=malloc(sizeof(char)*((int)strlen(var_value)-(int)strlen(original_value)+(int)strlen(to_var_value)));
     //if(begin!=1)
     //    strcat(change_change,substr(var_value,0,begin-1));
@@ -613,10 +613,10 @@ void changeTheOneVarValueFromItsInitialOneFromFileForList(char *file_name, char 
     //    strcat(change_change,"[");
     //strcat(change_change,to_var_value);
     //strcat(change_change,substr(var_value,end,(int)strlen(var_value)));
-    printf("Before change_change var_value is %s, original_value is %s, to_var_value is %s\n",var_value,original_value,to_var_value);
-    printf("begin is %d, end+1 is %d\n",begin,end+1);
+   //// printf("Before change_change var_value is %s, original_value is %s, to_var_value is %s\n",var_value,original_value,to_var_value);
+   //// printf("begin is %d, end+1 is %d\n",begin,end+1);
     change_change=replace_from_index_to_index(var_value,original_value,to_var_value,begin,end+1);
-    printf("change change is %s\n",change_change);
+   //// printf("change change is %s\n",change_change);
     changeTheWholeVarValueFromItsInitialOneFromFileForList(file_name, var_name, change_change);
 
 }
@@ -691,7 +691,7 @@ char *changeStringToList(char *input_str){
  * ListAppendOneElement("[1,2,3]","[3,4]"------>[1,2,3,[3,4]]
  */
 char *listAppendOneElement(char *list, char *append_element){
-    printf("#### listAppendOneElement ####\n");
+   //// printf("#### listAppendOneElement ####\n");
     list=removeAheadSpace(removeBackSpace(list));
     list=substr(list,0,(int)strlen(list)-1);//[1,2]---->[1,2
     char *output=malloc(sizeof(char)*((int)strlen(list)+1+(int)strlen(append_element)+1));
@@ -708,10 +708,10 @@ char *listAppendOneElement(char *list, char *append_element){
  */
 
 char *listRemoveOneElementAtOneIndex(char *list, char *index){
-    printf("List is %s, index is %s",list,index);
+   //// printf("List is %s, index is %s",list,index);
     list=removeAheadSpace(removeBackSpace(list));
     char *replace_str=valueOfListAtIndexString(list,index);
-    printf("replace_str is %s\n",replace_str);
+   //// printf("replace_str is %s\n",replace_str);
     //list[0]=',';   //[1,2,3]----->,1,2,3]
     //char *replace_str=malloc(sizeof(char)*((int)strlen(replace)+1));
     //strcat(replace_str,",");
@@ -720,30 +720,30 @@ char *listRemoveOneElementAtOneIndex(char *list, char *index){
     int begin_end[2];
     begin_end[0]=0;
     begin_end[1]=0;
-    printf("Enter here\n");
+   //// printf("Enter here\n");
     valueOfListAtIndexStringAndReturnBeginAndEnd(begin_end,list,index);
     
-    printf("Before change, list is |%s|,replace_str is |%s|, begin %d end %d length %d\n",list,replace_str,begin_end[0],begin_end[1],(int)strlen(list));
-    printf("%c",list[begin_end[1]]);
+   //// printf("Before change, list is |%s|,replace_str is |%s|, begin %d end %d length %d\n",list,replace_str,begin_end[0],begin_end[1],(int)strlen(list));
+   //// printf("%c",list[begin_end[1]]);
     //list = replace_from_index_to_index(list,replace_str,"",begin_end[0],begin_end[1]+1);
     char *output;
     output=replace_from_index_to_index(list,replace_str,"",begin_end[0],begin_end[1]);
     free(list);
     if(find_not_in_string(output,",,")!=-1){
-        printf("Find ,,\n");
+       //// printf("Find ,,\n");
         output = replace_not_in_string(output,",,",",");
     }
     if(find_not_in_string(output,",]")!=-1){
-        printf("Find ,]\n");
+       //// printf("Find ,]\n");
         output= replace_not_in_string(output,",]","]");
     } 
     
     if(find_not_in_string(output,"[,")!=-1){
-        printf("Find [,\n");
+       //// printf("Find [,\n");
         output= replace_not_in_string(output,"[,","[");
     } 
     
-    printf("Return list is %s\n",output);
+   //// printf("Return list is %s\n",output);
     return output; 
 }
 /*

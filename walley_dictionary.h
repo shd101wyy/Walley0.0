@@ -50,8 +50,8 @@ a.key()=["hello","hi"];
  * eg valueAtKey("{'Hello':11,'Hi':2}","'Hello'")---->11
  */
 char* valueAtKey(char *dictionary, char *key){
-    printf("#### valueAtKey ####\n");
-    printf("%s, %s\n",dictionary,key);
+   //// printf("#### valueAtKey ####\n");
+   //// printf("%s, %s\n",dictionary,key);
     if(find(dictionary,key)==-1|| find(dictionary,"{")==-1 || find(dictionary,"}")==-1){
         printf("Mistake occurred while calling function valueAtKey\nkey %s did not find in dictionary %s\n",key,dictionary);
         exit(1);
@@ -74,7 +74,7 @@ char* valueAtKey(char *dictionary, char *key){
 char *keyOfDictionaryAsList(char *dictionary){
     if(strcmp(dictionary,"{}")==0)
         return "[]";
-    printf("#### keyOfDictionaryAsList ####\ninput |%s|\n",dictionary);
+   //// printf("#### keyOfDictionaryAsList ####\ninput |%s|\n",dictionary);
     if(find(dictionary,"{")==-1 || find(dictionary,"}")==-1){
         printf("Mistake occurred while calling function keyOfDictionaryAsList\ndictionary %s mistake\n",dictionary);
         exit(1);
@@ -113,7 +113,7 @@ char *keyOfDictionaryAsList(char *dictionary){
     output2[(int)strlen(output)-1]=']';
     output2[(int)strlen(output)]=0;
     
-    printf("\n##########------- %s\n",output2);
+   //// printf("\n##########------- %s\n",output2);
     return output2;
 }
 /*
@@ -133,8 +133,8 @@ int numOfDictionaryKey(char *dictionary){
  * 
  */
 char *valueOfDictionaryAtKeyString(char *dict,char *key_str){
-    printf("#### valueOfDictionaryAtKeyString ####\n");
-    printf("dict |%s|\n, key_str |%s|\n",dict,key_str);
+   //// printf("#### valueOfDictionaryAtKeyString ####\n");
+   //// printf("dict |%s|\n, key_str |%s|\n",dict,key_str);
     dict=removeAheadSpace(removeBackSpace(dict));
     if(find(dict,"{")==-1 || find(dict,"}")==-1){
         printf("Mistake occurred while calling function valueOfDictionaryAtKeyString\nInput %s is not a dict\n",dict);
@@ -192,7 +192,7 @@ char *dictionaryAddKeyAndValue(char *dictionary, char *key, char *value){
  * eg dictionaryAddKeyAndValueInStringOrChangeOriginalValueByKey("{a:1}","{a}","13")---->"{a:13}"
  */
 char *dictionaryAddKeyAndValueInStringOrChangeOriginalValueByKey(char *dictionary, char *key, char *value){
-    printf("#### dictionaryAddKeyAndValueInStringOrChangeOriginalValueByKey ####\n");
+   //// printf("#### dictionaryAddKeyAndValueInStringOrChangeOriginalValueByKey ####\n");
     //printf("## Dictionary %s\n#### key %s\n#### value %s\n",dictionary,key,value);
     int length=(int)strlen(dictionary);
     char *temp=malloc(sizeof(char)*(length+4));    
@@ -336,7 +336,7 @@ dic{b}{d}:2:int:
  */
 
 char *formatStringForDictionaryInOrderToWtiteFile(char *var_name,char *var_value){
-    printf("#### formatStringForDictionaryInOrderToWtiteFile ####\n");
+   //// printf("#### formatStringForDictionaryInOrderToWtiteFile ####\n");
     //printf("var value is %s\n",var_value);
     char input_message[10000] = "";
     //strcat(input_message, "\n");
@@ -401,7 +401,7 @@ char *formatStringForDictionaryInOrderToWtiteFile(char *var_name,char *var_value
 
 //######### Write dictionary to File using an appointed format.
 void writeVarNameAndVarValueIntoAppointedFileForDictionary(char *file_name,char *var_name,char *var_value) {
-    printf("#### writeVarNameAndVarValueIntoAppointedFileForDictionary ####\n");
+   //// printf("#### writeVarNameAndVarValueIntoAppointedFileForDictionary ####\n");
     char *str_in_wy = getStringFromFile(file_name);
     //printf("###########str_int_wy is %s###########\n",str_in_wy);
     FILE *fp = fopen(file_name, "w");
@@ -429,14 +429,14 @@ void writeVarNameAndVarValueIntoAppointedFileForDictionary(char *file_name,char 
     }
     fclose(fp);
     //free(fp);
-    printf("### Finish writeVarNameAndVarValueIntoAppointedFileForDictionary ###\n");
+   //// printf("### Finish writeVarNameAndVarValueIntoAppointedFileForDictionary ###\n");
 
 }
 
 //########## Use this function only when the same var name list exits ########
 /*This function will change the whole value of the dictionary*/
 void changeTheWholeVarValueFromItsInitialOneFromFileForDictionary(char *file_name, char *var_name, char *var_value){
-    printf("#### changeTheWholeVarValueFromItsInitialOneFromFileForDictionary ####\n");
+   //// printf("#### changeTheWholeVarValueFromItsInitialOneFromFileForDictionary ####\n");
     //printf("file_name %s, var_name %s, var_value %s\n",file_name,var_name,var_value);
     FILE *fp;
     char ch;
@@ -501,8 +501,8 @@ void changeTheWholeVarValueFromItsInitialOneFromFileForDictionary(char *file_nam
  * eg changeTheOneVarValueFromItsInitialOneFromFileOrAddVarNameAndValueForDictionary("__walley__.wy","a{'hi'}","12")
  */
 void changeTheOneVarValueFromItsInitialOneFromFileOrAddVarNameAndValueForDictionary(char *file_name, char *change_var_name, char *to_var_value){
-    printf("#### changeTheOneVarValueFromItsInitialOneFromFileOrAddVarNameAndValueForDictionary ####\n");
-    printf("#### %s, %s, %s\n",file_name,change_var_name,to_var_value);
+   //// printf("#### changeTheOneVarValueFromItsInitialOneFromFileOrAddVarNameAndValueForDictionary ####\n");
+   //// printf("#### %s, %s, %s\n",file_name,change_var_name,to_var_value);
     
     change_var_name=removeAheadSpace(removeBackSpace(change_var_name));
     char *whole_dictionary_name=substr(change_var_name,0,find(change_var_name,"{")); //a{'hi'}--->a
@@ -602,8 +602,8 @@ void changeTheOneVarValueFromItsInitialOneFromFileOrAddVarNameAndValueForDiction
         }**/
     
     
-    printf("####^^^^ Dict |%s|",whole_value_of_dictionary);
-    printf("whole_dictionary_name is %s\n",whole_dictionary_name);
+   //// printf("####^^^^ Dict |%s|",whole_value_of_dictionary);
+   //// printf("whole_dictionary_name is %s\n",whole_dictionary_name);
     changeTheWholeVarValueFromItsInitialOneFromFileForDictionary(file_name, whole_dictionary_name, whole_value_of_dictionary);
 }
 

@@ -88,7 +88,7 @@ char *to_num(char *input_str){
 }
 
 char *to_nstr(char *input_str){
-    printf("#### to_nstr ####\n");
+   //// printf("#### to_nstr ####\n");
     if (strcmp("string", variableValueType(input_str)) == 0) {
         return toCString(input_str);
     }
@@ -208,7 +208,7 @@ char *var_input(char *input_str) {
     }
     else{
         input_str=toCString(input_str);
-        printf("%s",input_str);
+       //// printf("%s",input_str);
         char *output = malloc(sizeof (char) *(100));
         gets(output);
         return output;
@@ -234,7 +234,7 @@ char *var_value_type(char *input_str){
  * eg string_find("Hello","H")----->0
  */
 char *string_find(char *user,char* find_str){
-    printf("#### x.find('hi') ####\n");
+   //// printf("#### x.find('hi') ####\n");
     user=substr(user,1,(int)strlen(user)-1);
     if(strcmp(variableValueType(find_str),"string")==0)
         find_str=substr(find_str,1,(int)strlen(find_str)-1);
@@ -252,7 +252,7 @@ char *string_find(char *user,char* find_str){
  * eg string_find_from_index("'Hello'","'l',2")
  */
 char *string_find_from_index(char *user, char *func_param){
-    printf("#### eg x.find('hi',2) ####\n");
+   //// printf("#### eg x.find('hi',2) ####\n");
     user=substr(user,1,(int)strlen(user)-1);
     char *find_str=substr(func_param,0,find_not_in_string(func_param,","));
     find_str=removeAheadSpace(removeBackSpace(find_str));
@@ -262,7 +262,7 @@ char *string_find_from_index(char *user, char *func_param){
     int from=atoi(from_index);
     
     int index=find_from_index(user,find_str,from);
-    printf("User is %s, find_str is %s, from %d\n",user,find_str,from);
+   //// printf("User is %s, find_str is %s, from %d\n",user,find_str,from);
         char temp[100];
     sprintf(temp,"%d",index);
     char *output=malloc(sizeof(char)*(int)strlen(temp));
@@ -276,7 +276,7 @@ char *string_find_from_index(char *user, char *func_param){
  * eg string_replace("'Hello'","llo","a")---->Hao
  */
 char *string_replace(char *user, char *func_param){
-    printf("#### eg x.replace('hi','i') ####\n");
+   //// printf("#### eg x.replace('hi','i') ####\n");
     user=substr(user,1,(int)strlen(user)-1);
     char *replace_str=substr(func_param,0,find_not_in_string(func_param,","));
     replace_str=removeAheadSpace(removeBackSpace(replace_str));
@@ -284,9 +284,9 @@ char *string_replace(char *user, char *func_param){
     char *to_str=substr(func_param,find_not_in_string(func_param,",")+1,(int)strlen(func_param));
     to_str=removeAheadSpace(removeBackSpace(to_str));
     to_str=substr(to_str,1,(int)strlen(to_str)-1);
-    printf("user %s, replace str %s, to_str %s\n",user,replace_str, to_str);
+   //// printf("user %s, replace str %s, to_str %s\n",user,replace_str, to_str);
     char *output=replace(user,replace_str,to_str);  
-    printf("-------> output is %s\n",output);
+   //// printf("-------> output is %s\n",output);
     char *output2=malloc(sizeof(char)*((int)strlen(output)+2));
     strcat(output2,"'");
     strcat(output2,output);
@@ -315,8 +315,8 @@ char *string_count_str(char *user, char *func_param){
  * string_length("Hello")
  */
 char *string_length(char *user){
-    printf("#### string_length ####\n");
-    printf("### input_str %s ###\n",user);
+   //// printf("#### string_length ####\n");
+   //// printf("### input_str %s ###\n",user);
     user=toCString(user);
     int length=(int)strlen(user);
     //length=length-2; // delete '' and ""
@@ -327,7 +327,7 @@ char *string_length(char *user){
     for(i=0;i<(int)strlen(temp);i++){
         output[i]=temp[i];
     }
-    printf("output %s\n",output);
+   //// printf("output %s\n",output);
     return output;
 }
 
@@ -360,7 +360,7 @@ char *string_toupper(char *user){
 }
 
 char *string_tolower(char *user){
-    printf("#### string_tolower ####\n---->%s\n",user);
+   //// printf("#### string_tolower ####\n---->%s\n",user);
     user=toCString(user);
     user=stringToLowerCase(user);
     return toString(user);
@@ -466,9 +466,9 @@ char *string_split(char *user, char *func_param){
  * list_append("[1,2,3]","4"]
  */
 char *list_append(char *user, char *func_param){
-    printf("#### list_append #### x.append(4) ####\n");
+   //// printf("#### list_append #### x.append(4) ####\n");
     char *output=listAppendOneElement(user,func_param);
-    printf("#### list is |%s| ####\n",output);
+   //// printf("#### list is |%s| ####\n",output);
     return output;
 }
 /*
@@ -477,7 +477,7 @@ char *list_append(char *user, char *func_param){
  * list_remove_at_index("[1,2,3]","[0]")------->[2,3]
  */
 char *list_remove_at_index(char *user, char *func_param){
-    printf("#### list_remove_at_index #### x.remove_at_index([0])\n");
+   //// printf("#### list_remove_at_index #### x.remove_at_index([0])\n");
     return listRemoveOneElementAtOneIndex(user,func_param);
 }
 /*
@@ -541,7 +541,7 @@ char *dict_key(char *user){
 //################## Function for File Operation ###########################
 // file_readline("'math.wy'") and return list form of string
 char *file_readlines(char *walley_file_name){
-    printf("#### FILE_READLINES ####\n");
+   //// printf("#### FILE_READLINES ####\n");
     walley_file_name=toCString(walley_file_name);
     //printf("#### file_readlines ####\n");
     FILE *fp=fopen(walley_file_name,"r");
@@ -595,15 +595,15 @@ char *file_readlines(char *walley_file_name){
         fclose(fp);
         //output2=substr(output2,0,length);
         //printf("OUTPUT2 %s\n",output2);
-        printf("|%s|\n",output);
+       //// printf("|%s|\n",output);
         //return output2;
         return output;
     }
 }
 // file_writelines("'walley.wy','str to file'")
 char *file_writelines(char *file_name,char *lines){
-    printf("#### file_writelines ####\n");
-    printf("-- %s -- %s --\n",file_name,lines);
+   //// printf("#### file_writelines ####\n");
+   //// printf("-- %s -- %s --\n",file_name,lines);
     //printf("parameters is %s\n",params);
     //params=trim(params);
     //char *file_name=substr(params,0,find_not_in_string(params,","));
@@ -630,7 +630,7 @@ char *file_removefile(char *file_name){
 }
 
 char *file_createfile(char *file_name){
-    printf("#### file_createfile ####\n");
+   //// printf("#### file_createfile ####\n");
     file_name=trim(file_name);
     file_name=toCString(file_name);
     FILE *fp=fopen(file_name,"w");
@@ -653,8 +653,8 @@ char *Walley_Run_Special_Function(char *function, char *file_var_name) {
      */
     char *return_value;
 
-    printf("Begin to run special function like x=[1,2,3]  x.append(12)\n");
-    printf("---->Function %s\n---->file_var_name %s\n",function,file_var_name);
+   //// printf("Begin to run special function like x=[1,2,3]  x.append(12)\n");
+   //// printf("---->Function %s\n---->file_var_name %s\n",function,file_var_name);
     // eg x="Hello"  x.find("Hi")
     char *user = substr(function, 0, find_not_in_str_list_dict_parenthesis(function, ".")); //------> x
     char *user_function = substr(function, find_not_in_str_list_dict_parenthesis(function, ".") + 1, (int) strlen(function)); // -------->find("Hi")
@@ -666,7 +666,7 @@ char *Walley_Run_Special_Function(char *function, char *file_var_name) {
     }
     char *user_function_parameter = substr(user_function, find(user_function, "(") + 1, (int) strlen(removeBackSpace(user_function)) - 1); // ----->"Hi"  which is inside parenthesis
     int num_of_params = numOfParameters(user_function_parameter);
-    printf("user---->%s\nuser_function---->%s\nuser_value---->%s\nuser_function_parameter %s\n---->num_of_param %d\n",user,user_function,user_value,user_function_parameter,num_of_params);
+   //// printf("user---->%s\nuser_function---->%s\nuser_value---->%s\nuser_function_parameter %s\n---->num_of_param %d\n",user,user_function,user_value,user_function_parameter,num_of_params);
     // Special function for String
     if (strcmp("string", variableValueType(user_value)) == 0) {
         if (find(user_function, "find(") == 0) {
@@ -681,7 +681,7 @@ char *Walley_Run_Special_Function(char *function, char *file_var_name) {
         } else if (find(user_function, "split(") == 0) {
             return_value = string_split(user_value, user_function_parameter);
         } else if (find(user_function,"length(")==0){
-            printf("****** %s\n",user_value);
+           //// printf("****** %s\n",user_value);
             return_value=string_length(user_value);
         } else if (find(user_function,"trim(")==0){
             return_value=string_trim(user_value);
@@ -704,10 +704,10 @@ char *Walley_Run_Special_Function(char *function, char *file_var_name) {
     }        // Special function for list
     else if (strcmp("list", variableValueType(user_value)) == 0) {
         if (find(user_function, "append(") == 0) {
-            printf("#### FIND APPEND\n");
+           //// printf("#### FIND APPEND\n");
             return_value = list_append(user_value, user_function_parameter);
             changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name, user, return_value);
-            printf("#### FINISH APPEND ####\n");
+           //// printf("#### FINISH APPEND ####\n");
         } else if (find(user_function, "remove_at_index(") == 0) {
             return_value = list_remove_at_index(user_value, user_function_parameter);
             changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name, user, return_value);

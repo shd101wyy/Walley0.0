@@ -344,6 +344,7 @@ talk:
 write:
 print:
 prints:
+println:
 
 # Proverbs #
 in:

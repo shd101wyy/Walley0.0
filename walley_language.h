@@ -549,7 +549,7 @@ int Walley_Find_Similarity_Between_Two_Str(char *input_str, char *compare_to_str
  * Walley_Compare_Sentence_From_Memory("__walley_language__.wy","VAR IS VAR")----->"VAR = VAR"
  */
 char *Walley_Compare_Sentence_From_Memory(char *walley_language_file,char *input_str){
-    printf("#### Walley_Compare_Sentence_From_Memory ####\n");
+   //// printf("#### Walley_Compare_Sentence_From_Memory ####\n");
     FILE *fp=fopen(walley_language_file,"r");
     char arr[1000]="";
     if (fp == NULL) {
@@ -763,7 +763,7 @@ char *Walley_Analyze_Sentence_Manually(char *input_str) {
     output = substr(output, 0, (int) strlen(temp));
     output = trim(output);
     output = stringToUpperCase(output);
-    printf("output is %s\n",output);
+   //// printf("output is %s\n",output);
     return output;
 }
 
@@ -892,8 +892,8 @@ char *Walley_Analyze_Sentence_Manually_And_Return_Dictionary_For_Var(char *input
     output = substr(output, 0, (int) strlen(temp));
     output = trim(output);
     output = stringToUpperCase(output);
-    printf("output is %s\n",output);
-    printf("Dictionary is %s\n",dictionary);
+   //// printf("output is %s\n",output);
+   //// printf("Dictionary is %s\n",dictionary);
     
     
     return output;
@@ -1126,13 +1126,13 @@ char *getValueFromVarIndex(char *original_str, char *format_str, char *var_index
  * It will use __walley_language_verb__.wy to make verb unchange....
  */
 char *Walley_Analyze_Sentence_Automatically(char *file_var_name, char *walley_language_similarity_file, char *walley_language_verb_file, char *input_str) {
-    printf("#### Walley_Analyze_Sentence_Automatically ####\n");
+   //// printf("#### Walley_Analyze_Sentence_Automatically ####\n");
     input_str = trim(input_str);
     if (find_not_in_string(input_str, " the ")!=-1) {
         input_str=replace_not_in_string(input_str, " the ", " ");
     }
     input_str = cleanUpSentence(input_str);
-    printf("After clean up |%s|\n",input_str);
+   //// printf("After clean up |%s|\n",input_str);
     int num = numOfSmallSentences(input_str);
     int index = 0;
     char temp[10000] = "";
@@ -1158,7 +1158,7 @@ char *Walley_Analyze_Sentence_Automatically(char *file_var_name, char *walley_la
         //printf("similar %d\n",similarity);
         if (similarity_required == similarity) {
             similar = TRUE;
-            printf("Find Similar Sentence\n");
+           //// printf("Find Similar Sentence\n");
             break;
         }
 
@@ -1295,7 +1295,7 @@ void *Walley_Write_Language_To_Language_File(char *walley_language_file, char *t
     strcat(input,to_str);
     strcat(input,"|");
     input[(int)strlen(input)]=0;
-    printf("Input |%s|\n",input);
+   //// printf("Input |%s|\n",input);
     writeStringToFile(walley_language_file,input);
     cleanWalleyLanguageFile(walley_language_file);
 }
@@ -1305,8 +1305,8 @@ void *Walley_Write_Language_To_Language_File(char *walley_language_file, char *t
 // Translate print "hello world" to print("Hello World")
 
 char *Walley_Translate(char *walley_language_file, char *walley_language_similarity_file, char *walley_language_verb_file, char *file_var_name, char *input_str) {
-    printf("#### Walley_Translate ####\n");
-    printf("----> %s\n", input_str);
+   //// printf("#### Walley_Translate ####\n");
+   //// printf("----> %s\n", input_str);
     input_str = cleanUpSentence(input_str);
     
     if(stringIsEmpty(input_str)){
@@ -1315,11 +1315,14 @@ char *Walley_Translate(char *walley_language_file, char *walley_language_similar
     else if (removeAheadSpace(input_str)[0]=='#'){
         return input_str;
     }
+    else if (find_not_in_str_list_dict_parenthesis(input_str, "~#")!=-1){
+        return input_str;
+    }
     
     //printf("----> %s\n", input_str);
     int num_of_space_ahead=numOfSpaceAheadString(input_str);
     input_str = trim(input_str);
-    printf("----> %s\n", input_str);
+   //// printf("----> %s\n", input_str);
 
     if(find_not_in_string(input_str, " the ")!=-1)
         input_str=replace_not_in_string(input_str," the "," ");
@@ -1333,7 +1336,7 @@ char *Walley_Translate(char *walley_language_file, char *walley_language_similar
         strcmp("ELIF", temp_first_str)==0||
         strcmp("FOR", temp_first_str)==0||
         strcmp("WHILE",temp_first_str)==0) {
-        printf("It is if else elif for while sentence\n");
+       //// printf("It is if else elif for while sentence\n");
         char *output=append(temp_first_str," ");
         int i=1;
         int num_of_sentences=numOfSmallSentences(input_str);
@@ -1357,7 +1360,7 @@ char *Walley_Translate(char *walley_language_file, char *walley_language_similar
     char *format_string = Walley_Analyze_Sentence_Automatically(file_var_name,walley_language_similarity_file,walley_language_verb_file, input_str); //--> PRINT VAR
     char *change_to_string = Walley_Compare_Sentence_From_Memory(walley_language_file, format_string); //-->PRINT ( VAR )
 
-    printf("format_string %s\n", format_string);
+    ////printf("format_string %s\n", format_string);
 
     if (strcmp(change_to_string, "None") == 0) {
         printf("Sorry, I can not understand what you mean!\nYou can teach me.\n");
@@ -1629,6 +1632,7 @@ char *Walley_Translate(char *walley_language_file, char *walley_language_similar
         
         */
         //
+        ////printf("Come here\n");
         char *var_list=getVarIndexStringAsList(format_string);
         //printf("var_list is %s\n",var_list);
         int num_of_var=valueNumOfList(var_list);
@@ -1639,9 +1643,12 @@ char *Walley_Translate(char *walley_language_file, char *walley_language_similar
             //printf("VAR--------> |%s|\n",var);
             //printf("INPUT------> |%s|\n",input_str);
             char *value=getValueFromVarIndex(input_str,format_string,var);
+            ////printf("VALUE IS %s\n",value);
             int index_of_var=find_not_in_string(change_to_string,var);
             int to_index=index_of_var+(int)strlen(var);
             change_to_string=replace_from_index_to_index(change_to_string,var,value,index_of_var,to_index);
+            
+            ////printf("Change_to_string is %s\n",change_to_string);
             
             int index_of_value=find_not_in_string(input_str,value);
             int to_index2=index_of_value+(int)strlen(value);

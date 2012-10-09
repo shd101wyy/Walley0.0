@@ -80,19 +80,19 @@ char *classMother(char *input_str){
  * 
  */
 char *formatStringInClass(char *instance_name, char *string_in_class){
-    printf("#### formatStringInClass ####\n");
+   //// printf("#### formatStringInClass ####\n");
     if(string_in_class[0]=='"'|| string_in_class[0]=='\''){
         string_in_class=substr(string_in_class,1,(int)strlen(string_in_class)-1);
-        printf("''''''");
+       //// printf("''''''");
     }// "def ..."--->def ...
-    printf("|%s|\n\n",string_in_class);    
+   //// printf("|%s|\n\n",string_in_class);
     // instance is a  //a=hi()
     // then instance_dot="a."
     
     char temp[1000]="";
     strcat(temp,instance_name);
     strcat(temp,".");
-    printf("temp length %d\n",(int)strlen(temp));
+   //// printf("temp length %d\n",(int)strlen(temp));
     char *instance_dot=malloc(sizeof(char)*((int)strlen(temp)+1));
 
     int i=0;
@@ -104,10 +104,10 @@ char *formatStringInClass(char *instance_name, char *string_in_class){
 
     
     
-    printf("%s %d\n",instance_dot,(int)strlen(instance_dot));
+   //// printf("%s %d\n",instance_dot,(int)strlen(instance_dot));
     // change self.year=10 -----> a.year=10
     string_in_class=replace_not_in_string(string_in_class,"self.",instance_dot);
-    printf("|%s|\n\n",string_in_class);    
+   //// printf("|%s|\n\n",string_in_class);
     // change showMessage(self,input_str):------->a.showMessage(input_str):
     // change showMessage(self):------->a.showMessage():
     // so I need to find "def " and "(self"
@@ -116,18 +116,18 @@ char *formatStringInClass(char *instance_name, char *string_in_class){
     int right;
     char *temp_string_in_class=string_in_class;
     while(TRUE){
-        printf("---->|%s|\n",temp_string_in_class);
+       //// printf("---->|%s|\n",temp_string_in_class);
         define=find_from_index_not_in_string(string_in_class,"def ",define+1);  
         left=find_from_index(string_in_class,"(",define+4);   //find ( of def input():
         right=find_from_index_not_in_string(string_in_class,")",left);
         // Did not find 'def '
         if(define==-1)
             break;
-        printf("FIND DEFINE\n");
+       //// printf("FIND DEFINE\n");
         char *string_in_parenthesis;
         char *whole_function=substr(string_in_class,define,right+1); //get 'def hello(self,input)' without ':'
         char *func_name=functionName(whole_function); //               get hello
-        printf("###### func name is %s ####\n",func_name);
+       //// printf("###### func name is %s ####\n",func_name);
         if(left+1!=right){
             string_in_parenthesis=substr(string_in_class,left+1,right);//get self,input
             if(stringIsEmpty(string_in_parenthesis))
@@ -166,7 +166,7 @@ char *formatStringInClass(char *instance_name, char *string_in_class){
     int super_position=find_not_in_string(temp_string_in_class," super.");
     
     while(super_position!=-1){
-        printf("FIND Super.\n");
+       //// printf("FIND Super.\n");
         left=find_from_index_not_in_string(temp_string_in_class,"(",super_position+6);
         right = find_from_index_not_in_string(temp_string_in_class, ")", left);
         char *string_in_parenthesis; // = substr(string_in_class, left + 1, right);
@@ -180,10 +180,10 @@ char *formatStringInClass(char *instance_name, char *string_in_class){
         if (find_not_in_string(string_in_parenthesis, "self") != -1) {
             
             char *whole_function=substr(temp_string_in_class,super_position,right+1); //get ' super.init(self)'
-            printf("------ whole function is %s -------\n\n\n",whole_function);
+           //// printf("------ whole function is %s -------\n\n\n",whole_function);
             char *func_name=substr(temp_string_in_class,super_position,left);
             func_name=trim(func_name);
-            printf("------ func name is %s -------\n\n\n ",func_name);
+           //// printf("------ func name is %s -------\n\n\n ",func_name);
             string_in_parenthesis=replace_not_in_string(string_in_parenthesis,"self","");
             char *new_function_name = malloc(sizeof (char) *((int) strlen(func_name)+(int) strlen(instance_name) + 3));
             strcat(new_function_name, " ");
@@ -211,7 +211,7 @@ char *formatStringInClass(char *instance_name, char *string_in_class){
     
     
     string_in_class = temp_string_in_class;
-    printf("#### Finish formatClass ####\n#### output |%s| ####\n ",string_in_class);
+   //// printf("#### Finish formatClass ####\n#### output |%s| ####\n ",string_in_class);
     return string_in_class;
 }
 
@@ -253,7 +253,7 @@ bool checkWhetherSameInstanceExisted(char *file_name, char *instance_name){
 
 char *formatStringInAnyClassFromFile(char *file_var_name, char *instance_name, char *class_name, bool isFirstClass) {
     //char *instance_name=son; 
-    printf("\n\n#### formatStringInAnyClassFromFile ####\n");
+   //// printf("\n\n#### formatStringInAnyClassFromFile ####\n");
 
     if (class_name[0] != '\"')
         class_name = toString(class_name);
@@ -306,7 +306,7 @@ char *formatStringInAnyClassFromFile(char *file_var_name, char *instance_name, c
     char *temp_string_in_class = string_in_class;
     if (isFirstClass == TRUE) {
         while (TRUE) {
-            printf("---->|%s|\n", temp_string_in_class);
+           //// printf("---->|%s|\n", temp_string_in_class);
             define = find_from_index_not_in_string(temp_string_in_class, "def ", define + 1);
             left = find_from_index(temp_string_in_class, "(", define + 4); //find ( of def input():
             right = find_from_index_not_in_string(temp_string_in_class, ")", left);
@@ -325,14 +325,14 @@ char *formatStringInAnyClassFromFile(char *file_var_name, char *instance_name, c
             } else {
                 string_in_parenthesis = "";
             }
-            printf("&&&&& String in Params %s \n &&&&&&&\n",string_in_parenthesis);
+           //// printf("&&&&& String in Params %s \n &&&&&&&\n",string_in_parenthesis);
             if (find_not_in_string(string_in_parenthesis, "self") != -1) {
                 // find self in parameter.
                 
-                printf("====== Find Self\n");
-                printf("string_in_parenthesis======|%s|\n",string_in_parenthesis);
+               //// printf("====== Find Self\n");
+               //// printf("string_in_parenthesis======|%s|\n",string_in_parenthesis);
                 string_in_parenthesis = replace_not_in_string(string_in_parenthesis, "self", "");
-                printf("string_in_parenthesis======|%s|\n",string_in_parenthesis);
+               //// printf("string_in_parenthesis======|%s|\n",string_in_parenthesis);
                 
                 char *new_func_name = malloc(sizeof (char) *((int) strlen(func_name)+(int) strlen(instance_name) + 1));
                 strcat(new_func_name, instance_name);
@@ -344,26 +344,26 @@ char *formatStringInAnyClassFromFile(char *file_var_name, char *instance_name, c
             // change 'def hello(self)'--->'def a.hello()'
             char *new_function = malloc(sizeof (char) *((int) strlen("def ()")+(int) strlen(func_name)+(int) strlen(string_in_parenthesis)));
             strcat(new_function, "def ");
-            printf("Func_Name %s\n",func_name);
+           //// printf("Func_Name %s\n",func_name);
             strcat(new_function, func_name);
             strcat(new_function, "(");
-            printf("String In () %s\n",string_in_parenthesis);
+           //// printf("String In () %s\n",string_in_parenthesis);
             strcat(new_function, string_in_parenthesis);
             strcat(new_function, ")");
-            printf("DEFIND %d RIGHT %d\n",define,right);
-            printf("-1****************\n\n\n\n%s\n*************\n\n\n\n",temp_string_in_class);
-            printf("$$$$$$$$$$$$$$$$$$\n %s\n ",substr(temp_string_in_class,define-1,right+1));
+           //// printf("DEFIND %d RIGHT %d\n",define,right);
+           //// printf("-1****************\n\n\n\n%s\n*************\n\n\n\n",temp_string_in_class);
+           //// printf("$$$$$$$$$$$$$$$$$$\n %s\n ",substr(temp_string_in_class,define-1,right+1));
             
             temp_string_in_class = replace_from_index_to_index(temp_string_in_class, whole_function, new_function, define - 2, right + 1);
-            printf("0****************\n\n\n\n%s\n*************\n\n\n\n",temp_string_in_class);
+           //// printf("0****************\n\n\n\n%s\n*************\n\n\n\n",temp_string_in_class);
             if (find_not_in_string(temp_string_in_class, "(,") != -1)
                 temp_string_in_class = replace_not_in_string(temp_string_in_class, "(,", "(");
             else if (find_not_in_string(temp_string_in_class, ",)") != -1)
                 temp_string_in_class = replace_not_in_string(temp_string_in_class, ",)", ")");
-            printf("1****************\n\n\n\n%s\n*************\n\n\n\n",temp_string_in_class);
+           //// printf("1****************\n\n\n\n%s\n*************\n\n\n\n",temp_string_in_class);
         }
         
-        printf("2****************\n\n\n\n%s\n*************\n\n\n\n",temp_string_in_class);
+       //// printf("2****************\n\n\n\n%s\n*************\n\n\n\n",temp_string_in_class);
     }
     else {
         while (TRUE) {
@@ -480,10 +480,10 @@ char *formatStringInAnyClassFromFile(char *file_var_name, char *instance_name, c
     //printf("3********\n%s\n*******\n", temp_string_in_class);
     string_in_class = temp_string_in_class;
     if (find_super == TRUE) {
-        printf("FIND SUPER..\n");
+       //// printf("FIND SUPER..\n");
         //printf("********\n%s\n*******\n", string_in_class);
         char *mother_string = formatStringInAnyClassFromFile(file_var_name, instance_name, toString(mother),FALSE);
-        printf("@@@@\n@@@@\n%s\n",mother_string);
+       //// printf("@@@@\n@@@@\n%s\n",mother_string);
         char out[10000]="";
         strcat(out,mother_string);
         strcat(out,string_in_class);
@@ -500,7 +500,7 @@ char *formatStringInAnyClassFromFile(char *file_var_name, char *instance_name, c
 
 
 
-    printf("******\n*****\n|%s|\n",string_in_class);
+   //// printf("******\n*****\n|%s|\n",string_in_class);
     return string_in_class;
 }
 
@@ -535,7 +535,7 @@ char *formatStringInAnyClassFromFile(char *file_var_name, char *instance_name, c
 //formatStringInClassWithExtendFromFile("__walley__.wy","Rohit is person():")
 
 char *formatStringInClassWithExtendFromFile(char *file_var_name, char *input_str) {
-    printf("#### formatStringInClassWithExtendFromFile ####");
+   //// printf("#### formatStringInClassWithExtendFromFile ####");
     input_str=trim(input_str);
     char *instance_name = substr(input_str, 0, find_not_in_string(input_str, " is "));
     char *__class__ = substr(input_str, find_not_in_string(input_str, " is ") + 4, (int) strlen(input_str));
@@ -553,7 +553,7 @@ char *formatStringInClassWithExtendFromFile(char *file_var_name, char *input_str
 
     // has no extends
     if (strcmp("None", mother) == 0) {
-        printf("EXTENDS Nothing\n");
+       //// printf("EXTENDS Nothing\n");
         return formatStringInClass(instance_name, string_in_class);
     }        // has extends
     else {
@@ -662,9 +662,9 @@ char *formatStringInClassWithExtendFromFile(char *file_var_name, char *input_str
 }
 
 bool checkWhetherSameClassExisted(char *file_var_name, char *class_name){
-    printf("#### checkWhetherSameClassExisted ####\n");
+   //// printf("#### checkWhetherSameClassExisted ####\n");
     class_name=toString(class_name);
-    printf("class_name %s\n",class_name);
+   //// printf("class_name %s\n",class_name);
     char *__class__=getValueFromValueName(file_var_name,"__temp_class__");
     char *key_list=keyOfDictionaryAsList(__class__);
     int num=valueNumOfList(key_list);
@@ -677,6 +677,6 @@ bool checkWhetherSameClassExisted(char *file_var_name, char *class_name){
             break;
         }
     }
-    printf("Existed ? %d\n",existed);
+   //// printf("Existed ? %d\n",existed);
     return existed;
 }

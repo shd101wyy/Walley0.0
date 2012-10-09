@@ -6,22 +6,22 @@
  */
 #include "walley_core_third_generation.h"
 void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *temp_file_name, char* existing_file, char* input_str) {
-    printf("######### Run Function Walley_Run_Fourth_Generation ######\n");
-    printf("|%s|\n",input_str);
+   //// printf("######### Run Function Walley_Run_Fourth_Generation ######\n");
+   //// printf("|%s|\n",input_str);
     // check whether in #~ ~# at first
 
     bool now_in_annotation = atoi(getValueFromValueName(setting_file, "now_in_annotation"));
     char *judge_annotation_string=trim(input_str);
     int length_of_judge_annotation_string=(int)strlen(judge_annotation_string);
     if (judge_annotation_string[length_of_judge_annotation_string-1]=='#' && judge_annotation_string[length_of_judge_annotation_string-2]=='~'){
-        printf("Now End Long Annotation");
+       //// printf("Now End Long Annotation");
         now_in_annotation = 0;
         char temp4[100];
         sprintf(temp4, "%d", now_in_annotation);
         changeTheVarValueFromItsInitialOneFromFile(setting_file, "now_in_annotation", (char*) temp4, "int");
     }
     else if (judge_annotation_string[0] == '#' && judge_annotation_string[1] == '~') {
-        printf("Now Begin Long Annotation");
+       //// printf("Now Begin Long Annotation");
         now_in_annotation = 1;
         char temp4[100];
         sprintf(temp4, "%d", now_in_annotation);
@@ -41,16 +41,16 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
     //strcat(temp_input_str,input_str);
     //temp_input_str[(int) strlen(temp_input_str)] = 0;
     
-    if (find(input_str, "\n") != -1) {
-        printf("find \\n");
+    if (find_not_in_string(input_str, "\n") != -1) {
+       //// printf("find \\n");
         continue_run = TRUE;
         input_str = substr(input_str, 0, find(input_str, "\n"));
         //Walley_Run_For_Appointed_File(file_name,setting_file,substr(temp_input_str,find(temp_input_str,"\n")+1,(int)strlen(temp_input_str)));
     }
     
-    if (find(input_str, "\\n") != -1) {
+    if (find_not_in_string(input_str, "\\n") != -1) {
         //printf("find \\n");
-        printf("find \\\\n");
+       //// printf("find \\\\n");
         continue_run = TRUE;
         find_gang_gang = TRUE;
         input_str = substr(input_str, 0, find(input_str, "\\n"));
@@ -103,7 +103,7 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
         }
         //
         
-    printf("\n\n\n\n-------Now input is |%s|\n", input_str);
+    //// printf("\n\n\n\n-------Now input is |%s|\n", input_str);
     //printf("-------Current Space is |%d|\n",current_space);
     //printf("temp2 is %s\n",temp2);
     //printf("-------Now Ahead Space is %d\n",current_space);
@@ -134,9 +134,9 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
     if ((int) strlen(input_str) == 0 || stringIsEmpty(input_str) == TRUE) {
         can_run_basic_input = FALSE;
         str_is_empty=TRUE;
-        printf("Input Str is Empty\n");
-        printf("now_writting_function is %d\n",now_writting_function);
-        printf("now_writting_while is %d\n",now_writting_while);
+       //// printf("Input Str is Empty\n");
+       //// printf("now_writting_function is %d\n",now_writting_function);
+       //// printf("now_writting_while is %d\n",now_writting_while);
     }
     if (current_space > space) {
         can_run_basic_input = FALSE;
@@ -154,12 +154,12 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
     
     //############### Now Writting While In Progress ########################
     if (now_writting_while == TRUE && str_is_empty==FALSE) {
-        printf("Space %d, Current Space %d\n", space, current_space);
+       //// printf("Space %d, Current Space %d\n", space, current_space);
         if (current_space > space_of_first_while_sentence && current_space % 4 == 0) {
-            printf("################ Now Writting While ###################");
+           //// printf("################ Now Writting While ###################");
             can_run_basic_input = FALSE;
             input_str = removeAheadSpaceForNum(input_str, space_of_first_while_sentence + 4);
-            printf("Input str is |%s|\n", input_str);
+           //// printf("Input str is |%s|\n", input_str);
             char *temp_in_loop = malloc(sizeof (char) *((int) strlen(input_str)+(int) strlen(string_in_while_loop) + 2));
             strcat(temp_in_loop, substr(string_in_while_loop, 0, (int) strlen(string_in_while_loop) - 1));
             strcat(temp_in_loop, input_str);
@@ -167,7 +167,7 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
             string_in_while_loop = temp_in_loop;
             changeTheVarValueFromItsInitialOneFromFile(setting_file, "string_in_while_loop", string_in_while_loop, "string");
         } else if (current_space <= space_of_first_while_sentence && current_space % 4 == 0) {
-            printf("Begin to Run While\n");
+           //// printf("Begin to Run While\n");
             can_run_basic_input = TRUE;
             now_writting_while = FALSE;
 
@@ -182,7 +182,7 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
             char *__temp_while__=getValueFromValueName(file_name,"__temp_while__");
             int length_of_list=valueNumOfList(__temp_while__);
             char *last_while_sentence2=valueOfListAtIndex(__temp_while__,length_of_list-1);
-            printf("Last_While_Sentence is %s\n",last_while_sentence2);
+           //// printf("Last_While_Sentence is %s\n",last_while_sentence2);
             
             //get __temp_string_in_while_loop__
             char *__temp_string_in_while_loop__=getValueFromValueName(file_name,"__temp_string_in_while_loop__");
@@ -191,12 +191,12 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
             string_in_while_loop="\"#While\\n\"";
             changeTheVarValueFromItsInitialOneFromFile(setting_file, "string_in_while_loop", string_in_while_loop, "string");
             char *string_in_while_loop2=valueOfListAtIndex(__temp_string_in_while_loop__,length_of_list-1);
-            printf("String in while loop is %s\n",string_in_while_loop2);
+           //// printf("String in while loop is %s\n",string_in_while_loop2);
             
             //while (Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function_Second_Generation(last_while_sentence, file_name) == TRUE) {
             while (Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function_Third_Generation(last_while_sentence2, file_name) == TRUE) {
                 char *temp_to_run = substr(string_in_while_loop2, 1, (int) strlen(string_in_while_loop2) - 1);
-                printf("Temp To Run is %s\n",temp_to_run);
+               //// printf("Temp To Run is %s\n",temp_to_run);
                 
                 if(strcmp(trim(temp_to_run),"pass")==0){
                     break;
@@ -217,7 +217,7 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
             strcat(remove_at_index,"[");
             strcat(remove_at_index,final_index);
             strcat(remove_at_index,"]");
-            printf("remove at index is %s\n",remove_at_index);
+           //// printf("remove at index is %s\n",remove_at_index);
             __temp_while__=listRemoveOneElementAtOneIndex(__temp_while__,remove_at_index);
             changeTheWholeVarValueFromItsInitialOneFromFileForList(file_name,"__temp_while__",__temp_while__);
             __temp_string_in_while_loop__=listRemoveOneElementAtOneIndex(__temp_string_in_while_loop__,remove_at_index);
@@ -226,13 +226,14 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
     }//############### Now Writting Function In Progress #####################
     else if (now_writting_function == TRUE && str_is_empty==FALSE) {
         can_run_basic_input = FALSE;
-        printf("//############### Now Writting Function In Progress #####################\n");
-        printf("Current Space is %d, Required Space is %d\n",current_space,space);
+        ////printf("//############### Now Writting Function In Progress #####################\n");
+        ////printf("--->%s\n",input_str);
+       //// printf("Current Space is %d, Required Space is %d\n",current_space,space);
         if (current_space % 4 != 0) {
             printf("Space Mistake\nCurrent Space is %d\nRequired Space is %d\n", current_space, space);
             exit(0);
         } else if (current_space <= space_of_first_def_sentence) {
-            printf("Finish_define_FUNCTION\n");
+           //// printf("Finish_define_FUNCTION\n");
             can_run_basic_input = TRUE;
             now_writting_function = FALSE;
             char temp2[100];
@@ -242,7 +243,7 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
             sprintf(temp2, "%d", now_writting_function);
             changeTheVarValueFromItsInitialOneFromFile(setting_file, "now_writting_function", (char*) temp2, "int");
             
-            printf("--------Finish defining function--------\n");
+           //// printf("--------Finish defining function--------\n");
             writeStringToFile("__walley_function__.wy", "#~End\n\n");
         } else {
 
@@ -252,23 +253,24 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
             writeStringToFile("__walley_function__.wy", "\n");
         }
 
-        if (find_from_index_to_index(removeAheadSpace(input_str), "def ", 0, 5) != -1) {
+        if (find_from_index_to_index(removeAheadSpace(input_str), "def ", 0, (int)strlen(removeAheadSpace(input_str))) != -1) {
             //printf("Find another function while defining a function\n");
             space = space + 4;
             //printf("Now required space is %d\n",space);
         }
         //}
+        ////printf("NEXT\n");
 
     }        //################### Now Writting Class ##############################
     else if (now_writting_class == TRUE && str_is_empty==FALSE) {
         can_run_basic_input = FALSE;
-        printf("#### Now_Writting_Class In Progress ####\n");
+       //// printf("#### Now_Writting_Class In Progress ####\n");
        
         if(current_space % 4 !=0){
             printf("Space Mistake occurred while defining a class\n");
         }
         else if (current_space<=space_of_first_class_sentence){
-            printf("Finish defining class.\n");
+           //// printf("Finish defining class.\n");
             now_writting_class=FALSE;
             can_run_basic_input = TRUE;
             space=current_space;
@@ -278,7 +280,7 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
             changeTheVarValueFromItsInitialOneFromFile(setting_file, "now_writting_class", (char*) temp2, "int");
         }
         else{
-            printf("Now Writting Class To File\n");
+           //// printf("Now Writting Class To File\n");
             space=current_space;
             input_str = removeAheadSpaceForNum(input_str, space_of_first_def_sentence + 4);
             //printf("---->|%s|\n",input_str);
@@ -306,7 +308,7 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
 
     }        //################## Now Run If #######################################
     else if (now_run_if == TRUE && str_is_empty==FALSE) {
-        printf("Now Run If\n");
+       //// printf("Now Run If\n");
         if (current_space > space || current_space % 4 != 0) {
             //if (current_space != space) {
             printf("Space Mistake\nCurrent Space is %d\nRequired Space is %d\n", current_space, space);
@@ -326,7 +328,7 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
     else if (now_writting_for == TRUE && str_is_empty==FALSE) {
         //printf("#### Now Writting For ####");
         if (current_space > space_of_first_for_sentence && current_space % 4 == 0) {
-            printf("################ Now Writting For ###################");
+           //// printf("################ Now Writting For ###################");
             //printf("STRING IN FOR LOOP is |%s|\n", string_in_for_loop);
             can_run_basic_input = FALSE;
             input_str = removeAheadSpaceForNum(input_str, space_of_first_for_sentence + 4);
@@ -339,7 +341,7 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
             //printf("STRING IN FOR LOOP is |%s|\n", string_in_for_loop);
             changeTheVarValueFromItsInitialOneFromFile(setting_file, "string_in_for_loop", string_in_for_loop, "string");
         } else if (current_space <= space_of_first_for_sentence && current_space % 4 == 0) {
-            printf("Begin to Run For\n");
+           //// printf("Begin to Run For\n");
             can_run_basic_input = TRUE;
             now_writting_for = FALSE;
             //printf("----String in loop is %s\n",string_in_for_loop);
@@ -431,7 +433,7 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
                     strcat(index_temp, "]");
 
                     char *value_of_i_in_x = valueOfListAtIndexString(temp_i_in_for_sentence2, index_temp);
-                    printf("value_of_i_in_x is |%s|\n",value_of_i_in_x);
+                   //// printf("value_of_i_in_x is |%s|\n",value_of_i_in_x);
                     //printf("Now Run %d Time\n",x);
                     //printf("Get Here\n");
          
@@ -440,7 +442,7 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
                     strcat(init_temp_i, "=");
                     strcat(init_temp_i, value_of_i_in_x);
                     init_temp_i[(int)strlen(init_temp_i)]=0;
-                    printf("init_temp_i is |%s|\n",init_temp_i);
+                   //// printf("init_temp_i is |%s|\n",init_temp_i);
                     //printf("Get Here\n");
                         //printf("STRING IN FOR LOOP %s\n", string_in_for_loop2);
                         char *temp_to_run = substr(string_in_for_loop2, 1, (int) strlen(string_in_for_loop2) - 1);
@@ -486,7 +488,7 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
     //##########################################################################################################
     //##########################################################################################################
     //##########################################################################################################
-    printf("can run basic input %d numOfSpaceAheadString %d required space %d\n",can_run_basic_input,numOfSpaceAheadString(input_str),space);
+   //// printf("can run basic input %d numOfSpaceAheadString %d required space %d\n",can_run_basic_input,numOfSpaceAheadString(input_str),space);
     if (can_run_basic_input == TRUE && (numOfSpaceAheadString(input_str) == 0 || space==current_space)) {
         /*
                 //#####################  Anotation  ###################    
@@ -622,13 +624,13 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
             
         }            //#################### Basic Input To Run #############################
         else {
-            printf("\n\n######### Basic Input To Run #########\n");
+           //// printf("\n\n######### Basic Input To Run #########\n");
             input_str = trim(input_str);
             //#####################  Init class  #####################
             if (find_not_in_string(input_str, " is ") != -1||
                                 (find_not_in_string(input_str, "=")!=-1&&find_not_in_string(input_str,"(")!=-1&&checkWhetherSameClassExisted(file_name,trim(substr(input_str,find_not_in_string(input_str, "=")+1,find_not_in_string(input_str,"("))))==TRUE)
                     ) {
-                printf("#### Begin to initialize class ####\n");
+               //// printf("#### Begin to initialize class ####\n");
                 // ## a is hello()
                 // ## a is instance_name
                 // ## hello() is __class__ 
@@ -647,7 +649,7 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
                 **/
                 //char *after_change=formatStringInClass(instance_name,string_in_class);
                 char *after_change=formatStringInClassWithExtendFromFile(file_name,input_str);
-                printf("#### AFTER CHANGE\n|%s|\n####\n",after_change);
+               //// printf("#### AFTER CHANGE\n|%s|\n####\n",after_change);
                 
                 Walley_Run_Fourth_Generation(file_name, setting_file, temp_file_name, existing_file, after_change);
                 addInstanceNameToFile(instance_name,file_name);
@@ -662,7 +664,7 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
                 strcat(init,parameter);
                 strcat(init,")");
                 init[(int)strlen(init)]=0;
-                printf("BEGIN TO INITIALIZE");
+               //// printf("BEGIN TO INITIALIZE");
                 Walley_Run_Fourth_Generation(file_name, setting_file, temp_file_name, existing_file, init);
                 
             }
@@ -674,7 +676,9 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
             }//#####################  print  ###################
             else if (find_not_in_string(input_str, "print") == 0) {
                 char* output = Walley_Print_Third_Generation(file_name, strInBrackets(input_str));
+                ////printf("PRINT %s\n",output);
                 printf("%s", output);
+                ////puts(output);
             }                //#################### import ####################
             else if (find(removeAheadSpace(input_str), "import ") == 0) {
                 // Now only support import a   does not support import a,b,c ... at same row
@@ -748,20 +752,20 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
             
             //##################### setmark ##################
             else if (find(removeAheadSpace(input_str), "setmark ") == 0) {
-                printf("#### Find setmark ####");
+               //// printf("#### Find setmark ####");
             }//#################### goto ######################
             else if (find(removeAheadSpace(input_str), "goto ") == 0) {
                 char *mark_name = substr(input_str, find(input_str, "goto ") + 5, (int) strlen(input_str));
-                printf("Mark Name :%s\n", mark_name);
+               //// printf("Mark Name :%s\n", mark_name);
                 mark_name = removeBackSpace(removeAheadSpace(mark_name));
-                printf("#### Find goto ####");
+               //// printf("#### Find goto ####");
                 char *string_to_run;
                 if (strcmp("None", existing_file) == 0) {
                     string_to_run = getStringFromFile(temp_file_name);
                 } else {
                     string_to_run = getStringFromFile(existing_file);
                 }
-                printf("String in File is |%s|\n", getStringFromFile(temp_file_name));
+               //// printf("String in File is |%s|\n", getStringFromFile(temp_file_name));
                 char *setmark = malloc(sizeof (char) *((int) strlen("setmark ")+(int) strlen(mark_name)));
                 strcat(setmark, "setmark ");
                 strcat(setmark, mark_name);
@@ -773,7 +777,7 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
                     FILE *fp = fopen(temp_file_name, "w");
                     fputs("", fp);
                     fclose(fp);
-                    printf("$$$ \n|%s|\n", string_to_run);
+                   //// printf("$$$ \n|%s|\n", string_to_run);
                     //clearTextInFile(temp_file_name);
                     writeStringToFile(temp_file_name, string_to_run);
                     writeStringToFile(temp_file_name, "\n");
@@ -810,26 +814,26 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
                         can_just_eval = FALSE;
                 }
                 if (isFunction(input_str) == TRUE) {
-                    printf("Yes it is function\n");
+                   //// printf("Yes it is function\n");
                     can_just_eval = FALSE;
                 }
                 if (can_just_eval) {
                     char *temp2 = malloc(sizeof (char) *((int) strlen(input_str)+(int) strlen("__temp__=")));
                     strcat(temp2, "__temp__=");
                     strcat(temp2, input_str);
-                    printf("TEMP2 is %s\n", temp2);
+                   //// printf("TEMP2 is %s\n", temp2);
                     Walley_Eval_And_Update_Var_And_Value_To_File_Third_Generation(file_name, temp2);
-                    printf("Remove\n\n");
+                   //// printf("Remove\n\n");
                     Walley_Remove_Variable_And_Value_From_File(file_name, "__temp__");
                 } else {
-                    printf("Enter Else\n");
+                   //// printf("Enter Else\n");
                     input_str = Walley_Substitue_Var_And_Function_Return_Value_From_File_Third_Generation(input_str, file_name);
                     Walley_Eval_With_Variable_From_File(file_name, input_str);
                 }
 
             }
             //printf("\nRequired space num is %d\n",space);
-            printf("#### Set Settings ####\n\n\n");
+           //// printf("#### Set Settings ####\n\n\n");
             char temp2[100];
             sprintf(temp2, "%d", space);
             changeTheVarValueFromItsInitialOneFromFile(setting_file, "space", (char*) temp2, "int");
@@ -889,19 +893,19 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
     changeTheVarValueFromItsInitialOneFromFile(setting_file, "string_in_for_loop", string_in_for_loop, "string");
     changeTheVarValueFromItsInitialOneFromFile(setting_file, "temp_i", temp_i, "string");
     changeTheVarValueFromItsInitialOneFromFile(setting_file, "temp_i_in_for_sentence", temp_i_in_for_sentence, "string");*/
-    printf("here\n");
+   //// printf("here\n");
     if (continue_run == TRUE && run_goto == FALSE) {
-        printf("continue run\n");
+       //// printf("continue run\n");
         if (find_gang_gang == TRUE) {
             Walley_Run_Fourth_Generation(file_name, setting_file, temp_file_name, existing_file, substr(temp_input_str, find(temp_input_str, "\\n") + 2, (int) strlen(temp_input_str)));
 
         } else {
-            printf("STRING LEFT is %s\n",substr(temp_input_str,find(temp_input_str,"\n")+1,(int)strlen(temp_input_str)));
+           //// printf("STRING LEFT is %s\n",substr(temp_input_str,find(temp_input_str,"\n")+1,(int)strlen(temp_input_str)));
             Walley_Run_Fourth_Generation(file_name, setting_file, temp_file_name, existing_file, substr(temp_input_str, find(temp_input_str, "\n") + 1, (int) strlen(temp_input_str)));
         }
     }
     if (run_goto == TRUE) {
-        printf("@@@@ Run GOTO @@@@\n");
+       //// printf("@@@@ Run GOTO @@@@\n");
         Walley_Run_Fourth_Generation(file_name, setting_file, temp_file_name, existing_file, getStringFromFile(temp_file_name));
     }
     }

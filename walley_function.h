@@ -53,7 +53,7 @@ char* strInBrackets(char *input_str){
 }
 
 bool checkWhetherEquaIsInsideString(char *input_str) {
-    printf("#### checkWhetherEquaIsInsideString ####\n");
+   //// printf("#### checkWhetherEquaIsInsideString ####\n");
     bool inside = FALSE;
     int index_of_first_equa = find_not_in_string(input_str, "=");
     input_str=substr(input_str,0,index_of_first_equa);
@@ -132,7 +132,7 @@ char* checkValueType(char *input_str){
     }*/
     input_str=removeBackSpace(input_str);
     input_str=removeAheadSpace(input_str);
-    printf("The input_str is %s\n",input_str);
+   //// printf("The input_str is %s\n",input_str);
     
     
     int index_of_first_syh=find(input_str,"\"");
@@ -185,11 +185,11 @@ char* variableValue(char* input_message){
         } else {
        
             int index_of_equa=find(input_message,"=");
-            printf("$$index_of_equa is %d\n",index_of_equa);
+           //// printf("$$index_of_equa is %d\n",index_of_equa);
             char *variable_value=substr(input_message,index_of_equa+1,(int)strlen(input_message));
             variable_value=removeBackSpace(variable_value);
             variable_value=removeAheadSpace(variable_value);
-            printf("#### variableValue input |%s|, var_value |%s|####\n",input_message,variable_value);
+           //// printf("#### variableValue input |%s|, var_value |%s|####\n",input_message,variable_value);
             return variable_value;
         }
     }
@@ -203,15 +203,15 @@ bool checkWhetherSameVarNameExists(char *var_name){
     if ((fp = fopen("__walley__.wy", "r")) == NULL) {
         perror("File open error!\n");
         exit(1);
-    } else {
-        printf("Function checkWhetherSameVarNameExists Find file\n");
-    }
+    }//// else {
+     ////   printf("Function checkWhetherSameVarNameExists Find file\n");
+    //// }
     //char *var_name_in_file="";
     while ((fgets(arr, 1000, fp)) != NULL) {
         if(find(arr,":")==-1)
             continue;
         char *var_name_in_file=substr(arr,0,find(arr,":"));
-        printf("var_name is %s\n",var_name_in_file);
+       //// printf("var_name is %s\n",var_name_in_file);
         if (strcmp(var_name_in_file,var_name)==0){
             has_same_var_name=TRUE;
             break;
@@ -618,8 +618,8 @@ bool elementInExpressionAreAllString(char *input_str){
 }**/
 
 char *combineStringsToOneString(char *input_str){
-    printf("#### combineStringsToOneString ####\n");
-    printf("input_str %s\n",input_str);
+   //// printf("#### combineStringsToOneString ####\n");
+   //// printf("input_str %s\n",input_str);
     input_str=trim(input_str);
     if(find_not_in_string(input_str,"+")!=-1)
         input_str=replace_not_in_string(input_str,"+","#");
@@ -701,7 +701,7 @@ char *combineStringsToOneString(char *input_str){
         strcat(output, "'");
     }
     **/
-    printf("--->%s\n",output);
+   //// printf("--->%s\n",output);
     return output;
     
 }
@@ -765,8 +765,8 @@ char *getValueFromValueName(char *file_name,char *var_name){
     return var_value;
 }
 char* Walley_Eval_With_Variable_From_File(char *file_var_name, char *input_str) {
-    printf("#### Walley_Eval_With_Variable_From_File ####\n");
-    printf("------Input Str to this function is :|%s|------\n", input_str);
+   //// printf("#### Walley_Eval_With_Variable_From_File ####\n");
+   //// printf("------Input Str to this function is :|%s|------\n", input_str);
 
     // to solve input_str is -24 but output is 24
     if (input_str[0] == '-') {
@@ -800,10 +800,10 @@ char* Walley_Eval_With_Variable_From_File(char *file_var_name, char *input_str) 
     } else if (stringIsDigit(input_str) == TRUE)
         return input_str;
     else if (expressionIsAllString(input_str) == TRUE) {
-        printf("all var are string\n");
+       //// printf("all var are string\n");
         output = combineStringsToOneString(input_str);
         //printf("------> %s\n", output);
-        printf("Function Walley_Eval_With_Variable all are string . \noutput------:%s\n", output);
+       //// printf("Function Walley_Eval_With_Variable all are string . \noutput------:%s\n", output);
         return output;
     } else if (find_not_in_string(input_str, ",") != -1)
         return input_str;
@@ -908,7 +908,7 @@ char* Walley_Eval_With_Variable_From_File(char *file_var_name, char *input_str) 
             //printf("*********** %c End is %d --->%s\n", input_str[i], end, output);
             int temp_length = (int) strlen(output);
             if (finishFindingVarAndFunction(output) == TRUE) {
-                printf("Finish Finding Var And Function, output is |%s|\n", output);
+               //// printf("Finish Finding Var And Function, output is |%s|\n", output);
                 output = substr(output, 0, temp_length);
                 break;
             }
@@ -980,7 +980,7 @@ char* Walley_Eval_With_Variable_From_File(char *file_var_name, char *input_str) 
             //printf("--End this loop, output is %s\n",output);
 
         }
-        printf("output is %s\n",output);
+       //// printf("output is %s\n",output);
         return Walley_Eval(output);
     }
 
@@ -1020,7 +1020,7 @@ char* Walley_Eval_All_From_File(char *file_var_name,char *input_str){
 }
 
 char* Walley_Eval_With_Variable(char *input_str){
-    printf("#### Run Walley_Eval_With_Variable ####\n");
+   //// printf("#### Run Walley_Eval_With_Variable ####\n");
     //bool done=FALSE;
     /*
     int from_index = 0;
@@ -1211,7 +1211,7 @@ char *defineAFunction(char *input_str){
     char *func_name=substr(input_str, find(input_str,"def")+3,find(input_str,"("));
     func_name=removeAheadSpace(func_name);
     func_name=removeBackSpace(func_name);
-    printf("###### Function Name: %s ######\n",func_name);
+   //// printf("###### Function Name: %s ######\n",func_name);
     
         
     char *parameter_str=substr(input_str, find(input_str,"(")+1,find(input_str,")"));
@@ -1225,8 +1225,8 @@ char *defineAFunction(char *input_str){
         para_num=0;
         parameter_str="None";
     }
-    printf("###### Parameter is : %s ######\n",parameter_str);
-    printf("you have %d paras",para_num);
+   //// printf("###### Parameter is : %s ######\n",parameter_str);
+   //// printf("you have %d paras",para_num);
     return "Now Design Function";
 }
 
@@ -1261,7 +1261,7 @@ char *functionParameterStr(char *input_str){
     parameter_str=removeAheadSpace(parameter_str);
     //printf("#### parameter_str is %s ####\n",parameter_str);
     parameter_str=removeBackSpace(parameter_str);
-    printf("###### Parameter is : %s ######\n",parameter_str);
+   //// printf("###### Parameter is : %s ######\n",parameter_str);
     
     
     int para_num=count_str(parameter_str,",")+1;
@@ -1327,7 +1327,7 @@ void writeStringToFile(char *file_name, char *str_to_file){
 
 //change later
 void anaylizeExistedVariablesInExpression(char *input_str){
-    printf("#### anaylizeExistedVariablesInExpression ####\n");
+   //// printf("#### anaylizeExistedVariablesInExpression ####\n");
     //printf("input str is :%s\nlength is %d\n",input_str,(int)strlen(input_str));
     
     bool find_alpha=FALSE;
@@ -1530,14 +1530,14 @@ char *substitueExistedVarValueFromFile(char* input_str,char *file_var_name){//, 
     //if(has_var==FALSE){
     //    return input_str;
     //}
-    printf("output is |%s|\n",output);
+   //// printf("output is |%s|\n",output);
     return output;
 }
 
 void cleanFunctionFile(char *file_func_name){
         char *output=getStringFromFile(file_func_name);
-        if(output[(int)strlen(output)-1]=='\n')
-            printf("\\n");
+        //// if(output[(int)strlen(output)-1]=='\n')
+            //// printf("\\n");
         int i=0;
         char *output_output=malloc(sizeof(char)*(int)strlen(output));
         int begin=0;
@@ -1660,8 +1660,8 @@ char* println(char *input_str){
  * eg passConditionIfSentence("3>4")
  */
 bool passConditionIfSentence(char *input_str){
-    printf("#### passConditionIfSentence ####\n");
-    printf("input_str is :|%s|\n",input_str);
+   //// printf("#### passConditionIfSentence ####\n");
+   //// printf("input_str is :|%s|\n",input_str);
     if (strcmp("TRUE", stringToUpperCase(input_str))==0) {
         return TRUE;
     }
@@ -1738,7 +1738,7 @@ bool passConditionIfSentence(char *input_str){
     first_str=Walley_Eval_With_Variable_From_File("__walley__.wy",first_str);
     second_str=Walley_Eval_With_Variable_From_File("__walley__.wy",second_str);
     //#############################################################################
-    printf("First %s\nSecond %s\nJudge Sign %s\n",first_str,second_str,judge_sign);
+   //// printf("First %s\nSecond %s\nJudge Sign %s\n",first_str,second_str,judge_sign);
     double num1=atof(first_str);
     double num2=atof(second_str);
     first_str=removeAheadSpace(removeBackSpace(first_str));
@@ -1747,7 +1747,7 @@ bool passConditionIfSentence(char *input_str){
     char *second_str_type=variableValueType(second_str);
     //printf("num1 %f\nnum2 %f\n",num1,num2);
     if(strcmp(first_str_type,"string")==0 && strcmp(second_str_type,"string")==0){
-        printf("It is the comparison between strings\n");
+       //// printf("It is the comparison between strings\n");
         first_str=substr(first_str,1,(int)strlen(first_str)-1);
         second_str=substr(second_str,1,(int)strlen(second_str)-1);
      if(strcmp(judge_sign,"==")==0){
@@ -1817,7 +1817,7 @@ bool passConditionIfSentence(char *input_str){
     }
         
     }
-    printf("------- pass is %d\n",pass);
+   //// printf("------- pass is %d\n",pass);
     return pass;
 }
 
@@ -1852,7 +1852,7 @@ bool judgeWithAndAndOr(char *input_str){
         sentence=substr(input_str,0,find_not_in_string(input_str," "));
         //printf("sentence&&&& |%s|\n",sentence);
         if(strcmp("not",sentence)==0){
-            printf("Find Not\n");
+           //// printf("Find Not\n");
             find_not=TRUE;
             input_str=substr(input_str,find_not_in_string(input_str," ")+1,(int)strlen(input_str));
             sentence=substr(input_str,0,find_not_in_string(input_str," "));
@@ -1879,14 +1879,14 @@ bool judgeWithAndAndOr(char *input_str){
         input_str=substr(input_str,find_not_in_string(input_str," ")+1,(int)strlen(input_str));
         //printf("--%s\n",input_str);
     }
-    printf("++ Pass is ----> %d\n",pass);
+   //// printf("++ Pass is ----> %d\n",pass);
     return pass;
 }
 /*eg judgeWithAndAndOrWithParenthesis("1<2 or (3>4 and 3==3)"):
  */
 bool judgeWithAndAndOrWithParenthesis(char *input_str){
-    printf("#### judgeWithAndAndOrWithParenthesis ####\n");
-    printf("input_str ----> %s\n",input_str);
+   //// printf("#### judgeWithAndAndOrWithParenthesis ####\n");
+   //// printf("input_str ----> %s\n",input_str);
     int count_of_left=count_str(input_str,"(");
     int count_of_right=count_str(input_str,")");
     if(count_of_left != count_of_right){
@@ -1915,7 +1915,7 @@ bool judgeWithAndAndOrWithParenthesis(char *input_str){
     if(find(input_str,"  ")!=-1){
         input_str=replace(input_str,"  "," ");
     }
-    printf("@@@@@@@@AAAAA  input_str is %s\n",input_str);
+   //// printf("@@@@@@@@AAAAA  input_str is %s\n",input_str);
     return judgeWithAndAndOr(input_str);
 }
 /*Support variable
@@ -2033,7 +2033,7 @@ int numOfParameters(char *func_param){
  * import math as hi-->then add hi.
  */
 char *functionOrClassAddAheadName(char *import_file_name, char *as_name) {
-    printf("#### functionAddAheadName ####\n");
+   //// printf("#### functionAddAheadName ####\n");
     import_file_name = trim(import_file_name);
     as_name = trim(as_name);
     //printf("import_file_name %s\n",import_file_name);
@@ -2051,7 +2051,7 @@ char *functionOrClassAddAheadName(char *import_file_name, char *as_name) {
     //}
 
     while ((fgets(arr, 1000, fp)) != NULL) {
-        printf("----> %s\n\n",arr);
+       //// printf("----> %s\n\n",arr);
         int space_num = numOfSpaceAheadString(arr);
         //printf("%d\n",space_num);
         if (space_num == 0) {
@@ -2107,7 +2107,7 @@ char *functionOrClassAddAheadName(char *import_file_name, char *as_name) {
 
     fclose(fp);
     //printf("output is %s\n",output);
-    printf("output--->%s\n",output);
+   //// printf("output--->%s\n",output);
     char *output2;
 
 

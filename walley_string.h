@@ -108,7 +108,8 @@ int find(char *from_str, char *find_str) {
 
 int find_from_index_to_index(char *from_str, char *find_str, int from_index, int to_index) {
     if (from_index < 0 || to_index > (int) strlen(from_str)) {
-        printf("Mistake occurred which calling function find_from_index_to_index");
+        printf("Mistake occurred which calling function find_from_index_to_index\n");
+        printf("Try to find |%s| in |%s| from |%d| to |%d|\n",find_str,from_str,from_index,to_index);
         return -1;
     } else {
         int index = -1;

@@ -20,7 +20,7 @@ void writeVarNameAndVarValueIntoAppointedFile(char *file_name,char *var_name,cha
     strcat(input_message, var_value_type);
     strcat(input_message, ":");
     strcat(input_message, "\n");
-    printf("Input Message is %s\n", input_message);
+   //// printf("Input Message is %s\n", input_message);
     fputs(str_in_wy, fp);
     fputs(input_message, fp);
     fclose(fp);
@@ -172,7 +172,7 @@ void writeFunctionIntoFile(char *func_name,char *func_param_str) {
     strcat(input_message, ":");
     //strcat(input_message, var_value_type);
     strcat(input_message, "\n");
-    printf("Input Function is %s\n", input_message);
+   //// printf("Input Function is %s\n", input_message);
     fputs(str_in_wy, fp);
     fputs(input_message, fp);
     fclose(fp);
@@ -209,16 +209,17 @@ void changeFunctionFromItsInitialOne(char *func_name,char *func_param_str){
     fp=fopen("__walley_function__.wy", "w");
     fputs(output,fp);
     fclose(fp);
-    printf("Input Function is %s\n", output);
+   //// printf("Input Function is %s\n", output);
 }
 
 /* write a=6,b=3 into file*/
 /* write a=6,b=3 into file*/
 void writeFunctionParameterOneByOneToFile(char *func_param_str){
-    printf("Now Run Function writeFunctionParameterOneByOneToFile\n");
+   //// printf("Now Run Function writeFunctionParameterOneByOneToFile\n");
     if(strcmp("None",func_param_str)==0){
-        printf("This function has no parameters\n");
+        //printf("This function has no parameters\n");
         //writeStringToFile("__walley_function__.wy","#### Finish Initialize Parameters ####\n");
+        printf("");
     } else {
         char *temp=malloc(sizeof(char)*((int)strlen(func_param_str)+1));
         strcat(temp,func_param_str);
@@ -425,7 +426,7 @@ void cleanWalleyLanguageFile(char *file_name){
             }
         }
     }
-    printf("Finish Clean Up\n");
+   // printf("Finish Clean Up\n");
     int i=0;
     fp=fopen(file_name, "w");
     for (i=0; i<count; i++) {
