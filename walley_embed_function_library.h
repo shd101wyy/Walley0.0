@@ -366,6 +366,48 @@ char *string_tolower(char *user){
     return toString(user);
 }
 
+char *string_isupper(char *user){
+    user=toCString(user);
+    int i=0;
+    int length=(int)strlen(user);
+    bool isupper=TRUE;
+    for (i=0; i<length; i++) {
+        char temp=toupper(user[i]);
+        if (temp!=user[i]) {
+            isupper=FALSE;
+            break;
+        }
+    }
+    if (isupper==TRUE) {
+        return "TRUE";
+    }
+    else{
+        return "FALSE";
+    }
+}
+
+char *string_islower(char *user){
+    user=toCString(user);
+    int i=0;
+    int length=(int)strlen(user);
+    bool islower=TRUE;
+    for (i=0; i<length; i++) {
+        char temp=tolower(user[i]);
+        if (temp!=user[i]) {
+            islower=FALSE;
+            break;
+        }
+    }
+    if (islower==TRUE) {
+        return "TRUE";
+    }
+    else{
+        return "FALSE";
+    }
+
+}
+
+
 /*
  * x="  Hello "  x.trim()---->"Hello"
  * string_trim("'Hello'")
@@ -380,6 +422,42 @@ char *string_trim(char *user){
     strcat(output2,"'");
     return output2;  
 }
+
+/*
+ * x="Hello,Hi"  x.split(",")-------->["Hello","Hi"];
+ * string_count_str("'Hello,Hi'","','")
+ */
+char *string_split(char *user, char *func_param){
+    user=toCString(user);           //"Hello,Hi"
+    user=toCString(user);           // Hello,Hi
+    func_param=toCString(func_param);//","
+    func_param=toCString(func_param);//,
+    char *return_list="[]";
+    if (find_not_in_string(user,func_param)==-1) {
+        printf("Mistake occurred whiling calling function string_split, %s is not found in %s\n",func_param,user);
+        exit(0);
+    }
+    int begin=0;
+    int end=find_not_in_string(user,func_param);
+    while (TRUE) {
+        char *append_element=substr(user,begin,end);
+        return_list=listAppendOneElement(return_list, toString(append_element));
+        begin=end+(int)strlen(func_param);
+        if (begin>=(int)strlen(user)) {
+            break;
+        }
+        end=find_from_index_not_in_string(user, func_param, begin+1);
+        if (end==-1) {
+            end=(int)strlen(user);
+            append_element=substr(user, begin, end);
+            return_list=listAppendOneElement(return_list, toString(append_element));
+            break;
+        }
+    }
+    return return_list;
+}
+
+
 
 /*#################### Function for List ############################*/
 
@@ -405,9 +483,9 @@ char *list_remove_at_index(char *user, char *func_param){
 /*
  * range(0,10)------->[0,1,2,3,4,5,6,7,8,9]
  */
-char *list_range(char *function_param){
-    
-}
+//char *list_range(char *function_param){
+//
+//}
 
 /*
  * list_length
@@ -426,12 +504,28 @@ char *list_length(char *user){
 }
 /*
  * list_remove_element
- * x=[1,2,3] x.remove(1)--->[2,3]
- * x=[1,2,3,1] x.remove(1)--->[2,3]
- * x=[1,[1],2] x,remove(1)--->[2]
+ * x=[1,2,3] x.remove_element(1)--->[2,3]
+ * x=[1,2,3,1] x.remove_element(1)--->[2,3]
+ * x=[1,[1],2] x.remove_element(1)--->[2]
  */
 char *list_remove_element(char *user, char *function_param){
     return listRemoveOneElementByValue(user,function_param);
+}
+
+/*
+ * x=[1,1,2,3] x.count(1)---->2
+ * x=[1,2,[1],2] x.count(1)---->1
+ */
+char *list_count(char *user, char *function_param){
+    user=toCString(user);
+    function_param=toCString(function_param);
+    user=trim(user);
+    user=substr(user, 1, (int)strlen(user)-1);
+    int num=count_str_not_in_str_list_dict_parenthesis(user, function_param);
+    char temp[1000]="";
+    sprintf(temp, "%d",num);
+    char *output=append("", temp);
+    return output;
 }
 
 /*################## Function for Dictionary ############################*/
@@ -570,6 +664,8 @@ char *Walley_Run_Special_Function(char *function, char *file_var_name) {
             return_value = string_replace(user_value, user_function_parameter);
         } else if (find(user_function, "count(") == 0) {
             return_value = string_count_str(user_value, user_function_parameter);
+        } else if (find(user_function, "split(") == 0) {
+            return_value = string_split(user_value, user_function_parameter);
         } else if (find(user_function,"length(")==0){
             printf("****** %s\n",user_value);
             return_value=string_length(user_value);
@@ -583,6 +679,10 @@ char *Walley_Run_Special_Function(char *function, char *file_var_name) {
             return_value=string_toupper(user_value);
         } else if (find(user_function,"tolower(")==0){
             return_value=string_tolower(user_value);
+        } else if (find(user_function,"isupper(")==0){
+            return_value=string_isupper(user_value);
+        } else if (find(user_function,"islower(")==0){
+            return_value=string_islower(user_value);
         }
         else {
             printf("This Special Function for String eg. x.find('x') is still under development\n");
@@ -599,8 +699,9 @@ char *Walley_Run_Special_Function(char *function, char *file_var_name) {
             changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name, user, return_value);
         } else if (find(user_function, "length(") == 0) {
             return_value = list_length(user_value);
-        }
-        else if (find(user_function,"remove_element(")==0){
+        } else if (find(user_function, "count(") == 0) {
+            return_value = list_count(user_value, user_function_parameter);
+        } else if (find(user_function,"remove_element(")==0){
             return_value= list_remove_element(user_value,user_function_parameter);
             changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name, user, return_value); 
         }

@@ -76,6 +76,8 @@ int main(int argc, char *argv[]){
             printf("walley setpath [brain folder path]---->set brain path\n");
             printf("walley recall [file_name]         ---->recall file to debug\n");
             printf("walley basic [file_name]          ---->run .wy file\n");
+            printf("walley [embed type] functions     ---->show embed function ,eg walley string functions\n");
+            printf("       Now support [string, list, dictionary]\n");
         }
         else if (strcmp(param,"test")==0){
             printf("begin test!");
@@ -141,6 +143,35 @@ int main(int argc, char *argv[]){
             param2=toCString(param2);
             Walley_Run_File(param2);
             Walley_Finalize();
+        }
+        if (strcmp(param2, "functions")==0) {
+            if (strcmp(param1, "string")==0) {
+                printf("find\n");
+                printf("replace\n");
+                printf("count\n");
+                printf("split\n");
+                printf("length\n");
+                printf("trim\n");
+                printf("isdigit\n");
+                printf("isalpha\n");
+                printf("toupper\n");
+                printf("tolower\n");
+                printf("isupper\n");
+                printf("islower\n");
+            }
+            else if (strcmp(param1, "list")==0){
+                printf("append\n");
+                printf("length\n");
+                printf("remove_at_index\n");
+                printf("remove_element\n");
+                printf("count\n");
+            }
+            else if(strcmp(param1, "dictionary")==0){
+                printf("key\n");
+            }
+            else{
+                printf("It is now under development. Sorry, I can not find functions relevent with %s\n",param1);
+            }
         }
     }
     else{
