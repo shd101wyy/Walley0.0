@@ -1321,6 +1321,7 @@ char *Walley_Translate(char *walley_language_file, char *walley_language_similar
     
     //printf("----> %s\n", input_str);
     int num_of_space_ahead=numOfSpaceAheadString(input_str);
+   //// printf("num of space ahead is %d\n",num_of_space_ahead);
     input_str = trim(input_str);
    //// printf("----> %s\n", input_str);
 
@@ -1347,7 +1348,17 @@ char *Walley_Translate(char *walley_language_file, char *walley_language_similar
             output=append(output, " ");
         }
         output=cleanUpSentence(output);
-        return output;
+        char *output2=malloc(sizeof(char)*((int)strlen(output)+num_of_space_ahead+1));
+        int a=0;
+        //// printf("num of space ahead is %d\n",num_of_space_ahead);
+        for(a=0;a<num_of_space_ahead;a++){
+            strcat(output2," ");
+        }
+        strcat(output2,output);
+        output2[(int)strlen(output2)]=0;
+        //return change_to_string;
+    
+        return output2;
     }
     else {
     
