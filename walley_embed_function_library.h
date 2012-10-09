@@ -541,8 +541,9 @@ char *dict_key(char *user){
 //################## Function for File Operation ###########################
 // file_readline("'math.wy'") and return list form of string
 char *file_readlines(char *walley_file_name){
+    printf("#### FILE_READLINES ####\n");
     walley_file_name=toCString(walley_file_name);
-    printf("#### file_readlines ####\n");
+    //printf("#### file_readlines ####\n");
     FILE *fp=fopen(walley_file_name,"r");
     if(fp==NULL){
         printf("Mistake occurred whiling calling function file_readlines\nDoes not find %s\n",walley_file_name);
@@ -550,40 +551,53 @@ char *file_readlines(char *walley_file_name){
         exit(0);
     }
     else{
-        char output[100000]="";
-        strcat(output,"[");
-        char arr[1000] = "";
-        
-        while (fgets(arr, 1000, fp) != NULL) {
-            char temp[1000];
-            int a=0;
-            for(a=0;a<(int)strlen(arr);a++){
-                if(arr[a]=='\n')
-                        break;
-                else
-                    temp[a]=arr[a];
+        //char output[100000]="";
+        //strcat(output,"[");
+        char arr[100000] = "";
+        char *output=append("","[");
+        while (fgets(arr, 100000, fp) != NULL) {
+            //char temp[1000];
+            //int a=0;
+            //for(a=0;a<(int)strlen(arr);a++){
+            //    if(arr[a]=='\n')
+            //            break;
+            //    else
+            //        temp[a]=arr[a];
+            //}
+            //char *temp2=substr(temp,0,(int)strlen(arr));
+            
+            char *temp3=append("", arr);
+            temp3=trim(temp3);
+            if (temp3[(int)strlen(temp3)-1]=='\n') {
+                temp3=substr(temp3,0,(int)strlen(temp3)-1);
             }
-            char *temp2=substr(temp,0,(int)strlen(arr));
-            strcat(output, "\"");
+            
+            //strcat(output, "\"");
+            output=append(output, "\"");
             //strcat(output, arr);
             //strcat(output,temp);
-            strcat(output,temp2);
-            strcat(output, "\",");
+            output=append(output, temp3);
+            //strcat(output,temp2);
+            //strcat(output, "\",");
+            output=append(output, "\",");
         }
         //printf("%s****************\n\n\n",output);
         output[(int) strlen(output)-1]=']';
-        int length=(int)strlen(output);
-        char *output2=malloc(sizeof(char)*(length+1));
-        int i=0;
-        for(i=0;i<(int)strlen(output);i++){
-            output2[i]=output[i];
-        }
-        output2[(int)strlen(output2)]=0;
+        
+        //int length=(int)strlen(output);
+        //char *output2=malloc(sizeof(char)*(length+1));
+        //int i=0;
+        //for(i=0;i<(int)strlen(output);i++){
+        //    output2[i]=output[i];
+        //}
+        //output2[(int)strlen(output2)]=0;
         //printf("%s****************\n\n\n",output);
         fclose(fp);
         //output2=substr(output2,0,length);
-        printf("OUTPUT2 %s\n",output2);
-        return output2;
+        //printf("OUTPUT2 %s\n",output2);
+        printf("|%s|\n",output);
+        //return output2;
+        return output;
     }
 }
 // file_writelines("'walley.wy','str to file'")

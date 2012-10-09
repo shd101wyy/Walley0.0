@@ -379,7 +379,7 @@ a[1][1]:2:int:
 */
 char *formatStringForListInOrderToWtiteFile(char *var_name,char *var_value){
     printf("#### formatStringForListInOrderToWtiteFile ####\n");
-    char input_message[1000] = "";
+    char input_message[100000] = "";
     //strcat(input_message, "\n");
     strcat(input_message, var_name);
     strcat(input_message, ":");
@@ -393,12 +393,12 @@ char *formatStringForListInOrderToWtiteFile(char *var_name,char *var_value){
     strcat(input_message ,":\n");
     
     int i=0;
-    printf("Enter here\n");
+    //printf("Enter here\n");
     int num_of_value=valueNumOfList(var_value);
-    printf("num of value is %d\n",num_of_value);
-    printf("var_value is %s\n",var_value);
+    //printf("num of value is %d\n",num_of_value);
+    //printf("var_value is %s\n",var_value);
     for(i=0;i<num_of_value;i++){
-        printf("-----> %d\n",i);
+        //printf("-----> %d\n",i);
         //char *var_value_from_list=valueOfListAtIndex(var_value,i);
         char number[500];
         sprintf(number,"%d",i);
@@ -409,12 +409,13 @@ char *formatStringForListInOrderToWtiteFile(char *var_name,char *var_value){
         //char *var_value_from_list=valueOfListAtIndex(var_value,i);
         char *var_value_from_list=valueOfListAtIndexString(var_value,index_str);
         char *value_type=variableValueType(var_value_from_list);
+        //printf("HERE\n");
         if(strcmp(value_type,"list")==0){
             //printf("Find list\n");
             char *temp_var_name=malloc(sizeof(char)*((int)strlen(var_name)+2+i%10+1));
             strcat(temp_var_name,var_name);
             strcat(temp_var_name,"[");
-            char temp_str[500];
+            char temp_str[5000]="";
             sprintf(temp_str,"%d",i);
             strcat(temp_var_name,temp_str);
             strcat(temp_var_name,"]");
@@ -424,15 +425,17 @@ char *formatStringForListInOrderToWtiteFile(char *var_name,char *var_value){
             //free(temp_var_name);
         } else {
             //printf("It is not list\n");
+            //printf("var_value_from_list is %s\n",var_value_from_list);
             char *temp_var_name=malloc(sizeof(char)*((int)strlen(var_name)+2+i%10+1));
             strcat(temp_var_name,var_name);
             strcat(temp_var_name,"[");
-            char temp_str[500];
+            char temp_str[5000]="";
             sprintf(temp_str,"%d",i);
             strcat(temp_var_name,temp_str);
             strcat(temp_var_name,"]");
             
-
+            //printf("AAAA\n");
+            
             strcat(input_message, temp_var_name);
             strcat(input_message, ":");
             strcat(input_message,var_value_from_list );
@@ -444,6 +447,7 @@ char *formatStringForListInOrderToWtiteFile(char *var_name,char *var_value){
             //free(temp_var_name);        
             
         }
+        //printf("EXIT\n");
         
     }
 

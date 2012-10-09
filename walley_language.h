@@ -704,13 +704,14 @@ char *Walley_Analyze_Sentence_Manually(char *input_str) {
             }
         }
         
-        char *answer=malloc(sizeof(char)*10);//[1000]="";
+        //char *answer=malloc(sizeof(char)*10);//[1000]="";
         //answer="";
-        //char answer[100];
+        char answer2[100]="";
         printf("|%s| in |%s| at index %d---->Var? Y/N\n",string_at_index,input_str,index);
-        gets(answer);
+        gets(answer2);
         //scanf("%s",&answer);
-        printf("answer is %s\n",answer);
+        printf("answer is %s\n",answer2);
+        char *answer=append("", answer2);
         answer=stringToUpperCase(answer);
         if (strcmp(answer, "Y") == 0 || strcmp(answer, "YES") == 0) {
             printf("It is Yes\n");

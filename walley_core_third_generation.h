@@ -1333,7 +1333,7 @@ char *Walley_Substitue_Var_And_Function_Return_Value_From_File_Third_Generation(
         //printf("#### Enter Loop Output is %s\n####",output);
         //printf("#### Output Length is %d\n",(int)strlen(output));
         int temp_length=(int)strlen(output);
-        printf("--->%c find_var %d\n",input_str[i],find_alpha);
+        //printf("--->%c find_var %d\n",input_str[i],find_alpha);
         /*
         if(finishFindingVarAndFunction(output)==TRUE){
             printf("Finish Finding Var And Function, output is |%s|\n",output);

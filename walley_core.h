@@ -2221,14 +2221,15 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(char *file_var_name,char *se
         char *in_what = substr(input_str, find(input_str, " in ") + 4, (int) strlen(removeBackSpace(input_str)) - 1);
         in_what = removeAheadSpace(removeBackSpace(in_what));
         in_what = Walley_Substitue_Var_And_Function_Return_Value_From_File(in_what, file_var_name);
-        printf("i is |%s|, in_what is |%s|\n", temp_i, in_what);
+        //printf("i is |%s|, in_what is |%s|\n", temp_i, in_what);
         now_writting_for = TRUE;
         //temp_i_in_for_sentence=getValueFromValueName(file_name,in_what);
         temp_i_in_for_sentence = in_what;
         if (strcmp(variableValueType(temp_i_in_for_sentence), "string") == 0) {
+            printf("It is string\n");
             temp_i_in_for_sentence = changeStringToList(temp_i_in_for_sentence);
         }
-        printf("i is |%s|\n", temp_i_in_for_sentence);
+        //printf("i is |%s|\n", temp_i_in_for_sentence);
 
         space_of_first_for_sentence = space;
         space = space + 4;
@@ -2241,7 +2242,7 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(char *file_var_name,char *se
             //printf("####$$$$$ %s\n",temp_for_var_value);
             changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name,"__temp_for__",temp_for_var_value);
             
-            //printf("here\n");
+            printf("@@@@@@@@@@@@HERE\n");
             
             char *__temp_i__=getValueFromValueName(file_var_name,"__temp_i__");
             __temp_i__=listAppendOneElement(__temp_i__,temp_i);
