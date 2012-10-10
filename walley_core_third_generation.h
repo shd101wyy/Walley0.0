@@ -339,7 +339,10 @@ void Walley_Run_Third_Generation(char* file_name, char *setting_file, char *temp
             char temp3[100];
             sprintf(temp3, "%d", now_writting_for);
             changeTheVarValueFromItsInitialOneFromFile(setting_file, "now_writting_for", (char*) temp3, "int");
-
+            space=current_space;
+            sprintf(temp3, "%d", space);
+            changeTheVarValueFromItsInitialOneFromFile(setting_file, "space", (char*) temp3, "int");
+            
             if (strcmp(variableValueType(temp_i_in_for_sentence), "list") == 0) {
                 //printf("i is list type\ni value is |%s|\n", temp_i_in_for_sentence);
                 //printf("temp i is |%s|\n", temp_i);

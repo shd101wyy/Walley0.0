@@ -213,7 +213,7 @@ void Walley_Run_For_Appointed_File(char* file_name,char *setting_file,char* temp
     char *last_if_sentence=getValueFromValueName(setting_file,"last_if_sentence");
     
     int current_space=numOfSpaceAheadString(input_str);
-   //// printf("-------Now input is |%s|\n",input_str);
+    printf("-------Now input is |%s|\n",input_str);
     //printf("-------Now input length is %d\n",(int)strlen(input_str));
     //printf("-------Now Ahead Space is %d\n",current_space);
     //printf("-------Now writting in function is %d\n",now_writting_function);

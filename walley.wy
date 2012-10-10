@@ -1,10 +1,14 @@
-println("Hello")
-x=5
-while x>=1:
-    y=0
-    while y<x:
+def range(num1,num2):
+    x=[]
+    while num1<num2:
+        x.append(num1)
+        num1=num1+1
+    #here is some mistake 
+    return x
+#end define range
+
+for i in [1,2,3]:
+    for j in [1,2]:
         print("*")
-        y=y+1
-    x=x-1
     println("")
-#end
+    
