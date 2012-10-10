@@ -98,7 +98,7 @@ void Walley_Run_Third_Generation(char* file_name, char *setting_file, char *temp
             input_str=substr(input_str, 0, find_not_in_string(input_str, "#"));
         }
         //
-   //// printf("\n\n\n\n-------Now input is |%s|\n", input_str);
+   //// printf("-------Now input is |%s|\n", input_str);
     //printf("-------Current Space is |%d|\n",current_space);
     //printf("temp2 is %s\n",temp2);
     //printf("-------Now Ahead Space is %d\n",current_space);
@@ -1069,7 +1069,7 @@ char *Walley_Run_One_Function_And_Return_Value_Third_Generation(char *input_str,
 
         if(finish_init_param==TRUE && finish==FALSE){
             strcat(output,arr);
-           //// printf("------->%s\n",arr);
+           //// printf("-------------->%s\n",arr);
             //Walley_Run(arr);
             //Walley_Run_For_Appointed_File("__walley_temp__.wy","__walley_settings_temp__.wy",arr);
             char *temp=removeAheadSpace(removeBackSpace(arr));
@@ -1224,6 +1224,7 @@ char *Walley_Run_One_Function_And_Return_Value_Third_Generation(char *input_str,
     
     //remove("__walley_temp__.wy");
     //remove("__walley_settings_temp__.wy");
+    Walley_Run_Third_Generation(file_var_temp_name, file_settings_temp_name, file_file_temp_name, "__walley_function__.wy", "#end function");
     remove(file_var_temp_name);
     remove(file_settings_temp_name);
     remove(file_file_temp_name);
@@ -1434,6 +1435,8 @@ char *Walley_Substitue_Var_And_Function_Return_Value_From_File_Third_Generation(
                     bool instance_existed = checkWhetherSameInstanceExisted(file_var_name, user);
                     bool var_existed = checkWhetherSameVarNameExistsFromFile(file_var_name,user);
                     
+                    bool only_var_existed = var_existed;
+                    
                     char *user_value=Walley_Substitue_Var_And_Function_Return_Value_From_File_Third_Generation(user, file_var_name);
                     char *function_temp=replace_not_in_string(function, user, user_value);
                     
@@ -1443,7 +1446,11 @@ char *Walley_Substitue_Var_And_Function_Return_Value_From_File_Third_Generation(
                     }             
                     
                     if (instance_existed == FALSE && var_existed==TRUE){
+                        if (only_var_existed==TRUE) {
+                            return_value=Walley_Run_Special_Function(function, file_var_name);
+                        } else {
                         return_value = Walley_Run_Special_Function(function_temp, file_var_name);
+                        }
                         //printf("RETURN VALUE is %s\n",return_value);
                     }
                     else {
@@ -1729,6 +1736,7 @@ char *Walley_Substitue_Var_And_Function_Return_Value_From_File_Third_Generation(
             else {
                 if(checkWhetherSameVarNameExistsFromFile(file_var_name,var_name)==TRUE){
                         var_value=getValueFromValueName(file_var_name,var_name);
+                   //// printf("FIND!! %s   %s\n",file_var_name,var_name);
                 } else {
                     var_value=var_name;
                 }

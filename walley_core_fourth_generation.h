@@ -103,7 +103,7 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
         }
         //
         
-    //// printf("\n\n\n\n-------Now input is |%s|\n", input_str);
+   //// printf("\n\n\n\n-------Now input is |%s|\n", input_str);
     //printf("-------Current Space is |%d|\n",current_space);
     //printf("temp2 is %s\n",temp2);
     //printf("-------Now Ahead Space is %d\n",current_space);
@@ -180,14 +180,18 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
             
             //get __temp_while__ to get last_while_sentence
             char *__temp_while__=getValueFromValueName(file_name,"__temp_while__");
+           //// printf("__temp_while__ is %s\n",__temp_while__);
             int length_of_list=valueNumOfList(__temp_while__);
             char *last_while_sentence2=valueOfListAtIndex(__temp_while__,length_of_list-1);
            //// printf("Last_While_Sentence is %s\n",last_while_sentence2);
             
             //get __temp_string_in_while_loop__
             char *__temp_string_in_while_loop__=getValueFromValueName(file_name,"__temp_string_in_while_loop__");
+           //// printf("BEFORE APPEND -->|%s|\n",__temp_string_in_while_loop__);
+           //// printf("STRING IN WHILE LOOP-->|%s|\n",string_in_while_loop);
             __temp_string_in_while_loop__=listAppendOneElement(__temp_string_in_while_loop__,string_in_while_loop);
             changeTheWholeVarValueFromItsInitialOneFromFileForList(file_name,"__temp_string_in_while_loop__",__temp_string_in_while_loop__);
+           //// printf("AFTER CHANGE %s\n",__temp_string_in_while_loop__);
             string_in_while_loop="\"#While\\n\"";
             changeTheVarValueFromItsInitialOneFromFile(setting_file, "string_in_while_loop", string_in_while_loop, "string");
             char *string_in_while_loop2=valueOfListAtIndex(__temp_string_in_while_loop__,length_of_list-1);
@@ -205,7 +209,7 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
                     continue;
                 }
                 
-                
+              ////  printf("\ntemp to run |%s|\n",temp_to_run);
                 Walley_Run_Fourth_Generation(file_name, setting_file, temp_file_name, existing_file, temp_to_run);
                 //Walley_Run_For_Appointed_File(file_name,setting_file,temp_file_name,temp_to_run);
             }
@@ -219,8 +223,10 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
             strcat(remove_at_index,"]");
            //// printf("remove at index is %s\n",remove_at_index);
             __temp_while__=listRemoveOneElementAtOneIndex(__temp_while__,remove_at_index);
+           //// printf("__temp_while__ %s\n\n",__temp_while__);
             changeTheWholeVarValueFromItsInitialOneFromFileForList(file_name,"__temp_while__",__temp_while__);
             __temp_string_in_while_loop__=listRemoveOneElementAtOneIndex(__temp_string_in_while_loop__,remove_at_index);
+           //// printf("__temp_string_in_while_loop %s\n\n",__temp_string_in_while_loop__);
             changeTheWholeVarValueFromItsInitialOneFromFileForList(file_name,"__temp_string_in_while_loop__",__temp_string_in_while_loop__);
         }
     }//############### Now Writting Function In Progress #####################
@@ -897,6 +903,9 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
     if (continue_run == TRUE && run_goto == FALSE) {
        //// printf("continue run\n");
         if (find_gang_gang == TRUE) {
+           // int index_of_gang_gang_n=find(temp_input_str, "\\n");
+           // printf("index of gang gang is %d\n",index_of_gang_gang_n);
+           // printf("index of \\n %d",(int)strlen("\\n"));
             Walley_Run_Fourth_Generation(file_name, setting_file, temp_file_name, existing_file, substr(temp_input_str, find(temp_input_str, "\\n") + 2, (int) strlen(temp_input_str)));
 
         } else {

@@ -651,6 +651,8 @@ char *Walley_Run_Special_Function(char *function, char *file_var_name) {
     /*
      * eg x="Hello"-----> x.find("He")----->0
      */
+   //// printf("#### Walley_Run_Special_Function ####\n");
+   //// printf("FUNCTION %s, FILE_VAR_NAME %s\n",function,file_var_name);
     char *return_value;
 
    //// printf("Begin to run special function like x=[1,2,3]  x.append(12)\n");
@@ -727,6 +729,7 @@ char *Walley_Run_Special_Function(char *function, char *file_var_name) {
             return_value = dict_key(user_value);
         }
     }
-
+    
+   //// printf("RETURN VALUE %s\n",return_value);
     return return_value;
 }

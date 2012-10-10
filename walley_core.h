@@ -759,6 +759,9 @@ void Walley_Remove_Variable_And_Value_From_File(char* file_var_name, char *var_n
         }
 
         while ((fgets(arr, 1000, fp)) != NULL) {
+            if (find_not_in_string(arr, ":")==-1) {
+                continue;
+            }
             char *var_name_in_file = substr(arr, 0, find(arr, ":"));
             if (strcmp(var_name_in_file, var_name) != 0) {
                 if (begin_to_copy == TRUE)
@@ -1243,6 +1246,8 @@ char *Walley_Run_One_Function_And_Return_Value(char *input_str,char *get_var_fro
     
     //remove("__walley_temp__.wy");
     //remove("__walley_settings_temp__.wy");
+    Walley_Run_For_Appointed_File(file_var_temp_name, file_settings_temp_name,file_file_temp_name,"#end function");
+
     remove(file_var_temp_name);
     remove(file_settings_temp_name);
     remove(file_file_temp_name);
@@ -1434,6 +1439,8 @@ char *Walley_Substitue_Var_And_Function_Return_Value_From_File(char* input_str, 
                     bool instance_existed = checkWhetherSameInstanceExisted(file_var_name, user);
                     bool var_existed = checkWhetherSameVarNameExistsFromFile(file_var_name, user);
                     
+                    bool only_var_existed = var_existed;
+                    
                     char *user_value=Walley_Substitue_Var_And_Function_Return_Value_From_File(user, file_var_name);
                     char *function_temp=replace_not_in_string(function, user, user_value);
                     
@@ -1443,7 +1450,12 @@ char *Walley_Substitue_Var_And_Function_Return_Value_From_File(char* input_str, 
                     
                     if (instance_existed == FALSE && var_existed == TRUE) {
                        //// printf("function is %s\nfile_var_name is %s\n", function, file_var_name);
-                        return_value = Walley_Run_Special_Function(function_temp, file_var_name);
+                       // return_value = Walley_Run_Special_Function(function_temp, file_var_name);
+                        if (only_var_existed==TRUE) {
+                            return_value=Walley_Run_Special_Function(function, file_var_name);
+                        } else {
+                            return_value = Walley_Run_Special_Function(function_temp, file_var_name);
+                        }
                     } else {
                         return_value = Walley_Run_One_Function_And_Return_Value(function, "__walley__.wy");
                     }

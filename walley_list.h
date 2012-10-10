@@ -632,6 +632,9 @@ bool isListElement(char *file_name, char *var_name){
         exit(1);
     }
     //printf("Enter here\n");
+    if (find_not_in_string(var_name, "[")==-1) {
+        return FALSE;
+    }
     char *list_var_name=substr(var_name,0,find_not_in_string(var_name,"["));//a[0]-->a
     list_var_name=removeAheadSpace(list_var_name);
     bool find_var_name=FALSE;
@@ -692,14 +695,21 @@ char *changeStringToList(char *input_str){
  */
 char *listAppendOneElement(char *list, char *append_element){
    //// printf("#### listAppendOneElement ####\n");
-    list=removeAheadSpace(removeBackSpace(list));
+    list=trim(list);
     list=substr(list,0,(int)strlen(list)-1);//[1,2]---->[1,2
-    char *output=malloc(sizeof(char)*((int)strlen(list)+1+(int)strlen(append_element)+1));
-    strcat(output,list);
-    if(strcmp(list,"[")!=0)
-        strcat(output,",");//[1,2,
-    strcat(output,append_element); //[1,2,[3,4]
-    strcat(output,"]"); //[1,2,[3,4]]
+    //char *output=malloc(sizeof(char)*((int)strlen(list)+1+(int)strlen(append_element)+1));
+    char *output;
+    //strcat(output,list);
+    output=append("", list);
+    if(strcmp(list,"[")!=0){
+        //strcat(output,",");//[1,2,
+        output=append(output, ",");
+    }
+    //strcat(output,append_element); //[1,2,[3,4]
+    output=append(output, append_element);
+    //strcat(output,"]"); //[1,2,[3,4]]
+    output=append(output,"]");
+   //// printf("\n\nHERE-->ouput %s\n\n\n",output);
     return output;
 }
 /*

@@ -706,6 +706,7 @@ char *Walley_Analyze_Sentence_Manually(char *input_str) {
         
         //char *answer=malloc(sizeof(char)*10);//[1000]="";
         //answer="";
+        getchar();
         char answer2[100]="";
         printf("|%s| in |%s| at index %d---->Var? Y/N\n",string_at_index,input_str,index);
         gets(answer2);

@@ -1233,11 +1233,14 @@ char *Walley_Run_One_Function_And_Return_Value_Second_Generation(char *input_str
     
     //remove("__walley_temp__.wy");
     //remove("__walley_settings_temp__.wy");
+        Walley_Run_Second_Generation(file_var_temp_name, file_settings_temp_name, file_file_temp_name, "__walley_function__.wy", "#end function");
+    
     remove(file_var_temp_name);
     remove(file_settings_temp_name);
     remove(file_file_temp_name);
     
     //printf("The output is \n####################\n%s####################\n",output);
+
     return return_value;
 }
 
@@ -1423,6 +1426,8 @@ char *Walley_Substitue_Var_And_Function_Return_Value_From_File_Second_Generation
                 bool instance_existed=checkWhetherSameInstanceExisted(file_var_name,user);
                 bool var_existed = checkWhetherSameVarNameExistsFromFile(file_var_name,user);
                 
+                bool only_var_existed = var_existed;
+                
                 char *user_value=Walley_Substitue_Var_And_Function_Return_Value_From_File_Second_Generation(user, file_var_name);
                 char *function_temp=replace_not_in_string(function, user, user_value);
                 
@@ -1430,8 +1435,14 @@ char *Walley_Substitue_Var_And_Function_Return_Value_From_File_Second_Generation
                     var_existed=TRUE;
                 }
                 
-                if(instance_existed==FALSE && var_existed==TRUE)
-                        return_value =Walley_Run_Special_Function(function_temp,file_var_name);
+                if(instance_existed==FALSE && var_existed==TRUE){
+                     //   return_value =Walley_Run_Special_Function(function_temp,file_var_name);
+                    if (only_var_existed==TRUE) {
+                        return_value=Walley_Run_Special_Function(function, file_var_name);
+                    } else {
+                        return_value = Walley_Run_Special_Function(function_temp, file_var_name);
+                    }
+                }
                 else{
                    //// printf("FIND INSTANCE, THIS IS A CLASS FUNCTION\n");
                     return_value=Walley_Run_One_Function_And_Return_Value_Second_Generation(function,"__walley__.wy");

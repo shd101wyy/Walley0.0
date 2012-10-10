@@ -16,7 +16,13 @@ char* substr(char* input_str, int from_index, int to_index) {
     if (from_index < 0){// || to_index > (int) strlen(input_str)) {
         printf("\nMistake occurred while calling function substr\nPlease Check\n");
         printf("the input_str is %s from_index %d to_index %d\n\n",input_str,from_index,to_index);
-        return "\nMistake occurred while calling function substr\nPlease Check\n";
+        //return "\nMistake occurred while calling function substr\nPlease Check\n";
+        exit(0);
+    }
+    else if (from_index>to_index){
+        printf("\nMistake occurred while calling function substr\nPlease Check\n");
+        printf("the input_str is %s from_index %d to_index %d\n\n",input_str,from_index,to_index);
+        exit(1);
     }
     else if (from_index==to_index){
         //printf("RETURN NONE");
@@ -24,11 +30,11 @@ char* substr(char* input_str, int from_index, int to_index) {
     }
     else {
         //printf("\n\nFunction substr:\nThe input_str is %s\nthe from_index is %d\nthe to_index is %d\n", input_str, from_index, to_index);
-        if(to_index>(int)strlen(input_str))
-            to_index=(int)strlen(input_str);
+        //if(to_index>(int)strlen(input_str))
+        //    to_index=(int)strlen(input_str);
         int length = to_index - from_index;
         int i;
-        char *output = malloc((1+length) * sizeof (char));
+        char *output = malloc((length+1) * sizeof (char));
         for (i = 0; i < length; i++) {
             //*(output + i) = *(input_str + from_index + i);
             output[i] = input_str[from_index + i];

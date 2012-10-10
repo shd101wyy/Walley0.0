@@ -20,6 +20,7 @@ int main(int argc, char *argv[]){
     ////getcwd(cwd, sizeof (cwd));
     ////printf("Current Working Directory%s\n\n\n\n\n",cwd);
     ////printf("############################################################################\n\n");
+    /*
     FILE *fp;
     bool path_file_existed=TRUE;
     fp=fopen("__walley_path__.wy", "r");
@@ -177,7 +178,9 @@ int main(int argc, char *argv[]){
     }
     else{
         printf("......");
-    }
+    }*/
+    Walley_Initialize();
+    Walley_Run_File("/Users/shd101wyy/Documents/workspace/xcode/Walley/Walley/walley.wy");
      
     //printf("%d",charIsInDictionary("\"a\"", 0));
     //printf("Here\n");

@@ -1,0 +1,10 @@
+println("Hello")
+x=5
+while x>=1:
+    y=0
+    while y<x:
+        print("*")
+        y=y+1
+    x=x-1
+    println("")
+#end

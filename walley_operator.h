@@ -251,7 +251,7 @@ char* countFromExpression(char *var_value) {
         //strcat(output,output_str);
         //return output_temp;
         char *output_output=malloc(sizeof(char)*(int)strlen(output_str));
-        int a;
+        int a=0;
         for(a=0;a<(int)strlen(output_str);a++){
             output_output[a]=output_str[a];
         }
@@ -347,6 +347,7 @@ char *countFirstOrderSignAndChangeTheStrOnlyOnce(char *input_str){
 
 
 char *eval_simple_str(char *input_str){
+    /*
     int i=0;
     int j=0;
     
@@ -366,7 +367,7 @@ char *eval_simple_str(char *input_str){
     
     int end_of_second_num=(int)strlen(input_str)-1;
     int begin_of_first_num=0;
-    
+    */
    // for(;i<(int)strlen(input_str);i++){
     while(hasFirstOrderSignExist(input_str)==TRUE){
         input_str=countFirstOrderSignAndChangeTheStrOnlyOnce(input_str);

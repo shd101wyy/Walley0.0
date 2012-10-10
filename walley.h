@@ -250,6 +250,9 @@ void Walley_Agent_Recall(char *file_name) {
                     printf("Output--------------------|\n");
                     Walley_Agent_Run(temp_str);
                     printf("Finish Thinking---------------------|\n");
+                    printf("###################################################\n");
+                    printf("###################################################\n\n\n");
+
                     count += 1;
                 }
             }
@@ -263,6 +266,8 @@ void Walley_Agent_Recall(char *file_name) {
                 scanf("%d", &sentence_number);
                 if (sentence_number == 0) {
                     printf("\n\n#################################################\n\n");
+                    printf("Exit\n");
+                    exit(1);
                 } else {
                     printf("\nSentence # %d made mistake!\n", sentence_number);
                     count = 1;
@@ -301,6 +306,9 @@ void Walley_Agent_Recall(char *file_name) {
                                 printf("Output--------------------|\n");
                                 Walley_Agent_Run(input_to_run);
                                 printf("Finish Thinking---------------------|\n");
+                                printf("###################################################\n");
+                                printf("###################################################\n\n\n");
+
                                 
                                 break;
                             } else {

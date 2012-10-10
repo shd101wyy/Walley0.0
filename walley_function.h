@@ -707,31 +707,39 @@ char *combineStringsToOneString(char *input_str){
 }
 
 bool stringIsEmpty(char *input_str){
+    input_str=trim(input_str);
     int i=0;
     bool isEmpty=TRUE;
     for(; i<(int)strlen(input_str);i++){
         if(input_str[i]!=' ')
             isEmpty=FALSE;
     }
+    if (strcmp("\n", input_str)==0) {
+        isEmpty=TRUE;
+    }
+    //// printf("Input Str |%s|,length %d,isEmpty %d\n",input_str,(int)strlen(input_str),isEmpty);
     return isEmpty;
 }
 char *getValueFromValueName(char *file_name,char *var_name){
-    //printf("#### getValueFromValueName ####\n");
+    //// printf("#### getValueFromValueName ####\n");
     //printf("%s, %s\n",file_name,var_name);
     //printf("%s\n",file_name);
-    FILE *fp;
+    FILE *fp=fopen(file_name, "r");
     char ch;
-    char arr[1000]="";
+    char arr[10000]="";
     char output[1000]="";
     int final_shuangyinhao=0;
-    if ((fp = fopen(file_name, "r")) == NULL) {
-        perror("getValueFromValueName,File open error!\n");
+    if (fp == NULL) {
+        printf("getValueFromValueName,File open error!\n");
         exit(1);
     } //else {
       //  printf("Find file\n");
     //}
     char *var_value="None";
-    while ((fgets(arr, 1000, fp)) != NULL) {
+    while ((fgets(arr, 10000, fp)) != NULL) {
+        if (find(arr, ":")==-1) {
+            continue;
+        }
         char *func_name_in_file=substr(arr,0,find(arr,":"));
         if (strcmp(func_name_in_file, var_name) == 0) {
             final_shuangyinhao=find_from_index_not_in_string(arr,":",find_not_in_string(arr,":")+1);
