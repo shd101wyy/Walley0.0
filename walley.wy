@@ -7,6 +7,16 @@ def range(num1,num2):
     return x
 #end define range
 
+x=0
+y=0
+while x<2:
+    y=0
+    while y<2:
+        y=y+1
+        print("*")
+    x=x+1
+#end
+println("")
 for i in [1,2,3]:
     for j in [1,2]:
         print("*")

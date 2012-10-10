@@ -167,7 +167,7 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
             string_in_while_loop = temp_in_loop;
             changeTheVarValueFromItsInitialOneFromFile(setting_file, "string_in_while_loop", string_in_while_loop, "string");
         } else if (current_space <= space_of_first_while_sentence && current_space % 4 == 0) {
-            printf("Begin to Run While, input_str %s, current_space %d, space_of_first %d\n",input_str,current_space,space_of_first_while_sentence);
+           //// printf("Begin to Run While, input_str %s, current_space %d, space_of_first %d\n",input_str,current_space,space_of_first_while_sentence);
             can_run_basic_input = TRUE;
             now_writting_while = FALSE;
 
@@ -338,17 +338,21 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
             //printf("STRING IN FOR LOOP is |%s|\n", string_in_for_loop);
             can_run_basic_input = FALSE;
             input_str = removeAheadSpaceForNum(input_str, space_of_first_for_sentence + 4);
-           //// printf("Input str is |%s|\n", input_str);
-            char *temp_in_loop = malloc(sizeof (char) *((int) strlen(input_str)+(int) strlen(string_in_for_loop) + 2));
-            strcat(temp_in_loop, substr(string_in_for_loop, 0, (int) strlen(string_in_for_loop) - 1));
-            strcat(temp_in_loop, input_str);
-            strcat(temp_in_loop, "\\n\"");
+            //printf("Input str is |%s|\n", input_str);
+            //char *temp_in_loop = malloc(sizeof (char) *((int) strlen(input_str)+(int) strlen(string_in_for_loop) + 2));
+            //strcat(temp_in_loop, substr(string_in_for_loop, 0, (int) strlen(string_in_for_loop) - 1));
+            //strcat(temp_in_loop, input_str);
+            //strcat(temp_in_loop, "\\n\"");
+            
+            char *temp_in_loop=append(substr(string_in_for_loop, 0, (int) strlen(string_in_for_loop) - 1), input_str);
+            temp_in_loop=append(temp_in_loop, "\\n\"");
+            
             string_in_for_loop = temp_in_loop;
             //printf("STRING IN FOR LOOP is |%s|\n", string_in_for_loop);
             changeTheVarValueFromItsInitialOneFromFile(setting_file, "string_in_for_loop", string_in_for_loop, "string");
             
         } else if (current_space <= space_of_first_for_sentence && current_space % 4 == 0) {
-           //// printf("\nBegin to Run For input_str %s, current_space %d, space_of_first %d\n",input_str,current_space,space_of_first_for_sentence);
+            //printf("\nBegin to Run For input_str %s, current_space %d, space_of_first %d\n",input_str,current_space,space_of_first_for_sentence);
             can_run_basic_input = TRUE;
             now_writting_for = FALSE;
             //printf("----String in loop is %s\n",string_in_for_loop);
@@ -384,7 +388,7 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
             //printf("temp_i is %s\n",temp_i2);
             
             //get __temp_string_in_for_loop__
-               //// printf("string in for loop %s\n",string_in_for_loop);
+            //printf("string in for loop %s\n",string_in_for_loop);
             char *__temp_string_in_for_loop__=getValueFromValueName(file_name,"__temp_string_in_for_loop__");
             __temp_string_in_for_loop__=listAppendOneElement(__temp_string_in_for_loop__,string_in_for_loop);
             changeTheWholeVarValueFromItsInitialOneFromFileForList(file_name,"__temp_string_in_for_loop__",__temp_string_in_for_loop__);

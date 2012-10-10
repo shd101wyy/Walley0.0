@@ -324,10 +324,12 @@ void Walley_Run_Third_Generation(char* file_name, char *setting_file, char *temp
             can_run_basic_input = FALSE;
             input_str = removeAheadSpaceForNum(input_str, space_of_first_for_sentence + 4);
             //printf("Input str is |%s|\n", input_str);
-            char *temp_in_loop = malloc(sizeof (char) *((int) strlen(input_str)+(int) strlen(string_in_for_loop) + 2));
-            strcat(temp_in_loop, substr(string_in_for_loop, 0, (int) strlen(string_in_for_loop) - 1));
-            strcat(temp_in_loop, input_str);
-            strcat(temp_in_loop, "\\n\"");
+            //char *temp_in_loop = malloc(sizeof (char) *((int) strlen(input_str)+(int) strlen(string_in_for_loop) + 2));
+            //strcat(temp_in_loop, substr(string_in_for_loop, 0, (int) strlen(string_in_for_loop) - 1));
+            //strcat(temp_in_loop, input_str);
+            //strcat(temp_in_loop, "\\n\"");
+            char *temp_in_loop=append(substr(string_in_for_loop, 0, (int) strlen(string_in_for_loop) - 1), input_str);
+            temp_in_loop=append(temp_in_loop, "\\n\"");
             string_in_for_loop = temp_in_loop;
             //printf("STRING IN FOR LOOP is |%s|\n", string_in_for_loop);
             changeTheVarValueFromItsInitialOneFromFile(setting_file, "string_in_for_loop", string_in_for_loop, "string");
