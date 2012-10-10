@@ -1900,3 +1900,415 @@ char *Walley_Println_Third_Generation(char *var_in_file_name, char *input_str){
     return output;*/
     return append(Walley_Print_Third_Generation(var_in_file_name,input_str), "\n");
 }
+
+void Walley_Judge_Run_Anotation_For_While_Def_Class_Third_Generation(char *file_var_name,char *setting_file,char *input_str) {
+    //// printf("Walley_Judge_Run_Anotation_For_While_Def_Class----->|%s|,|%s|,|%s|\n",file_var_name,setting_file,input_str);
+    input_str = removeAheadSpace(input_str);
+    
+    int space = atoi(getValueFromValueName(setting_file, "space"));
+    bool now_writting_function = atoi(getValueFromValueName(setting_file, "now_writting_function"));
+    bool now_writting_class = atoi(getValueFromValueName(setting_file, "now_writting_class"));
+    bool now_writting_while = atoi(getValueFromValueName(setting_file, "now_writting_while"));
+    bool now_writting_for = atoi(getValueFromValueName(setting_file, "now_writting_for"));
+    bool now_run_if = atoi(getValueFromValueName(setting_file, "now_run_if"));
+    char *last_if_sentence = getValueFromValueName(setting_file, "last_if_sentence");
+    char *last_while_sentence = getValueFromValueName(setting_file, "last_while_sentence");
+    char *string_in_while_loop = getValueFromValueName(setting_file, "string_in_while_loop");
+    char *string_in_for_loop = getValueFromValueName(setting_file, "string_in_for_loop");
+    char *temp_i = getValueFromValueName(setting_file, "temp_i");
+    char *temp_i_in_for_sentence = getValueFromValueName(setting_file, "temp_i_in_for_sentence");
+    //I add this value here in order to run now_run_if.
+    bool can_run_basic_input = TRUE;
+    bool run_goto = FALSE;
+    int space_of_first_while_sentence = atoi(getValueFromValueName(setting_file, "space_of_first_while_sentence"));
+    int space_of_first_for_sentence = atoi(getValueFromValueName(setting_file, "space_of_first_for_sentence"));
+    int space_of_first_def_sentence = atoi(getValueFromValueName(setting_file, "space_of_first_def_sentence"));
+    int space_of_first_class_sentence = atoi(getValueFromValueName(setting_file,"space_of_first_def_sentence"));
+    
+    int current_space=atoi(getValueFromValueName(setting_file,"current_space"));
+    //// printf("current_space is %d\n",current_space);
+    
+    //#####################  Anotation  ###################
+    if (input_str[0] == '#') {
+        //printf("This is one anatation %s\n", removeAheadSpace(input_str));
+        printf("");
+    }
+    else if (find(input_str,"class ")==0){
+        //// printf("#### begin to define a class ####\n");
+        now_writting_class=TRUE;
+        space_of_first_class_sentence=space;
+        space=space+4;
+        
+        char *class_name=className(input_str);
+        char *class_mother=classMother(input_str);
+        char *__temp_class__=getValueFromValueName(file_var_name,"__temp_class__");
+        __temp_class__=dictionaryAddKeyAndValue(__temp_class__,toString(class_name),toString(class_mother));
+        changeTheWholeVarValueFromItsInitialOneFromFileForDictionary(file_var_name,"__temp_class__",__temp_class__);
+        
+        char *__string_in_temp_class__=getValueFromValueName(file_var_name,"__string_in_temp_class__");
+        //char *temp=malloc(sizeof(char)*((int)strlen("#Begin to define class...\\nClass name:\\n")+1+(int)strlen(class_name)));
+        __string_in_temp_class__=dictionaryAddKeyAndValue(__string_in_temp_class__,toString(class_name),toString("#Begin to define class...\\n"));
+        
+        
+        //// printf("__string_in_temp_class__ is %s\n",__string_in_temp_class__);
+        changeTheWholeVarValueFromItsInitialOneFromFileForDictionary(file_var_name,"__string_in_temp_class__",__string_in_temp_class__);
+        
+        
+        //// printf("class_name is %s, class extends %s\n",class_name,class_mother);
+        
+        changeTheVarValueFromItsInitialOneFromFile(file_var_name,"__temp_class_name_now_writting__",toString(class_name),"string");
+        
+    }
+    // ##############  Function  ##############################
+    else if (find(input_str, "def ") == 0) {
+        //// printf("\n###### begin to define a function######\n");
+        space_of_first_def_sentence = space;
+        space = space + 4;
+        //printf("Now Space is %d\n",space);
+        
+        now_writting_function = TRUE;
+        //char *output=defineAFunction(input_str);
+        //printf("100---------------\n%s---------------\n",getStringFromFile("__walley_settings__.wy"));
+        char *func_name = functionName(input_str);
+        char *func_param_str = functionParameterStr(input_str);
+        bool has_same_function_name = checkWhetherSameFunctionNameExists(func_name);
+        if (has_same_function_name) {
+            //printf("Has Same Function Name\n");
+            changeFunctionFromItsInitialOne(func_name, func_param_str);
+            
+        } else {
+            //printf("Does Not Have Same Function Name\n");
+            writeFunctionIntoFile(func_name, func_param_str);
+            writeStringToFile("__walley_function__.wy", "#~Begin\n");
+            //writeStringToFIle("__walley_function__.wy","Begin\n");
+            
+            if (strcmp(func_param_str, "None") == 0) {
+                //// printf("This Function has no Parameter\n");
+                writeStringToFile("__walley_function__.wy","#### Parameters  are None ####\n");
+                writeStringToFile("__walley_function__.wy", "##Finish Init Params\n");
+            } else {
+                writeFunctionParameterOneByOneToFile(func_param_str);
+                writeStringToFile("__walley_function__.wy", "##Finish Init Params\n");
+                //writeStringToFile("__walley_function__.wy","#Finish initialize parameters\n");
+            }
+        }
+    }//################## Judge Whether this whether an if sentence ##########################
+    else if (find(input_str, "if ") == 0 || find(input_str, "elif ") == 0 || find(input_str, "else") == 0) {
+        //// printf("now judge if sentence\n");
+        char *sentence = "";
+        char *temp_for_sentence = removeAheadSpace(removeBackSpace(input_str));
+        bool can_run=TRUE;
+        space=current_space;
+        
+        if (find(input_str, "if ") == 0) {
+            //// printf("Find If\n");
+            sentence = substr(temp_for_sentence, find(temp_for_sentence, "if ") + 3, (int) strlen(temp_for_sentence) - 1);
+            last_if_sentence = sentence;
+            can_run = Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(sentence, file_var_name);
+            //// printf("++++++can run is %d\n",can_run);
+            
+            // if can run.
+            // Write last_if_sentence to __temp_if__
+            //if(can_run==TRUE){
+            char *__temp_if__=getValueFromValueName(file_var_name,"__temp_if__");
+            __temp_if__=listAppendOneElement(__temp_if__,last_if_sentence);
+            changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name,"__temp_if__",__temp_if__);
+            //}
+            char *__temp_if_space__=getValueFromValueName(file_var_name,"__temp_if_space__");
+            char temp_num[100];
+            sprintf(temp_num,"%d",space);
+            __temp_if_space__=listAppendOneElement(__temp_if_space__,temp_num);
+            
+            char *__has_run_if__=getValueFromValueName(file_var_name,"__has_run_if__");
+            //char temp_num[100];
+            sprintf(temp_num,"%d",can_run);
+            __has_run_if__=listAppendOneElement(__has_run_if__,temp_num);
+            
+            
+            // Delete the same // eg delete one 4 from [0,4,4]
+            int num_of_temp_if_space=valueNumOfList(__temp_if_space__);
+            if (num_of_temp_if_space > 1) {
+                char *previous = valueOfListAtIndex(__temp_if_space__, num_of_temp_if_space - 2);
+                char *now = valueOfListAtIndex(__temp_if_space__, num_of_temp_if_space - 1);
+                if (atoi(previous) == atoi(now)) {
+                    //// printf("--------Find Another If--------\n");
+                    char temp_length[100];
+                    int index = num_of_temp_if_space - 2;
+                    sprintf(temp_length, "%d", index);
+                    char *index_str = malloc(sizeof (char) *((int) strlen(temp_length) + 2));
+                    strcat(index_str, "[");
+                    strcat(index_str, temp_length);
+                    strcat(index_str, "]");
+                    __temp_if_space__ = listRemoveOneElementAtOneIndex(__temp_if_space__, index_str);
+                    __temp_if__=listRemoveOneElementAtOneIndex(__temp_if__,index_str);
+                    __has_run_if__=listRemoveOneElementAtOneIndex(__has_run_if__,index_str);
+                    changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name,"__temp_if__",__temp_if__);
+                    
+                }
+                
+                
+            }
+            changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name,"__has_run_if__",__has_run_if__);
+            changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name,"__temp_if_space__",__temp_if_space__);
+            
+        } else if (find(input_str, "elif ") == 0) {
+            //// printf("Find elif\n");
+            //sentence = substr(temp_for_sentence, find(temp_for_sentence, "elif ") + 5, (int) strlen(temp_for_sentence) - 1);
+            //int length_of_temp = (int) strlen("not ( ") + 1 + (int) strlen(" ) and (  )")+(int) strlen(last_if_sentence)+(int) strlen(sentence);
+            //char *temp_for_sentence2 = malloc(sizeof (char) *length_of_temp);
+            //strcat(temp_for_sentence2, "not ( ");
+            
+            
+            
+            //strcat(temp_for_sentence2, last_if_sentence);
+            char *__temp_if__=getValueFromValueName(file_var_name,"__temp_if__");
+            int length=valueNumOfList(__temp_if__);
+            char temp_length[100];
+            
+            char *__has_run_if__=getValueFromValueName(file_var_name,"__has_run_if__");
+            
+            int i=0;
+            int index;
+            char *__temp_if_space__=getValueFromValueName(file_var_name,"__temp_if_space__");
+            for(i=0;i<length;i++){
+                int number=atoi(valueOfListAtIndex(__temp_if_space__,i));
+                //// printf("number is %d\n",number);
+                if(number==current_space){
+                    index=i;
+                    break;
+                }
+            }
+            
+            //sprintf(temp_length,"%d",length-1);
+            sprintf(temp_length,"%d",index);
+            char *index_str=malloc(sizeof(char)*((int)strlen(temp_length)+2));
+            strcat(index_str,"[");
+            strcat(index_str,temp_length);
+            strcat(index_str,"]");
+            last_if_sentence=valueOfListAtIndexString(__temp_if__,index_str);
+            bool has_run_if=atoi(valueOfListAtIndexString(__has_run_if__,index_str));
+            
+            
+            sentence = substr(temp_for_sentence, find(temp_for_sentence, "elif ") + 5, (int) strlen(temp_for_sentence) - 1);
+            int length_of_temp = (int) strlen("not ( ") + 1 + (int) strlen(" ) and (  )")+(int) strlen(last_if_sentence)+(int) strlen(sentence);
+            char *temp_for_sentence2 = malloc(sizeof (char) *length_of_temp);
+            strcat(temp_for_sentence2, "not ( ");
+            strcat(temp_for_sentence2, last_if_sentence);
+            strcat(temp_for_sentence2, " ) and ( ");
+            strcat(temp_for_sentence2, sentence);
+            strcat(temp_for_sentence2, " )");
+            temp_for_sentence2[length_of_temp - 1] = 0;
+            
+            sentence = temp_for_sentence2;
+            last_if_sentence = sentence;
+            can_run = Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(sentence, file_var_name);
+            // if can run.
+            // Write last_if_sentence to __temp_if__
+            //if(can_run==TRUE){
+            __temp_if__ = getValueFromValueName(file_var_name, "__temp_if__");
+            length = valueNumOfList(__temp_if__);
+            //char temp_length[100];
+            sprintf(temp_length, "%d", length - 1);
+            char *var_name_str = malloc(sizeof (char) *((int) strlen(temp_length) + 2 + (int) strlen("__temp_if__")));
+            strcat(var_name_str, "__temp_if__[");
+            strcat(var_name_str, temp_length);
+            strcat(var_name_str, "]");
+            changeTheOneVarValueFromItsInitialOneFromFileForList(file_var_name, var_name_str, sentence);
+            //}
+            if(has_run_if==TRUE){
+                //// printf("********* HAS RUN IF **********");
+                can_run=FALSE;
+            } else if (can_run==TRUE){
+                int length_of_has_run_if__=valueNumOfList(__has_run_if__);
+                char temp4[100];
+                sprintf(temp4,"%d",length_of_has_run_if__-1);
+                char *var_name_str2=malloc(sizeof(char)*((int)strlen("__has_run_if__")+3+(int)strlen(temp4)));
+                strcat(var_name_str2,"__has_run_if__[");
+                strcat(var_name_str2,temp4);
+                strcat(var_name_str2,"]");
+                var_name_str2[(int)strlen(var_name_str2)]=0;
+                changeTheOneVarValueFromItsInitialOneFromFileForList(file_var_name,var_name_str2,"1");
+            }
+        }
+        
+        
+        
+        else if (find(input_str, "else") == 0) {
+            //// printf("Find else\n");
+            
+            char *__temp_if__=getValueFromValueName(file_var_name,"__temp_if__");
+            int length=valueNumOfList(__temp_if__);
+            char temp_length[100];
+            
+            char *__has_run_if__=getValueFromValueName(file_var_name,"__has_run_if__");
+            
+            int i=0;
+            int index;
+            char *__temp_if_space__=getValueFromValueName(file_var_name,"__temp_if_space__");
+            for(i=0;i<length;i++){
+                int number=atoi(valueOfListAtIndex(__temp_if_space__,i));
+                //// printf("number is %d\n",number);
+                //// printf("current space is %d\n",current_space);
+                if(number==current_space){
+                    //// printf("number is %d, current_space is %d\n",number,current_space);
+                    index=i;
+                    break;
+                }
+            }
+            
+            //sprintf(temp_length,"%d",length-1);
+            sprintf(temp_length,"%d",index);
+            char *index_str=malloc(sizeof(char)*((int)strlen(temp_length)+2));
+            strcat(index_str,"[");
+            strcat(index_str,temp_length);
+            strcat(index_str,"]");
+            last_if_sentence=valueOfListAtIndexString(__temp_if__,index_str);
+            bool has_run_if=atoi(valueOfListAtIndexString(__has_run_if__,index_str));
+            
+            //// printf("last is sentence is %s\n", last_if_sentence);
+            
+            //if(strcmp("None",last_if_sentence)!=0){
+            can_run = Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(last_if_sentence, file_var_name);
+            //// printf("can_run is %d\n", can_run);
+            if (can_run == 1)
+                can_run = 0;
+            else
+                can_run = 1;
+            //else{
+            //    can_run=0;
+            //}
+            last_if_sentence = "\"None\"";
+            
+            //Delete the final __temp_if__ in file
+            //// printf("index str is %s\n",index_str);
+            __temp_if__=listRemoveOneElementAtOneIndex(__temp_if__,index_str);
+            changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name,"__temp_if__",__temp_if__);
+            
+            __temp_if_space__=listRemoveOneElementAtOneIndex(__temp_if_space__,index_str);
+            changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name,"__temp_if_space__",__temp_if_space__);
+            
+            __has_run_if__=listRemoveOneElementAtOneIndex(__has_run_if__,index_str);
+            changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name,"__has_run_if__",__has_run_if__);
+            if(has_run_if==TRUE){
+                //// printf("********* HAS RUN IF **********");
+                can_run=FALSE;
+            }
+            
+            
+        }
+        //// printf("Enter here\n");
+        //// printf("Sentence is |%s|\nLength is %d\n", sentence, (int) strlen(sentence));
+        //bool can_run = Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(sentence, file_name);
+        if (can_run) {
+            now_run_if = TRUE;
+            //// printf("\n\n\n\n\n\n!!!!!Can Run!!!!!\n");
+            space = space + 4;
+            //last_if_sentence=sentence;
+        } else {
+            now_run_if = FALSE;
+            //// printf("\n\n\n\n\n\n!!!!!! Can not run !!!!!!\n");
+            
+        }
+    }//#################### While Sentence ##################################
+    else if (find(input_str, "while ") == 0) {
+        //now_writting_while=TRUE;
+        last_while_sentence = removeAheadSpace(input_str);
+        last_while_sentence = substr(last_while_sentence, 6, find(last_while_sentence, ":"));
+        last_while_sentence = removeBackSpace(last_while_sentence);
+        
+        bool can_run_while = Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(last_while_sentence, file_var_name);
+        if (can_run_while == FALSE) {
+            //// printf("Can Not Run While");
+            now_writting_while = FALSE;
+            last_while_sentence = "None";
+        } else {
+            //// printf("Can Run While\n");
+            now_writting_while = TRUE;
+            space_of_first_while_sentence = space;
+            space = space + 4;
+            
+            // Write last_while_sentence to __temp_while__
+            char *temp_while_var_value=getValueFromValueName(file_var_name,"__temp_while__");
+            temp_while_var_value=listAppendOneElement(temp_while_var_value,last_while_sentence);
+            changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name,"__temp_while__",temp_while_var_value);
+            
+            char temp_space[100];
+            sprintf(temp_space,"%d",space_of_first_while_sentence);
+            char *temp_while_space=getValueFromValueName(file_var_name,"__temp_while_space__");
+            temp_while_space=listAppendOneElement(temp_while_space,temp_space);
+            changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name,"__temp_while_space__",temp_while_space);
+            
+        }
+    }        //#################### For Sentence #####################################
+    else if (find(input_str, "for ") == 0) {// && removeBackSpace(input_str)[(int) strlen(removeBackSpace(input_str)) - 1] == ':') {
+        //// printf("#### Find For ####\n");
+        temp_i = substr(input_str, find(input_str, "for ") + 4, find(input_str, " in"));
+        temp_i = removeAheadSpace(removeBackSpace(temp_i));
+        char *in_what = substr(input_str, find(input_str, " in ") + 4, (int) strlen(removeBackSpace(input_str)) - 1);
+        in_what = removeAheadSpace(removeBackSpace(in_what));
+        in_what = Walley_Substitue_Var_And_Function_Return_Value_From_File_Third_Generation(in_what, file_var_name);
+        //printf("i is |%s|, in_what is |%s|\n", temp_i, in_what);
+        now_writting_for = TRUE;
+        //temp_i_in_for_sentence=getValueFromValueName(file_name,in_what);
+        temp_i_in_for_sentence = in_what;
+        if (strcmp(variableValueType(temp_i_in_for_sentence), "string") == 0) {
+            //// printf("It is string\n");
+            temp_i_in_for_sentence = changeStringToList(temp_i_in_for_sentence);
+        }
+        //printf("i is |%s|\n", temp_i_in_for_sentence);
+        
+        space_of_first_for_sentence = space;
+        space = space + 4;
+        
+        
+        // Write temp_i_in_for_sentence to __temp_for__  eg
+        // for i in [1,2,3,4]:     write [1,2,3,4] to __temp_for__
+        char *temp_for_var_value=getValueFromValueName(file_var_name,"__temp_for__");
+        temp_for_var_value=listAppendOneElement(temp_for_var_value,temp_i_in_for_sentence);
+        //printf("####$$$$$ %s\n",temp_for_var_value);
+        changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name,"__temp_for__",temp_for_var_value);
+        
+        //// printf("@@@@@@@@@@@@HERE\n");
+        
+        char *__temp_i__=getValueFromValueName(file_var_name,"__temp_i__");
+        __temp_i__=listAppendOneElement(__temp_i__,temp_i);
+        changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name,"__temp_i__",__temp_i__);
+        //char temp_space[100];
+        //sprintf(temp_space,"%d",space_of_first_while_sentence);
+        //char *temp_while_space=getValueFromValueName(file_var_name,"__temp_while_space__");
+        //temp_while_space=listAppendOneElement(temp_while_space,temp_space);
+        //changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name,"__temp_while_space__",temp_while_space);
+    }
+    
+    
+    //#################### Set Settigns ################################
+    //// printf("#### Set Settings ####\n\n\n");
+    char temp2[100];
+    sprintf(temp2, "%d", space);
+    changeTheVarValueFromItsInitialOneFromFile(setting_file, "space", (char*) temp2, "int");
+    sprintf(temp2, "%d", now_writting_function);
+    changeTheVarValueFromItsInitialOneFromFile(setting_file, "now_writting_function", (char*) temp2, "int");
+    sprintf(temp2, "%d", now_writting_class);
+    changeTheVarValueFromItsInitialOneFromFile(setting_file, "now_writting_class", (char*) temp2, "int");
+    sprintf(temp2, "%d", now_writting_while);
+    changeTheVarValueFromItsInitialOneFromFile(setting_file, "now_writting_while", (char*) temp2, "int");
+    sprintf(temp2, "%d", now_writting_for);
+    changeTheVarValueFromItsInitialOneFromFile(setting_file, "now_writting_for", (char*) temp2, "int");
+    sprintf(temp2, "%d", now_run_if);
+    changeTheVarValueFromItsInitialOneFromFile(setting_file, "now_run_if", (char*) temp2, "int");
+    sprintf(temp2, "%d", space_of_first_while_sentence);
+    changeTheVarValueFromItsInitialOneFromFile(setting_file, "space_of_first_while_sentence", (char*) temp2, "int");
+    sprintf(temp2, "%d", space_of_first_for_sentence);
+    changeTheVarValueFromItsInitialOneFromFile(setting_file, "space_of_first_for_sentence", (char*) temp2, "int");
+    sprintf(temp2, "%d", space_of_first_def_sentence);
+    changeTheVarValueFromItsInitialOneFromFile(setting_file, "space_of_first_def_sentence", (char*) temp2, "int");
+    sprintf(temp2, "%d", space_of_first_class_sentence);
+    changeTheVarValueFromItsInitialOneFromFile(setting_file, "space_of_first_class_sentence", (char*) temp2, "int");
+    
+    changeTheVarValueFromItsInitialOneFromFile(setting_file, "last_if_sentence", last_if_sentence, "string");
+    changeTheVarValueFromItsInitialOneFromFile(setting_file, "last_while_sentence", last_while_sentence, "string");
+    changeTheVarValueFromItsInitialOneFromFile(setting_file, "string_in_while_loop", string_in_while_loop, "string");
+    changeTheVarValueFromItsInitialOneFromFile(setting_file, "string_in_for_loop", string_in_for_loop, "string");
+    changeTheVarValueFromItsInitialOneFromFile(setting_file, "temp_i", temp_i, "string");
+    changeTheVarValueFromItsInitialOneFromFile(setting_file, "temp_i_in_for_sentence", temp_i_in_for_sentence, "string");
+}

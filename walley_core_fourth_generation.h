@@ -638,7 +638,7 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
                 find(input_temp, "def ") == 0 ||
                 find(input_temp,"class ")==0) {
 
-            Walley_Judge_Run_Anotation_For_While_Def_Class(file_name, setting_file, input_str);
+            Walley_Judge_Run_Anotation_For_While_Def_Class_Third_Generation(file_name, setting_file, input_str);
             
         }            //#################### Basic Input To Run #############################
         else {
