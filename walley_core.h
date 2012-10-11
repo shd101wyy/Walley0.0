@@ -35,6 +35,7 @@ void Walley_Initialize_Settings_File(char *settings_file_name){
         fputs("space_of_first_def_sentence:0:int:\n",fp);
         fputs("space_of_first_class_sentence:0:int:\n",fp);
         fputs("now_in_annotation:0:int:\n",fp);
+        fputs("can_run_basic_input:0:int:\n", fp);
         
         //fputs("now_brain_path:\"\":string:\n",fp);
         
@@ -1012,7 +1013,16 @@ char *Walley_Run_One_Function_And_Return_Value(char *input_str,char *get_var_fro
             
             //find_return=TRUE;
            //// printf("--------Find Return--------");
-            Walley_Run_For_Appointed_File(file_var_temp_name, file_settings_temp_name,file_file_temp_name,"#FIND RETURN");
+            char *temp_arr=arr;
+            if (arr[(int)strlen(arr)-1]=='\n') {
+                temp_arr=substr(arr, 0, (int)strlen(arr)-1);
+            }
+
+            Walley_Run_For_Appointed_File(file_var_temp_name, file_settings_temp_name,file_file_temp_name,temp_arr);
+            bool can_get_return=atoi(getValueFromValueName(file_settings_temp_name, "can_run_basic_input"));
+            if (can_get_return==FALSE) {
+                continue;
+            }
             finish=TRUE;
             return_var_name=substr(arr,find(arr,"return")+7,(int)strlen(arr));
             return_var_name=removeAheadSpace(return_var_name);

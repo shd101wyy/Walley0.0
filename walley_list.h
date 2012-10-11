@@ -303,6 +303,10 @@ int valueNumOfList(char *list){
     return para_num;**/
     //printf("1");
 
+    if (strcmp(list, "[]")==0) {
+        return 0;
+    }
+    
     if(find_not_in_string(list,"[")==-1 || find_not_in_string(list,"]")==-1){
         printf("Mistake occurred while calling function valueNumOfList\nInput %s is not a list\n",list);
         exit(0);

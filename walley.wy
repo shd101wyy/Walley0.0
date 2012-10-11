@@ -1,14 +1,43 @@
-def range(num1,num2):
-    x=[]
-    while num1<num2:
-        x.append(num1)
-        num1=num1+1
-    #here is some mistake 
+def matrix_num(row,col):
+    x=[] 
+    y=[]
+    i=0
+    j=0
+    while i<row:
+        y=[]
+        j=0
+        while j<col:
+            y.append(0)
+            j=j+1
+        x.append(y)
+        i=i+1
     return x
-#end define range
+#end define matrix
 
-for i in range(0,2):
-    for j in range(0,5):
-        print("*")
-    println("")
-    
+# matrix_str("[1,2;3,2]")
+def matrix_str(mat):
+    output="["
+    i=0
+    length=mat.length()
+    while i<length:
+        if mat[i]==';':
+            output=output+'],['
+        else:
+            output=output+mat[i]
+        i=i+1
+    output=output+"]"
+    return nstr(output)
+
+def matrix(param1,param2):
+    println(param1)
+    println(param2)
+    print(type(param1))
+    if type(param1)=="int":
+        println("It is int")
+        return matrix_num(param1,param2)
+    else:
+        println("It is string")
+        return matrix_str(param1)
+
+x=matrix("[1,2;3,4]")
+print(x)

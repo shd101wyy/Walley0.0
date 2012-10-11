@@ -478,7 +478,11 @@ void Walley_Run_Third_Generation(char* file_name, char *setting_file, char *temp
 
         }
     }
-
+       
+        char temp5[100];
+        sprintf(temp5, "%d", can_run_basic_input);
+       // printf("---> %s TEMP %s\n",input_str,temp5);
+        changeTheVarValueFromItsInitialOneFromFile(setting_file, "can_run_basic_input", (char*) temp5, "int");
     //##########################################################################################################
     //##########################################################################################################
     //##########################################################################################################
@@ -617,7 +621,11 @@ void Walley_Run_Third_Generation(char* file_name, char *setting_file, char *temp
 
             Walley_Judge_Run_Anotation_For_While_Def_Class(file_name, setting_file, input_str);
             
-        }            //#################### Basic Input To Run #############################
+        } // ##################################### CHECK RETURN IN FUNCTION, CHECK WHETHER IT CAN RUN OR NOT
+        else if (strcmp(substr(trim(input_str),0, 6),"return")==0){
+            printf("");
+        }
+        //#################### Basic Input To Run #############################
         else {
            //// printf("\n\n######### Basic Input To Run #########\n");
             input_str = trim(input_str);
@@ -908,7 +916,7 @@ void Walley_Run_Third_Generation(char* file_name, char *setting_file, char *temp
  */
 //char *Walley_Run_One_Function_And_Return_Value(char *input_str){
 char *Walley_Run_One_Function_And_Return_Value_Third_Generation(char *input_str,char *get_var_from_file_name){
-   //// printf("\n#### Walley_Run_One_Function_And_Return_Value_Third_Generation ####\n");
+    printf("\n#### Walley_Run_One_Function_And_Return_Value_Third_Generation ####\n");
     char* return_var_name="None";
     char* return_value;
    //// printf("Function is |%s|\n",input_str);
@@ -1041,10 +1049,25 @@ char *Walley_Run_One_Function_And_Return_Value_Third_Generation(char *input_str,
        //// printf("----arr----%s\n", arr);
        //// printf("Finish init param %d\n", finish_init_param);
         if (find_function == TRUE && strcmp("return", substr(removeBackSpace(removeAheadSpace(arr)), 0, 6)) == 0) {
-
-            //find_return=TRUE;
-           //// printf("--------Find Return--------");
-            Walley_Run_Third_Generation(file_var_temp_name, file_settings_temp_name, file_file_temp_name, "__walley_function__.wy", "#FIND RETURN");
+            
+           //find_return=TRUE;
+           // printf("\n\n\n\n\n--------Find Return--------\n");
+           // printf("|%s|\n",arr);
+            char *temp_arr=arr;
+            if (arr[(int)strlen(arr)-1]=='\n') {
+                temp_arr=substr(arr, 0, (int)strlen(arr)-1);
+            }
+            Walley_Run_Third_Generation(file_var_temp_name, file_settings_temp_name, file_file_temp_name, "__walley_function__.wy", temp_arr);
+            
+           // printf("AAA--->%s",getValueFromValueName(file_settings_temp_name, "can_run_basic_input"));
+            
+            bool can_get_return=atoi(getValueFromValueName(file_settings_temp_name, "can_run_basic_input"));
+           // printf("can get return %d\n",can_get_return);
+           // printf("setting file %s\n",file_settings_temp_name);
+            if (can_get_return==FALSE) {
+                continue;
+            }
+            
             finish = TRUE;
             return_var_name = substr(arr, find(arr, "return") + 7, (int) strlen(arr));
             return_var_name = removeAheadSpace(return_var_name);
@@ -1052,7 +1075,7 @@ char *Walley_Run_One_Function_And_Return_Value_Third_Generation(char *input_str,
             if (return_var_name[(int) strlen(return_var_name) - 1] == '\n') {
                 return_var_name = substr(return_var_name, 0, (int) strlen(return_var_name) - 1);
             }
-            //printf("Return Var Name is :%s\n",return_var_name);
+           //// printf("Return Var Name is :%s\n",return_var_name);
             break;
         }
 

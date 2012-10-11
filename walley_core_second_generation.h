@@ -160,7 +160,7 @@ void Walley_Run_Second_Generation(char* file_name, char *setting_file, char *tem
            //// printf("@@@@ $$$$ string_in_while_loop is |%s|\n",string_in_while_loop);
             changeTheVarValueFromItsInitialOneFromFile(setting_file, "string_in_while_loop", string_in_while_loop, "string");
         } else if (current_space <= space_of_first_while_sentence && current_space % 4 == 0) {
-printf("Begin to Run While\n");
+           //// printf("Begin to Run While\n");
             can_run_basic_input = TRUE;
             now_writting_while = FALSE;
 
@@ -451,7 +451,10 @@ printf("Begin to Run While\n");
 
         }
     }
-
+        char temp5[10];
+        sprintf(temp5, "%d", can_run_basic_input);
+        changeTheVarValueFromItsInitialOneFromFile(setting_file, "can_run_basic_input", (char*) temp5, "int");
+        
     //##########################################################################################################
     //##########################################################################################################
     //##########################################################################################################
@@ -593,7 +596,11 @@ printf("Begin to Run While\n");
                 find(input_temp,"class ")==0) {
 
             Walley_Judge_Run_Anotation_For_While_Def_Class(file_name, setting_file, input_str);
-        }            //#################### Basic Input To Run #############################
+        }                    // ##################################### CHECK RETURN IN FUNCTION, CHECK WHETHER IT CAN RUN OR NOT
+        else if (strcmp(substr(trim(input_str),0, 6),"return")==0){
+            printf("");
+        }
+        //#################### Basic Input To Run #############################
         else {
            //// printf("\n\n######### Basic Input To Run #########\n");
             input_str=trim(input_str);
@@ -801,6 +808,7 @@ printf("Begin to Run While\n");
             changeTheVarValueFromItsInitialOneFromFile(setting_file,"space_of_first_def_sentence", (char*)temp2,"int");
             sprintf(temp2, "%d", space_of_first_class_sentence);
             changeTheVarValueFromItsInitialOneFromFile(setting_file, "space_of_first_class_sentence", (char*) temp2, "int");
+            
 
             changeTheVarValueFromItsInitialOneFromFile(setting_file, "last_if_sentence", last_if_sentence, "string");
             changeTheVarValueFromItsInitialOneFromFile(setting_file, "last_while_sentence", last_while_sentence, "string");
@@ -999,7 +1007,16 @@ char *Walley_Run_One_Function_And_Return_Value_Second_Generation(char *input_str
             
             //find_return=TRUE;
            //// printf("--------Find Return--------");
-            Walley_Run_Second_Generation(file_var_temp_name, file_settings_temp_name,file_file_temp_name,"__walley_function__.wy","#FIND RETURN");
+            char *temp_arr=arr;
+            if (arr[(int)strlen(arr)-1]=='\n') {
+                temp_arr=substr(arr, 0, (int)strlen(arr)-1);
+            }
+
+            Walley_Run_Second_Generation(file_var_temp_name, file_settings_temp_name,file_file_temp_name,"__walley_function__.wy",temp_arr);
+            bool can_get_return=atoi(getValueFromValueName(file_settings_temp_name, "can_run_basic_input"));
+            if (can_get_return==FALSE) {
+                continue;
+            }
             finish=TRUE;
             return_var_name=substr(arr,find(arr,"return")+7,(int)strlen(arr));
             return_var_name=removeAheadSpace(return_var_name);

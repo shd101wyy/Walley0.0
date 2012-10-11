@@ -501,8 +501,10 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
 
         }
     }
-
-    //##########################################################################################################
+        char temp5[10];
+        sprintf(temp5, "%d", can_run_basic_input);
+        changeTheVarValueFromItsInitialOneFromFile(setting_file, "can_run_basic_input", (char*) temp5, "int");
+        //##########################################################################################################
     //##########################################################################################################
     //##########################################################################################################
     //##########################################################################################################
@@ -640,7 +642,11 @@ void Walley_Run_Fourth_Generation(char* file_name, char *setting_file, char *tem
 
             Walley_Judge_Run_Anotation_For_While_Def_Class_Third_Generation(file_name, setting_file, input_str);
             
-        }            //#################### Basic Input To Run #############################
+        }// ##################################### CHECK RETURN IN FUNCTION, CHECK WHETHER IT CAN RUN OR NOT
+        else if (strcmp(substr(trim(input_str),0, 6),"return")==0){
+            printf("");
+        }
+        //#################### Basic Input To Run #############################
         else {
            //// printf("\n\n######### Basic Input To Run #########\n");
             input_str = trim(input_str);
