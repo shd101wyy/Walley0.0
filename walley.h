@@ -4,32 +4,52 @@
  *
  * Created on September 6, 2012, 12:01 AM
  */
-#include "walley_agent.h"
-void Walley_Run(char *input_str){
+#include "walley_core.h"
+/*void Walley_Run(char *input_str){
    //// printf("#### Walley Run ####\n");
     char *file_name = "__walley__.wy";
     char *setting_file = "__walley_settings__.wy";
     char *temp_file_name="__walley_file__.wy";
     char *existing_file="None";
     //Walley_Run_Four_Generation(file_name,setting_file,temp_file_name,existing_file,input_str);
-    Walley_Run_Fourth_Generation(file_name,setting_file,temp_file_name,existing_file,input_str);
+    Walley_Run_For_Appointed_File(file_name,setting_file,temp_file_name,existing_file,input_str);
+    
+}*/
+void Walley_Run(char *input_str){
+    char *existing_file="None";
+    Walley_Run_For_Appointed_Var(&VAR_var,&VAR_settings,&TEMP_FILE,existing_file,&FUNCTION,input_str);
 }
-void Walley_Agent_Run(char *input_str){
+/*
+void Walley_Agent_Run(char *input_str,char *existing_file){
    //// printf("#### Walley_Agent_Run ####\n");
     //char *brain_path="/Users/shd101wyy/Documents/workspace/xcode/Walley/Walley/";
-    char *brain_path=toCString(getValueFromValueName("__walley_path__.wy", "__walley_path__"));
-    char *walley_language_file=append(brain_path, "__walley_language__.wy");
-    char *walley_language_similarity_file=append(brain_path, "__walley_language_similarity__.wy");
-    char *walley_language_verb_file=append(brain_path, "__walley_language_verb__.wy");
-    char *file_name = "__walley__.wy";
-    char *setting_file = "__walley_settings__.wy";
-    char *temp_file_name="__walley_file__.wy";
-    char *existing_file="None"; 
-    Walley_Agent_Respond(walley_language_file,walley_language_similarity_file,walley_language_verb_file,file_name,setting_file,temp_file_name,existing_file,input_str);
-}
-void Walley_Run_File(char *file_name){
+    //char *brain_path=toCString(getValueFromValueName("__walley_path__.wy", "__walley_path__"));
+    //char *walley_language_file=append(brain_path, "__walley_language__.wy");
+    //char *walley_language_similarity_file=append(brain_path, "__walley_language_similarity__.wy");
+    //char *walley_language_verb_file=append(brain_path, "__walley_language_verb__.wy");
+    //char *existing_file="None";
     
+    //Walley_Agent_Respond(walley_language_file,walley_language_similarity_file,walley_language_verb_file,VAR_var,VAR_settings,TEMP_FILE,existing_file,input_str);
+    
+    Walley_Agent_Respond(WALLEY_LANGUAGE_FILE,WALLEY_SIMILARITY_FILE,WALLEY_VERB_FILE,VAR_var,VAR_settings,TEMP_FILE,existing_file,input_str);
+
+}*/
+void Walley_Run_File(char *file_name){
+   // printf("#### Walley_Run_File ####\n");
+        
     file_name=removeBackSpace(file_name);
+    
+    if (strcmp(".wyc",substr(file_name,(int)strlen(file_name)-4,(int)strlen(file_name)))==0) {
+        char *string_in_file=changeBinaryToText(getStringFromFile(file_name));
+        FILE *temp_file=fopen("WALLEY_TEMP_TEMP_FILE.wy", "w");
+        fputs(string_in_file, temp_file);
+        fclose(temp_file);
+        Walley_Run_File("WALLEY_TEMP_TEMP_FILE.wy");
+        remove("WALLEY_TEMP_TEMP_FILE.wy");
+    }
+    // .wy format file
+    else {
+    
     if(strcmp("wy",substr(file_name,(int)strlen(file_name)-2,(int)strlen(file_name)))!=0){
         printf("File format wrong\n");
         exit(1);
@@ -49,6 +69,7 @@ void Walley_Run_File(char *file_name){
     fclose(fp);
     **/
     FILE *fp=fopen(file_name,"r");
+   // printf("Here\n");
     if(fp==NULL){
         printf("Failed to initialize\n");
         printf("File not found\n");
@@ -57,7 +78,7 @@ void Walley_Run_File(char *file_name){
         
         //Walley_Initialize();
 
-        char arr[1001]="";
+        char arr[10000]="";
         //char output[1000]="";
         /**
         while ((fgets(arr, 1000, fp)) != NULL) {
@@ -73,11 +94,12 @@ void Walley_Run_File(char *file_name){
             //printf("## Length of arr is %d\n ##",(int)strlen(temp));
             Walley_Run(temp);
         }*/
-        while ((fgets(arr, 1000, fp)) != NULL) {
-            if(stringIsEmpty(arr) || strcmp("",removeAheadSpace(removeBackSpace(arr)))==0 ||(int)strlen(arr)==0)
+        while ((fgets(arr, 10000, fp)) != NULL) {
+            
+            if(stringIsEmpty(removeNFromBack(arr)) || strcmp("",trim(removeNFromBack(arr)))==0 ||(int)strlen(arr)==0)
                 continue;
             else{
-               //// printf("arr----> |%s|\n");
+               // printf("arr----> |%s|\n");
                 //strcat(output,arr);
                 if((int)strlen(arr)==0)
                     continue;
@@ -99,9 +121,24 @@ void Walley_Run_File(char *file_name){
                 
                 //Walley_Run(temp_str);
                 //if(stringIsEmpty(temp_str)==FALSE)
-               //// printf("temp_str---->|%s|\n",temp_str);
+               // printf("temp_str---->|%s|\n",temp_str);
                 //Walley_Run_Third_Generation("__walley__.wy","__walley_settings__.wy","__walley_file__.wy",file_name,temp_str);
-                Walley_Run_Fourth_Generation("__walley__.wy","__walley_settings__.wy","__walley_file__.wy",file_name,temp_str);
+                
+                
+                // new code here on Dec 10
+                if (strcmp(file_name, FIRST_RUNNING_FILE)==0) {
+                    TURN++;
+                }
+                
+                /*
+                //##################################################################
+                // for auto clean var
+                int turn = atoi(Var_getValueOfVar(VAR_settings , "turn"));
+                turn=turn+1;
+                Var_changeValueOfVar(VAR_settings , "turn", numToCString(turn), "int");
+                //###################################################################*/
+                
+                Walley_Run_For_Appointed_Var(&VAR_var,&VAR_settings,&TEMP_FILE,file_name,&FUNCTION,temp_str);
             }
         }
         //char *output_output=malloc(sizeof(char)*(int)strlen(output));
@@ -115,11 +152,14 @@ void Walley_Run_File(char *file_name){
         //fp = fopen(file_name, "w");
         //fputs(str_in_wy, fp);
         //fputs(input_message, fp);
-        Walley_Run_Fourth_Generation("__walley__.wy","__walley_settings__.wy","__walley_file__.wy",file_name,"#end");
+        //Walley_Run_For_Appointed_File("__walley__.wy","__walley_settings__.wy","__walley_file__.wy",file_name,"#end");
+        Walley_Run_For_Appointed_Var(&VAR_var,&VAR_settings,&TEMP_FILE,file_name,&FUNCTION,"#end");
+        Var_changeValueOfVar(VAR_settings , "turn", "0", "int");
         fclose(fp);
     }
+    }
 }
-
+/*
 void Walley_Agent_Run_File(char *file_name) {
 
     file_name = removeBackSpace(file_name);
@@ -138,11 +178,10 @@ void Walley_Agent_Run_File(char *file_name) {
             printf("File %s not found\n", file_name);
             exit(1);
         } else {
-
             //Walley_Initialize();
-            char ch;
+            //char ch;
             char arr[1001] = "";
-            char output[1000] = "";
+            char output[1000] = "";*/
             /**
             while ((fgets(arr, 1000, fp)) != NULL) {
                 //char *temp=substr(arr,0,(int)strlen(arr)-1);
@@ -156,7 +195,7 @@ void Walley_Agent_Run_File(char *file_name) {
                 printf("## Arr is '%s' ##\n",temp);
                 //printf("## Length of arr is %d\n ##",(int)strlen(temp));
                 Walley_Run(temp);
-            }*/
+            }*//*
             while ((fgets(arr, 1000, fp)) != NULL) {
                 if (stringIsEmpty(arr) || strcmp("", removeAheadSpace(removeBackSpace(arr))) == 0 || (int) strlen(arr) == 0)
                     continue;
@@ -164,23 +203,27 @@ void Walley_Agent_Run_File(char *file_name) {
                     strcat(output, arr);
                     if ((int) strlen(arr) == 0)
                         continue;
-                    char *temp_str = malloc(sizeof (char) *(int) strlen(arr));
-                    int a = 0;
-                    for (a = 0; a < (int) strlen(arr); a++) {
-                        temp_str[a] = arr[a];
-                    }
-                    temp_str = removeBackSpace(temp_str);
+                    //char *temp_str = malloc(sizeof (char) *(int) strlen(arr));
+                    //int a = 0;
+                    //for (a = 0; a < (int) strlen(arr); a++) {
+                    //    temp_str[a] = arr[a];
+                    //}
+                    //temp_str = removeBackSpace(temp_str);
+                    
+                    char *temp_str=append("", arr);
+                    temp_str=removeBackSpace(temp_str);
+                    temp_str=removeNFromBack(temp_str);
                     //printf("^^^^^^%c\n",(temp_str[(int)strlen(temp_str)-1]));
-                    if (temp_str[(int) strlen(temp_str) - 1] == '\n')
-                        temp_str = substr(temp_str, 0, (int) strlen(temp_str) - 1);
+                    //if (temp_str[(int) strlen(temp_str) - 1] == '\n')
+                    //    temp_str = substr(temp_str, 0, (int) strlen(temp_str) - 1);
 
 
                     //Walley_Run(temp_str);
                     //if(stringIsEmpty(temp_str)==FALSE)
-                    //printf("---->|%s|\n",temp_str);
+                   // printf("---->|%s|\n",temp_str);
                     //Walley_Run_Third_Generation("__walley__.wy","__walley_settings__.wy","__walley_file__.wy",file_name,temp_str);
-                    //Walley_Run_Fourth_Generation("__walley__.wy","__walley_settings__.wy","__walley_file__.wy",file_name,temp_str);
-                    Walley_Agent_Run(temp_str);
+                    //Walley_Run_For_Appointed_File("__walley__.wy","__walley_settings__.wy","__walley_file__.wy",file_name,temp_str);
+                    Walley_Agent_Run(temp_str,file_name);
                 }
             }
             //char *output_output=malloc(sizeof(char)*(int)strlen(output));
@@ -194,19 +237,20 @@ void Walley_Agent_Run_File(char *file_name) {
             //fp = fopen(file_name, "w");
             //fputs(str_in_wy, fp);
             //fputs(input_message, fp);
-            Walley_Run_Fourth_Generation("__walley__.wy", "__walley_settings__.wy", "__walley_file__.wy", file_name, "#end");
+            Walley_Run_For_Appointed_Var(VAR_var, VAR_settings, TEMP_FILE, file_name, FUNCTION,"#end");
             fclose(fp);
         }
     }
 }
-
+*/
+/*
 void Walley_Agent_Recall(char *file_name) {
    //// printf("#### Walley_Agent_Recall ####\n");
     //char *brain_path="/Users/shd101wyy/Documents/workspace/xcode/Walley/Walley/";
-    char *brain_path=toCString(getValueFromValueName("__walley_path__.wy", "__walley_path__"));
-    char *walley_language_file=append(brain_path, "__walley_language__.wy");
-    char *walley_language_similarity_file=append(brain_path, "__walley_language_similarity__.wy");
-    char *walley_language_verb_file=append(brain_path, "__walley_language_verb__.wy");
+    //char *brain_path=toCString(getValueFromValueName("__walley_path__.wy", "__walley_path__"));
+    //char *walley_language_file=append(brain_path, "__walley_language__.wy");
+    //char *walley_language_similarity_file=append(brain_path, "__walley_language_similarity__.wy");
+    //char *walley_language_verb_file=append(brain_path, "__walley_language_verb__.wy");
 
     file_name = removeBackSpace(file_name);
     if (strcmp("wy", substr(file_name, (int) strlen(file_name) - 2, (int) strlen(file_name))) == 0 || strcmp("wi", substr(file_name, (int) strlen(file_name) - 2, (int) strlen(file_name))) == 0) {
@@ -219,7 +263,6 @@ void Walley_Agent_Recall(char *file_name) {
         } else {
 
             //Walley_Initialize();
-            char ch;
             char arr[1001] = "";
             char output[1000] = "";
 
@@ -243,12 +286,12 @@ void Walley_Agent_Recall(char *file_name) {
 
                     printf("\n# %d ############################\n", count);
                     printf("Now input is       ----> |%s|\n", temp_str);
-                    char *format_string = Walley_Analyze_Sentence_Automatically("__walley__.wy",walley_language_similarity_file,walley_language_verb_file, temp_str);
+                    char *format_string = Walley_Analyze_Sentence_Automatically(VAR_var,WALLEY_SIMILARITY_FILE,WALLEY_VERB_FILE, temp_str);
                     printf("Format String is   ----> |%s|\n", format_string);
-                    printf("Translate to string----> |%s|\n", Walley_Translate(walley_language_file, walley_language_similarity_file,walley_language_verb_file,"__walley__.wy",temp_str));
+                    printf("Translate to string----> |%s|\n", Walley_Translate(WALLEY_LANGUAGE_FILE, WALLEY_SIMILARITY_FILE,WALLEY_VERB_FILE,VAR_var,temp_str));
                     printf("Think---------------------|\n");
                     printf("Output--------------------|\n");
-                    Walley_Agent_Run(temp_str);
+                    Walley_Agent_Run(temp_str,file_name);
                     printf("Finish Thinking---------------------|\n");
                     printf("###################################################\n");
                     printf("###################################################\n\n\n");
@@ -256,7 +299,7 @@ void Walley_Agent_Recall(char *file_name) {
                     count += 1;
                 }
             }
-            Walley_Run_Fourth_Generation("__walley__.wy", "__walley_settings__.wy", "__walley_file__.wy", file_name, "#end");
+            Walley_Run_For_Appointed_Var(VAR_var, VAR_settings, TEMP_FILE, file_name,FUNCTION, "#end");
             fclose(fp);
             while (TRUE) {
                 printf("Which Sentence do you think that has a problem?\n");
@@ -294,8 +337,8 @@ void Walley_Agent_Recall(char *file_name) {
                                 if (temp_str[(int) strlen(temp_str) - 1] == '\n')
                                     temp_str = substr(temp_str, 0, (int) strlen(temp_str) - 1);
                                 input_to_run = temp_str;
-                                format_string = Walley_Analyze_Sentence_Automatically("__walley__.wy", walley_language_similarity_file,walley_language_verb_file,input_to_run);
-                                translate_to = Walley_Translate(walley_language_file,walley_language_similarity_file,walley_language_verb_file, "__walley__.wy",input_to_run);
+                                format_string = Walley_Analyze_Sentence_Automatically(VAR_var, WALLEY_SIMILARITY_FILE,WALLEY_VERB_FILE,input_to_run);
+                                translate_to = Walley_Translate(WALLEY_LANGUAGE_FILE,WALLEY_SIMILARITY_FILE,WALLEY_VERB_FILE, VAR_var,input_to_run);
                                 
                                 printf("###################################################\n");
                                 printf("###################################################\n");
@@ -304,7 +347,7 @@ void Walley_Agent_Recall(char *file_name) {
                                 printf("Translate to string ----> |%s|\n", translate_to);
                                 printf("Think---------------------|\n");
                                 printf("Output--------------------|\n");
-                                Walley_Agent_Run(input_to_run);
+                                Walley_Agent_Run(input_to_run,file_name);
                                 printf("Finish Thinking---------------------|\n");
                                 printf("###################################################\n");
                                 printf("###################################################\n\n\n");
@@ -330,8 +373,8 @@ void Walley_Agent_Recall(char *file_name) {
                                 //if(stringIsEmpty(temp_str)==FALSE)
                                 //printf("---->|%s|\n",temp_str);
                                 //Walley_Run_Third_Generation("__walley__.wy","__walley_settings__.wy","__walley_file__.wy",file_name,temp_str);
-                                //Walley_Run_Fourth_Generation("__walley__.wy","__walley_settings__.wy","__walley_file__.wy",file_name,temp_str);
-                                Walley_Agent_Run(temp_str);
+                                //Walley_Run_For_Appointed_File("__walley__.wy","__walley_settings__.wy","__walley_file__.wy",file_name,temp_str);
+                                Walley_Agent_Run(temp_str,file_name);
                             }
                             count += 1;
                         }
@@ -365,11 +408,17 @@ void Walley_Agent_Recall(char *file_name) {
                             char temp_str[1000] = "";
                             sprintf(temp_str, "%d", num_of_true_format);
 
-                            writeStringToFile(walley_language_similarity_file, true_format);
-                            writeStringToFile(walley_language_similarity_file, "|");
-                            writeStringToFile(walley_language_similarity_file, temp_str);
-                            writeStringToFile(walley_language_similarity_file, "|\n");
-                            cleanWalleyLanguageFile(walley_language_similarity_file);
+                            char *temp_to_add=append(true_format, "|");
+                            temp_to_add=append(temp_to_add, temp_str);
+                            temp_to_add=append(temp_to_add, "|");
+                            Str_addString(WALLEY_SIMILARITY_FILE, temp_to_add);
+                            
+                            char *temp_walley_similarity_file_path=append(BRAIN_PATH, "__walley_language_similarity__.wy");
+                            writeStringToFile(temp_walley_similarity_file_path,true_format);
+                            writeStringToFile(temp_walley_similarity_file_path,"|");
+                            writeStringToFile(temp_walley_similarity_file_path,temp_str);
+                            writeStringToFile(temp_walley_similarity_file_path,"|\n");
+                            cleanWalleyLanguageFile(temp_walley_similarity_file_path);
                             
                             printf("\n\nOkay, I finished modifying the format string\n");
                             printf("to enter 0 to exit modification\n");
@@ -418,4 +467,4 @@ void Walley_Agent_Recall(char *file_name) {
         printf("File format wrong\nFile name : %s\n",file_name);
         exit(1);
     }
-}
+}*/

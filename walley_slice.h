@@ -32,16 +32,18 @@ char *sliceIncludeBothSides(char *input_str,int left,int right){
         //printf("it is list\n");
         char output[10000]="";
         int i=left;
-        int num = valueNumOfList(input_str);
-        strcat(output, "[");
+        //int num = valueNumOfList(input_str);
+        strcpy(output, "[");
         for (i = left; i <= right; i++) {
-            char temp[100];
-            sprintf(temp, "%d", i);
+            //char temp[100];
+            //sprintf(temp, "%d", i);
+            char *temp=intToCString(i);
+            
             char *index_str = malloc(sizeof (char) *(3 + (int) strlen(temp)));
-            strcat(index_str, "[");
+            strcpy(index_str, "[");
             strcat(index_str, temp);
             strcat(index_str, "]");
-            index_str[(int) strlen(index_str)] = 0;
+            index_str[2+ (int) strlen(temp)] = 0;
             //printf("->%s\n", index_str);
             char *value_at_index = valueOfListAtIndexString(input_str, index_str);
             strcat(output, value_at_index);
@@ -54,7 +56,7 @@ char *sliceIncludeBothSides(char *input_str,int left,int right){
         for (i = 0; i < (int) strlen(output); i++) {
             output2[i] = output[i];
         }
-        output2[(int) strlen(output2)] = 0;
+        output2[(int) strlen(output)] = 0;
         return output2;
     } else {
         printf("Mistake occurred while calling function sliceIncludeBothSides\nOnly support list and string now");
@@ -110,16 +112,17 @@ char *slice(char *input_str, char *slice) {
             char *output = substr(input_str, num, num + 1);
             return toString(output);
         } else if (strcmp("list", variableValueType(input_str)) == 0) {
-            //printf("it is list\n");
             char output[10000] = "";
-            //strcat(output, "[");
-            char temp[100];
-            sprintf(temp, "%d", num);
+           
+            //char temp[100];
+            //sprintf(temp, "%d", num);
+            char *temp=intToCString(num);
+            
             char *index_str = malloc(sizeof (char) *(3 + (int) strlen(temp)));
-            strcat(index_str, "[");
+            strcpy(index_str, "[");
             strcat(index_str, temp);
             strcat(index_str, "]");
-            index_str[(int) strlen(index_str)] = 0;
+            index_str[2+ (int) strlen(temp)] = 0;
             //printf("->%s\n", index_str);
             char *value_at_index = valueOfListAtIndexString(input_str, index_str);
             strcat(output, value_at_index);
@@ -131,7 +134,7 @@ char *slice(char *input_str, char *slice) {
             for (i = 0; i < (int) strlen(output); i++) {
                 output2[i] = output[i];
             }
-            output2[(int) strlen(output2)] = 0;
+            output2[(int) strlen(output)] = 0;
             return output2;
 
         }
@@ -145,12 +148,13 @@ char *slice(char *input_str, char *slice) {
 /*
  * like python slice
  */
+/*
 char *old_slice(char *input_str, char *slice){
    //// printf("#### old_slice ####\n");
    //// printf("|%s| \n|%s|\n",input_str,slice);
     slice = trim(slice);
-    char left = slice[0];
-    char right = slice[(int) strlen(slice) - 1];
+    //char left = slice[0];
+    //char right = slice[(int) strlen(slice) - 1];
     char *inside = substr(slice, 0 + 1, (int) strlen(slice) - 1);
     inside=trim(inside);
     //printf("Inside %s\n",inside);
@@ -169,7 +173,7 @@ char *old_slice(char *input_str, char *slice){
             return sliceOnlyIncludeLeftSide(input_str,num1,num2);
         }
         else if (inside[0]!=':'&&inside[(int)strlen(inside)-1]==':'){
-            char *type=variableValueType(input_str);
+            //char *type=variableValueType(input_str);
             //num1=atoi(substr(slice, 1, find_not_in_string(slice, ":")));
             num1=atoi(Walley_Eval(substr(slice, 1, find_not_in_string(slice, ":"))));
             //num2=Walley_Eval(num2);
@@ -244,19 +248,10 @@ char *old_slice(char *input_str, char *slice){
             return toString(output);
         } else if (strcmp("list", variableValueType(input_str)) == 0) {
            //// printf("it is list\n");
-            char output[10000] = "";
-            //strcat(output, "[");
-            //char temp[100];
-            //sprintf(temp, "%d", num);
-            //char *index_str = malloc(sizeof (char) *(3 + (int) strlen(temp)));
-            //strcat(index_str, "[");
-            //strcat(index_str, temp);
-            //strcat(index_str, "]");
-            //index_str[(int) strlen(index_str)] = 0;
-            //printf("->%s\n", index_str);
-            //char *value_at_index = valueOfListAtIndexString(input_str, index_str);
+            char *output = malloc(sizeof(char)*1000);
+            
             char *value_at_index = valueOfListAtIndexString(input_str, slice);
-            strcat(output, value_at_index);
+            strcpy(output, value_at_index);
 
 
             //strcat(output, "]");
@@ -265,13 +260,15 @@ char *old_slice(char *input_str, char *slice){
             for (i = 0; i < (int) strlen(output); i++) {
                 output2[i] = output[i];
             }
-            output2[(int) strlen(output2)] = 0;
+            output2[(int) strlen(output)] = 0;
             return output2;
 
         }
         else{
             printf("Mistake occurred while calling function slice\nIt is not a slice or value type wrong\n");
+            printf("If you want use dictionary, please try x{'a'} like expression\n");
             exit(0);
         }
     }    
 }
+*/

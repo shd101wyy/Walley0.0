@@ -4,13 +4,17 @@
  *
  * Created on August 17, 2012, 12:34 PM
  */
-#include <stdio.h>
-#include <stdlib.h>
-typedef int bool;
-#define TRUE 1
-#define FALSE 0
-#include <string.h>
 
+#include "walley_pre_functions.h"
+
+char* replace_not_in_string(char* input_str, char* replace_str, char* with_str);
+bool charIsInString(char *input_str, int char_index);
+char *charToString(char input_char){
+    char *output=malloc(sizeof(char)*2);
+    output[0]=input_char;
+    output[1]=0;
+    return output;
+}
 
 char* substr(char* input_str, int from_index, int to_index) {
     if (from_index < 0){// || to_index > (int) strlen(input_str)) {
@@ -28,6 +32,9 @@ char* substr(char* input_str, int from_index, int to_index) {
         //printf("RETURN NONE");
         return "";
     }
+    else if (to_index-from_index==1){
+        return charToString(input_str[from_index]);
+    }
     else {
         //printf("\n\nFunction substr:\nThe input_str is %s\nthe from_index is %d\nthe to_index is %d\n", input_str, from_index, to_index);
         //if(to_index>(int)strlen(input_str))
@@ -35,31 +42,16 @@ char* substr(char* input_str, int from_index, int to_index) {
         int length = to_index - from_index;
         int i;
         char *output = malloc((length+1) * sizeof (char));
+        strcpy(output, "");
         for (i = 0; i < length; i++) {
-            //*(output + i) = *(input_str + from_index + i);
             output[i] = input_str[from_index + i];
-            //printf("\n%c\n\n",output[i]);
         }
         output[length]=0;
-        //printf("The substr is %s\n\n\n", output);
-        //printf("\ninput_str is %s\n",input_str);
-        //char *output_str = output;
-        //return output_str;
         return output;
 
     }
 }
 
-//char *substr(const char *s,int n1,int n2)/*从s中提取下标为n1~n2的字符组成一个新字符串，然后返回这个新串的首地址*/
-/*{
-  char *sp=malloc(sizeof(char)*(n2-n1+1));
-  int i,j=0;
-  for (i=n1; i<n2; i++) {
-   sp[j++]=s[i];
-  }
-  sp[j]=0;
-  return sp;
-}*/
 
 char *append(char *input_str, char *append_str){
     //printf("$$ |%s| $$ |%s|\n",input_str,append_str);
@@ -73,8 +65,15 @@ char *append(char *input_str, char *append_str){
     for(i=0;i<length_of_append_str;i++){
         temp[i+length_of_input_str]=append_str[i];
     }
-    temp[(int)strlen(temp)]=0;
+    
+    // strlen problem 1
+    //temp[(int)strlen(temp)]=0;
+    temp[(length_of_input_str+length_of_append_str)]=0;
+    
+    /*
+     // I delete the code below on Dec 25
     temp=substr(temp,0,length_of_input_str+length_of_append_str);
+     */
     return temp;
 }
 
@@ -111,6 +110,116 @@ int find(char *from_str, char *find_str) {
     return index;
 }
 
+// "Hello" find "l"--->3, find from behind
+int find_from_behind(char *from_str, char *find_str) {
+    int index = -1;
+    bool find_index = TRUE;
+    int i;
+    int j;
+    
+    for (i = (int) strlen(from_str)-1; i >=0; i--) {
+        // I add one code here.
+        find_index=TRUE;
+        if (from_str[i] == find_str[0]) {
+            //printf("Find The same\n");
+            //char *temp = substr(from_str, i, i + (int) strlen(find_str));
+            //printf("############%d\n",i);
+            for (j = 0; j < (int) strlen(find_str); j++) {
+                if (i+j==(int)strlen(from_str)) {
+                    find_index=FALSE;
+                    break;
+                }
+                if (find_str[j] != from_str[i + j]) {
+                    //printf("!= %d %d\n",j,j+i);
+                    find_index = FALSE;
+                    break;
+                }
+            }
+            if (find_index == TRUE) {
+                //find_index = TRUE;
+                //printf("Fin_Index--->%d\n",i);
+                index = i;
+                break;
+            }
+        }
+    }
+    //printf("%d",index);
+    return index;
+}
+
+
+int find_from_behind_from_index(char *from_str, char *find_str, int from_index) {
+    int index = -1;
+    bool find_index = TRUE;
+    int i;
+    int j;
+    
+    for (i = from_index; i >=0; i--) {
+        // I add one code here.
+        find_index=TRUE;
+        if (from_str[i] == find_str[0]) {
+            //printf("Find The same\n");
+            //char *temp = substr(from_str, i, i + (int) strlen(find_str));
+            //printf("############%d\n",i);
+            for (j = 0; j < (int) strlen(find_str); j++) {
+                if (i+j==(int)strlen(from_str)) {
+                    find_index=FALSE;
+                    break;
+                }
+                if (find_str[j] != from_str[i + j]) {
+                    //printf("!= %d %d\n",j,j+i);
+                    find_index = FALSE;
+                    break;
+                }
+            }
+            if (find_index == TRUE) {
+                //find_index = TRUE;
+                //printf("Fin_Index--->%d\n",i);
+                index = i;
+                break;
+            }
+        }
+    }
+    //printf("%d",index);
+    return index;
+}
+
+// "Hello" find "l"--->3, find from behind
+int find_from_behind_not_in_string(char *from_str, char *find_str) {
+    int index = -1;
+    bool find_index = TRUE;
+    int i;
+    int j;
+    
+    for (i = (int) strlen(from_str)-1; i >=0; i--) {
+        // I add one code here.
+        find_index=TRUE;
+        if (from_str[i] == find_str[0] && charIsInString(from_str, i)==FALSE) {
+            //printf("Find The same\n");
+            //char *temp = substr(from_str, i, i + (int) strlen(find_str));
+            //printf("############%d\n",i);
+            for (j = 0; j < (int) strlen(find_str); j++) {
+                if (i+j==(int)strlen(from_str)) {
+                    find_index=FALSE;
+                    break;
+                }
+                if (find_str[j] != from_str[i + j]) {
+                    //printf("!= %d %d\n",j,j+i);
+                    find_index = FALSE;
+                    break;
+                }
+            }
+            if (find_index == TRUE) {
+                //find_index = TRUE;
+                //printf("Fin_Index--->%d\n",i);
+                index = i;
+                break;
+            }
+        }
+    }
+    //printf("%d",index);
+    return index;
+}
 
 int find_from_index_to_index(char *from_str, char *find_str, int from_index, int to_index) {
     if (from_index < 0 || to_index > (int) strlen(from_str)) {
@@ -237,7 +346,7 @@ char* replace(char* input_str, char* replace_str, char* with_str) {
     int j;
 
     //char *input_str_copy = input_str;
-    char output[1000] = "";
+    char output[100000] = "";
     int length_of_input_str=(int)strlen(input_str);
     for (i = 0; i < length_of_input_str; i++) {
         if (input_str[i] == replace_str[0]) {
@@ -262,16 +371,21 @@ char* replace(char* input_str, char* replace_str, char* with_str) {
     //char *output_str = output;
     //printf("Output is %s\n",output);
     int length=(int)strlen(output);
-    char *output_str=malloc(sizeof(char)*(int)strlen(output));
+    char *output_str=malloc(sizeof(char)*(length+1));
     //printf("%% %d %%\n",(int)strlen(output));
     int a=0;
-    for(a=0;a<(int)strlen(output);a++){
+    for(a=0;a<length;a++){
         output_str[a]=output[a];
     }
-    output_str=substr(output_str,0,length);
+    output_str[length]=0;
+    //output_str=substr(output_str,0,length);
     return output_str;
 }
 char* replace_from_index_to_index(char *input_str, char* replace_str, char* with_str, int from_index, int to_index){
+    if (from_index>=to_index) {
+        printf("Mistake occurred while calling function replace_from_index_to_index\ninput_str %s\nreplace_str %s\nwith_str %s\nfrom_index %d to_index %d\n",input_str,replace_str,with_str,from_index,to_index);
+        exit(0);
+    }
     char *ahead;
     char *back;
     char *middle;
@@ -284,22 +398,46 @@ char* replace_from_index_to_index(char *input_str, char* replace_str, char* with
     else
         back="";
     middle=substr(input_str,from_index,to_index);
+    //printf("middle %s\n, replace_str %s\n with_str %s\n",input_str,replace_str,with_str);
     middle=replace(middle,replace_str,with_str);
     
-    char *output=malloc(sizeof(char)*((int)strlen(middle)+(int)strlen(ahead)+(int)strlen(back)+1));
-    strcat(output,ahead);
-    strcat(output,middle);
-    strcat(output,back);
-    output[(int)strlen(output)]=0;
-    //printf("#### replace_from_index_to_index---- input str %s, output %s\n",input_str,output);
+    char *output=append(ahead, middle);
+    output=append(output, back);
     return output;
         
+}
+
+char* replace_from_index_to_index_not_in_string(char *input_str, char* replace_str, char* with_str, int from_index, int to_index){
+    if (from_index>=to_index) {
+        printf("Mistake occurred while calling function replace_from_index_to_index_not_in_string\ninput_str %s\nreplace_str %s\nwith_str %s\nfrom_index %d to_index %d\n",input_str,replace_str,with_str,from_index,to_index);
+        exit(0);
+    }
+    char *ahead;
+    char *back;
+    char *middle;
+    if(from_index!=0)
+        ahead=substr(input_str,0,from_index);
+    else
+        ahead="";
+    if(to_index!=(int)strlen(input_str))
+        back=substr(input_str,to_index,(int)strlen(input_str));
+    else
+        back="";
+    middle=substr(input_str,from_index,to_index);
+    //printf("middle %s\n, replace_str %s\n with_str %s\n",input_str,replace_str,with_str);
+    middle=replace_not_in_string(middle,replace_str,with_str);
+    
+    char *output=append(ahead, middle);
+    output=append(output, back);
+    return output;
+    
 }
 int count_str(char *input_str, char *count_str){
     int count=0;
     int i=0;
     int from=0;
-    for(;i<(int)strlen(input_str);i++){
+    int length_of_input_str=(int)strlen(input_str);
+    for(;i<length_of_input_str;i++){
         if(find_from_index(input_str,count_str,from)==-1)
             break;
         else{
@@ -355,11 +493,21 @@ int count_str(char *input_str, char *count_str){
         }
         if(find_double_quote==TRUE && input_str[i]=='"'){
             //printf("here\n");
+            if (input_str[i-1]=='\\') {
+                in_string=TRUE;
+                continue;
+            }
+            
             find_double_quote=FALSE;
             in_string=FALSE;
             continue;
         }
         if(input_str[i]=='\''&&find_double_quote==FALSE&&find_single_quote==TRUE){
+            if (input_str[i-1]=='\\') {
+                in_string=TRUE;
+                continue;
+            }
+            
             find_single_quote=FALSE;
             in_string=FALSE;
             continue;
@@ -377,10 +525,16 @@ int count_str(char *input_str, char *count_str){
         } 
     }
     //printf("Char is in string --->input_str : %s\n",input_str);
-    if(input_str[char_index]=='"')
-            in_string=FALSE;
-    if(find_double_quote==FALSE && find_single_quote==TRUE && input_str[char_index]=='\'')
-        in_string=FALSE;
+     if(input_str[char_index]=='"'){
+         if (char_index>=1 && input_str[char_index-1]!='\\') {
+             in_string=FALSE;
+         }
+     }
+     if(find_double_quote==FALSE && find_single_quote==TRUE){
+         if ( char_index>=1 && input_str[char_index]=='\'') {
+             in_string=FALSE;
+         }
+    }
     return in_string;
 }
 // change "heLlo" to "HELLO"
@@ -401,12 +555,12 @@ char *stringToUpperCase(char *input_str) {
             temp[i] = input_str[i];
         }
     }
-    char *output=malloc(sizeof(char)*((int)strlen(temp)+1));
-    for(i=0;i<(int)strlen(temp);i++){
+    int length_of_temp=(int)strlen(temp);
+    char *output=malloc(sizeof(char)*(length_of_temp+1));
+    for(i=0;i<length_of_temp;i++){
         output[i]=temp[i];
     }
-    output[(int)strlen(output)]=0;
-    //printf("String to upper case----->%s\n", temp);
+    output[length_of_temp]=0;
     return output;
 }
 char *stringToLowerCase(char *input_str) {
@@ -429,7 +583,7 @@ char *stringToLowerCase(char *input_str) {
     for(i=0;i<(int)strlen(temp);i++){
         output[i]=temp[i];
     }
-    output[(int)strlen(output)]=0;
+    output[(int)strlen(temp)]=0;
     //printf("String to lower case----->%s\n", temp);
     return output;
 }
@@ -482,9 +636,6 @@ char* replace_not_in_string(char* input_str, char* replace_str, char* with_str) 
     int j;
 
     char output[10000]="";
-    //char *output=malloc(sizeof(char)*(1000));
-    //printf("Hello\n");
-    //printf("%d",(int)strlen(output));
     int length_of_input_str=(int)strlen(input_str);
     int length_of_with_str=(int)strlen(with_str);
     
@@ -526,14 +677,14 @@ char* replace_not_in_string(char* input_str, char* replace_str, char* with_str) 
     //char *output_str = output;
     //printf("Output is %s\n",output);
     int length=(int)strlen(output);
-    char *output_str=malloc(sizeof(char)*length);
+    char *output_str=malloc(sizeof(char)*(length+1));
     //printf("%% %d %%\n",(int)strlen(output));
     int a=0;
     for(a=0;a<length;a++){
         output_str[a]=output[a];
     }
-    output_str=substr(output_str,0,length);
-    //printf("OUTPUT---->|%s|\n",output);
+    output_str[length]=0;
+    //output_str=substr(output_str,0,length);
     return output_str;
 }
 
@@ -549,9 +700,6 @@ char* replace_not_in_string_for_times(char* input_str, char* replace_str, char* 
     int count=0;
 
     char output[10000]="";
-    //char *output=malloc(sizeof(char)*(1000));
-    //printf("Hello\n");
-    //printf("%d",(int)strlen(output));
     int length_of_input_str=(int)strlen(input_str);
     int length_of_with_str=(int)strlen(with_str);
     
@@ -594,14 +742,14 @@ char* replace_not_in_string_for_times(char* input_str, char* replace_str, char* 
     //char *output_str = output;
     //printf("Output is %s\n",output);
     int length=(int)strlen(output);
-    char *output_str=malloc(sizeof(char)*length);
+    char *output_str=malloc(sizeof(char)*(length+1));
     //printf("%% %d %%\n",(int)strlen(output));
     int a=0;
     for(a=0;a<length;a++){
         output_str[a]=output[a];
     }
-    output_str=substr(output_str,0,length);
-    //printf("OUTPUT---->|%s|\n",output);
+    output_str[length]=0;
+    //output_str=substr(output_str,0,length);
     return output_str;
 }
 
@@ -638,7 +786,8 @@ int count_str_not_in_string(char *input_str, char *count_str){
     int count=0;
     int i=0;
     int from=0;
-    for(;i<(int)strlen(input_str);i++){
+    int length_of_input=(int)strlen(input_str);
+    for(;i<length_of_input;i++){
         if(find_from_index_not_in_string(input_str,count_str,from)==-1)
             break;
         else{
@@ -656,7 +805,8 @@ char *experiment(char *input_str){
 }
 
 char* removeBackSpace(char* input_message) {
-    if ((int) strlen(input_message) != 0) {
+    int length_of_input_message=(int)strlen(input_message);
+    if (length_of_input_message!= 0) {
         int i = (int) strlen(input_message) - 1;
         char *output = input_message;
         if (output[i] == ' ') {
@@ -687,10 +837,6 @@ char* removeAheadSpace(char* input_message) {
                 }
             }
         }
-        //char *output_str=malloc(sizeof(char)*(int)strlen(output));
-        //strcat(output_str,output);
-        //return output_str;
-        //printf("output is %s\n",output);
         return output;
     } else {
         return "";
@@ -751,6 +897,31 @@ bool stringIsDigit(char *input_str){
     return isDigit;
 }
 
+bool stringIsFraction(char *input_str){
+    int index_of_gang=find(input_str,"/");
+    int string_is_digit=stringIsDigit(input_str);
+    
+    if (index_of_gang==-1) {
+        return FALSE;
+    }
+    if (index_of_gang==-1 && string_is_digit==FALSE) {
+        return FALSE;
+    }
+    if (index_of_gang!=-1) {
+        char *numerator=substr(input_str, 0, index_of_gang);
+        char *denominator=substr(input_str, index_of_gang+1, (int)strlen(input_str));
+        
+        if (stringIsDigit(numerator)==TRUE && stringIsDigit(denominator)==TRUE) {
+            return TRUE;
+        }
+        else{
+            return FALSE;
+        }
+        
+    }
+    return FALSE;
+}
+
 bool stringIsAlpha(char *input_str){
     input_str=trim(input_str);
     int i=0;
@@ -764,6 +935,22 @@ bool stringIsAlpha(char *input_str){
     }
     return is_alpha;
 }
+
+// like a_b 
+bool stringIsAlphaAndSlash(char *input_str){
+    input_str=trim(input_str);
+    int i=0;
+    int length=(int)strlen(input_str);
+    bool is_alpha=TRUE;
+    for (i=0; i<length; i++) {
+        if (isalpha(input_str[i])==FALSE && input_str[i]!='_') {
+            is_alpha=FALSE;
+            break;
+        }
+    }
+    return is_alpha;
+}
+
 
 bool charIsInList(char *input_str,int index){
     char *check_str=substr(input_str, 0, index+1);
@@ -950,3 +1137,163 @@ int count_str_not_in_str_list_dict_parenthesis(char *input_str, char *count_str)
     return count;
 }
 
+char *intToCString(double num1){
+    int num1_int=(int)num1;
+    char temp[10000]="";
+    sprintf(temp, "%d",num1_int);
+    return append("", temp);
+    
+}
+
+bool checkWhetherComplete(char *input_str){
+    bool complete=TRUE;
+    if(input_str[0]==input_str[(int)strlen(input_str)-1]||
+       (input_str[0]=='['&&input_str[(int)strlen(input_str)-1]==']')||
+       (input_str[0]=='{'&&input_str[(int)strlen(input_str)-1]=='}'))
+        complete=TRUE;
+    else
+        complete=FALSE;
+    return complete;
+}
+
+
+char *numToCString(double num){
+    char temp[10000]="";
+    sprintf(temp, "%f",num);
+    return append("", temp);
+}
+
+char *stringReverse(char *input_str){
+    int count=0;
+    int length=(int)strlen(input_str);
+    char *output=malloc((sizeof(char)*(length+1)));
+    int i;
+    for (i=length-1; i>=0; i--) {
+        output[count]=input_str[i];
+        count++;
+    }
+    output[length]=0;
+    return output;
+}
+
+//             11
+//   012345678901
+//   sin(3*(4+5))        indexOfMostOutterBracket(sin(3*(4+5)),3)---->11
+int indexOfMostOutterBracket(char *input_str, int index_of_left_bracket){
+    int num_of_right_bracket=0;
+    int i=index_of_left_bracket;
+    int length=(int)strlen(input_str);
+    int num_of_left_bracket=0;
+    int index=-1;
+    for (; i<length; i++) {
+        if (input_str[i]=='(') {
+            num_of_left_bracket++;
+        }
+        else if (input_str[i]==')') {
+            num_of_right_bracket++;
+        }
+        if (num_of_left_bracket==num_of_right_bracket) {
+            index=i;
+            break;
+        }
+    }
+    return index;
+}
+
+int indexOfMostOutterRectBracket(char *input_str, int index_of_left_bracket){
+    int num_of_right_bracket=0;
+    int i=index_of_left_bracket;
+    int length=(int)strlen(input_str);
+    int num_of_left_bracket=0;
+    int index=-1;
+    for (; i<length; i++) {
+        if (input_str[i]=='[') {
+            num_of_left_bracket++;
+        }
+        else if (input_str[i]==']') {
+            num_of_right_bracket++;
+        }
+        if (num_of_left_bracket==num_of_right_bracket) {
+            index=i;
+            break;
+        }
+    }
+    return index;
+}
+
+int indexOfMostOutterDictBracket(char *input_str, int index_of_left_bracket){
+    int num_of_right_bracket=0;
+    int i=index_of_left_bracket;
+    int length=(int)strlen(input_str);
+    int num_of_left_bracket=0;
+    int index=-1;
+    for (; i<length; i++) {
+        if (input_str[i]=='{') {
+            num_of_left_bracket++;
+        }
+        else if (input_str[i]=='}') {
+            num_of_right_bracket++;
+        }
+        if (num_of_left_bracket==num_of_right_bracket) {
+            index=i;
+            break;
+        }
+    }
+    return index;
+}
+
+
+bool findAlphaInString(char *input_str){
+    int i=0;
+    while (i<(int)strlen(input_str)) {
+        if (isalpha(input_str[i])==TRUE) {
+            return TRUE;
+        }
+        
+        i++;
+    }
+    return FALSE;
+}
+
+bool stringHasAlpha(char *input_str){
+    bool has_alpha=FALSE;
+    int i=0;
+    for(;i<(int)strlen(input_str);i++){
+        if(isalpha(input_str[i])){
+            has_alpha=TRUE;
+            break;
+        }
+    }
+    return has_alpha;
+}
+
+
+
+/*
+ * Init String List
+ */
+void Str_initStringList(char ***output){
+    *output=(char**)malloc(sizeof(char*)*1);
+    *output[0]="1";
+}
+
+void Str_PrintStr(char **input_str){
+    printf("length is %s\n",input_str[0]);
+    int length=atoi(input_str[0]);
+    int i=1;
+    while (i<length) {
+        printf("%s\n",input_str[i]);
+        i++;
+    }
+}
+/*
+ * This function is for function[] and tempfile[]....
+ * replace __walley_function__.wy
+ */
+void Str_addString(char ***input_str_list,char *add_str){
+    int length=atoi((*input_str_list)[0]);
+    length=length+1;
+    (*input_str_list)[0]=intToCString(length);
+    (*input_str_list)=(char**)realloc(*input_str_list, sizeof(char*)*(length));
+    (*input_str_list)[length-1]=add_str;
+}
