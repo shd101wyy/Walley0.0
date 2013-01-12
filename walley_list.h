@@ -502,10 +502,16 @@ char *listAppendOneElement(char *list, char *append_element){
 char *listRemoveOneElementAtOneIndex(char *list, char *index){
    //// printf("List is %s, index is %s",list,index);
     
-    index=append("[", index);
-    index=append(index, "]");
+    index=trim(index);
+    list=trim(list);
+    if (index[0]=='['&&index[(int)strlen(index)-1]==']') {
+        index=index;
+    }
+    else{
+        index=append("[", index);
+        index=append(index, "]");
+    }
     
-    list=removeAheadSpace(removeBackSpace(list));
     char *replace_str=valueOfListAtIndexString(list,index);
    
     int begin_end[2];

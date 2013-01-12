@@ -52,6 +52,12 @@ bool NOW_WRITTING_SWITCH=FALSE;
 char *SWITCH_OBJECT="";
 char *SENTENCE_OF_SWITCH="";
 
+// For if elif sentence
+/*
+int SPACE_OF_FIRST_IF_ELIF_ELSE_SENTENCE=0;
+bool NOW_WRITTING_IF=FALSE;
+char *SENTENCE_OF_IF="";
+*/
 
 //char *STR_TO_BE_INCLUED_WHILE_MAKING_EXEC_FILE; // string that need to be included whiling making exec file.. replace "walley.h"
 

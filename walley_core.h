@@ -894,10 +894,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 strcat(remove_at_index,final_index);
                 strcat(remove_at_index,"]");
                 remove_at_index[(int)strlen("[]")+(int)strlen(final_index)]=0;
-                //// printf("remove at index is %s\n",remove_at_index);
                 __temp_while__=listRemoveOneElementAtOneIndex(__temp_while__,remove_at_index);
-                //// printf("__temp_while__ %s\n\n",__temp_while__);
-                //changeTheWholeVarValueFromItsInitialOneFromFileForList(struct_var,"__temp_while__",__temp_while__);
                 changeTheWholeVarValueFromItsInitialOneFromVarForList(struct_var, "__temp_while__", __temp_while__);
                 
                 __temp_string_in_while_loop__=listRemoveOneElementAtOneIndex(__temp_string_in_while_loop__,remove_at_index);
@@ -1072,8 +1069,39 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
             
         }        //################## Now Run If #######################################
         else if (now_run_if == TRUE && str_is_empty==FALSE) {
-            //// printf("Now Run If\n");
-            //// printf("Input_str is %s\n",input_str);
+            // printf("Now Run If\n");
+            // printf("Input_str is %s  %d\n",input_str,space);
+            
+            
+            /*
+            // new code here on Jan 12
+            if (current_space%4!=0) {
+                printf("Mistake occurred while run if sentence, space error. %s\n",input_str);
+                exit(0);
+            }
+            
+            if (current_space<=SPACE_OF_FIRST_IF_ELIF_ELSE_SENTENCE) {
+                NOW_WRITTING_IF=FALSE;
+                SPACE_OF_FIRST_IF_ELIF_ELSE_SENTENCE=0;
+                
+                printf("FINISH IF!");
+                printf("%s\n",SENTENCE_OF_IF);
+                
+                SENTENCE_OF_IF="";
+            }
+            else{
+                char *temp_str="";
+                int a=0;
+                for (; a<SPACE_OF_FIRST_IF_ELIF_ELSE_SENTENCE;a++) {
+                    temp_str=append(temp_str, " ");
+                }
+                temp_str=append(temp_str, trim(input_str));
+                SENTENCE_OF_IF=append(SENTENCE_OF_IF, temp_str);
+                SENTENCE_OF_IF=append(SENTENCE_OF_IF, "\n");
+            }
+            // new code here on Jan 12
+            */
+            
             
             if (current_space > space || current_space % 4 != 0) {
                 //if (current_space != space) {
@@ -1265,12 +1293,9 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
         
         //############### New code here on Jan 10 #############################################
         //############### To support switch sentence ##########################################
-        else if(NOW_WRITTING_SWITCH == TRUE && str_is_empty==FALSE){
-            
-            //printf("NOW_WRITTING_SWITCH\n");
+        if(NOW_WRITTING_SWITCH == TRUE && str_is_empty==FALSE){
             
             can_run_basic_input = FALSE;
-            
             if(current_space % 4 !=0){
                 printf("Space Mistake occurred while defining a switch\n");
             }
@@ -1300,8 +1325,8 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
             else{
                 
                 // case sentence
-                if (find(trim(input_str),"case ")==0) {
-                    if (current_space!=SPACE_OF_FIRST_SWITCH_SENTENCE+4) {
+                if (find(trim(input_str),"case ")==0&& current_space==SPACE_OF_FIRST_SWITCH_SENTENCE+4) {
+                    if (current_space%4!=0 && current_space<SPACE_OF_FIRST_SWITCH_SENTENCE+4) {
                         printf("Space mistake occurred while running |%s|\n",input_str);
                         exit(0);
                     }
@@ -1350,6 +1375,8 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                         
                         
                         SENTENCE_OF_SWITCH=append(SENTENCE_OF_SWITCH,append(temp_str, "\n"));
+                        space=current_space+4;
+                        Var_changeValueOfVar(*struct_settings, "space", intToCString(space), "int");
                     }
                 }
                 // string in case sentence
@@ -1396,7 +1423,6 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 find(input_temp,"class ")==0
                      // new code here to support switch
                      || find(input_temp,"switch ")==0) {
-                                
                 Walley_Judge_Run_Anotation_For_While_Def_Class(struct_var, struct_settings, FUNCTION_functions,input_str);
 
             }// ##################################### CHECK RETURN IN FUNCTION, CHECK WHETHER IT CAN RUN OR NOT
@@ -3856,6 +3882,8 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
    // printf("############################\n");
    // Var_PrintVar(struct_settings);
    // printf("############################\n");
+    
+    
     input_str = removeAheadSpace(input_str);
     
     int space = atoi(Var_getValueOfVar(*struct_settings , "space"));
@@ -3879,7 +3907,7 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
     int space_of_first_class_sentence = atoi(Var_getValueOfVar(*struct_settings , "space_of_first_class_sentence"));
     
     int current_space=atoi(Var_getValueOfVar(*struct_settings , "current_space"));
-    //// printf("current_space is %d\n",current_space);
+    //printf("##current_space is %d\n",current_space);
     
     //#####################  Anotation  ###################
     if (input_str[0] == '#') {
@@ -4038,20 +4066,6 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
             
             sentence = substr(temp_for_sentence, find(temp_for_sentence, "elif ") + 5, (int) strlen(temp_for_sentence) - 1);
             
-            /*
-            int length_of_temp = (int) strlen("not ( ") + 1 + (int) strlen(" ) and (  )")+(int) strlen(last_if_sentence)+(int) strlen(sentence);
-            char *temp_for_sentence2 = malloc(sizeof (char) *length_of_temp);
-            strcpy(temp_for_sentence2, "not ( ");
-            strcat(temp_for_sentence2, last_if_sentence);
-            strcat(temp_for_sentence2, " ) and ( ");
-            strcat(temp_for_sentence2, sentence);
-            strcat(temp_for_sentence2, " )");
-            temp_for_sentence2[length_of_temp] = 0;
-            
-            
-            
-            sentence = temp_for_sentence2;
-             */
             last_if_sentence = sentence;
             // if can run.
             // Write last_if_sentence to __temp_if__
@@ -4154,14 +4168,12 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
         //// printf("Sentence is |%s|\nLength is %d\n", sentence, (int) strlen(sentence));
         //bool can_run = Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(sentence, file_name);
         if (can_run) {
+            //SPACE_OF_FIRST_IF_ELIF_ELSE_SENTENCE=current_space;
+            //printf("space of first if sentence %d\n",current_space);
             now_run_if = TRUE;
-            //// printf("\n\n\n\n\n\n!!!!!Can Run!!!!!\n");
             space = space + 4;
-            //last_if_sentence=sentence;
         } else {
             now_run_if = FALSE;
-            //// printf("\n\n\n\n\n\n!!!!!! Can not run !!!!!!\n");
-            
         }
     }//#################### While Sentence ##################################
     else if (find(input_str, "while ") == 0) {
@@ -4236,9 +4248,8 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
         //changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name,"__temp_while_space__",temp_while_space);
     }
     else if (find(input_str, "switch ")==0){
-        
-        SPACE_OF_FIRST_SWITCH_SENTENCE = space;
-        space = space + 4;
+        SPACE_OF_FIRST_SWITCH_SENTENCE = current_space;
+        space = current_space + 4;
         
         NOW_WRITTING_SWITCH = TRUE;
         
