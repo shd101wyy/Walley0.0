@@ -500,7 +500,8 @@ char *listAppendOneElement(char *list, char *append_element){
  */
 
 char *listRemoveOneElementAtOneIndex(char *list, char *index){
-   //// printf("List is %s, index is %s",list,index);
+    //// printf("List is %s, index is %s",list,index);
+
     
     index=trim(index);
     list=trim(list);

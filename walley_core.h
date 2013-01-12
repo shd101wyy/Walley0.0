@@ -1110,10 +1110,11 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
             }
             // I do not know whether it is right or not.......
             if (current_space <= space) {
-                input_str = removeAheadSpace(input_str);
+                //input_str = removeAheadSpace(input_str);
                 // change space and rewrite it to file
                 space=current_space;
                 Var_changeValueOfVar(*struct_settings , "space", intToCString(space), "int");
+                Var_changeValueOfVar(*struct_settings , "current_space", intToCString(current_space), "int");
             }
             
         }        //################## Now Run For #######################################
@@ -3883,7 +3884,7 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
    // Var_PrintVar(struct_settings);
    // printf("############################\n");
     
-    
+    int current_space=numOfSpaceAheadString(input_str);
     input_str = removeAheadSpace(input_str);
     
     int space = atoi(Var_getValueOfVar(*struct_settings , "space"));
@@ -3906,7 +3907,7 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
     int space_of_first_def_sentence = atoi(Var_getValueOfVar(*struct_settings , "space_of_first_def_sentence"));
     int space_of_first_class_sentence = atoi(Var_getValueOfVar(*struct_settings , "space_of_first_class_sentence"));
     
-    int current_space=atoi(Var_getValueOfVar(*struct_settings , "current_space"));
+    //int current_space=atoi(Var_getValueOfVar(*struct_settings , "current_space"));
     //printf("##current_space is %d\n",current_space);
     
     //#####################  Anotation  ###################
