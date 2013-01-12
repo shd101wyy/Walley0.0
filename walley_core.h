@@ -775,13 +775,13 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
         
         //printf("-------Now input is |%s|\n", input_str);
         input_str=cleanUpSentence(input_str);
-        //printf("-------Now input is |%s|\n", input_str);
+        //printf("-------Now input is |%s| required space %d current space %d\n", input_str,space,current_space);
         
         
         if ((int) strlen(input_str) == 0 || stringIsEmpty(input_str) == TRUE) {
             can_run_basic_input = FALSE;
-            str_is_empty=TRUE;
-            
+            //str_is_empty=TRUE;
+            input_str="#empty";
         }
         if (current_space > space) {
             can_run_basic_input = FALSE;
@@ -1119,9 +1119,9 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
             
         }        //################## Now Run For #######################################
         else if (now_writting_for == TRUE && str_is_empty==FALSE) {
-           // printf("#### Now Writting For ####");
+            // printf("#### Now Writting For ####, |%s|\n",input_str);
             if (current_space > space_of_first_for_sentence && current_space % 4 == 0) {
-                //// printf("################ Now Writting For ###################");
+                //printf("################ Now Writting For ###################");
                 //printf("STRING IN FOR LOOP is |%s|\n", string_in_for_loop);
                 can_run_basic_input = FALSE;
                 input_str = removeAheadSpaceForNum(input_str, space_of_first_for_sentence + 4);
@@ -1160,7 +1160,6 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                     //printf("i is list type\ni value is |%s|\n", temp_i_in_for_sentence);
                     //printf("temp i is |%s|\n", temp_i);
                     int value_num = valueNumOfList(temp_i_in_for_sentence);
-                    
                     //get __temp_for__ to get last_while_sentence
                     char *__temp_for__=Var_getValueOfVar(*struct_var,"__temp_for__");
                     int length_of_list=valueNumOfList(__temp_for__);
@@ -1195,8 +1194,6 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                     //char *string_in_for_loop2=valueOfListAtIndex(__temp_string_in_for_loop__,length_of_list-1);
                     //// printf("__temp_string_in_for_loop__ %s\n",__temp_string_in_for_loop__);
                     char *string_in_for_loop2=valueOfListAtIndexString(__temp_string_in_for_loop__,temp_index);
-                    //// printf("string_in_for_loop2 is %s\n",string_in_for_loop2);
-                    //printf("String in for loop is %s\n",string_in_for_loop2);
                     
                     
                     // New code on Dec 16
@@ -1209,7 +1206,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                     int x = 0;
                     
                     for (x = 0; x < value_num; x++) {
-                        //printf("X--->%d\n", x);
+                        // printf("X--->%d\n", x);
                         char temp_num[100];
                         sprintf(temp_num, "%d", x);
                         
@@ -1220,29 +1217,15 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                         index_temp[2 + (int) strlen(temp_num)]=0;
                         
                         char *value_of_i_in_x = valueOfListAtIndexString(temp_i_in_for_sentence2, index_temp);
-                        //// printf("value_of_i_in_x is |%s|\n",value_of_i_in_x);
-                        //printf("Now Run %d Time\n",x);
-                        //printf("Get Here\n");
-                        
+                                                
                         char *init_temp_i = malloc(sizeof (char) *((int) strlen(temp_i2) + 2 + (int) strlen(value_of_i_in_x)));
                         strcpy(init_temp_i, temp_i2);
                         strcat(init_temp_i, "=");
                         strcat(init_temp_i, value_of_i_in_x);
                         init_temp_i[(int) strlen(temp_i2) + 1 + (int) strlen(value_of_i_in_x)]=0;
-                        //// printf("init_temp_i is %s\n",init_temp_i);
-                        //// printf("init_temp_i is |%s|\n",init_temp_i);
-                        //printf("Get Here\n");
-                        //printf("STRING IN FOR LOOP %s\n", string_in_for_loop2);
+                        
                         char *temp_to_run = substr(string_in_for_loop2, 1, (int) strlen(string_in_for_loop2) - 1);
-                        //printf("TEMP TO RUN %s\n", temp_to_run);
-                        //printf("Get Here\n");
-                        //if (strcmp(trim(temp_to_run), "pass") == 0) {
-                        //    break;
-                        //}
-                        //if (strcmp(trim(temp_to_run), "continue") == 0) {
-                        //    continue;
-                        //}
-                        //printf("%s\n",init_temp_i);
+
                         Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions,init_temp_i);
                         Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions,temp_to_run);
                         
@@ -1261,6 +1244,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                         }
 
                     }
+                    
                     string_in_for_loop = "\"#For\\n\"";
                     temp_i = "\"None\"";
                     temp_i_in_for_sentence = "\"None\"";
@@ -1275,7 +1259,6 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                     remove_at_index[(int)strlen("[]")+(int)strlen(final_index)]=0;
 
                     __temp_for__=listRemoveOneElementAtOneIndex(__temp_for__,remove_at_index);
-                    //changeTheWholeVarValueFromItsInitialOneFromFileForList(struct_var,"__temp_for__",__temp_for__);
                     changeTheWholeVarValueFromItsInitialOneFromVarForList(struct_var, "__temp_for__", __temp_for__);
                     __temp_string_in_for_loop__=listRemoveOneElementAtOneIndex(__temp_string_in_for_loop__,remove_at_index);
                     //changeTheWholeVarValueFromItsInitialOneFromFileForList(struct_var,"__temp_string_in_for_loop__",__temp_string_in_for_loop__);
@@ -4207,15 +4190,14 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
         }
     }        //#################### For Sentence #####################################
     else if (find(input_str, "for ") == 0) {// && removeBackSpace(input_str)[(int) strlen(removeBackSpace(input_str)) - 1] == ':') {
-        //// printf("#### Find For ####\n");
+        // printf("#### Find For ####\n");
         temp_i = substr(input_str, find(input_str, "for ") + 4, find(input_str, " in"));
         temp_i = removeAheadSpace(removeBackSpace(temp_i));
         char *in_what = substr(input_str, find(input_str, " in ") + 4, (int) strlen(removeBackSpace(input_str)) - 1);
         in_what = removeAheadSpace(removeBackSpace(in_what));
         in_what = Walley_Substitute_Var_And_Function_Return_Value_From_Var(in_what, struct_var,FUNCTION_functions);
-        //printf("i is |%s|, in_what is |%s|\n", temp_i, in_what);
+        // printf("i is |%s|, in_what is |%s|\n", temp_i, in_what);
         now_writting_for = TRUE;
-        //temp_i_in_for_sentence=Var_getValueOfVar(struct_var,in_what);
         temp_i_in_for_sentence = in_what;
         if (strcmp(variableValueType(temp_i_in_for_sentence), "string") == 0) {
             //// printf("It is string\n");
@@ -4229,24 +4211,16 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
         
         // Write temp_i_in_for_sentence to __temp_for__  eg
         // for i in [1,2,3,4]:     write [1,2,3,4] to __temp_for__
+        
+        
         char *temp_for_var_value=Var_getValueOfVar(*struct_var,"__temp_for__");
         temp_for_var_value=listAppendOneElement(temp_for_var_value,temp_i_in_for_sentence);
-        //printf("####$$$$$ %s\n",temp_for_var_value);
-        //changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name,"__temp_for__",temp_for_var_value);
         changeTheWholeVarValueFromItsInitialOneFromVarForList(struct_var,"__temp_for__" , temp_for_var_value);
-        
-        //// printf("@@@@@@@@@@@@HERE\n");
         
         char *__temp_i__=Var_getValueOfVar(*struct_var,"__temp_i__");
         __temp_i__=listAppendOneElement(__temp_i__,temp_i);
-        //changeTheWholeVarValueFromItsInitialOneFromFileForList(struct_var,"__temp_i__",__temp_i__);
         changeTheWholeVarValueFromItsInitialOneFromVarForList(struct_var,"__temp_i__" , __temp_i__);
 
-        //char temp_space[100];
-        //sprintf(temp_space,"%d",space_of_first_while_sentence);
-        //char *temp_while_space=Var_getValueOfVar(file_var_name,"__temp_while_space__");
-        //temp_while_space=listAppendOneElement(temp_while_space,temp_space);
-        //changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name,"__temp_while_space__",temp_while_space);
     }
     else if (find(input_str, "switch ")==0){
         SPACE_OF_FIRST_SWITCH_SENTENCE = current_space;
