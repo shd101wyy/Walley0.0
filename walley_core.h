@@ -776,6 +776,19 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
         //printf("-------Now input is |%s|\n", input_str);
         input_str=cleanUpSentence(input_str);        
         
+        if (strcmp(trim(input_str), "#empty")==0) {
+            input_str=trim(input_str);
+            char *temp_str="";
+            int a=0;
+            for (; a<space; a++) {
+                temp_str=append(temp_str, " ");
+            }
+            
+            input_str=append(temp_str, "#empty");
+            current_space=space;
+            
+        }
+        
         if ((int) strlen(input_str) == 0 || stringIsEmpty(input_str) == TRUE) {
             can_run_basic_input = FALSE;
             //str_is_empty=TRUE;
@@ -790,18 +803,6 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
             current_space=space;
         }
         
-        if (strcmp(trim(input_str), "#empty")==0) {
-            input_str=trim(input_str);
-            char *temp_str="";
-            int a=0;
-            for (; a<space; a++) {
-                temp_str=append(temp_str, " ");
-            }
-            
-            input_str=append(temp_str, "#empty");
-            current_space=space;
-
-        }
         
         if (current_space > space) {
             can_run_basic_input = FALSE;
@@ -3754,6 +3755,87 @@ void Walley_Eval_And_Update_Var_And_Value_To_Var(struct VAR **struct_var,char **
     //// printf("#### The Variable Value is :%s\n", var_value);
     //// printf("#### The Variable Value Type is :%s\n", var_value_type);
     
+    // new code here on Jan 12 to solve x[i][j]=x[i][j]+3, replace var_name x[i][j] problem
+    int i=0;
+    int begin=0;
+    int end=0;
+    for (i = 0; i < (int) strlen(var_name); i++) {
+        
+        
+        if (charIsInString(var_name, i) == FALSE && var_name[i] == '{') {
+            //printf("______------______FIND {}\n");
+            begin = i;
+            end = find_from_index_not_in_string(var_name, "}", begin + 1);
+            //if (end != -1) {
+            char *check = substr(var_name, begin, end + 1);
+            while (count_str_not_in_string(check, "{") != count_str_not_in_string(check, "}")) {
+                end = find_from_index_not_in_string(var_name, "}", end + 1);
+                check = substr(var_name, begin, end + 1);
+            }
+            char *replace_str = substr(var_name, begin + 1, end); //from x{i} get i
+            if (stringIsEmpty(replace_str) == FALSE) {
+                if (finishFindingVarAndFunction(replace_str) == FALSE) {
+                    char *with_str = Walley_Substitute_Var_And_Function_Return_Value_From_Var(replace_str, struct_var,FUNCTION_functions);
+                    var_name = replace_from_index_to_index(var_name, replace_str, with_str, begin + 1, end);
+                }
+            }
+            //} //printf("Replace %s with %s, the input_str is %s\n",replace_str,with_str,input_str);
+        }
+        
+        if (charIsInString(var_name, i) == FALSE && var_name[i] == '[') {
+            
+            begin = i;
+            end = find_from_index_not_in_string(var_name, "]", begin + 1);
+            //if (end != -1) {
+            char *check = substr(var_name, begin, end + 1);
+            //if(end!=-1){
+            while (count_str_not_in_string(check, "[") != count_str_not_in_string(check, "]")) {
+                end = find_from_index_not_in_string(var_name, "]", end + 1);
+                check = substr(var_name, begin, end + 1);
+            }
+            //}
+            char *replace_str = substr(var_name, begin + 1, end);
+            if (stringIsEmpty(replace_str) == FALSE) {
+                if (finishFindingVarAndFunction(replace_str) == FALSE && find_not_in_string(replace_str, ":")==-1) {//from x{i} get i
+                    char *with_str = Walley_Substitute_Var_And_Function_Return_Value_From_Var(replace_str, struct_var,FUNCTION_functions);
+                    var_name = replace_from_index_to_index(var_name, replace_str, with_str, begin + 1, end);
+                }
+            }
+            //}
+        }
+        if (charIsInString(var_name, i) == FALSE && var_name[i] == '(') {
+            begin = i;
+            end = find_from_index_not_in_string(var_name, ")", begin + 1);
+            //if (end != -1) {
+            char *check = substr(var_name, begin, end + 1);
+            while (count_str_not_in_string(check, "(") != count_str_not_in_string(check, ")")) {
+                end = find_from_index_not_in_string(var_name, ")", end + 1);
+                check = substr(var_name, begin, end + 1);
+            }
+            char *replace_str = substr(var_name, begin + 1, end);
+            if (stringIsEmpty(replace_str) == FALSE) {
+                
+                if (finishFindingVarAndFunction(replace_str) == FALSE) {//from x{i} get i
+                    char *with_str = Walley_Substitute_Var_And_Function_Return_Value_From_Var(replace_str, struct_var,FUNCTION_functions);
+                    if (strcmp(with_str, replace_str)==0) {
+                        continue;
+                    }
+                    
+                    // with_str=Walley_Eval_All_From_Var(struct_var, with_str);
+                    var_name = replace_from_index_to_index(var_name, replace_str, with_str, begin + 1, end);
+                    // printf("here\n");
+                }
+            }
+            //}
+        }
+        
+    }
+
+    
+    
+    
+    
+    
     
     // new code here on Jan 6
     
@@ -3882,6 +3964,7 @@ void Walley_Eval_And_Update_Var_And_Value_To_Var(struct VAR **struct_var,char **
     
     // ################### Basic Calculation ##################################
     //if(strcmp(var_value_type,"unknown type")!=0){//&&strcmp(var_value_type,"function")!=0){
+        
     Walley_Update_Var_And_Var_Value_To_Var(struct_var,var_name,var_value);
 }
 }
