@@ -774,18 +774,43 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
         
         
         //printf("-------Now input is |%s|\n", input_str);
-        input_str=cleanUpSentence(input_str);
-        //printf("-------Now input is |%s| required space %d current space %d\n", input_str,space,current_space);
-        
+        input_str=cleanUpSentence(input_str);        
         
         if ((int) strlen(input_str) == 0 || stringIsEmpty(input_str) == TRUE) {
             can_run_basic_input = FALSE;
             //str_is_empty=TRUE;
-            input_str="#empty";
+            
+            char *temp_str="";
+            int a=0;
+            for (; a<space; a++) {
+                temp_str=append(temp_str, " ");
+            }
+            
+            input_str=append(temp_str, "#empty");
+            current_space=space;
         }
+        
+        if (strcmp(trim(input_str), "#empty")==0) {
+            input_str=trim(input_str);
+            char *temp_str="";
+            int a=0;
+            for (; a<space; a++) {
+                temp_str=append(temp_str, " ");
+            }
+            
+            input_str=append(temp_str, "#empty");
+            current_space=space;
+
+        }
+        
         if (current_space > space) {
             can_run_basic_input = FALSE;
         }
+        
+        
+        // printf("-------Now input is |%s| required space %d current space %d\n", input_str,space,current_space);
+
+        
         //printf("-------Now Ahead Space is %d\n-------Now Required Space is %d\n",numOfSpaceAheadString(input_str),space);
         //printf("-------Now writting in function is %d\n",now_writting_function);
         
@@ -854,13 +879,14 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 //############### New code on Dec 16
                 string_in_while_loop2=replace(string_in_while_loop2, "(#double quote#)","\"");
                 string_in_while_loop2=replace(string_in_while_loop2, "(#single quote#)","'");
+                string_in_while_loop2=append(substr(string_in_while_loop2, 1, (int) strlen(string_in_while_loop2) - 1), "#FINISH WHILE\n");
                 //##################################
                 
                 //printf("String in while loop is |%s|\n",string_in_while_loop2);
                 //printf("__temp_string_in_while_loop__ is |%s|  and index|%d|\n",__temp_string_in_while_loop__,length_of_list-1);
                 //exit(0);
                 while (Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(last_while_sentence2, struct_var,FUNCTION_functions) == TRUE) {
-                    char *temp_to_run = substr(string_in_while_loop2, 1, (int) strlen(string_in_while_loop2) - 1);
+                    char *temp_to_run = string_in_while_loop2;
                     
                     char *temp_to_run2=temp_to_run;
                     while (find_not_in_string(temp_to_run, "\\n")!=-1) {
@@ -1200,8 +1226,8 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                     string_in_for_loop2=replace(string_in_for_loop2, "(#double quote#)","\"");
                     string_in_for_loop2=replace(string_in_for_loop2, "(#single quote#)","'");
 
-                    
-                    
+                    string_in_for_loop2=append(substr(string_in_for_loop2, 1, (int) strlen(string_in_for_loop2) - 1), "#FINISH FOR\n");
+                                        
                     
                     int x = 0;
                     
@@ -1224,8 +1250,8 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                         strcat(init_temp_i, value_of_i_in_x);
                         init_temp_i[(int) strlen(temp_i2) + 1 + (int) strlen(value_of_i_in_x)]=0;
                         
-                        char *temp_to_run = substr(string_in_for_loop2, 1, (int) strlen(string_in_for_loop2) - 1);
-
+                        char *temp_to_run = string_in_for_loop2;
+                        
                         Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions,init_temp_i);
                         Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions,temp_to_run);
                         
@@ -1248,6 +1274,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                     string_in_for_loop = "\"#For\\n\"";
                     temp_i = "\"None\"";
                     temp_i_in_for_sentence = "\"None\"";
+                    
                     
                     //Afte run while, remove the element at __temp_for__
                     char final_index[100];
