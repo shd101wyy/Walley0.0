@@ -495,12 +495,16 @@ char *listAppendOneElement(char *list, char *append_element){
     return output;
 }
 /*
- * listRemoveOneElementAtOneIndex("[1,2,3]","[1]")----->[1,3]
- * listRemoveOneElementAtOneIndex("[1,[1,2],3]","[1]")----->[1,3]
+ * listRemoveOneElementAtOneIndex("[1,2,3]","1")----->[1,3]
+ * listRemoveOneElementAtOneIndex("[1,[1,2],3]","1")----->[1,3]
  */
 
 char *listRemoveOneElementAtOneIndex(char *list, char *index){
    //// printf("List is %s, index is %s",list,index);
+    
+    index=append("[", index);
+    index=append(index, "]");
+    
     list=removeAheadSpace(removeBackSpace(list));
     char *replace_str=valueOfListAtIndexString(list,index);
    
@@ -527,38 +531,18 @@ char *listRemoveOneElementAtOneIndex(char *list, char *index){
 }
 /*
  * eg listRemoveOneElementByValue("[1,2,3]","1")---->"[2,3]"
- *    listRemoveOneElementByValue("[1,2,[1,3]]","1")----->[1,[3]]
+ *    listRemoveOneElementByValue("[1,2,[1,3]]","1")----->[2,[1,3]]
+ *    listRemoveOneElementByValue("[1,1,1,1]","1")  -----> [1,1,1]
  */
 char *listRemoveOneElementByValue(char *list, char *remove_value){
-    char *temp1=malloc(sizeof(char)*((int)strlen(remove_value)+3));
-    strcpy(temp1,"[");
-    strcat(temp1,remove_value);
-    strcat(temp1,",");   // temp is [1,2,3]-->[1,
-    temp1[(int)strlen(remove_value)+2]=0;
-    if(find_not_in_string(list,temp1)!=-1)
-        list=replace_not_in_string(list,temp1,"[");
-    char *temp2=malloc(sizeof(char)*((int)strlen(remove_value)+3));
-    strcpy(temp2,",");
-    strcat(temp2,remove_value);
-    strcat(temp2,"]"); //temp2 is [1,2,3]--->,3];
-    temp2[(int)strlen(remove_value)+2]=0;
-    if(find_not_in_string(list,temp2)!=-1)
-        list=replace_not_in_string(list,temp2,"]");
-    char *temp3=malloc(sizeof(char)*((int)strlen(remove_value)+3));
-    strcpy(temp3,"[");
-    strcat(temp3,remove_value);
-    strcat(temp3,"]"); // temp3 is [1,2,[3],4]---->[3]
-    temp3[(int)strlen(remove_value)+2]=0;
-    if(find_not_in_string(list,temp3)!=-1)
-        list=replace_not_in_string(list,temp3,"");
-    char *temp4=malloc(sizeof(char)*((int)strlen(remove_value)+3));
-    strcpy(temp4,",");
-    strcat(temp4,remove_value);
-    strcat(temp4,","); // temp4 is [1,2,3]--->,2,
-    temp4[(int)strlen(remove_value)+2]=0;
-    if(find_not_in_string(list,temp4)!=-1)
-        list=replace_not_in_string(list,temp4,",");
-    if(find_not_in_string(list,",,")!=-1)
-        list=replace_not_in_string(list,",,",",");
+    list=substr(list, 1, (int)strlen(list)-1);
+    int index=find_not_in_str_list_dict(list, remove_value);
+    list=replace_from_index_to_index(list, remove_value, "", index, index+(int)strlen(remove_value));
+    list=append("[", list);
+    list=append(list, "]");
+    list=replace_not_in_string(list, ",,", ",");
+    list=replace_not_in_string(list, "[,", "[");
+    list=replace_not_in_string(list, ",]", "]");
+    //printf("%s\n",list);
     return list;
 }

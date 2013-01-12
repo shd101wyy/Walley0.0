@@ -23,30 +23,6 @@
 //#include "walley_function.h"
 #include "walley_language.h"
 
-char *TEMP_FUNCTION_PARAMETER;
-char *TEMP_FUNCTION_NAME;
-
-//void Walley_Initialize_Settings_File(char *settings_file_name);
-//void Walley_Initialize_Var_File(char *file_var_name);
-void Walley_Initialize();
-void Walley_Finalize();
-char *Walley_Print(struct VAR **struct_var,char ***FUNCTION_functions, char *input_str);
-char *Walley_Println(struct VAR **struct_var,char ***FUNCTION_functions, char *input_str);
-void Walley_Initialize_Var(struct VAR **var);
-void Walley_Initialize_Settings(struct VAR **settings);
-char *Walley_Run_One_Function_And_Return_Value_From_Var(char *input_str,struct VAR **struct_var,char ***FUNCTION_function);
-char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,struct VAR **struct_var,char ***FUNCTION_functions);
-void Walley_Update_Var_And_Var_Value_To_Var(struct VAR **struct_var, char *var_name, char *var_value);
-void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_settings, char ***temp_file, char* existing_file,char ***FUNCTION_functions, char* input_str);
-bool Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(char *input_str, struct VAR **struct_var, char ***FUNCTION_functions);
-void Walley_Eval_And_Update_Var_And_Value_To_Var(struct VAR **struct_var,char ***FUNCTION_functions,char* input_str) ;
-void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,struct VAR **struct_settings,char ***FUNCTION_functions,char *input_str);
-char *Walley_Translate_To_Function_From_Var(char *input_str, char *best_match_sentence, struct VAR **struct_var);
-
-void Walley_Update_Functions_And_Vars_While_Importing(char *temp_file_to_run, struct VAR **struct_var, char ***FUNCTION_functions);
-void Walley_Run(char *input_str);
-
-char *Walley_Slice(char *var_value, char *slice,struct VAR **struct_var, char ***FUNCTION_functions);
 
 /*
  *#################################################################################################################################
@@ -1312,7 +1288,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 SWITCH_OBJECT="";
                 SPACE_OF_FIRST_SWITCH_SENTENCE=0;
                 
-                printf("TO RUN :|\n%s|\nspace is %d\n",copy_SENTENCE_OF_SWITCH,SPACE_OF_FIRST_SWITCH_SENTENCE);
+                //printf("TO RUN :|\n%s|\nspace is %d\n",copy_SENTENCE_OF_SWITCH,SPACE_OF_FIRST_SWITCH_SENTENCE);
                 Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions, copy_SENTENCE_OF_SWITCH);
                 
                 space=current_space;
@@ -1335,6 +1311,14 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                         
                         // case "Hello":    str_after_case = "Hello"
                         char *str_after_case=substr(trim_input_str, 5, find_from_behind(trim_input_str, ":"));
+                        
+                        
+                        // str_after_case -> 1 or 2
+                        // change to  -----> 1 or x==2
+                        str_after_case=replace_not_in_string(str_after_case, " or ", append(" or ", append(SWITCH_OBJECT, "==")));
+                        str_after_case=replace_not_in_string(str_after_case, " and ", append(" and ", append(SWITCH_OBJECT, "==")));
+
+                        
                         str_after_case=trim(str_after_case);
                         int a=0;
                         for (; a<SPACE_OF_FIRST_SWITCH_SENTENCE; a++) {
@@ -1363,6 +1347,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                             temp_str=append(temp_str, append(SWITCH_OBJECT, append("==", str_after_case)));
                             temp_str=append(temp_str, ":");
                         }
+                        
                         
                         SENTENCE_OF_SWITCH=append(SENTENCE_OF_SWITCH,append(temp_str, "\n"));
                     }
@@ -3551,6 +3536,11 @@ bool Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(char *
     input_str=cleanJudgeSentence(input_str);
     input_str=trim(input_str);
     
+    
+    
+    input_str=replace_not_in_string(input_str, " and ", "+++++");
+    input_str=replace_not_in_string(input_str, " or ", "----");
+    /*
     if(find(input_str," and ")!=-1){
         //printf("Find And\n");
         input_str=replace(input_str," and ","+++++");
@@ -3559,6 +3549,7 @@ bool Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(char *
         //printf("Find Or\n");
         input_str=replace(input_str," or ","----");
     }
+    */
     if(find(input_str,"TRUE")!=-1){
         //printf("Find And\n");
         
@@ -3589,12 +3580,16 @@ bool Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(char *
     }
     //######### if not 3>4: #########
     //############# Add Not #########
+    
+    input_str=replace_not_in_string(input_str, "not ", "*****");
+    /*
     if(find(input_str,"not ")!=-1){
         input_str=replace(input_str,"not ","*****");
     }
-
+     */
     input_str=Walley_Substitute_Var_And_Function_Return_Value_From_Var(input_str,struct_var,FUNCTION_functions);
     
+    /*
     if(find(input_str,"+++++")!=-1){
         input_str=replace(input_str,"+++++"," and ");
     }
@@ -3605,7 +3600,10 @@ bool Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(char *
     
     if(find(input_str,"*****")!=-1){
         input_str=replace(input_str,"*****","not ");
-    }
+    }*/
+    input_str=replace_not_in_string(input_str, "+++++", " and ");
+    input_str=replace_not_in_string(input_str, "----", " or ");
+    input_str=replace_not_in_string(input_str, "*****","not ");
     
     input_str=replace_not_in_string(input_str, "TRUE==", "1==");
     input_str=replace_not_in_string(input_str, "FALSE==", "0==");
@@ -4006,6 +4004,8 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
 
             
         } else if (find(input_str, "elif ") == 0) {
+            
+            
             char *__temp_if__=Var_getValueOfVar(*struct_var,"__temp_if__");
             int length=valueNumOfList(__temp_if__);
             char temp_length[100];
@@ -4035,7 +4035,10 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
             bool has_run_if=atoi(valueOfListAtIndexString(__has_run_if__,index_str));
             
             
+            
             sentence = substr(temp_for_sentence, find(temp_for_sentence, "elif ") + 5, (int) strlen(temp_for_sentence) - 1);
+            
+            /*
             int length_of_temp = (int) strlen("not ( ") + 1 + (int) strlen(" ) and (  )")+(int) strlen(last_if_sentence)+(int) strlen(sentence);
             char *temp_for_sentence2 = malloc(sizeof (char) *length_of_temp);
             strcpy(temp_for_sentence2, "not ( ");
@@ -4045,9 +4048,11 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
             strcat(temp_for_sentence2, " )");
             temp_for_sentence2[length_of_temp] = 0;
             
+            
+            
             sentence = temp_for_sentence2;
+             */
             last_if_sentence = sentence;
-            can_run = Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(sentence, struct_var,FUNCTION_functions);
             // if can run.
             // Write last_if_sentence to __temp_if__
             //if(can_run==TRUE){
@@ -4066,24 +4071,28 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
             if(has_run_if==TRUE){
                 //// printf("********* HAS RUN IF **********");
                 can_run=FALSE;
-            } else if (can_run==TRUE){
-                int length_of_has_run_if__=valueNumOfList(__has_run_if__);
-                char temp4[100];
-                sprintf(temp4,"%d",length_of_has_run_if__-1);
-                char *var_name_str2=malloc(sizeof(char)*((int)strlen("__has_run_if__")+3+(int)strlen(temp4)));
-                strcpy(var_name_str2,"__has_run_if__[");
-                strcat(var_name_str2,temp4);
-                strcat(var_name_str2,"]");
-                var_name_str2[(int)strlen("__has_run_if__")+2+(int)strlen(temp4)]=0;
-                //changeTheOneVarValueFromItsInitialOneFromFileForList(struct_var,var_name_str2,"1");
-                changeTheOneVarValueFromItsInitialOneFromVarForList(struct_var, var_name_str2, "1");
+            }else{
+                can_run = Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(sentence, struct_var,FUNCTION_functions);
+
+                 if (can_run==TRUE){
+                    int length_of_has_run_if__=valueNumOfList(__has_run_if__);
+                    char temp4[100];
+                    sprintf(temp4,"%d",length_of_has_run_if__-1);
+                    char *var_name_str2=malloc(sizeof(char)*((int)strlen("__has_run_if__")+3+(int)strlen(temp4)));
+                    strcpy(var_name_str2,"__has_run_if__[");
+                    strcat(var_name_str2,temp4);
+                    strcat(var_name_str2,"]");
+                    var_name_str2[(int)strlen("__has_run_if__")+2+(int)strlen(temp4)]=0;
+                    //changeTheOneVarValueFromItsInitialOneFromFileForList(struct_var,var_name_str2,"1");
+                    changeTheOneVarValueFromItsInitialOneFromVarForList(struct_var, var_name_str2, "1");
+                }
             }
+            
         }
         
         
         
         else if (find(input_str, "else") == 0) {
-            //// printf("Find else\n");
             
             char *__temp_if__=Var_getValueOfVar(*struct_var,"__temp_if__");
             int length=valueNumOfList(__temp_if__);
@@ -4104,7 +4113,7 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
                     break;
                 }
             }
-            
+                        
             //sprintf(temp_length,"%d",length-1);
             sprintf(temp_length,"%d",index);
             char *index_str=malloc(sizeof(char)*((int)strlen(temp_length)+3));
@@ -4115,18 +4124,7 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
             last_if_sentence=valueOfListAtIndexString(__temp_if__,index_str);
             bool has_run_if=atoi(valueOfListAtIndexString(__has_run_if__,index_str));
             
-            //// printf("last is sentence is %s\n", last_if_sentence);
-            
-            //if(strcmp("None",last_if_sentence)!=0){
-            can_run = Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(last_if_sentence, struct_var,FUNCTION_functions);
-            //// printf("can_run is %d\n", can_run);
-            if (can_run == 1)
-                can_run = 0;
-            else
-                can_run = 1;
-            //else{
-            //    can_run=0;
-            //}
+           
             last_if_sentence = "\"None\"";
             
             //Delete the final __temp_if__ in file
@@ -4144,8 +4142,10 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
             changeTheWholeVarValueFromItsInitialOneFromVarForList(struct_var, "__has_run_if__", __has_run_if__);
 
             if(has_run_if==TRUE){
-                //// printf("********* HAS RUN IF **********");
                 can_run=FALSE;
+            }
+            else{
+                can_run=TRUE;
             }
             
             

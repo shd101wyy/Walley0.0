@@ -953,7 +953,15 @@ bool stringIsAlphaAndSlash(char *input_str){
 
 
 bool charIsInList(char *input_str,int index){
-    char *check_str=substr(input_str, 0, index+1);
+    char *check_str;
+    if (input_str[index]=='[') {
+        check_str=substr(input_str, 0, index);
+    }
+    else if (input_str[index]==']')
+        check_str=substr(input_str, 0, index+1);
+    else
+        check_str=substr(input_str, 0, index+1);
+
     if(count_str_not_in_string(check_str, "[") != count_str_not_in_string(check_str, "]")){
         //printf("%c %d is in []\n",input_str[index],index);
         //printf("[ %d, ] %d\n",count_str_not_in_string(check_str, "["),count_str_not_in_string(check_str, "]"));
@@ -966,7 +974,14 @@ bool charIsInList(char *input_str,int index){
 
 
 bool charIsInDictionary(char *input_str,int index){
-    char *check_str=substr(input_str, 0, index+1);
+    char *check_str;
+    if (input_str[index]=='{') {
+        check_str=substr(input_str, 0, index);
+    }
+    else if (input_str[index]=='}')
+        check_str=substr(input_str, 0, index+1);
+    else
+        check_str=substr(input_str, 0, index+1);
     if(count_str_not_in_string(check_str, "{") != count_str_not_in_string(check_str, "}")){
         //printf("%c %d is in dictionary\n",input_str[index],index);
         //printf("RETURN TRUE\n");

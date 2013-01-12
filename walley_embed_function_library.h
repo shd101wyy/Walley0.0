@@ -9,7 +9,6 @@
 #include "walley_dictionary.h"
 
 
-
 //     1,2,3,4 index 0----->1
 //     This function now has some problems......
 //     I did not consider the , in list or ......
@@ -18,10 +17,10 @@ char* getParamAccordingToIndex(char *params_str, int index){
     //1,2,3,4,
     int index_of_comma=0;
     while (index>0) {
-        index_of_comma=find_from_index_not_in_string(params_str, ",", index_of_comma+1);
+        index_of_comma=find_from_index_not_in_str_list_dict(params_str, ",", index_of_comma+1);
         index--;
     }
-    int index_of_final=find_from_index_not_in_string(params_str, ",", index_of_comma+1);
+    int index_of_final=find_from_index_not_in_str_list_dict(params_str, ",", index_of_comma+1);
     if (index_of_comma==0) {
         index_of_comma=-1;
     }
@@ -688,6 +687,14 @@ char *string_split(char *user, char *func_param){
     return return_list;
 }
 
+// x="Hello"
+// x=x.reverse()--> "olleH"
+char *string_reverse(char *user){
+    user=toCString(user);
+    user=stringReverse(user);
+    return toString(user);
+}
+
 
 
 /*#################### Function for List ############################*/
@@ -703,12 +710,12 @@ char *list_append(char *user, char *func_param){
     return output;
 }
 /*
- * eg x=[1,2,3] x.remove_at_index([0])------->x=[2,3]
- *    x=[1,[1,2],4] x.remove_at_index([1])------->x=[1,4]
- * list_remove_at_index("[1,2,3]","[0]")------->[2,3]
+ * eg x=[1,2,3] x.remove_at_index(0)------->x=[2,3]
+ *    x=[1,[1,2],4] x.remove_at_index(1)------->x=[1,4]
+ * list_remove_at_index("[1,2,3]","0")------->[2,3]
  */
 char *list_remove_at_index(char *user, char *func_param){
-   //// printf("#### list_remove_at_index #### x.remove_at_index([0])\n");
+    //printf("#### list_remove_at_index #### x.remove_at_index([0])\n");
     return listRemoveOneElementAtOneIndex(user,func_param);
 }
 /*
@@ -741,7 +748,7 @@ char *list_length(char *user){
  * list_remove_element
  * x=[1,2,3] x.remove_element(1)--->[2,3]
  * x=[1,2,3,1] x.remove_element(1)--->[2,3]
- * x=[1,[1],2] x.remove_element(1)--->[2]
+ * x=[1,[1],2] x.remove_element(1)--->[[1],2]
  */
 char *list_remove_element(char *user, char *function_param){
     return listRemoveOneElementByValue(user,function_param);
@@ -1115,7 +1122,7 @@ char *walley_rotate(char *input_str){
 //################## Special Function Summary #############################*/
 
 
-char *Walley_Run_Special_Function_From_Var(char *function, struct VAR struct_var[]) {
+char *Walley_Run_Special_Function_From_Var(char *function, struct VAR *struct_var) {
     //################### Special Function #########################################################
     /*
      * eg x="Hello"-----> x.find("He")----->0
@@ -1175,6 +1182,8 @@ char *Walley_Run_Special_Function_From_Var(char *function, struct VAR struct_var
             return_value=string_isupper(user_value);
         } else if (find(user_function,"islower(")==0){
             return_value=string_islower(user_value);
+        } else if (find(user_function,"reverse(")==0){
+            return_value=string_reverse(user_value);
         }
         else {
             printf("This Special Function for String eg. x.find('x') is still under development\n");
@@ -1192,7 +1201,7 @@ char *Walley_Run_Special_Function_From_Var(char *function, struct VAR struct_var
         } else if (find(user_function, "remove_at_index(") == 0) {
             return_value = list_remove_at_index(user_value, user_function_parameter);
             //changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name, user, return_value);
-            Var_changeValueOfVar(struct_var, user, return_value, "list");
+            Walley_Update_Var_And_Var_Value_To_Var(&struct_var, user, return_value);
 
         } else if (find(user_function, "length(") == 0) {
             return_value = list_length(user_value);
@@ -1201,7 +1210,8 @@ char *Walley_Run_Special_Function_From_Var(char *function, struct VAR struct_var
         } else if (find(user_function,"remove_element(")==0){
             return_value= list_remove_element(user_value,user_function_parameter);
             //changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name, user, return_value);
-            Var_changeValueOfVar(struct_var, user, return_value, "list");
+            //Var_changeValueOfVar(struct_var, user, return_value, "list");
+            Walley_Update_Var_And_Var_Value_To_Var(&struct_var, user, return_value);
 
         }
     }        // Special function for dictionary

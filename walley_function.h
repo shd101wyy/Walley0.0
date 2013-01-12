@@ -1167,26 +1167,14 @@ char *substitueExistedVarValueFromVar(char* input_str,struct VAR struct_var[]){/
  */
 bool passConditionIfSentence(char *input_str){
     //// printf("#### passConditionIfSentence ####\n");
-    //// printf("input_str is :|%s|\n",input_str);
     if (strcmp("TRUE", stringToUpperCase(input_str))==0) {
         return TRUE;
     }
     if (strcmp("FALSE", stringToUpperCase(input_str))==0) {
         return FALSE;
     }
-    input_str=removeAheadSpace(input_str);
-    input_str=removeBackSpace(input_str);
+    input_str=trim(input_str);
 
-    /*
-    char *temp=malloc(sizeof(char)*((int)strlen(input_str)+1));
-    int a=0;
-    for(a=0;a<(int)strlen(input_str);a++){
-        temp[a]=input_str[a];
-    }
-    temp[(int)strlen(input_str)]=0;
-
-    input_str=temp;
-   */
     
     char *first_str;
     char *second_str;
@@ -1196,14 +1184,14 @@ bool passConditionIfSentence(char *input_str){
     bool find_var=FALSE;
     bool pass=FALSE;
     char *judge_sign;
-    //input_str=substr(input_str,find(input_str,"if "),(int)strlen(input_str));
-    //input_str=replace(input_str,"if ","");
-    //input_str=removeAheadSpace(input_str);
-    //printf("%s\n%d\n",input_str,(int)strlen(input_str));
+
     for(i=0;i<(int)strlen(input_str);i++){
+        if (charIsInString(input_str, i)==TRUE||charIsInDictionary(input_str, i)==TRUE||charIsInList(input_str, i)==TRUE) {
+            continue;
+        }
         if(input_str[i]==' ')
             continue;
-        if(find_var==FALSE && (isalpha(input_str[i]) || isdigit(input_str[i]) || input_str[i]=='\'' || input_str[i]=='"')){
+        if(find_var==FALSE && (isalpha(input_str[i]) || isdigit(input_str[i]) || input_str[i]=='\'' || input_str[i]=='"' || input_str[i]=='[' || input_str[i]=='{')){
             begin=i;
             find_var=TRUE;
             //printf("Find Var at index %d\n",i);
@@ -1236,21 +1224,15 @@ bool passConditionIfSentence(char *input_str){
             break;
         }
     }
-    //##################################### Maybe some mistakes here ###################
-    /*
-     * I modified those codes on Dec 6
-     *
-    //first_str=Walley_Eval_With_Variable_From_File("__walley__.wy",first_str);
-    //second_str=Walley_Eval_With_Variable_From_File("__walley__.wy",second_str);
-    //printf("first_str is %s\n second_str is %s\n",first_str,second_str);
-     */
+
+    
     //printf("first str is %s\n second_str is %s\n",first_str,second_str);
     first_str=Walley_Eval_With_Variable_From_Var(NULL, first_str);
     second_str=Walley_Eval_With_Variable_From_Var(NULL, second_str);
     //#############################################################################
-   //// printf("First %s\nSecond %s\nJudge Sign %s\n",first_str,second_str,judge_sign);
-    first_str=removeAheadSpace(removeBackSpace(first_str));
-    second_str=removeAheadSpace(removeBackSpace(second_str));
+    //printf("First %s\nSecond %s\nJudge Sign %s\n",first_str,second_str,judge_sign);
+    first_str=trim(first_str);
+    second_str=trim(second_str);
     char *first_str_type=variableValueType(first_str);
     char *second_str_type=variableValueType(second_str);
     //printf("num1 %f\nnum2 %f\n",num1,num2);
@@ -1297,44 +1279,88 @@ bool passConditionIfSentence(char *input_str){
         return FALSE;
     }
     
-    else {
-        
-        
-        double num1=atof(eval_for_decimal_with_alpha(first_str));
-        double num2=atof(eval_for_decimal_with_alpha(second_str));
-        
-        //printf("it is compared between number\n");
-        //printf("Judge Sign %s\n",judge_sign);
-    if(strcmp(judge_sign,"==")==0){
-        //printf("enter\n");
-        if(num1==num2){
-            pass=TRUE;
+    else if (strcmp(first_str_type, "list")==0 && strcmp(second_str_type, "list")==0){
+        if (strcmp(judge_sign, "==")==0) {
+            if (strcmp(first_str, second_str)==0) {
+                return TRUE;
+            }
+            else{
+                return FALSE;
+            }
         }
-    } else if (strcmp(judge_sign,"!=")==0){
-        if(num1!=num2){
-            pass=TRUE;
+        else if (strcmp(judge_sign, "!=")==0){
+            if (strcmp(first_str, second_str)!=0) {
+                return TRUE;
+            }
+            else{
+                return FALSE;
+            }
         }
-    } else if (strcmp(judge_sign,">")==0){
-        if(num1>num2){
-            pass=TRUE;
-        }
-    } else if (strcmp(judge_sign,"<")==0){
-        if(num1<num2){
-            pass=TRUE;
-        }
-    } else if (strcmp(judge_sign,">=")==0){
-        if(num1>=num2){
-            pass=TRUE;
-        }
-    } else if (strcmp(judge_sign,"<=")==0){
-        if(num1<=num2){
-            pass=TRUE;
-        }
-    } else {
-        pass=FALSE;
-        printf("Mistake occurred while calling function passConditionIfSentence\n");
+
     }
+
+    else if (strcmp(first_str_type, "dictionary")==0 && strcmp(second_str_type, "dictionary")==0){
+        if (strcmp(judge_sign, "==")==0) {
+            if (strcmp(first_str, second_str)==0) {
+                return TRUE;
+            }
+            else{
+                return FALSE;
+            }
+        }
+        else if (strcmp(judge_sign, "!=")==0){
+            if (strcmp(first_str, second_str)!=0) {
+                return TRUE;
+            }
+            else{
+                return FALSE;
+            }
+        }
         
+    }
+    
+    
+    else if ((strcmp(first_str_type, "int")==0||strcmp(first_str_type, "fraction")==0||strcmp(first_str_type, "double")==0)
+             &&(strcmp(second_str_type, "int")==0||strcmp(second_str_type, "fraction")==0||strcmp(second_str_type, "double")==0)){
+                 double num1=atof(eval_for_decimal_with_alpha(first_str));
+                 double num2=atof(eval_for_decimal_with_alpha(second_str));
+                 
+                 //printf("it is compared between number\n");
+                 //printf("Judge Sign %s\n",judge_sign);
+                 if(strcmp(judge_sign,"==")==0){
+                     //printf("enter\n");
+                     if(num1==num2){
+                         pass=TRUE;
+                     }
+                 } else if (strcmp(judge_sign,"!=")==0){
+                     if(num1!=num2){
+                         pass=TRUE;
+                     }
+                 } else if (strcmp(judge_sign,">")==0){
+                     if(num1>num2){
+                         pass=TRUE;
+                     }
+                 } else if (strcmp(judge_sign,"<")==0){
+                     if(num1<num2){
+                         pass=TRUE;
+                     }
+                 } else if (strcmp(judge_sign,">=")==0){
+                     if(num1>=num2){
+                         pass=TRUE;
+                     }
+                 } else if (strcmp(judge_sign,"<=")==0){
+                     if(num1<=num2){
+                         pass=TRUE;
+                     }
+                 } else {
+                     pass=FALSE;
+                     printf("Mistake occurred while calling function passConditionIfSentence\n");
+                 }
+                 
+             }
+    
+    else {
+        return FALSE;
     }
    //// printf("------- pass is %d\n",pass);
     return pass;
@@ -1346,6 +1372,7 @@ bool passConditionIfSentence(char *input_str){
  */
 bool judgeWithAndAndOr(char *input_str){
     //printf("#### judgeWithAndAndOr ####\n");
+    //printf("---->%s\n",input_str);
     input_str=trim(input_str);
     bool pass=TRUE;
     char *temp=append("and ", input_str);
