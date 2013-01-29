@@ -1,4 +1,4 @@
-//
+﻿//
 //  walley_core.h
 //  Walley
 //
@@ -22,6 +22,7 @@
  */
 //#include "walley_function.h"
 #include "walley_language.h"
+
 
 
 /*
@@ -916,7 +917,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 //Afte run while, remove the element at __temp_while__
                 char final_index[100];
                 sprintf(final_index,"%d",length_of_list-1);
-                char *remove_at_index=malloc(sizeof(char)*((int)strlen("[]")+(int)strlen(final_index)+1));
+                char *remove_at_index=(char*)malloc(sizeof(char)*((int)strlen("[]")+(int)strlen(final_index)+1));
                 strcpy(remove_at_index,"[");
                 strcat(remove_at_index,final_index);
                 strcat(remove_at_index,"]");
@@ -1085,7 +1086,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 temp_in_class=append(temp_in_class, "\\n\"");
                 string_in_class=temp_in_class;
                 
-                char *dict_var_name=malloc(sizeof(char)*(2+(int)strlen("__string_in_temp_class__{}")+(int)strlen(__class_now__)));
+                char *dict_var_name=(char*)malloc(sizeof(char)*(2+(int)strlen("__string_in_temp_class__{}")+(int)strlen(__class_now__)));
                 strcpy(dict_var_name,"__string_in_temp_class__{");
                 strcat(dict_var_name,__class_now__);
                 strcat(dict_var_name,"}");
@@ -1192,7 +1193,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                     int length_of_list=valueNumOfList(__temp_for__);
                     char final_index0[100];
                     sprintf(final_index0,"%d",length_of_list-1);
-                    char *temp_index=malloc(sizeof(char)*((int)strlen("[]")+(int)strlen(final_index0)+1));
+                    char *temp_index=(char*)malloc(sizeof(char)*((int)strlen("[]")+(int)strlen(final_index0)+1));
                     strcpy(temp_index,"[");
                     strcat(temp_index,final_index0);
                     strcat(temp_index,"]");
@@ -1237,7 +1238,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                         char temp_num[100];
                         sprintf(temp_num, "%d", x);
                         
-                        char *index_temp = malloc(sizeof (char) *(3 + (int) strlen(temp_num)));
+                        char *index_temp = (char*)malloc(sizeof (char) *(3 + (int) strlen(temp_num)));
                         strcpy(index_temp, "[");
                         strcat(index_temp, temp_num);
                         strcat(index_temp, "]");
@@ -1245,7 +1246,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                         
                         char *value_of_i_in_x = valueOfListAtIndexString(temp_i_in_for_sentence2, index_temp);
                                                 
-                        char *init_temp_i = malloc(sizeof (char) *((int) strlen(temp_i2) + 2 + (int) strlen(value_of_i_in_x)));
+                        char *init_temp_i = (char*)malloc(sizeof (char) *((int) strlen(temp_i2) + 2 + (int) strlen(value_of_i_in_x)));
                         strcpy(init_temp_i, temp_i2);
                         strcat(init_temp_i, "=");
                         strcat(init_temp_i, value_of_i_in_x);
@@ -1280,7 +1281,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                     //Afte run while, remove the element at __temp_for__
                     char final_index[100];
                     sprintf(final_index,"%d",length_of_list-1);
-                    char *remove_at_index=malloc(sizeof(char)*(1+(int)strlen("[]")+(int)strlen(final_index)));
+                    char *remove_at_index=(char*)malloc(sizeof(char)*(1+(int)strlen("[]")+(int)strlen(final_index)));
                     strcpy(remove_at_index,"[");
                     strcat(remove_at_index,final_index);
                     strcat(remove_at_index,"]");
@@ -1497,7 +1498,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                     // run init() function
                     // a.init()
                     if (find(after_change,".init(")!=-1) {
-                        char *init=malloc(sizeof(char)*((int)strlen(instance_name)+1+(int)strlen(".init()")+(int)strlen(parameter)));
+                        char *init=(char*)malloc(sizeof(char)*((int)strlen(instance_name)+1+(int)strlen(".init()")+(int)strlen(parameter)));
                         strcpy(init,instance_name);
                         strcat(init,".init(");
                         strcat(init,parameter);
@@ -2648,7 +2649,7 @@ char *Walley_Slice(char *var_value, char *slice,struct VAR **struct_var, char **
             return toString(output);
         } else if (strcmp("list", variableValueType(var_value)) == 0) {
             //// printf("it is list\n");
-            char *output = malloc(sizeof(char)*1000);
+            char *output = (char*)malloc(sizeof(char)*1000);
             
             char *value_at_index = valueOfListAtIndexString(var_value, slice);
             strcpy(output, value_at_index);
@@ -2656,7 +2657,7 @@ char *Walley_Slice(char *var_value, char *slice,struct VAR **struct_var, char **
             
             //strcat(output, "]");
             int i = 0;
-            char *output2 = malloc(sizeof (char) *((int) strlen(output) + 1));
+            char *output2 = (char*)malloc(sizeof (char) *((int) strlen(output) + 1));
             for (i = 0; i < (int) strlen(output); i++) {
                 output2[i] = output[i];
             }
@@ -2844,7 +2845,7 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
     i=0;
     
     
-    char *output=malloc(sizeof(char)*((int)strlen(input_str)+1));
+    char *output=(char*)malloc(sizeof(char)*((int)strlen(input_str)+1));
     //char output[1000]="";
     for(i=0;i<(int)strlen(input_str);i++){
         output[i]=input_str[i];
@@ -3012,10 +3013,12 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
                     temp_value = Walley_Eval_With_Variable_From_Var(*struct_var, temp_value);
                     return_value = to_decimal(temp_value);
                 } else if (find(function, "f(") ==0) {
+                    WALLEY_SUBSTITUTION_CAN_JUST_EVAL_IN_THE_END=FALSE;
                     char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
                     char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
-                    temp_value = Walley_Eval_With_Variable_From_Var(*struct_var, temp_value);
+                    temp_value = eval_for_fraction_with_alpha(temp_value);
                     return_value = to_fraction(temp_value);
+                    WALLEY_SUBSTITUTION_CAN_JUST_EVAL_IN_THE_END=TRUE;
                 } else if (find(function, "nstr(") ==0) {
                     //// printf("Find nstr(");
                     char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
@@ -3515,17 +3518,22 @@ def random(num1=0,num2=1):\n\
         
     }
     
-    //if(has_var==FALSE){
-    //    return input_str;
-    //}
-    //printf("#Output ----> %s\n",output);
-    if (/*strcmp(output, "None")!=0&&*/stringIsAlpha(output)==FALSE) {
-        output=Walley_Eval_All_From_Var(*struct_var, output);
-    }else {
-    
-    output=Walley_Eval_With_Variable_From_Var(*struct_var, output);
+    if (WALLEY_SUBSTITUTION_CAN_JUST_EVAL_IN_THE_END==TRUE) {
+        //if(has_var==FALSE){
+        //    return input_str;
+        //}
+        //printf("#Output ----> %s\n",output);
+        if (/*strcmp(output, "None")!=0&&*/stringIsAlpha(output)==FALSE) {
+            output=Walley_Eval_All_From_Var(*struct_var, output);
+        }else {
+            
+            output=Walley_Eval_With_Variable_From_Var(*struct_var, output);
+        }
+        //printf("Output ----> %s\n",output);
+        
+
     }
-    //printf("Output ----> %s\n",output);
+    
 
     //printf("Walley_Substitute_Var_And_Function_Return_Value_From_File !!!!!!input %s  output is %s\n",input_str,output);
     return output;
@@ -4103,7 +4111,7 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
                     char temp_length[100];
                     int index = num_of_temp_if_space - 2;
                     sprintf(temp_length, "%d", index);
-                    char *index_str = malloc(sizeof (char) *((int) strlen(temp_length) + 3));
+                    char *index_str = (char*)malloc(sizeof (char) *((int) strlen(temp_length) + 3));
                     strcpy(index_str, "[");
                     strcat(index_str, temp_length);
                     strcat(index_str, "]");
@@ -4148,7 +4156,7 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
             
             //sprintf(temp_length,"%d",length-1);
             sprintf(temp_length,"%d",index);
-            char *index_str=malloc(sizeof(char)*((int)strlen(temp_length)+3));
+            char *index_str=(char*)malloc(sizeof(char)*((int)strlen(temp_length)+3));
             strcpy(index_str,"[");
             strcat(index_str,temp_length);
             strcat(index_str,"]");
@@ -4168,7 +4176,7 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
             length = valueNumOfList(__temp_if__);
             //char temp_length[100];
             sprintf(temp_length, "%d", length - 1);
-            char *var_name_str = malloc(sizeof (char) *((int) strlen(temp_length) + 3 + (int) strlen("__temp_if__")));
+            char *var_name_str =(char*) malloc(sizeof (char) *((int) strlen(temp_length) + 3 + (int) strlen("__temp_if__")));
             strcpy(var_name_str, "__temp_if__[");
             strcat(var_name_str, temp_length);
             strcat(var_name_str, "]");
@@ -4186,7 +4194,7 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
                     int length_of_has_run_if__=valueNumOfList(__has_run_if__);
                     char temp4[100];
                     sprintf(temp4,"%d",length_of_has_run_if__-1);
-                    char *var_name_str2=malloc(sizeof(char)*((int)strlen("__has_run_if__")+3+(int)strlen(temp4)));
+                    char *var_name_str2=(char*)malloc(sizeof(char)*((int)strlen("__has_run_if__")+3+(int)strlen(temp4)));
                     strcpy(var_name_str2,"__has_run_if__[");
                     strcat(var_name_str2,temp4);
                     strcat(var_name_str2,"]");
@@ -4224,7 +4232,7 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
                         
             //sprintf(temp_length,"%d",length-1);
             sprintf(temp_length,"%d",index);
-            char *index_str=malloc(sizeof(char)*((int)strlen(temp_length)+3));
+            char *index_str=(char*)malloc(sizeof(char)*((int)strlen(temp_length)+3));
             strcpy(index_str,"[");
             strcat(index_str,temp_length);
             strcat(index_str,"]");
