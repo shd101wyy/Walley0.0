@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * File:   walley_class.h
  * Author: shd101wyy
  *

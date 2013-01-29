@@ -810,7 +810,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
         }
         
         
-        // printf("-------Now input is |%s| required space %d current space %d\n", input_str,space,current_space);
+        //printf("-------Now input is |%s| required space %d current space %d\n", input_str,space,current_space);
 
         
         //printf("-------Now Ahead Space is %d\n-------Now Required Space is %d\n",numOfSpaceAheadString(input_str),space);
@@ -2183,6 +2183,8 @@ char *Walley_Run_One_Function_And_Return_Value_From_Var(char *input_str,struct V
     int row=0;
     int length_of_FUNCTION_functions=atoi((*FUNCTION_functions)[0]);
     
+    char *global_var="[]";
+    
     
     while (row<length_of_FUNCTION_functions) {
         char *arr=(*FUNCTION_functions)[row];
@@ -2304,6 +2306,7 @@ char *Walley_Run_One_Function_And_Return_Value_From_Var(char *input_str,struct V
                 // printf("*************** GO THERE ***************");
                 // if is_instance_value is true, save like Rohit.age to VAR_var
                 bool is_instance_value=FALSE;
+                bool is_global_var=FALSE;
                 if(isExpression(arr)){
                     //// printf("********* %s IT IS EXPRESSION ********\n",arr);
                     char *var_name2=variableName(arr);
@@ -2317,12 +2320,43 @@ char *Walley_Run_One_Function_And_Return_Value_From_Var(char *input_str,struct V
                             is_instance_value=FALSE;
                     }
                     
+                    
+                    int x=0;
+                    int num_of_element_in_global_var=valueNumOfList(GLOBAL_VAR);
+                    for (; x<num_of_element_in_global_var; x++) {
+                        char *element=valueOfListAtIndex(GLOBAL_VAR, x);
+                        if (strcmp(element, var_name2)==0) {
+                            is_global_var=TRUE;
+                            break;
+                        }
+                    }
+                    
                 }
                 if(is_instance_value==FALSE){
                     // printf("********** Not INSTANCE VALUE *********\n");
-                    //// printf("#---> %s\n",arr);
-                    //Walley_Run_For_Appointed_Var(file_var_temp_name,file_settings_temp_name,file_file_temp_name,"FUNCTION",arr);
-                    Walley_Run_For_Appointed_Var(&TEMP_VAR_var,&TEMP_VAR_settings,&TEMP_TEMP_FILE,"FUNCTION",FUNCTION_functions,arr);
+                   
+                    // begin to define global var
+                    if (find(trim(arr),"global ")==0) {
+                        char *rest=trim(substr(trim(arr),7,(int)strlen(trim(arr))));
+                        int num_of_var=count_str(rest, ",")+1;
+                        int x=0;
+                        for (; x<num_of_var; x++) {
+                            global_var=list_append(global_var, getParamAccordingToIndex(rest,x));
+                        }
+                        GLOBAL_VAR=global_var;
+                    }
+                    
+                    // is global var
+                    else if (is_global_var==TRUE){
+                        Walley_Run_For_Appointed_Var(&TEMP_VAR_var, &TEMP_VAR_settings, &TEMP_TEMP_FILE, "FUNCTION",FUNCTION_functions,arr);
+                        char *var_name3 = variableName(arr);
+                        char *var_value3 = Var_getValueOfVar(TEMP_VAR_var, var_name3);
+                        
+                        Walley_Update_Var_And_Var_Value_To_Var(&VAR_var, var_name3, var_value3);
+                    }
+                    else{
+                        Walley_Run_For_Appointed_Var(&TEMP_VAR_var,&TEMP_VAR_settings,&TEMP_TEMP_FILE,"FUNCTION",FUNCTION_functions,arr);
+                    }
                 }
                 else{
                     // printf("************ IT IS INSTANCE VALUE ************");
@@ -2476,7 +2510,7 @@ char *Walley_Run_One_Function_And_Return_Value_From_Var(char *input_str,struct V
         a++;
     }
     function_in_def="";
-
+    GLOBAL_VAR="[]";
     
     return return_value;
 }
@@ -3475,7 +3509,7 @@ def random(num1=0,num2=1):\n\
         }
         //printf("--End this loop, output is %s\n",output);
         if (finish_find_var) {
-            // printf("@@@@ Enter finish_find_var @@@@\n");
+            //printf("@@@@ Enter finish_find_var @@@@\n");
             //printf("------\n%s\n------\n",substr(input_str,begin,end));
             
             //printf("Begin %d, End %d\n",begin,end);
@@ -3494,11 +3528,33 @@ def random(num1=0,num2=1):\n\
                 
             }
             else {
-                if(Var_Existed(*struct_var,var_name)==TRUE){
-                    var_value=Var_getValueOfVar(*struct_var,var_name);
-                    //// printf("FIND!! %s   %s\n",file_var_name,var_name);
-                } else {
-                    var_value=var_name;
+                
+                // check whether is global var
+                int num_of_element_in_global_var=valueNumOfList(GLOBAL_VAR);
+                int x=0;
+                bool is_global_var=FALSE;
+                for (; x<num_of_element_in_global_var; x++) {
+                    char *element=valueOfListAtIndex(GLOBAL_VAR, x);
+                    if (strcmp(element, var_name)==0) {
+                        is_global_var=TRUE;
+                        break;
+                    }
+                }
+                
+                // is global var
+                if (is_global_var==TRUE) {
+                    var_value=Var_getValueOfVar(VAR_var, var_name);
+                }
+                
+                // is not global var
+                else{
+                
+                    if(Var_Existed(*struct_var,var_name)==TRUE){
+                        var_value=Var_getValueOfVar(*struct_var,var_name);
+                        //// printf("FIND!! %s   %s\n",file_var_name,var_name);
+                    } else {
+                        var_value=var_name;
+                    }
                 }
             }
             //printf("Var Name %s\nVar Value %s\n",var_name,var_value);
@@ -3844,12 +3900,11 @@ void Walley_Eval_And_Update_Var_And_Value_To_Var(struct VAR **struct_var,char **
     
     
     
-    
     // new code here on Jan 6
     
     var_value=removeBackSpace(var_value);
     // incomplete string
-    if (var_value[0]=='"'&&(var_value[(int)strlen(var_value)-1]!='"' ||(int)strlen(trim(var_value))==1||(var_value[(int)strlen(var_value)-1]=='"'&&var_value[(int)strlen(var_value)-2]=='\\'))) {
+    if (var_value[0]=='"'&&(var_value[(int)strlen(var_value)-1]!='"' ||(int)strlen(trim(var_value))==1||(var_value[(int)strlen(var_value)-1]=='"'&&var_value[(int)strlen(var_value)-2]=='\\'))&&count_str_not_in_string(var_value, "\"")%2!=0) {
         VAR_VALUE_INCOMPLETE=TRUE;
         VAR_VALUE_INCOMPLETE_TYPE="string\"";
         VAR_VALUE_TO_BE_COMPLETE=var_value;

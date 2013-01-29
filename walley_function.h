@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * File:   walley_function.h
  * Author: shd101wyy
  *
@@ -337,7 +337,7 @@ char* getStringFromFile(char *file_name){
         output2="";
     } else {
         int a=0;
-        output2 = malloc(sizeof (char) *(int) strlen(output)+sizeof(char));
+        output2 = (char*)malloc(sizeof (char) *(int) strlen(output)+sizeof(char));
         for (a = 0; a < (int) strlen(output); a++) {
             output2[a] = output[a];
         }
@@ -382,7 +382,7 @@ char* getStringFromFileExceptInclude(char *file_name){
         output2="";
     } else {
         int a=0;
-        output2 = malloc(sizeof (char) *(int) strlen(output)+sizeof(char));
+        output2 = (char*)malloc(sizeof (char) *(int) strlen(output)+sizeof(char));
         for (a = 0; a < (int) strlen(output); a++) {
             output2[a] = output[a];
         }
@@ -632,7 +632,7 @@ char* Walley_Eval_With_Variable_From_Var(struct VAR var[], char *input_str) {
     
     // to solve input_str is -24 but output is 24
     if (input_str[0] == '-') {
-        char *temp = malloc(sizeof (char) *((int) strlen(input_str) + 2));
+        char *temp = (char*)malloc(sizeof (char) *((int) strlen(input_str) + 2));
         strcpy(temp, "0");
         strcat(temp, input_str);
         temp[(int) strlen(input_str) +1] = 0;
@@ -867,7 +867,7 @@ char* Walley_Eval_All_From_Var(struct VAR struct_var[],char *input_str){
 
 char *defineAFunction(char *input_str){
     int length_to=(int)strlen(substr(input_str, 0, find(input_str,")")))+4;
-    char *temp=malloc(sizeof(char)*(length_to+1));
+    char *temp=(char*)malloc(sizeof(char)*(length_to+1));
     strcpy(temp,substr(input_str, 0, find(input_str,")")));
     strcat(temp,"  ):");
     temp[length_to]=0;
@@ -965,7 +965,7 @@ void writeStringToFile(char *file_name, char *str_to_file){
     //printf("#### writeStringToFile |%s|####\n",str_to_file);
     char *str_in_wy_ = getStringFromFile(file_name);
     //printf("str in wy %s\n",str_in_wy_);
-    char *input_message=malloc(sizeof(char)*((int)strlen(str_to_file)+1));
+    char *input_message=(char*)malloc(sizeof(char)*((int)strlen(str_to_file)+1));
     int i=0;
     for(i=0;i<(int)strlen(str_to_file);i++){
         input_message[i]=str_to_file[i];
@@ -1063,7 +1063,7 @@ char *substitueExistedVarValueFromVar(char* input_str,struct VAR struct_var[]){/
     int end=(int)strlen(input_str);
     int i=0;
     //char *output=input_str;
-    char *output=malloc(sizeof(char)*((int)strlen(input_str)+1));
+    char *output=(char*)malloc(sizeof(char)*((int)strlen(input_str)+1));
     for(i=0;i<(int)strlen(input_str);i++){
         output[i]=input_str[i];
     }
@@ -1753,7 +1753,7 @@ char *getOneFunctionFromFile(char *import_file_name, char *func_name) {
             strcat(output, arr);
         }
         if (space_num == 0) {
-            char *temp = malloc(sizeof (char) *((int) strlen(func_name) + 2));
+            char *temp = (char*)malloc(sizeof (char) *((int) strlen(func_name) + 2));
             strcpy(temp, func_name);
             strcat(temp, "(");
             temp[(int) strlen(func_name) + 1] = 0;
@@ -1778,7 +1778,7 @@ char *getOneFunctionFromFile(char *import_file_name, char *func_name) {
         output2 = "";
     } else {
         int a = 0;
-        output2 = malloc(sizeof (char) *(int) strlen(output) + sizeof (char));
+        output2 = (char*)malloc(sizeof (char) *(int) strlen(output) + sizeof (char));
         for (a = 0; a < (int) strlen(output); a++) {
             output2[a] = output[a];
         }
@@ -1941,7 +1941,7 @@ char *getOneFunctionFromFileAndFormatItgetOneFunctionFromFile(char *import_file_
                     return append(as_name,substr(arr, index_of_equal, (int)strlen(arr)) );
                 }
             }
-            char *temp = malloc(sizeof (char) *((int) strlen(func_name) + 2));
+            char *temp =(char*) malloc(sizeof (char) *((int) strlen(func_name) + 2));
             strcpy(temp, func_name);
             strcat(temp, "(");
             temp[(int) strlen(func_name) + 1] = 0;
@@ -2349,7 +2349,7 @@ void deleteOneFunctionFromBehind(char **FUNCTION_functions, char *delete_func_na
         i++;
     }
     
-    char **new_functions=malloc(sizeof(char**)*(final-end));
+    char **new_functions=(char**)malloc(sizeof(char**)*(final-end));
     i=0;
     while (i<(final-end)) {
         new_functions[i]=FUNCTION_functions[i+end];

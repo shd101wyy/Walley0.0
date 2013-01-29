@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * File:   walley_language.h
  * Author: shd101wyy
  *
@@ -291,7 +291,7 @@ char *cleanUpSentence(char *input_str){
         }
     }
     int length_of_temp=(int)strlen(temp);
-    char *output=malloc(sizeof(char)*(length_of_temp+1));
+    char *output=(char*)malloc(sizeof(char)*(length_of_temp+1));
     for(i=0;i<length_of_temp;i++){
         output[i]=temp[i];
     }
@@ -1163,7 +1163,7 @@ char *Walley_Analyze_Sentence(struct VAR struct_var[], char *input_str){
 char *getVarIndexStringAsList(char *input_str){
     //printf("#### getVarIndexStringAsList ####\n");
     //printf("-----> |%s|\n",input_str);
-    char *temp=malloc(sizeof(char)*((int)strlen(input_str)+2));
+    char *temp=(char*)malloc(sizeof(char)*((int)strlen(input_str)+2));
     strcpy(temp,input_str);
     strcat(temp," ");
     temp[(int)strlen(input_str)+1]=0;

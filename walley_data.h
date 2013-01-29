@@ -49,7 +49,7 @@ void Var_addProperty(struct VAR **var,char *var_name, char *var_value, char *var
     
     (*var)->var_value=intToCString(1+atoi((*var)->var_value));
     
-    *var=realloc(*var, sizeof(struct VAR)*(length+1));
+    *var=(struct VAR*)realloc(*var, sizeof(struct VAR)*(length+1));
     (*var+length)->var_name=var_name;
     (*var+length)->var_type=var_type;
     (*var+length)->var_value=var_value;    
@@ -109,7 +109,7 @@ void Var_removeVar(struct VAR **var, char *remove_var_name){
         (*var+length-1)->var_name=NULL;
         (*var+length-1)->var_type=NULL;
         (*var+length-1)->var_value=NULL;
-        *var=realloc(*var, sizeof(struct VAR)*(length-1));
+        *var=(struct VAR*)realloc(*var, sizeof(struct VAR)*(length-1));
         (*var)->var_value=intToCString(atoi((*var)->var_value)-1);
     }
     

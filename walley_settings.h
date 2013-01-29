@@ -1,4 +1,4 @@
-//
+﻿//
 //  walley_settings.h
 //  Walley
 //
@@ -45,12 +45,19 @@ char *EXPRESSION_TO_BE_COMPLETE="";
 bool RUN_EXPRESSION_INCOMPLETE=FALSE;    // can not run expression that is incomplete
 char *RUN_EXPRESSION_TO_BE_COMPLETE="";
 
+bool WALLEY_SUBSTITUTION_CAN_JUST_EVAL_IN_THE_END=TRUE;
 
 // For switch sentence
 int SPACE_OF_FIRST_SWITCH_SENTENCE=0;
 bool NOW_WRITTING_SWITCH=FALSE;
 char *SWITCH_OBJECT="";
 char *SENTENCE_OF_SWITCH="";
+
+
+// Global Var
+char *GLOBAL_VAR="[]";
+
+
 
 // For if elif sentence
 /*

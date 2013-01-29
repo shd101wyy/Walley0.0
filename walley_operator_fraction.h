@@ -1,4 +1,4 @@
-//
+﻿//
 //  walley_operator_fraction.h
 //  Walley
 //
@@ -21,6 +21,7 @@ char *changeDecimalToFraction(char *input_str){
     else{
         int num_after_dot=(int)strlen(input_str)-1-find(input_str, ".");
         input_str=replace(input_str, ".", "");
+
         return simplify_fraction(input_str, intToCString(pow(10, num_after_dot)));
     }
 }
@@ -301,7 +302,7 @@ char* countFromExpressionForFraction(char *var_value) {
         
         char *previous_num_str;
                 
-        for (; i < strlen(input); i++) {
+        for (; i <(int)strlen(input); i++) {
             if (isSign(input[i]) == TRUE&& input[i]!='/') {
                 num1_str = substr(input, temp, i);
                 //printf("sign %c\n",input[i]);
@@ -2712,7 +2713,7 @@ char *countFirstOrderSignAndChangeTheStrOnlyOnce_with_alpha_for_fraction(char *i
             
             char* output_str=Walley_Operator_with_alpha_for_fraction(num1_str,num2_str,input_str[i]);
             
-            char *output_temp=malloc(sizeof(char)*1000);
+            char *output_temp=(char*)malloc(sizeof(char)*1000);
             
             if(begin_of_first_num==0){
                 strcat(output_temp,output_str);
@@ -2773,7 +2774,7 @@ char* countFromExpression_with_alpha_for_fraction(char *var_value) {
         char *num1_str;
         char *num2_str;
         
-        for (; i < strlen(input); i++) {
+        for (; i < (int)strlen(input); i++) {
             if (isSign(input[i]) == TRUE && input[i]!='/') {
                 num1_str = substr(input, temp, i);
                 //printf("sign %c\n",input[i]);

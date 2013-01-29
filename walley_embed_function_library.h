@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * File:   walley_embed_function_library.h
  * Author: shd101wyy
  *
@@ -74,7 +74,7 @@ char *to_double(char *input_str){
         input_str = substr(input_str, 1, (int) strlen(input_str) - 1);
         char *temp;
         if (find(input_str, ".") == -1) {
-            temp = malloc(sizeof (char) *((int) strlen(input_str) + 3));
+            temp = (char*)malloc(sizeof (char) *((int) strlen(input_str) + 3));
             strcpy(temp, input_str);
             strcat(temp, ".0");
             temp[(int) strlen(input_str) + 2] = 0;
@@ -85,7 +85,7 @@ char *to_double(char *input_str){
         // int to double
     else if (strcmp("int", variableValueType(input_str)) == 0) {
         char *temp;
-        temp = malloc(sizeof (char) *((int) strlen(input_str) + 3));
+        temp = (char*)malloc(sizeof (char) *((int) strlen(input_str) + 3));
         strcpy(temp, input_str);
         strcat(temp, ".0");
         temp[(int) strlen(input_str) + 2] = 0;
@@ -189,7 +189,7 @@ char *walley_system_return_str(char *cmd){
     pclose(pipe);
     #endif
 
-    char *output=malloc(sizeof(char)*((int)strlen(result)+1));
+    char *output=(char*)malloc(sizeof(char)*((int)strlen(result)+1));
     
     int i=0;
     for(;i<(int)strlen(result);i++){
@@ -216,7 +216,7 @@ char *math_sin(char *input_str){
     num=sin(num);
     char output[100];
     sprintf(output,"%Lf",num);
-    char *output_str=malloc(sizeof(char)*((int)strlen(output)+1));
+    char *output_str=(char*)malloc(sizeof(char)*((int)strlen(output)+1));
     int i=0;
     for(i=0;i<(int)strlen(output);i++){
         output_str[i]=output[i];
@@ -229,7 +229,7 @@ char *math_cos(char *input_str){
     num=cos(num);
     char output[100];
     sprintf(output,"%f",num);
-    char *output_str=malloc(sizeof(char)*((int)strlen(output)+1));
+    char *output_str=(char*)malloc(sizeof(char)*((int)strlen(output)+1));
     int i=0;
     for(i=0;i<(int)strlen(output);i++){
         output_str[i]=output[i];
@@ -243,7 +243,7 @@ char *math_sec(char *input_str){
     num=1/cos(num);
     char output[100];
     sprintf(output,"%f",num);
-    char *output_str=malloc(sizeof(char)*((int)strlen(output)+1));
+    char *output_str=(char*)malloc(sizeof(char)*((int)strlen(output)+1));
     int i=0;
     for(i=0;i<(int)strlen(output);i++){
         output_str[i]=output[i];
@@ -257,7 +257,7 @@ char *math_csc(char *input_str){
     num=1/sin(num);
     char output[100];
     sprintf(output,"%f",num);
-    char *output_str=malloc(sizeof(char)*((int)strlen(output)+1));
+    char *output_str=(char*)malloc(sizeof(char)*((int)strlen(output)+1));
     int i=0;
     for(i=0;i<(int)strlen(output);i++){
         output_str[i]=output[i];
@@ -274,7 +274,7 @@ char *math_tan(char *input_str){
     num=tan(num);
     char output[100];
     sprintf(output,"%f",num);
-    char *output_str=malloc(sizeof(char)*(1+(int)strlen(output)));
+    char *output_str=(char*)malloc(sizeof(char)*(1+(int)strlen(output)));
     int i=0;
     for(i=0;i<(int)strlen(output);i++){
         output_str[i]=output[i];
@@ -289,7 +289,7 @@ char *math_cot(char *input_str){
     num=1/tan(num);
     char output[100];
     sprintf(output,"%f",num);
-    char *output_str=malloc(sizeof(char)*((int)strlen(output)+1));
+    char *output_str=(char*)malloc(sizeof(char)*((int)strlen(output)+1));
     int i=0;
     for(i=0;i<(int)strlen(output);i++){
         output_str[i]=output[i];
@@ -305,7 +305,7 @@ char *math_exp(char *input_str){
     num=exp(num);
     char output[100];
     sprintf(output,"%f",num);
-    char *output_str=malloc(sizeof(char)*((int)strlen(output)+1));
+    char *output_str=(char*)malloc(sizeof(char)*((int)strlen(output)+1));
     int i=0;
     for(i=0;i<(int)strlen(output);i++){
         output_str[i]=output[i];
@@ -319,7 +319,7 @@ char *math_log10(char *input_str) {
     num = log10(num);
     char output[100];
     sprintf(output, "%f", num);
-    char *output_str = malloc(sizeof (char) *((int) strlen(output)+1));
+    char *output_str = (char*)malloc(sizeof (char) *((int) strlen(output)+1));
     int i = 0;
     for (i = 0; i < (int) strlen(output); i++) {
         output_str[i] = output[i];
@@ -336,7 +336,7 @@ char *math_log10(char *input_str) {
  */
 char *var_input(char *input_str) {
     if (stringIsEmpty(input_str)) {
-        char *output = malloc(sizeof (char) *(10000));
+        char *output = (char*)malloc(sizeof (char) *(10000));
         gets(output);
         //scanf("%s",output);
         //return toString(output);
@@ -347,7 +347,7 @@ char *var_input(char *input_str) {
         input_str=toCString(input_str);
         input_str=replace(input_str, "\\n", "\n");
         printf("%s",input_str);
-        char *output = malloc(sizeof (char) *(10000));
+        char *output = (char*)malloc(sizeof (char) *(10000));
         gets(output);
         //scanf("%s",output);
         return append("\"", append(output, "\""));
@@ -361,7 +361,7 @@ char *var_input(char *input_str) {
  * var_value_type("1")---->"int"
  */
 char *var_value_type(char *input_str){
-    char *type=malloc(sizeof(char)*(3+(int)strlen(variableValueType(input_str))));
+    char *type=(char*)malloc(sizeof(char)*(3+(int)strlen(variableValueType(input_str))));
     strcpy(type,"'");
     strcat(type,variableValueType(input_str));
     strcat(type,"'");
@@ -386,7 +386,7 @@ char *string_find(char *user,char* find_str){
     //sprintf(temp,"%d",index);
     char *temp=intToCString(index);
     
-    char *output=malloc(sizeof(char)*((int)strlen(temp)+1));
+    char *output=(char*)malloc(sizeof(char)*((int)strlen(temp)+1));
     int i=0;
     for(i=0;i<(int)strlen(temp);i++){
         output[i]=temp[i];
@@ -424,7 +424,7 @@ char *string_find_from_index(char *user, char *func_param){
             //sprintf(temp,"%d",index);
             char *temp=intToCString(index);
             
-            char *output=malloc(sizeof(char)*((int)strlen(temp)+1));
+            char *output=(char*)malloc(sizeof(char)*((int)strlen(temp)+1));
             int i=0;
             for(i=0;i<(int)strlen(temp);i++){
                 output[i]=temp[i];
@@ -451,7 +451,7 @@ char *string_find_from_index(char *user, char *func_param){
     //sprintf(temp,"%d",index);
         char *temp=intToCString(index);
         
-    char *output=malloc(sizeof(char)*((int)strlen(temp)+1));
+    char *output=(char*)malloc(sizeof(char)*((int)strlen(temp)+1));
     int i=0;
     for(i=0;i<(int)strlen(temp);i++){
         output[i]=temp[i];
@@ -528,7 +528,7 @@ char *string_count_str(char *user, char *func_param){
     //sprintf(temp,"%d",num);
     char *temp=intToCString(num);
     
-    char *output=malloc(sizeof(char)*((int)strlen(temp)+1));
+    char *output=(char*)malloc(sizeof(char)*((int)strlen(temp)+1));
     int i=0;
     for(i=0;i<(int)strlen(temp);i++){
         output[i]=temp[i];
@@ -550,7 +550,7 @@ char *string_length(char *user){
     //sprintf(temp,"%d",length);
     char *temp=intToCString(length);
     
-    char *output=malloc(sizeof(char)*((int)strlen(temp)+1));
+    char *output=(char*)malloc(sizeof(char)*((int)strlen(temp)+1));
     int i=0;
     for(i=0;i<(int)strlen(temp);i++){
         output[i]=temp[i];
@@ -645,7 +645,7 @@ char *string_trim(char *user){
     user=trim(user);
     user=substr(user,1,(int)strlen(user)-1);
     char *output=trim(user);
-    char *output2=malloc(sizeof(char)*((int)strlen(output)+3));
+    char *output2=(char*)malloc(sizeof(char)*((int)strlen(output)+3));
     strcpy(output2,"'");
     strcat(output2,output);
     strcat(output2,"'");
@@ -736,7 +736,7 @@ char *list_length(char *user){
     //   sprintf(temp,"%d",num);
     char *temp=intToCString(num);
     
-    char *output=malloc(sizeof(char)*((int)strlen(temp)+1));
+    char *output=(char*)malloc(sizeof(char)*((int)strlen(temp)+1));
     int i=0;
     for(i=0;i<(int)strlen(temp);i++){
         output[i]=temp[i];

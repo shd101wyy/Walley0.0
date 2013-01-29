@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * File:   walley_slice.h
  * Author: shd101wyy
  *
@@ -39,7 +39,7 @@ char *sliceIncludeBothSides(char *input_str,int left,int right){
             //sprintf(temp, "%d", i);
             char *temp=intToCString(i);
             
-            char *index_str = malloc(sizeof (char) *(3 + (int) strlen(temp)));
+            char *index_str = (char*)malloc(sizeof (char) *(3 + (int) strlen(temp)));
             strcpy(index_str, "[");
             strcat(index_str, temp);
             strcat(index_str, "]");
@@ -52,7 +52,7 @@ char *sliceIncludeBothSides(char *input_str,int left,int right){
             }
         }
         strcat(output, "]");
-        char *output2 = malloc(sizeof (char) *((int) strlen(output) + 1));
+        char *output2 = (char*)malloc(sizeof (char) *((int) strlen(output) + 1));
         for (i = 0; i < (int) strlen(output); i++) {
             output2[i] = output[i];
         }
@@ -118,7 +118,7 @@ char *slice(char *input_str, char *slice) {
             //sprintf(temp, "%d", num);
             char *temp=intToCString(num);
             
-            char *index_str = malloc(sizeof (char) *(3 + (int) strlen(temp)));
+            char *index_str =(char*) malloc(sizeof (char) *(3 + (int) strlen(temp)));
             strcpy(index_str, "[");
             strcat(index_str, temp);
             strcat(index_str, "]");
@@ -130,7 +130,7 @@ char *slice(char *input_str, char *slice) {
 
             //strcat(output, "]");
             int i = 0;
-            char *output2 = malloc(sizeof (char) *((int) strlen(output) + 1));
+            char *output2 =(char*) malloc(sizeof (char) *((int) strlen(output) + 1));
             for (i = 0; i < (int) strlen(output); i++) {
                 output2[i] = output[i];
             }

@@ -1,4 +1,4 @@
-//
+﻿//
 //  walley_pre_functions.h
 //  Walley
 //
@@ -6,15 +6,29 @@
 //  Copyright (c) 2012年 shd101wyy. All rights reserved.
 //
 
+#ifdef _WIN32
+#define _CRT_SECURE_NO_WARNINGS
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
-#include <dirent.h>
-#include <math.h>
+//#include <dirent.h>
+//#include <math.h>
+//#include <cmath>
 #include <ctype.h>
 #include <limits.h>
 #include <string.h>
 #include <time.h>
+#ifndef _WIN32
 typedef int bool;
+#include <math.h>
+#include <dirent.h>
+#else
+#include <cmath>
+#include "windows_dirent.h"
+#endif
+
+
 #define TRUE 1
 #define FALSE 0
 int main(int argc, char **argv);

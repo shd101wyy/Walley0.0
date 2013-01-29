@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * File:   walley_list.h
  * Author: shd101wyy
  *
@@ -12,7 +12,7 @@ char *valueOfListAtIndex(char *list,int index){
         printf("Mistake occurred while calling function valueOfListAtIndex\nInput %sis not a list\n",list);
     list=trim(list);
     list=substr(list,1,(int)strlen(list)-1);
-    char *temp=malloc(sizeof(char)*(2+(int)strlen(list)));
+    char *temp=(char*)malloc(sizeof(char)*(2+(int)strlen(list)));
     strcpy(temp,",");
     strcat(temp,list);
     temp[1+(int)strlen(list)]=0;
@@ -64,7 +64,7 @@ char *valueOfListAtIndexString(char *list,char *index_str){
     list=removeBackSpace(list);
     list=removeAheadSpace(list);
     list=substr(list,1,(int)strlen(list)-1);
-    char *temp=malloc(sizeof(char)*(2+(int)strlen(list)));
+    char *temp=(char*)malloc(sizeof(char)*(2+(int)strlen(list)));
     strcpy(temp,",");
     strcat(temp,list);
     temp[1+(int)strlen(list)]=0;
@@ -226,7 +226,7 @@ int valueNumOfList(char *list){
     list=removeBackSpace(list);
     list=removeAheadSpace(list);
     list=substr(list,1,(int)strlen(list)-1);
-    char *temp=malloc(sizeof(char)*(3+(int)strlen(list)));
+    char *temp=(char*)malloc(sizeof(char)*(3+(int)strlen(list)));
     strcpy(temp, ",");
     strcat(temp,list);
     strcat(temp,",");
@@ -281,7 +281,7 @@ void formatStringForListInOrderToWtiteToVar(struct VAR **struct_var,char *var_na
         //sprintf(number,"%d",i);
         char *number=intToCString(i);
         
-        char *index_str=malloc(sizeof(char)*((int)strlen(number)+3));
+        char *index_str=(char*)malloc(sizeof(char)*((int)strlen(number)+3));
         strcpy(index_str,"[");
         strcat(index_str,number);
         strcat(index_str,"]");
@@ -289,7 +289,7 @@ void formatStringForListInOrderToWtiteToVar(struct VAR **struct_var,char *var_na
         char *var_value_from_list=valueOfListAtIndexString(var_value,index_str);
         char *value_type=variableValueType(var_value_from_list);
         if(strcmp(value_type,"list")==0){
-            char *temp_var_name=malloc(sizeof(char)*((int)strlen(var_name)+2+i%10+1));
+            char *temp_var_name=(char*)malloc(sizeof(char)*((int)strlen(var_name)+2+i%10+1));
             strcpy(temp_var_name,var_name);
             strcat(temp_var_name,"[");
             //char temp_str[5000]="";
@@ -299,7 +299,7 @@ void formatStringForListInOrderToWtiteToVar(struct VAR **struct_var,char *var_na
             strcat(temp_var_name,"]");
             formatStringForListInOrderToWtiteToVar(struct_var,temp_var_name,var_value_from_list);
         } else {
-            char *temp_var_name=malloc(sizeof(char)*((int)strlen(var_name)+3+i%10+1));
+            char *temp_var_name=(char*)malloc(sizeof(char)*((int)strlen(var_name)+3+i%10+1));
             strcpy(temp_var_name,var_name);
             strcat(temp_var_name,"[");
             //char temp_str[5000]="";
@@ -460,7 +460,7 @@ char *changeStringToList(char *input_str){
             strcat(output,"',");
         }
         output[(int)strlen(output)-1]=']';
-        char *output2=malloc(sizeof(char)*((int)strlen(output)+1));
+        char *output2=(char*)malloc(sizeof(char)*((int)strlen(output)+1));
         for(i=0;i<(int)strlen(output);i++){
             output2[i]=output[i];
         }

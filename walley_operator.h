@@ -1,4 +1,4 @@
-/*
+﻿/*
  * File:   walley_operator.h
  * Author: shd101wyy
  *
@@ -261,7 +261,7 @@ char* countFromExpression(char *var_value) {
         
         //printf("input %s\n",input);
         
-        for (; i < strlen(input); i++) {
+        for (; i <(int)strlen(input); i++) {
             if (isSign(input[i]) == TRUE) {
                 num1_str = substr(input, temp, i);
                 //printf("sign %c\n",input[i]);
@@ -459,7 +459,7 @@ char *countFirstOrderSignAndChangeTheStrOnlyOnce(char *input_str){
             sprintf(output_str,"%f",output);
             //printf("input_str is:%s\n",input_str);
             //printf("output_str is %s\n",output_str);
-            char *output_temp=malloc(sizeof(char)*1000);
+            char *output_temp=(char*)malloc(sizeof(char)*1000);
             //printf("input_str is:%s\n",input_str);
             //printf("input_str is:%s\n",input_str);
             if(begin_of_first_num==0){
@@ -1026,7 +1026,7 @@ char *countFirstOrderSignAndChangeTheStrOnlyOnce_with_alpha(char *input_str){
             
             char* output_str=Walley_Operator_with_alpha(num1_str,num2_str,input_str[i]);
             
-            char *output_temp=malloc(sizeof(char)*1000);
+            char *output_temp=(char*)malloc(sizeof(char)*1000);
             
             if(begin_of_first_num==0){
                 strcat(output_temp,output_str);
@@ -1087,7 +1087,7 @@ char* countFromExpression_with_alpha(char *var_value) {
         char *num1_str;
         char *num2_str;
         
-        for (; i < strlen(input); i++) {
+        for (; i < (int)strlen(input); i++) {
             if (isSign(input[i]) == TRUE) {
                 num1_str = substr(input, temp, i);
                 //printf("sign %c\n",input[i]);

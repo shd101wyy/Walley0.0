@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * File:   walley_dictionary.h
  * Author: shd101wyy
  *
@@ -108,7 +108,7 @@ char *keyOfDictionaryAsList(char *dictionary){
         
     }
     dictionary[0]='{';
-    char *output2=malloc(sizeof(char)*((int)strlen(output)+1));
+    char *output2=(char*)malloc(sizeof(char)*((int)strlen(output)+1));
     for(i=0;i<(int)strlen(output)-1;i++){
         output2[i]=output[i];
     }
@@ -173,7 +173,7 @@ char *valueOfDictionaryAtKeyString(char *dict,char *key_str){
  */
 char *dictionaryAddKeyAndValue(char *dictionary, char *key, char *value){
     dictionary=removeAheadSpace(removeBackSpace(dictionary));
-    char *output=malloc(sizeof(char)*((int)strlen(dictionary)+(int)strlen(key)+(int)strlen(value)+3));
+    char *output=(char*)malloc(sizeof(char)*((int)strlen(dictionary)+(int)strlen(key)+(int)strlen(value)+3));
     strcpy(output,substr(dictionary,0,(int)strlen(dictionary)-1));
     strcat(output,",");
     strcat(output,key);
@@ -199,7 +199,7 @@ char *dictionaryAddKeyAndValueInStringOrChangeOriginalValueByKey(char *dictionar
    // printf("#### dictionaryAddKeyAndValueInStringOrChangeOriginalValueByKey ####\n");
    // printf("## Dictionary %s\n#### key %s\n#### value %s\n",dictionary,key,value);
     int length=(int)strlen(dictionary);
-    char *temp=malloc(sizeof(char)*(length+4));
+    char *temp=(char*)malloc(sizeof(char)*(length+4));
     strcpy(temp,"XX:");
     strcat(temp,dictionary);
     temp[length+3]=0;
@@ -225,7 +225,7 @@ char *dictionaryAddKeyAndValueInStringOrChangeOriginalValueByKey(char *dictionar
     char *final_key;
     for(i=0;i<count_of_douhao;i++){
         char *temp_key=substr(key,begin,find_from_index_not_in_string(key,",",begin)); // a,b,---->a
-        char *temp=malloc(sizeof(char)*((int)strlen(temp_key)+2));
+        char *temp=(char*)malloc(sizeof(char)*((int)strlen(temp_key)+2));
         strcpy(temp,temp_key);
         strcat(temp,":");
         temp[(int)strlen(temp_key)+1]=0;
@@ -262,7 +262,7 @@ char *dictionaryAddKeyAndValueInStringOrChangeOriginalValueByKey(char *dictionar
             strcpy(output,temp_temp);
             for (j = i; j < count_of_douhao; j++) {
                 char *temp_key2 = substr(key, begin, find_from_index_not_in_string(key, ",", begin)); // a,b,---->a
-                char *temp2 = malloc(sizeof (char) *((int) strlen(temp_key2) + 2));
+                char *temp2 =(char*) malloc(sizeof (char) *((int) strlen(temp_key2) + 2));
                 strcpy(temp2, temp_key2);
                 strcat(temp2, ":");
                 temp2[(int) strlen(temp_key2) + 1]=0;
@@ -271,7 +271,7 @@ char *dictionaryAddKeyAndValueInStringOrChangeOriginalValueByKey(char *dictionar
                     strcat(output,temp2);
                     strcat(output,value);  //{a:2 + ,b:1
                     
-                    output2=malloc(sizeof(char)*((int)strlen(output)+j-i+2));
+                    output2=(char*)malloc(sizeof(char)*((int)strlen(output)+j-i+2));
 
                     strcpy(output2,output);
                     int a=0;
@@ -301,12 +301,12 @@ char *dictionaryAddKeyAndValueInStringOrChangeOriginalValueByKey(char *dictionar
     if(existed==TRUE){
         //{a}--->a
         char *value2=valueOfDictionaryAtKeyString(dictionary,key_copy);
-        char *temp=malloc(sizeof(char)*((int)strlen(final_key)+2+(int)strlen(value2)));
+        char *temp=(char*)malloc(sizeof(char)*((int)strlen(final_key)+2+(int)strlen(value2)));
         strcpy(temp,final_key);  // a
         strcat(temp,":");  // a:
         strcat(temp,value2); //a:12
         temp[sizeof(char)*((int)strlen(final_key)+1+(int)strlen(value2))]=0;
-        char *temp2=malloc(sizeof(char)*((int)strlen(final_key)+2+(int)strlen(value)));
+        char *temp2=(char*)malloc(sizeof(char)*((int)strlen(final_key)+2+(int)strlen(value)));
         strcpy(temp2,final_key);
         strcat(temp2,":");
         strcat(temp2,value);
@@ -345,7 +345,7 @@ void formatStringForDictionaryInOrderToWtiteVar(struct VAR **struct_var,char *va
     for(i=0;i<num_of_key;i++){
         char *key_name=valueOfListAtIndex(key,i);
         //printf("Key Name ----> %s\n",key_name);
-        char *temp_key=malloc(sizeof(char)*((int)strlen(key_name)+3));
+        char *temp_key=(char*)malloc(sizeof(char)*((int)strlen(key_name)+3));
         strcpy(temp_key,"{");
         strcat(temp_key,key_name);
         strcat(temp_key,"}");
@@ -354,7 +354,7 @@ void formatStringForDictionaryInOrderToWtiteVar(struct VAR **struct_var,char *va
         char *value=valueOfDictionaryAtKeyString(var_value,temp_key);
         //printf("Value    ----> %s\n",value);
         if (strcmp("dictionary",variableValueType(value))==0){ // Value Type is Dictionary
-            char *temp_var_name=malloc(sizeof(char)*((int)strlen(temp_key)+(int)strlen(var_name)+1));
+            char *temp_var_name=(char*)malloc(sizeof(char)*((int)strlen(temp_key)+(int)strlen(var_name)+1));
             strcpy(temp_var_name,var_name);
             strcat(temp_var_name,temp_key);
             temp_var_name[(int)strlen(temp_key)+(int)strlen(var_name)]=0;

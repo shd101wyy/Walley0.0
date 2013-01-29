@@ -1,4 +1,4 @@
-/* 
+﻿/* 
  * File:   walley_string.h
  * Author: shd101wyy
  *
@@ -10,7 +10,7 @@
 char* replace_not_in_string(char* input_str, char* replace_str, char* with_str);
 bool charIsInString(char *input_str, int char_index);
 char *charToString(char input_char){
-    char *output=malloc(sizeof(char)*2);
+    char *output=(char*)malloc(sizeof(char)*2);
     output[0]=input_char;
     output[1]=0;
     return output;
@@ -41,7 +41,7 @@ char* substr(char* input_str, int from_index, int to_index) {
         //    to_index=(int)strlen(input_str);
         int length = to_index - from_index;
         int i;
-        char *output = malloc((length+1) * sizeof (char));
+        char *output =(char*)malloc((length+1) * sizeof (char));
         strcpy(output, "");
         for (i = 0; i < length; i++) {
             output[i] = input_str[from_index + i];
@@ -57,7 +57,7 @@ char *append(char *input_str, char *append_str){
     //printf("$$ |%s| $$ |%s|\n",input_str,append_str);
     int length_of_input_str=(int)strlen(input_str);
     int length_of_append_str=(int)strlen(append_str);
-    char *temp=malloc(sizeof(char)*(length_of_input_str+length_of_append_str+1));
+    char *temp=(char*)malloc(sizeof(char)*(length_of_input_str+length_of_append_str+1));
     int i=0;
     for(i=0;i<length_of_input_str;i++){
         temp[i]=input_str[i];
@@ -371,7 +371,7 @@ char* replace(char* input_str, char* replace_str, char* with_str) {
     //char *output_str = output;
     //printf("Output is %s\n",output);
     int length=(int)strlen(output);
-    char *output_str=malloc(sizeof(char)*(length+1));
+    char *output_str=(char*)malloc(sizeof(char)*(length+1));
     //printf("%% %d %%\n",(int)strlen(output));
     int a=0;
     for(a=0;a<length;a++){
@@ -556,7 +556,7 @@ char *stringToUpperCase(char *input_str) {
         }
     }
     int length_of_temp=(int)strlen(temp);
-    char *output=malloc(sizeof(char)*(length_of_temp+1));
+    char *output=(char*)malloc(sizeof(char)*(length_of_temp+1));
     for(i=0;i<length_of_temp;i++){
         output[i]=temp[i];
     }
@@ -579,7 +579,7 @@ char *stringToLowerCase(char *input_str) {
             temp[i] = input_str[i];
         }
     }
-    char *output=malloc(sizeof(char)*((int)strlen(temp)+1));
+    char *output=(char*)malloc(sizeof(char)*((int)strlen(temp)+1));
     for(i=0;i<(int)strlen(temp);i++){
         output[i]=temp[i];
     }
@@ -677,7 +677,7 @@ char* replace_not_in_string(char* input_str, char* replace_str, char* with_str) 
     //char *output_str = output;
     //printf("Output is %s\n",output);
     int length=(int)strlen(output);
-    char *output_str=malloc(sizeof(char)*(length+1));
+    char *output_str=(char*)malloc(sizeof(char)*(length+1));
     //printf("%% %d %%\n",(int)strlen(output));
     int a=0;
     for(a=0;a<length;a++){
@@ -742,7 +742,7 @@ char* replace_not_in_string_for_times(char* input_str, char* replace_str, char* 
     //char *output_str = output;
     //printf("Output is %s\n",output);
     int length=(int)strlen(output);
-    char *output_str=malloc(sizeof(char)*(length+1));
+    char *output_str=(char*)malloc(sizeof(char)*(length+1));
     //printf("%% %d %%\n",(int)strlen(output));
     int a=0;
     for(a=0;a<length;a++){
@@ -1181,7 +1181,7 @@ char *numToCString(double num){
 char *stringReverse(char *input_str){
     int count=0;
     int length=(int)strlen(input_str);
-    char *output=malloc((sizeof(char)*(length+1)));
+    char *output=(char*)malloc((sizeof(char)*(length+1)));
     int i;
     for (i=length-1; i>=0; i--) {
         output[count]=input_str[i];
