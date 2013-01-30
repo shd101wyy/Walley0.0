@@ -258,6 +258,52 @@ int valueNumOfList(char *list){
     num-=1;
     return num;
 }
+
+char *ModifyVarValue(char *var_value){
+    //printf("-->%s\n",var_value);
+    // new code here on Jan 30
+    // to change x=[1,2;3,4] to [[1,2],[3,4]]
+    //    change x=[1;2;3] to [[1],[2],[3]]
+    if (find_not_in_string(var_value, ";")==-1) {
+        return var_value;
+    }
+    int i=0;
+    int begin=0;
+    int end=0;
+    for (i = 0; i < (int) strlen(var_value); i++) {
+            
+        if (charIsInString(var_value, i) == FALSE && var_value[i] == '[') {
+            
+            begin = i;
+            end = find_from_index_not_in_string(var_value, "]", begin + 1);
+            //if (end != -1) {
+            char *check = substr(var_value, begin, end + 1);
+            //if(end!=-1){
+            while (count_str_not_in_string(check, "[") != count_str_not_in_string(check, "]")) {
+                end = find_from_index_not_in_string(var_value, "]", end + 1);
+                check = substr(var_value, begin, end + 1);
+            }
+            //}
+            char *replace_str = substr(var_value, begin , end+1);
+            if (stringIsEmpty(replace_str) == FALSE) {
+                if (finishFindingVarAndFunction(replace_str) == FALSE && find_not_in_string(replace_str, ":")==-1) {//from x{i} get i
+                    char *with_str = ModifyVarValue(replace_str);
+                    var_value = replace_from_index_to_index(var_value, replace_str, with_str, begin, end+1);
+                }
+            }
+        }
+    }
+    
+    
+    var_value=replace_not_in_string(var_value, ";", "],[");
+    // [1;2;3]---> [1],[2],[3]
+    // [1,2;3]--->[1,2],[3]
+    // [1,2,[1;2]]--->[1,2,[[1],[2]]]
+    var_value=append("[", append(var_value, "]"));
+    return var_value;
+}
+
+
 /*format:    
 a:[1,[1,2] ]:list:
 #~Begin:a:
@@ -271,6 +317,10 @@ a[1][1]:2:int:
 */
 
 void formatStringForListInOrderToWtiteToVar(struct VAR **struct_var,char *var_name,char *var_value){
+
+    
+    var_value=ModifyVarValue(var_value);
+    
     
     Var_addProperty(struct_var, var_name, var_value, "list");
     
