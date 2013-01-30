@@ -2852,9 +2852,8 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
 
     }
     
-        
     
-    //printf("AFTER REPLACE THE THING IN [] AND {}\nTHE INPUT IS |%s|\n",input_str);
+    // printf("AFTER REPLACE THE THING IN [] AND {}\nTHE INPUT IS |%s|\n",input_str);
     
     // I add new code here to solve print(input_str='1') problem
     // input_str='1' should not be run
@@ -2892,7 +2891,7 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
     bool has_var=FALSE;
     for(i=0;i<(int)strlen(input_str);i++){
   
-        //printf("output %s--->%c %d\n",output,input_str[i],i);
+        // printf("output %s--->%c %d\n",output,input_str[i],i);
         
         if(find_alpha==FALSE && (isalpha(input_str[i])||input_str[i]=='_'||input_str[i]=='"'||input_str[i]=='\''||input_str[i]=='[' )&& charIsInString(input_str,i)==FALSE){
             //// printf("Find alpha\n");
@@ -3560,36 +3559,31 @@ def random(num1=0,num2=1):\n\
                     }
                 }
             }
-            //printf("Var Name %s\nVar Value %s\n",var_name,var_value);
+            // printf("Var Name %s\nVar Value %s\n",var_name,var_value);
             int begin_temp=begin+(int)strlen(output)-(int)strlen(input_str);
             int end_temp=end+(int)strlen(output)-(int)strlen(input_str);
             
             //printf("Begin %d, End %d\n",begin_temp,end_temp);
             //printf("Before change, output is %s\n",output);
             output=replace_from_index_to_index(output,var_name,var_value,begin_temp,end_temp);
-            //printf("Output is %s\n",output);
+            // printf("Output is %s\n",output);
             has_var=TRUE;
             finish_find_var=FALSE;
             find_alpha=FALSE;
             
         }
-        //printf("--End this loop, output is %s\n",output);
+        // printf("--End this loop, output is %s\n",output);
         
     }
     
+    
     if (WALLEY_SUBSTITUTION_CAN_JUST_EVAL_IN_THE_END==TRUE) {
-        //if(has_var==FALSE){
-        //    return input_str;
-        //}
-        //printf("#Output ----> %s\n",output);
         if (/*strcmp(output, "None")!=0&&*/stringIsAlpha(output)==FALSE) {
             output=Walley_Eval_All_From_Var(*struct_var, output);
         }else {
             
             output=Walley_Eval_With_Variable_From_Var(*struct_var, output);
         }
-        //printf("Output ----> %s\n",output);
-        
 
     }
     

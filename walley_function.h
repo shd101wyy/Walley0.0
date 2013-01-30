@@ -650,6 +650,11 @@ char* Walley_Eval_With_Variable_From_Var(struct VAR var[], char *input_str) {
         return input_str;
     } else if (stringIsDigit(input_str) == TRUE)
         return Walley_Eval(input_str);
+    
+    // solve a:"Hello" return ":"Hello" problem
+    else if(find_not_in_string(input_str, ":")!=-1)
+        return input_str;
+
     else if (expressionIsAllString(input_str) == TRUE) {
         //printf("all var are string\n");
         output = combineStringsToOneString(input_str);
@@ -666,7 +671,6 @@ char* Walley_Eval_With_Variable_From_Var(struct VAR var[], char *input_str) {
     else if (strcmp("None", input_str) == 0) {
         return "None";
     }
-    
     // to solve |print 3+"hello"| problem
     else if(find(input_str,"\"")!=-1||find(input_str,"'")!=-1){
         char *output="";
@@ -854,6 +858,7 @@ char* Walley_Eval_All_From_Var(struct VAR struct_var[],char *input_str){
         //printf("Begin %d, End %d\n",begin,end);
         char *sub=substr(input_str, begin, end);
         sub=Walley_Eval_With_Variable_From_Var(struct_var, sub);
+
         output=append(output, sub);
         output=append(output, ",");
         begin=end+1;
