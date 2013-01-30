@@ -2109,6 +2109,8 @@ void Walley_Update_Var_And_Var_Value_To_Var(struct VAR **struct_var, char *var_n
 char *Walley_Run_One_Function_And_Return_Value_From_Var(char *input_str,struct VAR **struct_var, char ***FUNCTION_functions){
     //printf("\n#### Walley_Run_One_Function_And_Return_Value ####\n");
     //printf("#### %s\n",input_str);
+    char *global_var_back_up=GLOBAL_VAR;
+
     char *function_in_def="[]";
     
     char* return_var_name="None";
@@ -2510,7 +2512,7 @@ char *Walley_Run_One_Function_And_Return_Value_From_Var(char *input_str,struct V
         a++;
     }
     function_in_def="";
-    GLOBAL_VAR="[]";
+    GLOBAL_VAR=global_var_back_up;
     
     return return_value;
 }
@@ -2713,6 +2715,7 @@ char *Walley_Slice(char *var_value, char *slice,struct VAR **struct_var, char **
 char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,struct VAR **struct_var, char ***FUNCTION_functions){//, char *file_function_name){
     // printf("#### Walley_Substitute_Var_And_Function_Return_Value_From_File ####\n");
     // printf("#### input str is |%s| ####\n",input_str);
+    
     
     if(stringIsAlphaAndSlash(input_str)){
         return Var_getValueOfVar(*struct_var, input_str);

@@ -134,8 +134,8 @@ int numOfDictionaryKey(char *dictionary){
  */
 char *valueOfDictionaryAtKeyString(char *dict,char *key_str){
     // printf("#### valueOfDictionaryAtKeyString ####\n");
-    // printf("dict |%s|\n, key_str |%s|\n",dict,key_str);
-    dict=removeAheadSpace(removeBackSpace(dict));
+    //printf("dict |%s|\n, key_str |%s|\n",dict,key_str);
+    dict=trim(dict);
     if(find(dict,"{")==-1 || find(dict,"}")==-1){
         printf("Mistake occurred while calling function valueOfDictionaryAtKeyString\nInput %s is not a dict\n",dict);
         exit(0);
@@ -147,20 +147,21 @@ char *valueOfDictionaryAtKeyString(char *dict,char *key_str){
     int i=0;
     char *key;
     char *value;
-    int num=count_str(key_str,"{");
+    int num=count_str_not_in_string(key_str,"{");
     for(i=0;i<num;i++){
-        key=substr(key_str,find(key_str,"{")+1,find(key_str,"}"));
-        if(find(dict,key)==-1){
+        key=substr(key_str,find_not_in_string(key_str,"{")+1,find_not_in_string(key_str,"}"));
+        key=append(key, ":");
+        if(find_not_in_string(dict,key)==-1){
             printf("Mistake occurred while calling function valueOfDictionaryAtKeyString\nkey %s in dictionary %s not found\n",key,dict);
             exit(1);
         }
-        if(find_from_index_not_in_string(dict,"{",find(dict,key))!=-1 && find_from_index_not_in_string(dict,"{",find(dict,key)) < find_from_index_not_in_str_list_dict(dict,",",find(dict,key))){
+        if(find_from_index_not_in_string(dict,"{",find_not_in_string(dict,key))!=-1 && find_from_index_not_in_string(dict,"{",find_not_in_string(dict,key)) < find_from_index_not_in_str_list_dict(dict,",",find_not_in_string(dict,key))){
             value=substr(dict,find_from_index_not_in_string(dict,"{",find(dict,key)),find_from_index_not_in_string(dict,"}",find(dict,key))+1);
         } else {
-            if(find_from_index_not_in_str_list_dict(dict,",",find(dict,key))!=-1)
-                value=substr(dict,find_from_index_not_in_string(dict,":",find(dict,key))+1,find_from_index_not_in_str_list_dict(dict,",",find(dict,key)));
+            if(find_from_index_not_in_str_list(dict,",",find_not_in_string(dict,key))!=-1)
+                value=substr(dict,find_from_index_not_in_string(dict,":",find_not_in_string(dict,key))+1,find_from_index_not_in_str_list(dict,",",find_not_in_string(dict,key)));
             else
-                value=substr(dict,find_from_index_not_in_string(dict,":",find(dict,key))+1,(int)strlen(dict)-1);
+                value=substr(dict,find_from_index_not_in_string(dict,":",find_not_in_string(dict,key))+1,(int)strlen(dict)-1);
         }
         key_str=substr(key_str,find(key_str,"}{")+1,(int)strlen(key_str));
         dict=value;
@@ -336,6 +337,9 @@ dic{b}{d}:2:int:
  */
 
 void formatStringForDictionaryInOrderToWtiteVar(struct VAR **struct_var,char *var_name, char *var_value){
+    
+    // printf("formatStringForDictionaryInOrderToWtiteVar  %s %s\n",var_name,var_value);
+    
     int num_of_key=numOfDictionaryKey(var_value);
     char *key=keyOfDictionaryAsList(var_value);
     //printf("key is %s\n",key);
@@ -350,9 +354,9 @@ void formatStringForDictionaryInOrderToWtiteVar(struct VAR **struct_var,char *va
         strcat(temp_key,key_name);
         strcat(temp_key,"}");
         temp_key[(int)strlen(key_name)+2]=0;
-        //printf("Temp Key ----> %s\n",temp_key);
+        // printf("Temp Key ----> %s\n",temp_key);
         char *value=valueOfDictionaryAtKeyString(var_value,temp_key);
-        //printf("Value    ----> %s\n",value);
+        // printf("Value    ----> %s\n",value);
         if (strcmp("dictionary",variableValueType(value))==0){ // Value Type is Dictionary
             char *temp_var_name=(char*)malloc(sizeof(char)*((int)strlen(temp_key)+(int)strlen(var_name)+1));
             strcpy(temp_var_name,var_name);
@@ -383,8 +387,8 @@ void writeVarNameAndVarValueIntoAppointedVarForDictionary(struct VAR **struct_va
 //########## Use this function only when the same var name list exits ########
 /*This function will change the whole value of the dictionary*/
 void changeTheWholeVarValueFromItsInitialOneFromVarForDictionary(struct VAR **struct_var, char *var_name, char *var_value){
-    //// printf("#### changeTheWholeVarValueFromItsInitialOneFromFileForList ####\n");
-    //// printf("#### %s, %s, %s ####\n",file_name,var_name,var_value);
+    // printf("#### changeTheWholeVarValueFromItsInitialOneFromFileForList ####\n");
+    // printf("#### %s, %s ####\n",var_name,var_value);
     int row=0;
     int length=0;
     if (strcmp((*struct_var)->var_name,"__size_of_array__")!=0) {

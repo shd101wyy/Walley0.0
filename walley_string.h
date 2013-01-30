@@ -1063,6 +1063,34 @@ int find_from_index_not_in_str_list_dict(char *from_str, char *find_str, int fro
         return index;
     }
 }
+int find_from_index_not_in_str_list(char *from_str, char *find_str, int from_index) {
+    if (from_index < 0) {
+        printf("Mistake occurred which calling function find_from_index_not_in_str_list_dict");
+        return -1;
+    } else {
+        int index = -1;
+        bool find_index = TRUE;
+        int i;
+        int j;
+        for (i = from_index; i < (int) strlen(from_str); i++) {
+            find_index = TRUE;
+            if (from_str[i] == find_str[0] && charIsInString(from_str,i)==FALSE && charIsInList(from_str, i)==FALSE) {
+                for (j = 0; j < (int) strlen(find_str); j++) {
+                    if (find_str[j] != from_str[i + j]) {
+                        find_index = FALSE;
+                        break;
+                    }
+                }
+                if (find_index == TRUE) {
+                    //find_index = TRUE;
+                    index = i;
+                    break;
+                }
+            }
+        }
+        return index;
+    }
+}
 int count_str_not_in_str_list_dict(char *input_str, char *count_str){
     int count=0;
     int i=0;
