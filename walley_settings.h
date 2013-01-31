@@ -57,6 +57,10 @@ char *SENTENCE_OF_SWITCH="";
 // Global Var
 char *GLOBAL_VAR="[]";
 
+// List Incomplete
+int LIST_TOTAL_LEFT=0; // num of [
+int LIST_TOTAL_RIGHT=0; // num of ]
+
 
 
 // For if elif sentence

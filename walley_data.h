@@ -78,6 +78,8 @@ int Var_Existed(struct VAR var[], char *var_name){
 }
 
 void Var_removeVar(struct VAR **var, char *remove_var_name){
+        
+    
     int length=0;
     if (strcmp((*var)->var_name,"__size_of_array__")!=0) {
         printf("Var_removeVar..Can not find __size_of_array__");
@@ -90,28 +92,81 @@ void Var_removeVar(struct VAR **var, char *remove_var_name){
     
     int i=0;
     int find_var=0;
+    int remove_num=0;
+    bool is_deleting_list_or_dict=FALSE;
+    
+    
+    char *delete_var_type="";
+    char *delete_var_name="";
+    
     
     while (i<length) {
         if (find_var==1) {
-            (*var+i-1)->var_name=(*var+i)->var_name;
-            (*var+i-1)->var_type=(*var+i)->var_type;
-            (*var+i-1)->var_value=(*var+i)->var_value;
-            i++;
+            if(is_deleting_list_or_dict==TRUE&&strcmp(delete_var_type, "list")==0){
+                char *temp_var_name=(*var+i)->var_name;
+                char *ahead=substr(temp_var_name, 0, find(temp_var_name,"["));
+                if (strcmp(ahead, delete_var_name)==0) {
+                    remove_num+=1;
+                    (*var+i)->var_name=NULL;
+                    (*var+i)->var_value=NULL;
+                    (*var+i)->var_type=NULL;
+                    i++;
+                    continue;
+                }
+                else{
+                    is_deleting_list_or_dict=FALSE;
+                }
+            }
+            else if(is_deleting_list_or_dict==TRUE && strcmp(delete_var_type, "dictionary")==0){
+                char *temp_var_name=(*var+i)->var_name;
+                char *ahead=substr(temp_var_name, 0, find(temp_var_name,"{"));
+                if (strcmp(ahead, delete_var_name)==0) {
+                    remove_num+=1;
+                    (*var+i)->var_name=NULL;
+                    (*var+i)->var_value=NULL;
+                    (*var+i)->var_type=NULL;
+                    i++;
+                    continue;
+                }
+                else{
+                    is_deleting_list_or_dict=FALSE;
+                }
+            }
+            else{
+                is_deleting_list_or_dict=FALSE;
+            }
+            
+            if(is_deleting_list_or_dict==FALSE){
+            
+                (*var+i-remove_num)->var_name=(*var+i)->var_name;
+                (*var+i-remove_num)->var_type=(*var+i)->var_type;
+                (*var+i-remove_num)->var_value=(*var+i)->var_value;
+                i++;
+            }
             continue;
+            
+            
         }
         if (strcmp((*var+i)->var_name,remove_var_name)==0) {
             find_var=1;
+            remove_num+=1;
+            if (strcmp((*var+i)->var_type, "dictionary")==0||strcmp((*var+i)->var_type, "list")==0) {
+                is_deleting_list_or_dict=TRUE;
+                delete_var_name=(*var+i)->var_name;
+                delete_var_type=(*var+i)->var_type;
+            }
         }
         i=i+1;
     }
     if (find_var==1) {
        
-        (*var+length-1)->var_name=NULL;
-        (*var+length-1)->var_type=NULL;
-        (*var+length-1)->var_value=NULL;
-        *var=(struct VAR*)realloc(*var, sizeof(struct VAR)*(length-1));
-        (*var)->var_value=intToCString(atoi((*var)->var_value)-1);
+        (*var+length-remove_num)->var_name=NULL;
+        (*var+length-remove_num)->var_type=NULL;
+        (*var+length-remove_num)->var_value=NULL;
+        *var=(struct VAR*)realloc(*var, sizeof(struct VAR)*(length-remove_num));
+        (*var)->var_value=intToCString(atoi((*var)->var_value)-remove_num);
     }
+    
     
 }
 

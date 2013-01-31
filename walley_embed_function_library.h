@@ -6,7 +6,7 @@
  */
 
 //#include "walley_gui.h"
-#include "walley_dictionary.h"
+#include "walley_table.h"
 
 
 //     1,2,3,4 index 0----->1

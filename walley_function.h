@@ -105,6 +105,9 @@ char* checkValueType(char *input_str){
         type="string";
     } else if (index_of_first_list==0&&checkWhetherComplete(input_str)==TRUE){
         type="list";
+        if (find_not_in_string(input_str, "=")!=-1) {
+            type="table";
+        }
     } else {
         type="unknown type";
     }
@@ -243,6 +246,9 @@ char* variableValueType(char *variable_value){
         type="string";
     } else if (index_of_first_list==0&&checkWhetherComplete(variable_value)==TRUE){
         type="list";
+        if (find_not_in_string(variable_value, "=")!=-1) {
+            type="table";
+        }
     } else if (index_of_first_dict==0&&checkWhetherComplete(variable_value)==TRUE){
         type="dictionary";
     } else if(stringIsDigit(variable_value)){
@@ -274,7 +280,7 @@ char *toCString(char *input_str){
 }
 bool isExpression(char *input_str){
     bool is_expression=TRUE;
-    int index_of_equal=find_not_in_string(input_str,"=");
+    int index_of_equal=find_not_in_str_list_dict_parenthesis(input_str,"=");
     if (index_of_equal==-1) {
         return FALSE;
     }

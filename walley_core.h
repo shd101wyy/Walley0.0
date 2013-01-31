@@ -549,8 +549,10 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
         
         else if (strcmp(VAR_VALUE_INCOMPLETE_TYPE, "list")==0){
             int length_of_input_str=(int)strlen(input_str);
-            if (count_str_not_in_string(input_str, "[")+1==count_str_not_in_string(input_str, "]")&&input_str[length_of_input_str-1]==']') {
-                VAR_VALUE_TO_BE_COMPLETE=append(VAR_VALUE_TO_BE_COMPLETE, input_str);
+            LIST_TOTAL_LEFT+=count_str_not_in_string(input_str, "[");
+            LIST_TOTAL_RIGHT+=count_str_not_in_string(input_str, "]");
+            if (LIST_TOTAL_LEFT==LIST_TOTAL_RIGHT&&input_str[length_of_input_str-1]==']') {
+                VAR_VALUE_TO_BE_COMPLETE=append(VAR_VALUE_TO_BE_COMPLETE, trim(input_str));
                 input_str=append(VAR_NAME_TO_BE_COMPLETE, "=");
                 input_str=append(input_str, VAR_VALUE_TO_BE_COMPLETE);
                 
@@ -561,12 +563,15 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 VAR_NAME_TO_BE_COMPLETE="";
                 VAR_VALUE_TYPE_TO_BE_COMPLETE="";
                 
+                LIST_TOTAL_LEFT=0;
+                LIST_TOTAL_RIGHT=0;
+                
                 Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions, input_str);
                 
             }
             // Can not become complete now
             else{
-                VAR_VALUE_TO_BE_COMPLETE=append(VAR_VALUE_TO_BE_COMPLETE, input_str);
+                VAR_VALUE_TO_BE_COMPLETE=append(VAR_VALUE_TO_BE_COMPLETE, trim(input_str));
             }
         }
         
@@ -2011,6 +2016,7 @@ void Walley_Update_Var_And_Var_Value_To_Var(struct VAR **struct_var, char *var_n
                 writeVarNameAndVarValueIntoAppointedVarForDictionary(struct_var, var_name, var_value);
             }
         }
+                
         else {
             
             // Eg a[0] is one element of list a
@@ -2024,7 +2030,19 @@ void Walley_Update_Var_And_Var_Value_To_Var(struct VAR **struct_var, char *var_n
                 //changeTheOneVarValueFromItsInitialOneFromFileOrAddVarNameAndValueForDictionary(file_var_name, var_name, var_value);
                // printf("!!!!!!!!!!11111\n");
                 changeTheOneVarValueFromItsInitialOneFromVarOrAddVarNameAndValueForDictionary(struct_var,var_name,var_value);
-            } else {
+            }
+            
+            // x[0]=12, x is table
+            else if (find_not_in_string(var_name,"[")!=-1){
+                char *ahead=substr(var_name, 0, find_not_in_string(var_name, "["));
+                char *string_index=substr(var_name, find_not_in_string(var_name, "["), (int)strlen(var_name));
+                char *temp_var_value=Var_getValueOfVar(*struct_var, ahead);
+                if (strcmp(variableValueType(temp_var_value), "table")==0) {
+                    var_value=Table_addValueOrChangeValue(temp_var_value, string_index, var_value);
+                    Var_changeValueOfVar(*struct_var, ahead, var_value, "table");
+                }
+            }
+            else {
                 
                 if(strcmp(previous_var_value_type,"dictionary")==0||strcmp(previous_var_value_type,"list")==0){
                     //Walley_Remove_Variable_And_Value_From_File(file_var_name,var_name);
@@ -2077,6 +2095,10 @@ void Walley_Update_Var_And_Var_Value_To_Var(struct VAR **struct_var, char *var_n
             //printf("ENTER HERE EHE\n");
             //writeVarNameAndVarValueIntoAppointedVarForDictionary(struct_var, var_name, var_value);
         }            // Eg a{"Hello"} is one element of dictionary
+        
+        else if (strcmp(var_value_type, "table")==0){
+            Table_updateTableToStructVar(struct_var, var_name, var_value);
+        }
                                                                                                         // add new code here to fix x{'a'}.age=12 like problem
         else if (find_not_in_string(var_name, "{") != -1 && find_not_in_string(var_name, "}") != -1 && find_not_in_str_list_dict_parenthesis(var_name, ".")==-1) {
             //// printf("&&&&&&& Enter Here 1 \n");
@@ -2086,14 +2108,31 @@ void Walley_Update_Var_And_Var_Value_To_Var(struct VAR **struct_var, char *var_n
                 writeVarNameAndVarValueIntoAppointedVarForDictionary(struct_var, temp_var_name, "{}");
             }
             changeTheOneVarValueFromItsInitialOneFromVarOrAddVarNameAndValueForDictionary(struct_var,var_name,var_value);
-        }            // Initialize simple value
+        }
+        
+        // x[0]=12, x is table
+        else if (find_not_in_string(var_name,"[")!=-1){
+            char *ahead=substr(var_name, 0, find_not_in_string(var_name, "["));
+            char *string_index=substr(var_name, find_not_in_string(var_name, "["), (int)strlen(var_name));
+            char *temp_var_value=Var_getValueOfVar(*struct_var, ahead);
+            if (strcmp(variableValueType(temp_var_value), "table")==0) {
+                var_value=Table_addValueOrChangeValue(temp_var_value, string_index, var_value);
+                Var_changeValueOfVar(*struct_var, ahead, var_value, "table");
+            }
+            else if(strcmp(variableValueType(temp_var_value), "list")==0){
+                var_value=Table_addValueOrChangeValue(temp_var_value, string_index, var_value);
+                //printf("var_value is %s\n",var_value);
+                Var_removeVar(struct_var, ahead);
+
+                Var_addProperty(struct_var, ahead, var_value, "table");
+
+            }
+            
+        }
+        
+        // Initialize simple value
         else {
-            //printf("++++++++++++enter here\n");
-            //var_value=countFromExpression(var_value);
-            //var_value = Walley_Substitute_Var_And_Function_Return_Value_From_File(var_value, file_var_name);
-            //var_value = Walley_Eval_With_Variable_From_File(file_var_name, var_value);
-            //var_value_type = variableValueType(var_value);
-            //writeVarNameAndVarValueIntoAppointedFile(file_var_name, var_name, var_value, var_value_type);
+            
             Var_addProperty(struct_var, var_name, var_value, var_value_type);
         }
     }
@@ -2577,6 +2616,9 @@ char *Walley_Translate_To_Function_From_Var(char *input_str, char *best_match_se
 char *Walley_Slice(char *var_value, char *slice,struct VAR **struct_var, char ***FUNCTION_functions){
     slice = trim(slice);
     
+    if (strcmp(variableValueType(var_value), "table")==0) {
+        return Table_valueOfTableAtStringIndex(var_value, slice);
+    }
     
     int count=count_str(slice, "][");
     int a=0;
@@ -3896,7 +3938,6 @@ void Walley_Eval_And_Update_Var_And_Value_To_Var(struct VAR **struct_var,char **
     
     
     
-    
     // new code here on Jan 6
     
     var_value=removeBackSpace(var_value);
@@ -3927,12 +3968,15 @@ void Walley_Eval_And_Update_Var_And_Value_To_Var(struct VAR **struct_var,char **
     }
     
     // incomplete list
-    else if (var_value[0]=='['&&count_str_not_in_string(var_value, "[")==count_str_not_in_string(var_value, "]")+1){
+    // and table
+    else if (var_value[0]=='['&&count_str_not_in_string(var_value, "[")!=count_str_not_in_string(var_value, "]")){
         VAR_VALUE_INCOMPLETE=TRUE;
         VAR_VALUE_INCOMPLETE_TYPE="list";
-        VAR_VALUE_TO_BE_COMPLETE=var_value;
+        VAR_VALUE_TO_BE_COMPLETE=removeNFromBack(var_value);
         VAR_NAME_TO_BE_COMPLETE=var_name;
         VAR_VALUE_TYPE_TO_BE_COMPLETE="list";
+        LIST_TOTAL_LEFT=count_str_not_in_string(var_value, "[");
+        LIST_TOTAL_RIGHT=count_str_not_in_string(var_value, "]");
 
     }
     

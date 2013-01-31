@@ -19,7 +19,7 @@ char *valueOfListAtIndex(char *list,int index){
     /* For Example [1,2]--->,1,2*/
     list=temp;
     
-    int num_of_comma=count_str_not_in_string(list,",");
+    int num_of_comma=count_str_not_in_str_list_dict(list,",");
     if(num_of_comma<=index){
         printf("Mistake occurred while calling function valueOfListAtIndex\nIndex is outside the boundary\nList |%s| and index %d\n",list,index);
         exit(1);
@@ -30,14 +30,14 @@ char *valueOfListAtIndex(char *list,int index){
     int begin=-1;
     int end=(int)strlen(list)-1;
     for(;i<index+1;i++){
-            begin=find_from_index_not_in_string(list,",",begin+1);
+            begin=find_from_index_not_in_str_list_dict(list,",",begin+1);
     }
     
     char *output;
-    if(find_from_index_not_in_string(list,",",begin+1)==-1){
+    if(find_from_index_not_in_str_list_dict(list,",",begin+1)==-1){
         output=substr(list,begin+1,(int)strlen(list));
     } else {
-        end=find_from_index_not_in_string(list,",",begin+1);
+        end=find_from_index_not_in_str_list_dict(list,",",begin+1);
         output=substr(list,begin+1,end);
     }
     if(strcmp(output,"")==0)
