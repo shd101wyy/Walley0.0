@@ -419,7 +419,7 @@ char *countFirstOrderSignAndChangeTheStrOnlyOnce(char *input_str){
     
     
     for(;i<(int)strlen(input_str);i++){
-        if(isdigit(input_str[i])==TRUE){
+        if(isdigit(input_str[i])){
             continue;
         }
         
@@ -997,7 +997,7 @@ char *countFirstOrderSignAndChangeTheStrOnlyOnce_with_alpha(char *input_str){
     char *num2_str;
     
     for(;i<(int)strlen(input_str);i++){
-        if(isdigit(input_str[i])==TRUE){
+        if(isdigit(input_str[i])){
             continue;
         }
         

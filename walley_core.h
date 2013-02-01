@@ -2018,7 +2018,6 @@ void Walley_Update_Var_And_Var_Value_To_Var(struct VAR **struct_var, char *var_n
         }
                 
         else {
-            
             // Eg a[0] is one element of list a
             if (isListElementForVar(*struct_var, var_name)) {
                 //changeTheOneVarValueFromItsInitialOneFromFileForList(file_var_name, var_name, var_value);
@@ -2054,6 +2053,10 @@ void Walley_Update_Var_And_Var_Value_To_Var(struct VAR **struct_var, char *var_n
                 //var_value = Walley_Substitute_Var_And_Function_Return_Value_From_File(var_value, file_var_name);
                 //var_value = Walley_Eval_With_Variable_From_File(file_var_name, var_value);
                 //var_value_type = variableValueType(var_value);
+                else if(strcmp(var_value_type, "table")==0){
+                    
+                    Table_updateTableToStructVar(struct_var, var_name, var_value);
+                }
                 else{
                     //printf("here2\n");
                     Var_changeValueOfVar(*struct_var, var_name, var_value, var_value_type);
@@ -2756,7 +2759,7 @@ char *Walley_Slice(char *var_value, char *slice,struct VAR **struct_var, char **
 // Not Modify....
 char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,struct VAR **struct_var, char ***FUNCTION_functions){//, char *file_function_name){
     // printf("#### Walley_Substitute_Var_And_Function_Return_Value_From_File ####\n");
-    // printf("#### input str is |%s| ####\n",input_str);
+    // printf("$$$ input str is |%s| ####\n",input_str);
     
     
     if(stringIsAlphaAndSlash(input_str)){
@@ -2785,19 +2788,6 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
         begin = find_from_behind_not_in_string(input_str, "<@");
         end = find_from_index_not_in_string(input_str, ">", begin + 1);
         
-        /* THE BELOW CODE HAS SOME PROBLEM WHILE RUNNING ON UBUNTU
-        if (stringIsEmpty(replace_str) == FALSE) {
-            if (finishFindingVarAndFunction(replace_str) == FALSE) {//from x{i} get i                
-                // I modified this code on 2012/11/21 in order to solve translation problem
-                //char *with_str = Walley_Translate_To_Function(replace_str, bestMathSentenceForExpression(replace_str,WALLEY_EXPRESSION));
-                char *with_str = Walley_Translate_To_Function_From_Var(replace_str, bestMathSentenceForExpression(replace_str,WALLEY_EXPRESSION),struct_var);
-                
-                
-                // printf("with str is %s\n",with_str);
-                input_str = replace_from_index_to_index(input_str, substr(input_str, begin, end+1), with_str, begin, end+1);
-                //printf("input_str %s\n",input_str);
-            }
-        }*/
         char *replace_str = substr(input_str, begin + 2, end); //<@hello> get hello
         if (stringIsEmpty(replace_str) == FALSE) {
             
@@ -2814,7 +2804,7 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
         }
     }
     
-    // printf("@@@@@@AFTER TRANSLATION, |%s|\n",input_str);
+    //printf("@@@@@@AFTER TRANSLATION, |%s|\n",input_str);
     //###############################################################################################################
     //###############################################################################################################
     //###############################################################################################################
@@ -2877,7 +2867,6 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
             }
             char *replace_str = substr(input_str, begin + 1, end);
             if (stringIsEmpty(replace_str) == FALSE) {
-                
                 if (finishFindingVarAndFunction(replace_str) == FALSE) {//from x{i} get i
                     char *with_str = Walley_Substitute_Var_And_Function_Return_Value_From_Var(replace_str, struct_var,FUNCTION_functions);
                     if (strcmp(with_str, replace_str)==0) {
@@ -2889,7 +2878,7 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
                    // printf("here\n");
                 }
             }
-            //}
+            
         }
 
     }
@@ -2987,8 +2976,7 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
                 it_is_slice=TRUE;
             }
             //printf("it_is_slice is %d\n",it_is_slice);
-            
-            
+                       
             // New code here
             // to deal with list instance like x[0]=a() while a is class
             if (input_str[i]=='[' && it_is_slice==FALSE) {

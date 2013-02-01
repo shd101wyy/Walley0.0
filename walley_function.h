@@ -623,7 +623,7 @@ bool finishFindingVarAndFunction(char *input_str){
     int i=0;
     bool finish=TRUE;
     for(i=0;i<(int)strlen(input_str);i++){
-        if(isalpha(input_str[i])==TRUE && charIsInString(input_str,i)==FALSE){
+        if(isalpha(input_str[i]) && charIsInString(input_str,i)==FALSE){
             finish=FALSE;
             break;
         }
@@ -1218,7 +1218,7 @@ bool passConditionIfSentence(char *input_str){
             //printf("Find Judge Sign at index %d\n",i);
             first_str=substr(input_str,begin,i);
             //printf("First str %s\n",first_str);
-            if(isalpha(input_str[i+1])==TRUE || isdigit(input_str[i+1])==TRUE || input_str[i+1]=='\''||input_str[i+1]=='"' || input_str[i+1]=='-' || input_str[i+1]=='+'||input_str[i+1]=='*'||input_str[i+1]=='\\'){
+            if(isalpha(input_str[i+1]) || isdigit(input_str[i+1]) || input_str[i+1]=='\''||input_str[i+1]=='"' || input_str[i+1]=='-' || input_str[i+1]=='+'||input_str[i+1]=='*'||input_str[i+1]=='\\'){
                 //printf("Enter 1\n");
                 judge_sign=substr(input_str,i,i+1);
                 //printf("judge sign is %s\n",judge_sign);

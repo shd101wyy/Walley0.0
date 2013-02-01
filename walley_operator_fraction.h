@@ -407,7 +407,7 @@ char *countFirstOrderSignAndChangeTheStrOnlyOnceForFraction(char *input_str){
     char *num2_str;
         
     for(;i<(int)strlen(input_str);i++){
-        if(isdigit(input_str[i])==TRUE){
+        if(isdigit(input_str[i])){
             continue;
         }
         
@@ -1126,7 +1126,7 @@ char *countFirstOrderSignAndChangeTheStrOnlyOnceForFractionAndRootAndPower(char 
     
     char *input_str2=input_str;
     for(;i<(int)strlen(input_str);i++){
-        if(isdigit(input_str[i])==TRUE || input_str[i]=='^'){
+        if(isdigit(input_str[i]) || input_str[i]=='^'){
             continue;
         }
         
@@ -1233,7 +1233,7 @@ char *countFirstOrderSignAndChangeTheStrOnlyOnceForFractionAndRootAndPowerWithAd
     
     char *input_str2=input_str;
     for(;i<(int)strlen(input_str);i++){
-        if(isdigit(input_str[i])==TRUE || input_str[i]=='^'){
+        if(isdigit(input_str[i]) || input_str[i]=='^'){
             continue;
         }
         
@@ -2684,7 +2684,7 @@ char *countFirstOrderSignAndChangeTheStrOnlyOnce_with_alpha_for_fraction(char *i
     char *num2_str;
     
     for(;i<(int)strlen(input_str);i++){
-        if(isdigit(input_str[i])==TRUE){
+        if(isdigit(input_str[i])){
             continue;
         }
         

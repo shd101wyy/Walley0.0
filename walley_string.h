@@ -547,7 +547,7 @@ char *stringToUpperCase(char *input_str) {
     char temp[10000] = "";
     for (i = 0; i < length; i++) {
         //printf("%c\n", input_str[i]);
-        if (isalpha(input_str[i]) == TRUE && charIsInString(input_str,i)==FALSE) {
+        if (isalpha(input_str[i])  && charIsInString(input_str,i)==FALSE) {
             //if(input_str[i]>='a'&&input_str[i]<='z'){
             //printf("here %c\n", toupper(input_str[i]));
             temp[i] = toupper(input_str[i]);
@@ -571,7 +571,7 @@ char *stringToLowerCase(char *input_str) {
     char temp[10000] = "";
     for (i = 0; i < length; i++) {
         //printf("%c\n", input_str[i]);
-        if (isalpha(input_str[i]) == TRUE && charIsInString(input_str,i)==FALSE) {
+        if (isalpha(input_str[i])  && charIsInString(input_str,i)==FALSE) {
             //if(input_str[i]>='a'&&input_str[i]<='z'){
             //printf("here %c\n", toupper(input_str[i]));
             temp[i] = tolower(input_str[i]);
@@ -1289,7 +1289,7 @@ int indexOfMostOutterDictBracket(char *input_str, int index_of_left_bracket){
 bool findAlphaInString(char *input_str){
     int i=0;
     while (i<(int)strlen(input_str)) {
-        if (isalpha(input_str[i])==TRUE) {
+        if (isalpha(input_str[i])) {
             return TRUE;
         }
         
