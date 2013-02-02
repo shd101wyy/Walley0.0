@@ -78,7 +78,7 @@ int Var_Existed(struct VAR var[], char *var_name){
 }
 
 void Var_removeVar(struct VAR **var, char *remove_var_name){
-        
+    
     
     int length=0;
     if (strcmp((*var)->var_name,"__size_of_array__")!=0) {
@@ -104,14 +104,20 @@ void Var_removeVar(struct VAR **var, char *remove_var_name){
         if (find_var==1) {
             if(is_deleting_list_or_dict==TRUE&&strcmp(delete_var_type, "list")==0){
                 char *temp_var_name=(*var+i)->var_name;
-                char *ahead=substr(temp_var_name, 0, find(temp_var_name,"["));
-                if (strcmp(ahead, delete_var_name)==0) {
-                    remove_num+=1;
-                    (*var+i)->var_name=NULL;
-                    (*var+i)->var_value=NULL;
-                    (*var+i)->var_type=NULL;
-                    i++;
-                    continue;
+                int index_of=find(temp_var_name,"[");
+                if(index_of!=-1){
+                    char *ahead=substr(temp_var_name, 0, index_of);
+                    if (strcmp(ahead, delete_var_name)==0) {
+                        remove_num+=1;
+                        (*var+i)->var_name=NULL;
+                        (*var+i)->var_value=NULL;
+                        (*var+i)->var_type=NULL;
+                        i++;
+                        continue;
+                    }
+                    else{
+                        is_deleting_list_or_dict=FALSE;
+                    }
                 }
                 else{
                     is_deleting_list_or_dict=FALSE;
@@ -119,14 +125,20 @@ void Var_removeVar(struct VAR **var, char *remove_var_name){
             }
             else if(is_deleting_list_or_dict==TRUE && strcmp(delete_var_type, "dictionary")==0){
                 char *temp_var_name=(*var+i)->var_name;
-                char *ahead=substr(temp_var_name, 0, find(temp_var_name,"{"));
-                if (strcmp(ahead, delete_var_name)==0) {
-                    remove_num+=1;
-                    (*var+i)->var_name=NULL;
-                    (*var+i)->var_value=NULL;
-                    (*var+i)->var_type=NULL;
-                    i++;
-                    continue;
+                int index_of=find(temp_var_name,"{");
+                if(index_of!=-1){
+                    char *ahead=substr(temp_var_name, 0, index_of);
+                    if (strcmp(ahead, delete_var_name)==0) {
+                        remove_num+=1;
+                        (*var+i)->var_name=NULL;
+                        (*var+i)->var_value=NULL;
+                        (*var+i)->var_type=NULL;
+                        i++;
+                        continue;
+                    }
+                    else{
+                        is_deleting_list_or_dict=FALSE;
+                    }
                 }
                 else{
                     is_deleting_list_or_dict=FALSE;
@@ -160,14 +172,19 @@ void Var_removeVar(struct VAR **var, char *remove_var_name){
     }
     if (find_var==1) {
        
-        (*var+length-remove_num)->var_name=NULL;
-        (*var+length-remove_num)->var_type=NULL;
-        (*var+length-remove_num)->var_value=NULL;
+        //(*var+length-remove_num)->var_name=NULL;
+        //(*var+length-remove_num)->var_type=NULL;
+        //(*var+length-remove_num)->var_value=NULL;
+        int a=length-remove_num;
+        for (; a<length; a++) {
+            (*var+a)->var_name=NULL;
+            (*var+a)->var_type=NULL;
+            (*var+a)->var_value=NULL;
+        }
         *var=(struct VAR*)realloc(*var, sizeof(struct VAR)*(length-remove_num));
         (*var)->var_value=intToCString(atoi((*var)->var_value)-remove_num);
     }
-    
-    
+       
 }
 
 void Var_changeValueOfVar(struct VAR *var, char *var_name, char *var_value, char *var_type){

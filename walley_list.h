@@ -379,7 +379,7 @@ void writeVarNameAndVarValueIntoAppointedVarForList(struct VAR **struct_var,char
 void changeTheWholeVarValueFromItsInitialOneFromVarForList(struct VAR **struct_var, char *var_name, char *var_value){
     // printf("#### changeTheWholeVarValueFromItsInitialOneFromFileForList ####\n");
     
-    int row=0;
+    //int row=0;
     int length=0;
     if (strcmp((*struct_var)->var_name,"__size_of_array__")!=0) {
         printf("Can not find __size_of_array__");
@@ -388,6 +388,7 @@ void changeTheWholeVarValueFromItsInitialOneFromVarForList(struct VAR **struct_v
     else{
         length=atoi((*struct_var)->var_value);
     }
+    /*
     //struct VAR temp_var[];
     char *temp_var_name=append(var_name, "[");
     while (row<length) {
@@ -398,7 +399,8 @@ void changeTheWholeVarValueFromItsInitialOneFromVarForList(struct VAR **struct_v
         }
         row++;
     }
-   
+   */
+    Var_removeVar(struct_var, var_name);
     writeVarNameAndVarValueIntoAppointedVarForList(struct_var, var_name, var_value);
 }
 

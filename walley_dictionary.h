@@ -389,7 +389,7 @@ void writeVarNameAndVarValueIntoAppointedVarForDictionary(struct VAR **struct_va
 void changeTheWholeVarValueFromItsInitialOneFromVarForDictionary(struct VAR **struct_var, char *var_name, char *var_value){
     // printf("#### changeTheWholeVarValueFromItsInitialOneFromFileForList ####\n");
     // printf("#### %s, %s ####\n",var_name,var_value);
-    int row=0;
+    //int row=0;
     int length=0;
     if (strcmp((*struct_var)->var_name,"__size_of_array__")!=0) {
         printf("Can not find __size_of_array__");
@@ -399,6 +399,7 @@ void changeTheWholeVarValueFromItsInitialOneFromVarForDictionary(struct VAR **st
         length=atoi((*struct_var)->var_value);
     }
 
+    /*
     char *temp_var_name=append(var_name, "{");
     while (row<length) {
         if (strcmp(var_name,(*struct_var+row)->var_name)==0 || find((*struct_var+row)->var_name, temp_var_name)==0) {
@@ -408,6 +409,8 @@ void changeTheWholeVarValueFromItsInitialOneFromVarForDictionary(struct VAR **st
         }
         row++;
     }
+     */
+    Var_removeVar(struct_var, var_name);
     
     writeVarNameAndVarValueIntoAppointedVarForDictionary(struct_var, var_name, var_value);
 }

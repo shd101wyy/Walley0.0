@@ -4101,16 +4101,16 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
         printf("");
     }
     else if (find(input_str,"class ")==0){
-        //// printf("#### begin to define a class ####\n");
         now_writting_class=TRUE;
         space_of_first_class_sentence=space;
         space=space+4;
         
         char *class_name=className(input_str);
         char *class_mother=classMother(input_str);
+
         char *__temp_class__=Var_getValueOfVar(*struct_var,"__temp_class__");
+
         __temp_class__=dictionaryAddKeyAndValue(__temp_class__,toString(class_name),toString(class_mother));
-        //changeTheWholeVarValueFromItsInitialOneFromFileForDictionary(file_var_name,"__temp_class__",__temp_class__);
         changeTheWholeVarValueFromItsInitialOneFromVarForDictionary(struct_var, "__temp_class__", __temp_class__);
 
         
@@ -4121,10 +4121,9 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
         //changeTheWholeVarValueFromItsInitialOneFromFileForDictionary(file_var_name,"__string_in_temp_class__",__string_in_temp_class__);
         changeTheWholeVarValueFromItsInitialOneFromVarForDictionary(struct_var, "__string_in_temp_class__", __string_in_temp_class__);
         
-        //// printf("class_name is %s, class extends %s\n",class_name,class_mother);
+        //printf("class_name is %s, class extends %s\n",class_name,class_mother);
         
         Var_changeValueOfVar(*struct_var,"__temp_class_name_now_writting__",toString(class_name),"string");
-        
     }
     // ##############  Function  ##############################
     else if (find(input_str, "def ") == 0) {
