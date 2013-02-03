@@ -518,7 +518,9 @@ char *sentenceAtIndexOfString(char *input_str, int index){
     //printf("input_str |%s|\n",input_str);
     //printf("Num --> %d",numOfSmallSentences(input_str));
     if(index>=numOfSmallSentences(input_str)){
-        printf("Mistake occurred whiling calling function sentenceAtIndexOfString\nIndex out of bound\ninput_str |%s|\n",input_str);
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
+        printf("Mistake occurred while calling function sentenceAtIndexOfString\nIndex out of bound\ninput_str |%s|\n",input_str);
         exit(0);
     }
     //printf("---->|%s|\n",input_str);
@@ -1934,6 +1936,8 @@ char *bestMathSentenceForExpression(char *input_sentence, char **expression){
 char *Walley_Translate_To_Function(char *input_str, char *best_match_sentence){
     int index_of_gang=find(best_match_sentence, "|");
     if (index_of_gang==-1) {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Mistake occurred while calling function Walley_Translate_To_Function\n best_match sentence error, |%s|\n",best_match_sentence);
         printf("it should be in format function|expression \n");
         exit(0);

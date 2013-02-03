@@ -11,7 +11,6 @@ char *eval_for_fraction(char *input_str);
 char *simplify_fraction(char *num1_str, char *num2_str);
 char *addParenthesisForPower(char *input_str);
 
-
 // 1.2-->6/5  2-->2
 char *changeDecimalToFraction(char *input_str){
     input_str=cleanDotZeroAfterNum(input_str);
@@ -541,7 +540,9 @@ char *eval_for_fraction(char *input_str){
     
     //char *output;
     if(count_of_left_bracket!=count_of_right_bracket){
-        printf("Mistakes occurred while calling function eval:\nnum of ( != num of )");
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
+printf("Mistakes occurred while calling function eval:\nnum of ( != num of )");
         exit(1);
     }
     
@@ -1682,7 +1683,9 @@ char *eval_for_fraction_root_power(char *input_str){
     
     //char *output;
     if(count_of_left_bracket!=count_of_right_bracket){
-        printf("Mistakes occurred while calling function eval_for_fraction_root_power:\nnum of ( != num of )");
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
+printf("Mistakes occurred while calling function eval_for_fraction_root_power:\nnum of ( != num of )");
         exit(1);
     }
     
@@ -2039,7 +2042,7 @@ char *changePowerToRoot_ForEvalFinal(char *input_str){
 
 char *eval_final(char *input_str){
     input_str=eval_for_fraction_root_power(input_str);
-    printf("after eval %s\n",input_str);
+    //printf("after eval %s\n",input_str);
         
     int num_of_power=count_str(input_str, "^");
     int begin=0;
@@ -2101,7 +2104,7 @@ char *eval_final(char *input_str){
             }
         }
     }
-    printf("save is %s\n",save);
+    //printf("save is %s\n",save);
     return input_str;
 }
 
@@ -2768,7 +2771,7 @@ char* countFromExpression_with_alpha_for_fraction(char *var_value) {
         
         double num1;
         double num2;
-        double previous_num;
+        double previous_num=0;
         bool begin = FALSE;
         
         char *num1_str;
@@ -2872,14 +2875,15 @@ char* countFromExpression_with_alpha_for_fraction(char *var_value) {
                     }
                     else{
                         //####################################################
-                        
                         previous_num = Walley_Operator(previous_num, num2, input[i]);
                         output = previous_num;
+                        
                         
                     }
                 }
             }
         }
+        //printf("output---->%f\n",output);
         //printf("END %s\n",my_output_str);
         char *temp_output=numToCString(output);
         if (output!=0) {
@@ -2893,8 +2897,13 @@ char* countFromExpression_with_alpha_for_fraction(char *var_value) {
                 
             }
         }
+        
+        // x=1*1-1*1
+        if (stringIsEmpty(my_output_str)==TRUE) {
+            my_output_str=temp_output;
+        }
+        
         my_output_str=cleanDotZeroAfterNum(my_output_str);
-        //printf("my_output_str is |%s|\n",my_output_str);
         if (my_output_str[0]=='+') {
             my_output_str=substr(my_output_str, 1, (int)strlen(my_output_str));
         }
@@ -3020,7 +3029,9 @@ char *eval_for_fraction_with_alpha(char *input_str){
     
     //char *output;
     if(count_of_left_bracket!=count_of_right_bracket){
-        printf("Mistakes occurred while calling function eval:\nnum of ( != num of )");
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
+printf("Mistakes occurred while calling function eval:\nnum of ( != num of )");
         exit(1);
     }
     
@@ -3055,8 +3066,9 @@ char *eval_for_fraction_with_alpha(char *input_str){
         temp=append(temp,substr(input_str,index_of_first_right_bracket+1,(int)strlen(input_str)));
         input_str=temp;
     }
-    input_str=eval_simple_str_with_alpha_for_fraction(input_str);
     
+    input_str=eval_simple_str_with_alpha_for_fraction(input_str);
+
     
     x=INDEX_OFR_SAVE_EXPRESSION-1;
     for (; x>=0; x--) {

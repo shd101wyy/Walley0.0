@@ -18,6 +18,8 @@ void Var_PrintVar(struct VAR *struct_var){
     int row=0;
     int length=0;
     if (strcmp((struct_var)->var_name,"__size_of_array__")!=0) {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Var_PrintVar..Can not find __size_of_array__");
         exit(0);
     }
@@ -40,6 +42,8 @@ void Var_addProperty(struct VAR **var,char *var_name, char *var_value, char *var
     
     int length=0;
     if (strcmp((*var)->var_name,"__size_of_array__")!=0) {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Var_addProperty..Can not find __size_of_array__");
         exit(0);
     }
@@ -59,6 +63,8 @@ int Var_Existed(struct VAR var[], char *var_name){
     int i=0;
     int length=0;
     if (strcmp((var)->var_name,"__size_of_array__")!=0) {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Var_Existed..Can not find __size_of_array__");
         exit(0);
     }
@@ -82,6 +88,8 @@ void Var_removeVar(struct VAR **var, char *remove_var_name){
     
     int length=0;
     if (strcmp((*var)->var_name,"__size_of_array__")!=0) {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Var_removeVar..Can not find __size_of_array__");
         exit(0);
     }
@@ -191,6 +199,8 @@ void Var_changeValueOfVar(struct VAR *var, char *var_name, char *var_value, char
     int i=0;
     int length=0;
     if (strcmp((var)->var_name,"__size_of_array__")!=0) {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Can not find __size_of_array__");
         exit(0);
     }
@@ -212,6 +222,8 @@ char *Var_getValueOfVar(struct VAR *var, char *var_name){
     int i=0;
     int length=0;
     if (strcmp((var)->var_name,"__size_of_array__")!=0) {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Var_getValueOfVar..Can not find __size_of_array__");
         exit(0);
     }

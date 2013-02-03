@@ -59,7 +59,9 @@ char *sliceIncludeBothSides(char *input_str,int left,int right){
         output2[(int) strlen(output)] = 0;
         return output2;
     } else {
-        printf("Mistake occurred while calling function sliceIncludeBothSides\nOnly support list and string now");
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
+printf("Mistakes occurred while calling function sliceIncludeBothSides\nOnly support list and string now");
         exit(0);
     }
 }
@@ -100,7 +102,9 @@ char *slice(char *input_str, char *slice) {
         } else if (left == '(' && right == ']') {
             return sliceOnlyIncludeRightSide(input_str, num1, num2);
         } else {
-            printf("Mistake occurred while calling function slice\nIt is not a slice");
+            printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
+printf("Mistakes occurred while calling function slice\nIt is not a slice");
             exit(0);
         }
     } else {
@@ -139,7 +143,9 @@ char *slice(char *input_str, char *slice) {
 
         }
         else{
-            printf("Mistake occurred while calling function slice\nIt is not a slice or value type wrong\n");
+            printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
+printf("Mistakes occurred while calling function slice\nIt is not a slice or value type wrong\n");
             exit(0);
         }
     }
@@ -265,7 +271,9 @@ char *old_slice(char *input_str, char *slice){
 
         }
         else{
-            printf("Mistake occurred while calling function slice\nIt is not a slice or value type wrong\n");
+            printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
+printf("Mistakes occurred while calling function slice\nIt is not a slice or value type wrong\n");
             printf("If you want use dictionary, please try x{'a'} like expression\n");
             exit(0);
         }

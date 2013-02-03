@@ -12,6 +12,8 @@ char *eval_simple_str_with_alpha(char *input_str);
 char *countFirstOrderSignAndChangeTheStrOnlyOnce_with_alpha(char *input_str);
 char *Walley_Operator_with_alpha(char* num1_str,char* num2_str,char sign);
 char* countFromExpression_with_alpha(char *var_value);
+bool stringIsEmpty(char *input_str);
+
 // 1.00000-->1
 //13.00->13
 //14--->14
@@ -128,7 +130,9 @@ bool judge(bool p, bool q, char *condition){
         else
             output=FALSE;
     } else {
-        printf("Mistake occurred while calling function Judge\nP is %d, Q is %d, condition is %s\n",p,q,condition);
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
+printf("Mistakes occurred while calling function Judge\nP is %d, Q is %d, condition is %s\n",p,q,condition);
     }
     //printf("Output---->%d\n",output);
     return output;
@@ -216,7 +220,9 @@ double Walley_Operator(double num1,double num2,char sign){
     } else if (sign == '-') {
         output = num1-num2;
     } else {
-        printf("Mistake Occurred while calling function Walley_Operator");
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
+printf("Mistakes Occurred while calling function Walley_Operator");
         output=0;
     }
     return output;
@@ -618,7 +624,9 @@ char *eval(char *input_str){
     
     //char *output;
     if(count_of_left_bracket!=count_of_right_bracket){
-        printf("Mistakes occurred while calling function eval:\nnum of ( != num of )");
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
+printf("Mistakes occurred while calling function eval:\nnum of ( != num of )");
         exit(1);
     }
     while(count_str(input_str,"(")!=0){
@@ -793,7 +801,9 @@ char *changeOperatorToStr(char sign){
         return "#percent#";
     }
     else{
-        printf("Mistake occurred while calling function changeOperatorToStr\n%c is not sign\n",sign);
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
+printf("Mistakes occurred while calling function changeOperatorToStr\n%c is not sign\n",sign);
         exit(0);
     }
 }
@@ -1206,6 +1216,12 @@ char* countFromExpression_with_alpha(char *var_value) {
                 
             }
         }
+        
+        // x=1*1-1*1
+        if (stringIsEmpty(my_output_str)==TRUE) {
+            my_output_str=temp_output;
+        }
+        
         my_output_str=cleanDotZeroAfterNum(my_output_str);
         //printf("my_output_str is |%s|\n",my_output_str);
         if (my_output_str[0]=='+') {
@@ -1278,7 +1294,9 @@ char *clean_math_output_for_decimal(char *input_str){
                 index_of_left=find_from_behind_from_index(input_str, "(", from_index_for_left);
                 from_index_for_left=index_of_left-1;
                 if (index_of_left==-1) {
-                    printf("Mistake occurred while calling function clean_math_output_for_decimal\n No left ( found\n");
+                    printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
+printf("Mistakes occurred while calling function clean_math_output_for_decimal\n No left ( found\n");
                 }
             }
             if (index_of_left!=0) {
@@ -1317,7 +1335,9 @@ char *eval_for_decimal_with_alpha(char *input_str){
     
     //char *output;
     if(count_of_left_bracket!=count_of_right_bracket){
-        printf("Mistakes occurred while calling function eval:\nnum of ( != num of )");
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
+printf("Mistakes occurred while calling function eval:\nnum of ( != num of )");
         exit(1);
     }
     

@@ -98,6 +98,7 @@ void cleanWalleyLanguageFile(char *file_name){
     FILE *fp=fopen(file_name, "r");
     char arr[10000];
     if (fp==NULL) {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
         printf("No File %s Found\n",file_name);
         exit(0);
     }

@@ -718,7 +718,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
         input_str = substr(input_str, 0, find_not_in_string(input_str, "\\n"));
     }
     input_str=removeNFromBack(input_str);
-   // printf("INPUT_STR     ---_>|%s|\n",input_str);
+    //printf("INPUT_STR     ---_>|%s|\n",input_str);
     
     bool now_in_annotation = atoi(Var_getValueOfVar(*struct_settings, "now_in_annotation"));
     char *judge_annotation_string=trim(input_str);
@@ -815,6 +815,17 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
         }
         
         
+        if (input_str[(int)strlen(input_str)-1]==';') {
+            printf("@@ |%s|\n",input_str);
+            printf("You do not need to add ; behind\n");
+            exit(0);
+        }
+        
+        
+        if(CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==FALSE){
+            can_run_basic_input=FALSE;
+        }
+        
         //printf("-------Now input is |%s| required space %d current space %d\n", input_str,space,current_space);
 
         
@@ -823,7 +834,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
         
         
         //############### Now Writting While In Progress ########################
-        if (now_writting_while == TRUE && str_is_empty==FALSE) {
+        if (now_writting_while == TRUE && str_is_empty==FALSE && CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==TRUE) {
             //// printf("Space %d, Current Space %d\n", space, current_space);
             if (current_space > space_of_first_while_sentence && current_space % 4 == 0) {
                 // printf("################ Now Writting While ###################");
@@ -846,7 +857,8 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 temp_in_loop=append(temp_in_loop, "\\n\"");
                 string_in_while_loop = temp_in_loop;
                 Var_changeValueOfVar(*struct_settings , "string_in_while_loop", string_in_while_loop, "string");
-            } else if (current_space <= space_of_first_while_sentence && current_space % 4 == 0) {
+            }
+            else if (current_space <= space_of_first_while_sentence && current_space % 4 == 0) {
                 //printf("Begin to Run While, input_str %s, current_space %d, space_of_first %d\n",input_str,current_space,space_of_first_while_sentence);
                 can_run_basic_input = TRUE;
                 now_writting_while = FALSE;
@@ -888,11 +900,9 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 string_in_while_loop2=replace(string_in_while_loop2, "(#single quote#)","'");
                 string_in_while_loop2=append(substr(string_in_while_loop2, 1, (int) strlen(string_in_while_loop2) - 1), "#FINISH WHILE\n");
                 //##################################
-                
-                //printf("String in while loop is |%s|\n",string_in_while_loop2);
-                //printf("__temp_string_in_while_loop__ is |%s|  and index|%d|\n",__temp_string_in_while_loop__,length_of_list-1);
-                //exit(0);
+               
                 while (Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(last_while_sentence2, struct_var,FUNCTION_functions) == TRUE) {
+                    CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=TRUE;
                     char *temp_to_run = string_in_while_loop2;
                     
                     char *temp_to_run2=temp_to_run;
@@ -904,6 +914,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                         Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions,temp_to_run2);
                     }
                     
+                    /*
                     bool can_break=FALSE;
                     bool can_continue=FALSE;
                     can_break=atoi(Var_getValueOfVar(*struct_settings, "can_break"));
@@ -915,9 +926,19 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                     if (can_continue) {
                         Var_changeValueOfVar(*struct_settings, "can_continue", "0", "int");
                         continue;
+                    }*/
+                    if (CAN_BREAK) {
+                        CAN_BREAK=FALSE;
+                        break;
+                    }
+                    if (CAN_CONTINUE) {
+                        CAN_CONTINUE=FALSE;
+                        continue;
                     }
                     
                 }
+                
+                CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=TRUE;
                 
                 //Afte run while, remove the element at __temp_while__
                 char final_index[100];
@@ -936,12 +957,14 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 changeTheWholeVarValueFromItsInitialOneFromVarForList(struct_var, "__temp_string_in_while_loop__", __temp_string_in_while_loop__);
             }
         }//############### Now Writting Function In Progress #####################
-        else if (now_writting_function == TRUE && str_is_empty==FALSE) {
+        else if (now_writting_function == TRUE && str_is_empty==FALSE&& CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==TRUE) {
             can_run_basic_input = FALSE;
             //printf("//############### Now Writting Function In Progress #####################\n");
             //printf("--->%s\n",input_str);
             //// printf("Current Space is %d, Required Space is %d\n",current_space,space);
             if (current_space % 4 != 0) {
+                printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
                 printf("Space Mistake\nCurrent Space is %d\nRequired Space is %d\n", current_space, space);
                 exit(0);
             } else if (current_space <= space_of_first_def_sentence) {
@@ -1055,7 +1078,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 space = space + 4;
             }            
         }        //################### Now Writting Class ##############################
-        else if (now_writting_class == TRUE && str_is_empty==FALSE) {
+        else if (now_writting_class == TRUE && str_is_empty==FALSE&& CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==TRUE) {
             can_run_basic_input = FALSE;
             // printf("#### Now_Writting_Class In Progress ####\n");
             
@@ -1101,57 +1124,25 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
             }
             
         }        //################## Now Run If #######################################
-        else if (now_run_if == TRUE && str_is_empty==FALSE) {
-            // printf("Now Run If\n");
-            // printf("Input_str is %s  %d\n",input_str,space);
-            
-            
-            /*
-            // new code here on Jan 12
-            if (current_space%4!=0) {
-                printf("Mistake occurred while run if sentence, space error. %s\n",input_str);
-                exit(0);
-            }
-            
-            if (current_space<=SPACE_OF_FIRST_IF_ELIF_ELSE_SENTENCE) {
-                NOW_WRITTING_IF=FALSE;
-                SPACE_OF_FIRST_IF_ELIF_ELSE_SENTENCE=0;
-                
-                printf("FINISH IF!");
-                printf("%s\n",SENTENCE_OF_IF);
-                
-                SENTENCE_OF_IF="";
-            }
-            else{
-                char *temp_str="";
-                int a=0;
-                for (; a<SPACE_OF_FIRST_IF_ELIF_ELSE_SENTENCE;a++) {
-                    temp_str=append(temp_str, " ");
-                }
-                temp_str=append(temp_str, trim(input_str));
-                SENTENCE_OF_IF=append(SENTENCE_OF_IF, temp_str);
-                SENTENCE_OF_IF=append(SENTENCE_OF_IF, "\n");
-            }
-            // new code here on Jan 12
-            */
-            
-            
+        else if (now_run_if == TRUE && str_is_empty==FALSE&& CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==TRUE) {
             if (current_space > space || current_space % 4 != 0) {
-                //if (current_space != space) {
+                printf("@@ |%s|\n",CURRENT_INPUT_STR);
                 printf("Space Mistake\nCurrent Space is %d\nRequired Space is %d\n", current_space, space);
                 exit(0);
             }
             // I do not know whether it is right or not.......
-            if (current_space <= space) {
-                //input_str = removeAheadSpace(input_str);
+            if (current_space < space) {
                 // change space and rewrite it to file
                 space=current_space;
                 Var_changeValueOfVar(*struct_settings , "space", intToCString(space), "int");
                 Var_changeValueOfVar(*struct_settings , "current_space", intToCString(current_space), "int");
+                now_run_if=FALSE;
+                
+               
             }
             
         }        //################## Now Run For #######################################
-        else if (now_writting_for == TRUE && str_is_empty==FALSE) {
+        else if (now_writting_for == TRUE && str_is_empty==FALSE&& CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==TRUE) {
             // printf("#### Now Writting For ####, |%s|\n",input_str);
             if (current_space > space_of_first_for_sentence && current_space % 4 == 0) {
                 //printf("################ Now Writting For ###################");
@@ -1239,7 +1230,8 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                     int x = 0;
                     
                     for (x = 0; x < value_num; x++) {
-                        // printf("X--->%d\n", x);
+                        CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=TRUE;
+                        //printf("X--->%d\n", x);
                         char temp_num[100];
                         sprintf(temp_num, "%d", x);
                         
@@ -1262,7 +1254,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                         Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions,init_temp_i);
                         Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions,temp_to_run);
                         
-                        
+                        /*
                         bool can_break=FALSE;
                         bool can_continue=FALSE;
                         can_break=atoi(Var_getValueOfVar(*struct_settings, "can_break"));
@@ -1272,11 +1264,22 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                             break;
                         }
                         if (can_continue) {
+                            printf("----> CAN CONTINUE\n");
                             Var_changeValueOfVar(*struct_settings, "can_continue", "0", "int");
+                            continue;
+                        }
+                         */
+                        if (CAN_BREAK) {
+                            CAN_BREAK=FALSE;
+                            break;
+                        }
+                        if (CAN_CONTINUE) {
+                            CAN_CONTINUE=FALSE;
                             continue;
                         }
 
                     }
+                    CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=TRUE;
                     
                     string_in_for_loop = "\"#For\\n\"";
                     temp_i = "\"None\"";
@@ -1309,9 +1312,13 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
             }
         }
         
+        if(CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==FALSE){
+            can_run_basic_input=FALSE;
+        }
+        
         //############### New code here on Jan 10 #############################################
         //############### To support switch sentence ##########################################
-        if(NOW_WRITTING_SWITCH == TRUE && str_is_empty==FALSE){
+        if(NOW_WRITTING_SWITCH == TRUE && str_is_empty==FALSE && CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==TRUE){
             
             can_run_basic_input = FALSE;
             if(current_space % 4 !=0){
@@ -1345,6 +1352,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 // case sentence
                 if (find(trim(input_str),"case ")==0&& current_space==SPACE_OF_FIRST_SWITCH_SENTENCE+4) {
                     if (current_space%4!=0 && current_space<SPACE_OF_FIRST_SWITCH_SENTENCE+4) {
+                        printf("@@ |%s|\n",CURRENT_INPUT_STR);
                         printf("Space mistake occurred while running |%s|\n",input_str);
                         exit(0);
                     }
@@ -1425,13 +1433,21 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
             //printf("CAN RUN BASIC INPUT\n");
             char *input_temp = removeAheadSpace(input_str);
             if (strcmp(trim(input_str), "pass")==0) {
-                Var_changeValueOfVar(*struct_settings, "can_break", "1", "int");
+                CAN_BREAK=TRUE;
+                CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=FALSE;
+                //Var_changeValueOfVar(*struct_settings, "can_break", "1", "int");
             }
             else if (strcmp(trim(input_str), "break")==0) {
-                Var_changeValueOfVar(*struct_settings, "can_break", "1", "int");
+                CAN_BREAK=TRUE;
+                CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=FALSE;
+
+                //Var_changeValueOfVar(*struct_settings, "can_break", "1", "int");
             }
             else if (strcmp(trim(input_str), "continue")==0) {
-                Var_changeValueOfVar(*struct_settings, "can_continue", "1", "int");
+                CAN_CONTINUE=TRUE;
+                CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=FALSE;
+
+                //Var_changeValueOfVar(*struct_settings, "can_continue", "1", "int");
             }
             else if (input_temp[0] == '#' ||
                 find(input_temp, "for ") == 0 ||
@@ -1546,6 +1562,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                     
                     
                     if (module_path[(int)strlen(module_path)-1]=='p') {
+                        printf("@@ |%s|\n",CURRENT_INPUT_STR);
                         printf("Can not import folder\nPlease try to import the file in that folder");
                         exit(0);
                     }
@@ -1575,6 +1592,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                     char *final_module2=substr(name_of_file_to_run, a+1, length_of_name_of_file_to_run);
                     //printf("FINAL MODULE2 IS %s\n",final_module2);
                     if (strcmp(final_module2, final_module)!=0) {
+                        printf("@@ |%s|\n",CURRENT_INPUT_STR);
                         printf("No File called %s found\nYou can only import .wy file\n",append(final_module2, ".wy"));
                         exit(0);
                     }
@@ -1639,6 +1657,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                     
                     input_str=trim(input_str);
                     if(find_not_in_string(input_str," import ")==-1){
+                        printf("@@ |%s|\n",CURRENT_INPUT_STR);
                         printf("Mistake occurred while importing\n no ' import ' found");
                         exit(0);
                     }
@@ -1721,6 +1740,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                             //printf("content_of_file:\n##########################################\n%s\n################################################\n",content_of_file);
                             
                         } else {
+                            printf("@@ |%s|\n",CURRENT_INPUT_STR);
                             printf("Can not run\n from A import all/* as B\n");
                             exit(0);
                             //content_of_file = functionOrClassAddAheadName(temp_file_to_run,substr(AS_NAME, 1, (int)strlen(AS_NAME)));
@@ -2236,7 +2256,7 @@ char *Walley_Run_One_Function_And_Return_Value_From_Var(char *input_str,struct V
        // printf("----arr----%s\n", arr);
        // printf("Finish init param %d\n", finish_init_param);
        // printf("temp_temp is %s\n",temp_temp);
-        if (find_function == TRUE && strcmp("return", substr(removeBackSpace(removeAheadSpace(arr)), 0, 6)) == 0) {
+        if (find_function == TRUE && strcmp("return", substr(trim(arr), 0, 6)) == 0) {
             
             //find_return=TRUE;
             // printf("\n\n\n\n\n--------Find Return--------\n");
@@ -2244,12 +2264,10 @@ char *Walley_Run_One_Function_And_Return_Value_From_Var(char *input_str,struct V
             char *temp_arr=removeNFromBack(arr);
             Walley_Run_For_Appointed_Var(&TEMP_VAR_var, &TEMP_VAR_settings, &TEMP_TEMP_FILE, "FUNCTION", FUNCTION_functions,temp_arr);
 
-            // printf("AAA--->%s",Var_getValueOfVar(file_settings_temp_name, "can_run_basic_input"));
-            
-            //bool can_get_return=atoi(Var_getValueOfVar(file_settings_temp_name, "can_run_basic_input"));
+                        
             bool can_get_return=atoi(Var_getValueOfVar(TEMP_VAR_settings, "can_run_basic_input"));
-            //printf("can get return %d\n",can_get_return);
-            //printf("setting file %s\n",file_settings_temp_name);
+            
+
             if (can_get_return==FALSE) {
                 row++;
                 continue;
@@ -2535,6 +2553,8 @@ char *Walley_Run_One_Function_And_Return_Value_From_Var(char *input_str,struct V
     }
     
     if (find_function==FALSE) {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Mistake occurred whiling call function Walley_Run_One_Function_And_Return_Value\n");
         printf("Function |%s| is not found\n Exit....\n",input_str);
         exit(0);
@@ -2567,6 +2587,8 @@ char *Walley_Translate_To_Function_From_Var(char *input_str, char *best_match_se
     //printf("best match sentence |%s|, input_str |%s|\n",best_match_sentence,input_str);
     int index_of_gang=find(best_match_sentence, "|");
     if (index_of_gang==-1) {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Mistake occurred while calling function Walley_Translate_To_Function\n input_str |%s|, best_match sentence error, |%s|\n",input_str,best_match_sentence);
         printf("it should be in format function|expression \n");
         exit(0);
@@ -2747,6 +2769,8 @@ char *Walley_Slice(char *var_value, char *slice,struct VAR **struct_var, char **
             
         }
         else{
+            printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
             printf("Mistake occurred while calling function slice\nIt is not a slice or value type wrong\n");
             printf("If you want use dictionary, please try x{'a'} like expression\n");
             exit(0);
@@ -2768,9 +2792,8 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
     else if (stringIsDigit(input_str)){
         return Walley_Eval(input_str);
     }
-    else if(strcmp("string", variableValueType(input_str))==0){
-        return combineStringsToOneString(input_str);
-    }
+    
+    
     int i=0;
     int begin=0;  //begin of { and [
     int end = 0; // end of } and ]
@@ -2892,6 +2915,7 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
         // printf("%s IT IS EXPRESSION\n",input_str);
         char *var_name=variableName(input_str);
         char *var_value=variableValue(input_str);
+
         var_value=Walley_Substitute_Var_And_Function_Return_Value_From_Var(var_value, struct_var,FUNCTION_functions);
         char *output=append(var_name, "=");
         output=append(output, var_value);
@@ -3488,6 +3512,8 @@ def random(num1=0,num2=1):\n\
                     value_of_var=func_name;
                 }
                 else{
+                    printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
                     printf("Mistake occurred while calling function Walley_Substitute_Third....\n%s is wrong whiling judging it is slice\n",func_name);
                     exit(0);
                 }
@@ -3606,9 +3632,11 @@ def random(num1=0,num2=1):\n\
         
     }
     
+    // printf("output ----> %s\n",output);
+    
     
     if (WALLEY_SUBSTITUTION_CAN_JUST_EVAL_IN_THE_END==TRUE) {
-        if (/*strcmp(output, "None")!=0&&*/stringIsAlpha(output)==FALSE) {
+        if (stringIsAlpha(output)==FALSE) {
             output=Walley_Eval_All_From_Var(*struct_var, output);
         }else {
             
@@ -4518,6 +4546,8 @@ def random(num1=0,num2=1):\n\
     int i=0;
     int length_of_temp_struct_var=0;
     if (strcmp((temp_struct_var)->var_name,"__size_of_array__")!=0) {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Can not find __size_of_array__");
         exit(0);
     }

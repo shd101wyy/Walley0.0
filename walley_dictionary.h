@@ -53,6 +53,8 @@ char* valueAtKey(char *dictionary, char *key){
    //// printf("#### valueAtKey ####\n");
    //// printf("%s, %s\n",dictionary,key);
     if(find(dictionary,key)==-1|| find(dictionary,"{")==-1 || find(dictionary,"}")==-1){
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Mistake occurred while calling function valueAtKey\nkey %s did not find in dictionary %s\n",key,dictionary);
         exit(1);
     } else {
@@ -76,6 +78,8 @@ char *keyOfDictionaryAsList(char *dictionary){
         return "[]";
    //// printf("#### keyOfDictionaryAsList ####\ninput |%s|\n",dictionary);
     if(find(dictionary,"{")==-1 || find(dictionary,"}")==-1){
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Mistake occurred while calling function keyOfDictionaryAsList\ndictionary %s mistake\n",dictionary);
         exit(1);
     }
@@ -137,10 +141,14 @@ char *valueOfDictionaryAtKeyString(char *dict,char *key_str){
     //printf("dict |%s|\n, key_str |%s|\n",dict,key_str);
     dict=trim(dict);
     if(find(dict,"{")==-1 || find(dict,"}")==-1){
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Mistake occurred while calling function valueOfDictionaryAtKeyString\nInput %s is not a dict\n",dict);
         exit(0);
     }
     if(count_str(dict,"{")!=count_str(dict,"}")){
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Mistake occurred while calling function valueOfDictionaryAtKeyString\nInput %s is not a list because the num of { and } is different\n",dict);
         exit(0);  
     }
@@ -152,6 +160,8 @@ char *valueOfDictionaryAtKeyString(char *dict,char *key_str){
         key=substr(key_str,find_not_in_string(key_str,"{")+1,find_not_in_string(key_str,"}"));
         key=append(key, ":");
         if(find_not_in_string(dict,key)==-1){
+            printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
             printf("Mistake occurred while calling function valueOfDictionaryAtKeyString\nkey %s in dictionary %s not found\n",key,dict);
             exit(1);
         }
@@ -392,6 +402,8 @@ void changeTheWholeVarValueFromItsInitialOneFromVarForDictionary(struct VAR **st
     //int row=0;
     int length=0;
     if (strcmp((*struct_var)->var_name,"__size_of_array__")!=0) {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Can not find __size_of_array__");
         exit(0);
     }

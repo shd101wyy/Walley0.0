@@ -59,6 +59,8 @@ char *to_int(char *input_str){
     }
     
     else {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Mistakes occurred while calling function to_int\nThe input_str %s is not string\nThis function only support string to int now\n",input_str);
         exit(1);
     }
@@ -98,6 +100,8 @@ char *to_double(char *input_str){
     }
     
     else {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Mistakes occurred while calling function to_double\nThe input_str %s is not string\nThis function only support string to int now\n",input_str);
         exit(1);
     }
@@ -412,6 +416,8 @@ char *string_find_from_index(char *user, char *func_param){
     if (strcmp(variableValueType(from_index), "list")==0) {
         int num_of_value=valueNumOfList(from_index);
         if (num_of_value>2) {
+            printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
             printf("Mistake occurred whiling calling function string_find_from_index\n%s is not a correct list, only two or one number are allowed\n",from_index);
             exit(0);
         }
@@ -488,6 +494,8 @@ char *string_replace_from_index(char *user, char *func_param){
     if (strcmp(variableValueType(from_index), "list")==0) {
         int num_of_value=valueNumOfList(from_index);
         if (num_of_value>2) {
+            printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
             printf("Mistake occurred whiling calling function string_replace_from_index\n%s is not a correct list, only two or one number are allowed\n",from_index);
             exit(0);
         }
@@ -664,6 +672,8 @@ char *string_split(char *user, char *func_param){
     func_param=toCString(func_param);//,
     char *return_list="[]";
     if (find_not_in_string(user,func_param)==-1) {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Mistake occurred whiling calling function string_split, %s is not found in %s\n",func_param,user);
         exit(0);
     }
@@ -793,6 +803,8 @@ char *file_readlines(char *walley_file_name){
    // printf("walley_file_name %s\n",walley_file_name);
     FILE *fp=fopen(walley_file_name,"r");
     if(fp==NULL){
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Mistake occurred whiling calling function file_readlines\nDoes not find %s\n",walley_file_name);
         fclose(fp);
         exit(0);
@@ -829,6 +841,8 @@ char *file_writelines(char *file_name,char *lines){
     file_name=toCString(file_name);
     FILE *fp=fopen(file_name,"w");
     if(fp==NULL){
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Mistake occurred whiling calling function file_writelines\nNo file %s found",file_name);
         fclose(fp);
         exit(1);
@@ -853,6 +867,8 @@ char *file_createfile(char *file_name){
     file_name=toCString(file_name);
     FILE *fp=fopen(file_name,"w");
     if(fp==NULL){
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Failed to create %s\n",file_name);
         exit(0);
     }
@@ -895,6 +911,8 @@ char *file_readFileNameInDirectory(char *directory_name){
         return output;
     }
     else{
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Mistake occurred while calling function file_readFileNameInDirectory\nNo directory %s found\n",directory_name);
         exit(0);
     }
@@ -967,6 +985,8 @@ char *walley_show_var(struct VAR *struct_var){
     
     int length=0;
     if (strcmp((struct_var)->var_name,"__size_of_array__")!=0) {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Can not find __size_of_array__");
         exit(0);
     }

@@ -163,6 +163,8 @@ bool checkWhetherSameVarNameExists(char *var_name){
     char arr[1000]="";
     bool has_same_var_name=FALSE;
     if ((fp = fopen("__walley__.wy", "r")) == NULL) {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         perror("File open error!\n");
         exit(1);
     }//// else {
@@ -323,6 +325,8 @@ char* getStringFromFile(char *file_name){
     char arr[10000]="";
     char output[10000]="";
     if ((fp = fopen(file_name, "r")) == NULL) {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         perror("File open error!\n");
         exit(1);
     } //else {
@@ -366,6 +370,8 @@ char* getStringFromFileExceptInclude(char *file_name){
     char arr[10000]="";
     char output[10000]="";
     if ((fp = fopen(file_name, "r")) == NULL) {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         perror("File open error!\n");
         exit(1);
     } //else {
@@ -684,8 +690,8 @@ char* Walley_Eval_With_Variable_From_Var(struct VAR var[], char *input_str) {
         int index_of_plus=find_not_in_str_list_dict_parenthesis(input_str, "+");
         if (index_of_plus==-1) {
             return input_str;
-            printf("Mistake occurred while calling function Walley_Eval_With_Variable_From_Var\ninput_str %s can not be combined, no + found\n",input_str);
-            exit(0);
+           // printf("Mistake occurred while calling function Walley_Eval_With_Variable_From_Var\ninput_str %s can not be combined, no + found\n",input_str);
+           // exit(0);
         }
         int begin=0;
         while(TRUE){
@@ -723,99 +729,6 @@ char* Walley_Eval_With_Variable_From_Var(struct VAR var[], char *input_str) {
         
     }
     else {
-        // I WRITE THE CODE IN SEPTEMBER 27
-        /*
-        int i = 0;
-        int begin = 0;
-        int end = (int) strlen(input_str);
-        char *output = malloc(sizeof (char) *((int) strlen(input_str) + 1));
-        for (i = 0; i < (int) strlen(input_str); i++) {
-            output[i] = input_str[i];
-        }
-        output[(int) strlen(input_str)] = 0;
-        bool has_var = FALSE;
-        bool find_alpha = FALSE;
-        bool finish_find_var = FALSE;
-        for (i = 0; i < (int) strlen(input_str); i++) {
-            //printf("#### Enter Loop Output is %s\n####",output);
-            //printf("#### Output Length is %d\n",(int)strlen(output));
-            //printf("*********** %c End is %d --->%s\n", input_str[i], end, output);
-            int temp_length = (int) strlen(output);
-            if (finishFindingVarAndFunction(output) == TRUE) {
-                //// printf("Finish Finding Var And Function, output is |%s|\n", output);
-                output = substr(output, 0, temp_length);
-                break;
-            }
-            if (find_alpha == FALSE && (isalpha(input_str[i]) || input_str[i] == '_') && charIsInString(input_str, i) == FALSE) {
-                //printf("Find alpha\n");
-                //printf("--End this loop, output is %s\n",output);
-                find_alpha = TRUE;
-                begin = i;
-                //printf("begin %d\n",begin);
-            }
-            
-            if (find_alpha == TRUE && isSign(input_str[i]) && charIsInString(input_str, i) == FALSE) {
-                find_alpha = FALSE;
-                end = i;
-                //printf("@@@@@@ end %d\n",end);
-                finish_find_var = TRUE;
-                
-            }
-            if (find_alpha == TRUE && ((isJudgeSign(input_str[i])) || input_str[i] == ')' || input_str[i] == ',' || input_str[i] == ' ') && charIsInString(input_str, i) == FALSE) {
-                //printf("%d\n%d\n%d\n",find_alpha,(isJudgeSign(input_str[i])),input_str[i]==')');
-                find_alpha = FALSE;
-                end = i;
-                //printf("------end %d\n",end);
-                finish_find_var = TRUE;
-                
-            }
-            if (find_alpha == TRUE && i == (int) strlen(input_str) - 1) {
-                find_alpha = FALSE;
-                end = i + 1;
-                //printf("end %d\n",end);
-                finish_find_var = TRUE;
-            }
-            //printf("--End this loop, output is %s\n",output);
-            if (finish_find_var) {
-                //printf("@@@@ Enter finish_find_var @@@@\n");
-                //printf("------\n%s\n------\n",substr(input_str,begin,end));
-                //printf("Begin %d, End %d\n",begin,end);
-                char *var_name = substr(input_str, begin, end);
-                char *var_value;
-                if (find_not_in_string(var_name, ".") != -1) {
-                    char *user = substr(var_name, 0, find_not_in_string(var_name, "."));
-                    if (Var_Existed(VAR_var, user) == TRUE) {
-                        //var_value = getValueFromValueName("__walley__.wy", var_name);
-                        var_value=Var_getValueOfVar(VAR_var, var_name);
-                    } else {
-                        //var_value = getValueFromValueName(file_var_name, var_name);
-                        var_value=Var_getValueOfVar(var, var_name);
-                    }
-                    
-                } else {
-                    if (Var_Existed(var, var_name) == TRUE) {
-                        //var_value = getValueFromValueName(file_var_name, var_name);
-                        var_value=Var_getValueOfVar(var, var_name);
-                    } else {
-                        var_value = var_name;
-                    }
-                }
-                //printf("Var Name %s\nVar Value %s\n",var_name,var_value);
-                int begin_temp = begin + (int) strlen(output)-(int) strlen(input_str);
-                int end_temp = end + (int) strlen(output)-(int) strlen(input_str);
-                
-                //printf("Begin %d, End %d\n",begin_temp,end_temp);
-                //printf("Before change, output is %s\n",output);
-                output = replace_from_index_to_index(output, var_name, var_value, begin_temp, end_temp);
-                //printf("Output is %s\n",output);
-                has_var = TRUE;
-                finish_find_var = FALSE;
-                find_alpha = FALSE;
-               
-            }
-            //printf("--End this loop, output is %s\n",output);
-            
-        }*/
         return Walley_Eval(input_str);
     }
     
@@ -847,7 +760,6 @@ char* Walley_Eval_All_From_Var(struct VAR struct_var[],char *input_str){
     
     
     if (find_not_in_str_list_dict_parenthesis(input_str, ",")==-1) {
-        //printf("\n\nDid not find\n");
         return Walley_Eval_With_Variable_From_Var(struct_var, input_str);
     }
     input_str=trim(input_str);
@@ -1446,6 +1358,8 @@ bool judgeWithAndAndOrWithParenthesis(char *input_str){
     int count_of_left=count_str(input_str,"(");
     int count_of_right=count_str(input_str,")");
     if(count_of_left != count_of_right){
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Mistake occurred while calling function judgeWithAndAndOrWithParenthesis\ncount_of_left != count_of_right\n");
         exit(1);
     }
@@ -1674,6 +1588,8 @@ char *functionOrClassAddAheadName(char *import_file_name, char *as_name) {
     char *output="";
     
     if (fp == NULL) {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         perror("File open error!\n");
         exit(1);
     }
@@ -1735,6 +1651,8 @@ char *getOneFunctionFromFile(char *import_file_name, char *func_name) {
     char output[10000] = "";
 
     if (fp == NULL) {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         perror("File open error!\n");
         exit(1);
     }
@@ -1916,6 +1834,8 @@ char *getOneFunctionFromFileAndFormatItgetOneFunctionFromFile(char *import_file_
     //printf("func_name %s as_name %s\n",func_name,as_name);
     
     if (fp == NULL) {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         perror("File open error!\n");
         exit(1);
     }
@@ -2186,6 +2106,8 @@ int changeBinaryToAscii(char *input_str){
     input_str=stringReverse(input_str);
     int length=(int)strlen(input_str);
     if (length!=8) {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Mistake occurred whiling calling function changeBinaryToAscii\ninput_str length is not 8\n");
         exit(2);
     }
@@ -2203,6 +2125,8 @@ int changeBinaryToAscii(char *input_str){
 char *changeBinaryToText(char *input_str){
     int length=(int)strlen(input_str);
     if (length%8!=0) {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Mistake occurred while translating Binary to Text\nBinary can not be divided by 8");
         exit(0);
     }
@@ -2289,6 +2213,8 @@ char *getVarNameAndReturnList(struct VAR *struct_var){
     int i=0;
     int length=0;
     if (strcmp((struct_var)->var_name,"__size_of_array__")!=0) {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("getVarNameAndReturnList..Can not find __size_of_array__");
         exit(0);
     }

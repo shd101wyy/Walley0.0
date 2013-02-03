@@ -21,6 +21,8 @@ char *valueOfListAtIndex(char *list,int index){
     
     int num_of_comma=count_str_not_in_str_list_dict(list,",");
     if(num_of_comma<=index){
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Mistake occurred while calling function valueOfListAtIndex\nIndex is outside the boundary\nList |%s| and index %d\n",list,index);
         exit(1);
     }
@@ -52,10 +54,14 @@ char *valueOfListAtIndexString(char *list,char *index_str){
     char *index_str_temp=substr(index_str,find(index_str,"[")+1,find(index_str,"]"));
     int index=atoi(index_str_temp);
     if(find(list,"[")==-1 || find(list,"]")==-1){
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Mistake occurred while calling function valueOfListAtIndexString\nInput %s is not a list\n",list);
         exit(0);
     }
     if(count_str_not_in_string(list,"[")!=count_str_not_in_string(list,"]")){
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Mistake occurred while calling function valueOfListAtIndexString\nInput %s is not a list because the num of [ and ] is different\n",list);
         exit(0);  
     }
@@ -75,6 +81,8 @@ char *valueOfListAtIndexString(char *list,char *index_str){
     
     int num_of_comma=count_str(list,",");
     if(num_of_comma<=index){
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Mistake occurred while calling function valueOfListAtIndexString\nIndex is outside the boundary\n");
         exit(1);
     }
@@ -131,10 +139,14 @@ void valueOfListAtIndexStringAndReturnBeginAndEnd(int begin_end[],char *list,cha
     char *index_str_temp=substr(index_str,find(index_str,"[")+1,find(index_str,"]"));
     int index=atoi(index_str_temp);
     if(find(list,"[")==-1 || find(list,"]")==-1){
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Mistake occurred while calling function valueOfListAtIndexStringAndReturnBeginAndEnd\nInput %s is not a list\n",list);
         exit(0);
     }
     if(count_str_not_in_string(list,"[")!=count_str_not_in_string(list,"]")){
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Mistake occurred while calling function valueOfListAtIndexStringAndReturnBeginAndEnd\nInput %s is not a list because the num of [ and ] is different\n",list);
         exit(0);  
     }
@@ -150,6 +162,8 @@ void valueOfListAtIndexStringAndReturnBeginAndEnd(int begin_end[],char *list,cha
     
     int num_of_comma=count_str(list,",");
     if(num_of_comma<=index){
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Mistake occurred while calling function valueOfListAtIndexStringAndReturnBeginAndEnd\nIndex is outside the boundary\n");
         exit(1);
     }
@@ -214,10 +228,14 @@ int valueNumOfList(char *list){
     }
     
     if(find_not_in_string(list,"[")==-1 || find_not_in_string(list,"]")==-1){
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Mistake occurred while calling function valueNumOfList\nInput |%s| is not a list\n",list);
         exit(0);
     }
     if(count_str_not_in_string(list,"[")!=count_str_not_in_string(list,"]")){
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Mistake occurred while calling function valueNumOfList\nInput |%s| is not a list because the num of [ %d and ] %d is different\n",list,count_str_not_in_string(list,"["),count_str_not_in_string(list,"]"));
         exit(0);  
     }
@@ -382,6 +400,8 @@ void changeTheWholeVarValueFromItsInitialOneFromVarForList(struct VAR **struct_v
     //int row=0;
     int length=0;
     if (strcmp((*struct_var)->var_name,"__size_of_array__")!=0) {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Can not find __size_of_array__");
         exit(0);
     }
@@ -424,6 +444,8 @@ void changeTheOneVarValueFromItsInitialOneFromVarForList(struct VAR **struct_var
     int row=0;
     int length=0;
     if (strcmp((*struct_var)->var_name,"__size_of_array__")!=0) {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Can not find __size_of_array__");
         exit(0);
     }
@@ -472,6 +494,8 @@ bool isListElementForVar(struct VAR *struct_var, char *var_name){
     
     int length=0;
     if (strcmp((struct_var)->var_name,"__size_of_array__")!=0) {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Can not find __size_of_array__");
         exit(0);
     }
@@ -499,6 +523,8 @@ bool isListElementForVar(struct VAR *struct_var, char *var_name){
 char *changeStringToList(char *input_str){
     input_str=removeAheadSpace(removeBackSpace(input_str));
     if(strcmp(variableValueType(input_str),"string")!=0){
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("Mistake occurred while calling function changeStringToList\n|%s| is not a string",input_str);
         exit(2);
     } else {

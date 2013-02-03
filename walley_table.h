@@ -74,7 +74,9 @@ char *Table_formatTable(char *input_str){
                 
                 // check whether content in [] is string
                 if (strcmp(variableValueType(substr(left, 1, find_not_in_string(inside, "=")-1)), "string")!=0&& stringIsDigit(toCString(substr(left, 1, find_not_in_string(inside, "=")-1)))==FALSE) {
-                    printf("Mistake occurred while formatting a table. The content in %s is not string\nQuit..",left);
+                    printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
+printf("Mistakes occurred while formatting a table. The content in %s is not string\nQuit..",left);
                     exit(0);
                 }
                 
@@ -178,7 +180,9 @@ int Table_indexOfStringIndex(char *input_str, char *string_index){
     
     int index_of_string_index=find_not_in_str_list_dict(temp_input_str, string_index);
     if (index_of_string_index==-1) {
-        printf("Mistake occurred while calling function Table_indexOfStringIndex. No index found\n");
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
+printf("Mistakes occurred while calling function Table_indexOfStringIndex. No index found\n");
         exit(0);
     }
     index_of_string_index+=1;
@@ -280,6 +284,7 @@ char *Table_addValueOrChangeValue(char *table, char *string_index, char *change_
             int index_of_equal_sign=find_from_index_not_in_string(table,"=",index_of_string_index_that_exists);
             char *value=Table_valueOfTableAtStringIndex(table, string_index_that_exists);
             if (strcmp(variableValueType(value), "table")!=0) {
+                printf("@@ |%s|\n",CURRENT_INPUT_STR);
                 printf("Can not assign index to a number\n");
                 exit(0);
             }

@@ -18,12 +18,15 @@ char *charToString(char input_char){
 
 char* substr(char* input_str, int from_index, int to_index) {
     if (from_index < 0){// || to_index > (int) strlen(input_str)) {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
         printf("\nMistake occurred while calling function substr\nPlease Check\n");
         printf("the input_str is %s from_index %d to_index %d\n\n",input_str,from_index,to_index);
         //return "\nMistake occurred while calling function substr\nPlease Check\n";
         exit(0);
     }
     else if (from_index>to_index){
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
         printf("\nMistake occurred while calling function substr\nPlease Check\n");
         printf("the input_str is %s from_index %d to_index %d\n\n",input_str,from_index,to_index);
         exit(1);
@@ -223,7 +226,9 @@ int find_from_behind_not_in_string(char *from_str, char *find_str) {
 
 int find_from_index_to_index(char *from_str, char *find_str, int from_index, int to_index) {
     if (from_index < 0 || to_index > (int) strlen(from_str)) {
-        printf("Mistake occurred which calling function find_from_index_to_index\n");
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
+printf("Mistakes occurred which calling function find_from_index_to_index\n");
         printf("Try to find |%s| in |%s| from |%d| to |%d|\n",find_str,from_str,from_index,to_index);
         return -1;
     } else {
@@ -253,7 +258,9 @@ int find_from_index_to_index(char *from_str, char *find_str, int from_index, int
 
 int find_from_index(char *from_str, char *find_str, int from_index) {
     if (from_index < 0) {
-        printf("Mistake occurred which calling function find_from_index");
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
+printf("Mistakes occurred which calling function find_from_index");
         return -1;
     } else {
         int index = -1;
@@ -286,7 +293,9 @@ int find_from_index(char *from_str, char *find_str, int from_index) {
 
 int find_to_index(char *from_str, char *find_str, int to_index) {
     if (to_index > (int) strlen(from_str)) {
-        printf("Mistake occurred which calling function find_to_index");
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
+printf("Mistakes occurred which calling function find_to_index");
         return -1;
     } else {
         int index = -1;
@@ -383,7 +392,9 @@ char* replace(char* input_str, char* replace_str, char* with_str) {
 }
 char* replace_from_index_to_index(char *input_str, char* replace_str, char* with_str, int from_index, int to_index){
     if (from_index>=to_index) {
-        printf("Mistake occurred while calling function replace_from_index_to_index\ninput_str %s\nreplace_str %s\nwith_str %s\nfrom_index %d to_index %d\n",input_str,replace_str,with_str,from_index,to_index);
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
+printf("Mistakes occurred while calling function replace_from_index_to_index\ninput_str %s\nreplace_str %s\nwith_str %s\nfrom_index %d to_index %d\n",input_str,replace_str,with_str,from_index,to_index);
         exit(0);
     }
     char *ahead;
@@ -409,7 +420,9 @@ char* replace_from_index_to_index(char *input_str, char* replace_str, char* with
 
 char* replace_from_index_to_index_not_in_string(char *input_str, char* replace_str, char* with_str, int from_index, int to_index){
     if (from_index>=to_index) {
-        printf("Mistake occurred while calling function replace_from_index_to_index_not_in_string\ninput_str %s\nreplace_str %s\nwith_str %s\nfrom_index %d to_index %d\n",input_str,replace_str,with_str,from_index,to_index);
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
+printf("Mistakes occurred while calling function replace_from_index_to_index_not_in_string\ninput_str %s\nreplace_str %s\nwith_str %s\nfrom_index %d to_index %d\n",input_str,replace_str,with_str,from_index,to_index);
         exit(0);
     }
     char *ahead;
@@ -478,7 +491,9 @@ int count_str(char *input_str, char *count_str){
     //char *temp=substr(input_str,0,char_index+1);
     //char char_to_check=input_str[char_index];
      if(char_index>=(int)strlen(input_str)){
-         printf("Mistake occurred whiling calling function charIsInString\nOut of index, input_str %s with index %d\n",input_str,char_index);
+         printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
+printf("Mistakes occurred whiling calling function charIsInString\nOut of index, input_str %s with index %d\n",input_str,char_index);
          exit(0);
      }
     bool in_string=FALSE;
@@ -755,7 +770,9 @@ char* replace_not_in_string_for_times(char* input_str, char* replace_str, char* 
 
 int find_from_index_not_in_string(char *from_str, char *find_str, int from_index) {
     if (from_index < 0) {
-        printf("Mistake occurred which calling function find_from_index_not_in_string");
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
+printf("Mistakes occurred which calling function find_from_index_not_in_string");
         return -1;
     } else {
         int index = -1;
@@ -936,6 +953,7 @@ bool stringIsAlpha(char *input_str){
     return is_alpha;
 }
 
+
 // like a_b 
 bool stringIsAlphaAndSlash(char *input_str){
     input_str=trim(input_str);
@@ -1037,7 +1055,9 @@ int find_not_in_str_list_dict(char *from_str, char *find_str) {
 }
 int find_from_index_not_in_str_list_dict(char *from_str, char *find_str, int from_index) {
     if (from_index < 0) {
-        printf("Mistake occurred which calling function find_from_index_not_in_str_list_dict");
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
+printf("Mistakes occurred which calling function find_from_index_not_in_str_list_dict");
         return -1;
     } else {
         int index = -1;
@@ -1065,7 +1085,9 @@ int find_from_index_not_in_str_list_dict(char *from_str, char *find_str, int fro
 }
 int find_from_index_not_in_str_list(char *from_str, char *find_str, int from_index) {
     if (from_index < 0) {
-        printf("Mistake occurred which calling function find_from_index_not_in_str_list_dict");
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
+printf("Mistakes occurred which calling function find_from_index_not_in_str_list_dict");
         return -1;
     } else {
         int index = -1;
@@ -1139,7 +1161,9 @@ int find_not_in_str_list_dict_parenthesis(char *from_str, char *find_str) {
 }
 int find_from_index_not_in_str_list_dict_parenthesis(char *from_str, char *find_str, int from_index) {
     if (from_index < 0) {
-        printf("Mistake occurred which calling function find_from_index_not_in_str_list_dict");
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
+printf("Mistakes occurred which calling function find_from_index_not_in_str_list_dict");
         return -1;
     } else {
         int index = -1;

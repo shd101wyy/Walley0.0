@@ -6,6 +6,8 @@
 //  Copyright (c) 2012年 shd101wyy. All rights reserved.
 //
 
+char *CURRENT_INPUT_STR="";
+
 #ifdef _WIN32
 #define _CRT_SECURE_NO_WARNINGS
 #endif

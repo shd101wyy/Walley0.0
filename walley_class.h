@@ -60,6 +60,7 @@ char *className(char *input_str){
     if(find_not_in_string(input_str," extends ")==-1){
         end=find_from_index(input_str,":",begin+1);
         if(end==-1){
+            printf("@@ |%s|\n",CURRENT_INPUT_STR);
             printf("class define mistake occurred. please check.\nThe format should be 'class hi:' or 'class hi extends hello:");
             exit(0);
         }
@@ -159,7 +160,6 @@ char *formatStringInClass(char *instance_name, char *string_in_class){
     int begin=0;
     int index_of_exp=0;
     int space_of_exp=0;
-    //exit(0);
     while (TRUE) {
         index_of_exp=find_from_index_not_in_string(string_in_class, "    exp", begin);
         if (index_of_exp==-1) {
@@ -199,6 +199,8 @@ char *formatStringInClass(char *instance_name, char *string_in_class){
                 int begin3=find(replace_str," self ");
                 if (space_num-4==space_of_exp) {
                     if (begin3!=0) {
+                        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
                         printf("Mistake Occurred whiling defining expression in Class Functions\n'self 'must be added at the most ahead position\n");
                         exit(1);
                     }
@@ -337,6 +339,8 @@ char *formatStringInAnyClassFromVar(struct VAR *struct_var, char *instance_name,
             while (TRUE) {
                 end=find_from_index_not_in_string(string_in_mother_class, "\\n", end+1);
                 if (end==-1) {
+                    printf("@@ |%s|\n",CURRENT_INPUT_STR);
+
                     printf("Mistake occurred whiling calling function formatStringInAnyClassFromVar 1\n");
                     exit(1);
                 }

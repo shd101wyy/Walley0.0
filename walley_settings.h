@@ -61,7 +61,10 @@ char *GLOBAL_VAR="[]";
 int LIST_TOTAL_LEFT=0; // num of [
 int LIST_TOTAL_RIGHT=0; // num of ]
 
-
+// for loop
+bool CAN_CONTINUE=FALSE;
+bool CAN_BREAK=FALSE;
+bool CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=TRUE;  // if meet break, continue, then it is false;
 
 // For if elif sentence
 /*
