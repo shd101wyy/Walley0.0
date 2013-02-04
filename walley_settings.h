@@ -66,6 +66,14 @@ bool CAN_CONTINUE=FALSE;
 bool CAN_BREAK=FALSE;
 bool CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=TRUE;  // if meet break, continue, then it is false;
 
+
+// for while loop
+char **STRING_IN_WHILE_LOOP;
+
+// for for loop
+char **STRING_IN_FOR_LOOP;
+
+
 // For if elif sentence
 /*
 int SPACE_OF_FIRST_IF_ELIF_ELSE_SENTENCE=0;

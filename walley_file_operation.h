@@ -155,5 +155,25 @@ void cleanWalleyLanguageFile(char *file_name){
     
 }
 
-
+// return string list and no empty string in string list
+char **getStringFromFileAndReturnStringList(char *file_name){
+    FILE *fp;
+    char arr[10000]="";
+    if ((fp = fopen(file_name, "r")) == NULL) {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+        
+        perror("File open error!\n");
+        exit(1);
+    }
+    char **output;
+    Str_initStringList(&output);
+    while ((fgets(arr, 10000, fp)) != NULL) {
+        //printf("%s\n",arr);
+        if (stringIsEmpty(removeNFromBack(trim(arr)))==FALSE) {
+            Str_addString(&output, arr);
+        }
+    }
+    fclose(fp);
+    return output;
+}
 

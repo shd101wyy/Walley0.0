@@ -59,6 +59,7 @@ char* strInBrackets(char *input_str){
     
     //int end_index=(int)strlen(input_str)-1;
     if (begin_index==-1||end_index==-1){
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
         printf("\nMistake occurred while calling function strInBrackets\n");
         return "\nMistake occurred while calling function strInBrackets\n";
     } else {
@@ -121,11 +122,13 @@ char* checkValueType(char *input_str){
 
 char* variableName(char* input_message){
     if(find(input_message,"=")==-1){
-        printf("\nMistake occurred while calling function variableName\nPlease check");
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+       printf("\nMistake occurred while calling function variableName\nPlease check");
         return "None";
     } else {
         if(checkWhetherEquaIsInsideString(input_message)==TRUE){
-            printf("\nMistake occurred while calling function variableName\nPlease check");
+            printf("@@ |%s|\n",CURRENT_INPUT_STR);
+       printf("\nMistake occurred while calling function variableName\nPlease check");
             return "None";
         } else {
             //printf("Enter else\n");
@@ -139,11 +142,13 @@ char* variableName(char* input_message){
 
 char* variableValue(char* input_message){
     if(find(input_message,"=")==-1){
-        printf("\nMistake occurred while calling function variableValue\nPlease check");
+         printf("@@ |%s|\n",CURRENT_INPUT_STR);
+       printf("Mistake occurred while calling function variableValue\nPlease check\n");
         return "None";
     } else {
         if(checkWhetherEquaIsInsideString(input_message)==TRUE||find(input_message,"=")==(int)strlen(input_message)-1){
-            printf("\nMistake occurred while calling function variableValue\nPlease check");
+            printf("@@ |%s|\n",CURRENT_INPUT_STR);
+       printf("Mistake occurred while calling function variableValue\nPlease check\n");
             return "None";
         } else {
        

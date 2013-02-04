@@ -1,4 +1,4 @@
-﻿//
+//
 //  walley_pre_functions.h
 //  Walley
 //
@@ -61,5 +61,6 @@ char *Walley_Translate_To_Function_From_Var(char *input_str, char *best_match_se
 
 void Walley_Update_Functions_And_Vars_While_Importing(char *temp_file_to_run, struct VAR **struct_var, char ***FUNCTION_functions);
 void Walley_Run(char *input_str);
+void Walley_Run_For_Appointed_Var_String_List(struct VAR **struct_var, struct VAR **struct_settings, char ***save_to_file, char *existing_file, char ***FUNCTION_functions, char **input_str);
 
 char *Walley_Slice(char *var_value, char *slice,struct VAR **struct_var, char ***FUNCTION_functions);
