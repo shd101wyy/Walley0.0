@@ -219,6 +219,11 @@ void Var_changeValueOfVar(struct VAR *var, char *var_name, char *var_value, char
 }
 
 char *Var_getValueOfVar(struct VAR *var, char *var_name){
+    
+    if (strcmp(var_name, "None")==0) {
+        return "None";
+    }
+    
     int i=0;
     int length=0;
     if (strcmp((var)->var_name,"__size_of_array__")!=0) {
@@ -237,7 +242,11 @@ char *Var_getValueOfVar(struct VAR *var, char *var_name){
         }
         i=i+1;
     }
-    //return "None";
+
+    
+    
+    printf("Undefined var |%s|\n",var_name);
+    exit(0);
     return var_name;
 }
 

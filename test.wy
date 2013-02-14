@@ -1,0 +1,49 @@
+def range(num1=-1,num2=-1):
+    if num2==-1:
+        num2=num1
+        num1=0
+    x=[]
+    while num1<num2:
+        x.append(num1)
+        num1=num1+1
+    return x
+#end define range
+
+println "Begin to test While"
+i=0
+j=0
+while i<100:
+    j=0
+    while j<i:
+        print "*"
+        j=j+1
+    println ""
+    i=i+1
+
+println "Begin to test For"
+for i in range(100):
+    for j in range(i):
+        print "*"
+    println ""
+
+println "Begin to test Def"
+def Hello():
+    def Hi():
+        exp:
+            <@say Hi>
+        println "HI"
+    Hi()
+    <@say Hi>
+    println "Hello"
+Hello()
+
+println "Begin to test Class"
+
+class a:
+    def self.init():
+        println "INIT ROHIT"
+    def self.showAge():
+        println "Rohit Age-->19"
+    
+x=a()
+x.showAge()

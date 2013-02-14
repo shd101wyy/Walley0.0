@@ -1,0 +1,7 @@
+x="Hel"
+if x=="Hello":
+    print "H"
+    print "E"
+else:
+    print "L"
+    print "O"

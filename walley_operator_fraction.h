@@ -7,6 +7,8 @@
 //
 
 #include "walley_operator.h"
+#include "mathomatic_walley/mathomatic.h"
+
 char *eval_for_fraction(char *input_str);
 char *simplify_fraction(char *num1_str, char *num2_str);
 char *addParenthesisForPower(char *input_str);
@@ -52,6 +54,13 @@ char *simplify_fraction(char *num1_str, char *num2_str){
     //printf("num1 %s num2 %s\n",num1_str,num2_str);
     num1_str=cleanDotZeroAfterNum(num1_str);
     num2_str=cleanDotZeroAfterNum(num2_str);
+    
+    bool is_negative=FALSE;
+    int num_of_minus=count_str(num1_str, "-")+count_str(num2_str, "-");
+    if (num_of_minus%2!=0) {
+        is_negative=TRUE;
+    }
+    
     if (find(num1_str,"/")==-1 && find(num2_str,"/")==-1) {
         int num_of_ten_need_to_times=0;
         int index_of_dot1=find(num1_str,".");
@@ -79,13 +88,16 @@ char *simplify_fraction(char *num1_str, char *num2_str){
         // if params are 0.3 4---->3 40
         double num1=atof(num1_str);
         double num2=atof(num2_str);
+        num1=abs(num1);
+        num2=abs(num2);
         num1=num1*pow(10, num_of_ten_need_to_times);
         num2=num2*pow(10, num_of_ten_need_to_times);
         
         //printf("num1 is %f, num2 is %f\n",num1,num2);
         
+    
         int smaller_number=(int)num1;
-        if (num1>num2) {
+        if (num1>abs(num2)) {
             smaller_number=(int)num2;
         }
         
@@ -105,12 +117,21 @@ char *simplify_fraction(char *num1_str, char *num2_str){
                 }
             }
         }
+        
+        
+        
         if (num2_int==1) {
+            if (is_negative) {
+                return intToCString(-1*num1_int);
+            }
             return intToCString(num1_int);
         }
         // get denominator and numerator after simplified
         char *output=append(intToCString(num1_int), "/");
         output=append(output, intToCString(num2_int));
+        if (is_negative) {
+            output=append("-", output);
+        }
         return output;
     }
     // find / in num1_str or num2_str
@@ -2505,7 +2526,7 @@ char *eval_CalculatePowerAtFirst_with_alpha_for_fraction(char *input_str){
         left_str=eval_for_fraction_with_alpha(left_str);
         right_str=eval_for_fraction_with_alpha(right_str);
         char *with_str="";//numToCString(pow(atof(left_str), atof(right_str)));
-        printf("left %s right %s\n",left_str,right_str);
+        //printf("left %s right %s\n",left_str,right_str);
         // 3^4
         if (stringIsDigit(left_str)&&stringIsDigit(right_str)) {
             with_str=numToCString(pow(atof(left_str), atof(right_str)));
@@ -2533,7 +2554,7 @@ char *eval_CalculatePowerAtFirst_with_alpha_for_fraction(char *input_str){
             int temp_length1=(int)strlen(temp_with_var);
             temp_with_var=cleanDotZeroAfterNum(temp_with_var);
             int temp_length2=(int)strlen(temp_with_var);
-            printf("temp_with_var %s\n",temp_with_var);
+            //printf("temp_with_var %s\n",temp_with_var);
             if (atof(temp_with_var)==(int)atof(temp_with_var)) {
                 with_str=temp_with_var;
             }
@@ -2546,7 +2567,7 @@ char *eval_CalculatePowerAtFirst_with_alpha_for_fraction(char *input_str){
                 with_str=eval_for_fraction_root_power(input_str);
             }
             
-            printf("with_str--->%s\n",with_str);
+            //printf("with_str--->%s\n",with_str);
         }
         input_str=replace_from_index_to_index(input_str, replace_str, with_str, left, right+1);
         
@@ -2567,6 +2588,7 @@ char* Walley_Operator_with_alpha_for_fraction(char* num1_str,char* num2_str,char
     // if has alpha like 3*x, then return 3#time#x
     bool num1_is_digit=stringIsDigit(num1_str);
     bool num2_is_digit=stringIsDigit(num2_str);
+        
     if (num1_is_digit==TRUE&&num2_is_digit==TRUE) {
         if (sign!='/') {
             //return cleanDotZeroAfterNum(numToCString(Walley_Operator(atof(num1_str), atof(num2_str), sign)));
@@ -2576,6 +2598,7 @@ char* Walley_Operator_with_alpha_for_fraction(char* num1_str,char* num2_str,char
         else{
             //return changeOperatorToStrForWhoStr(Walley_Operator_For_Fraction(num1_str, num2_str, sign));
             output_output=changeOperatorToStrForWhoStr(Walley_Operator_For_Fraction(num1_str, num2_str, sign));;
+            //output_output=Walley_Operator_For_Fraction(num1_str, num2_str, sign);
         }
     }
     else{
@@ -2777,26 +2800,29 @@ char* countFromExpression_with_alpha_for_fraction(char *var_value) {
         char *num1_str;
         char *num2_str;
         
+        
         for (; i < (int)strlen(input); i++) {
             if (isSign(input[i]) == TRUE && input[i]!='/') {
                 num1_str = substr(input, temp, i);
                 //printf("sign %c\n",input[i]);
                 //printf("num1_str %s\n",num1_str);
+
+                
                 j = i + 1;
                 int final_place=0; // for a+b+4--->final_place=3
                 for (; j < (int) strlen(input); j++) {
-                    if (input[i]=='+'&&input[i+1]=='+') {
+                    if (input[i]=='+'&&input[i+1]=='+'&&i+1==(int)strlen(input)-1) {
                         num2_str="1";
                         i++;
                         break;
                     }
-                    if (input[i]=='-'&&input[i+1]=='-') {
+                    if (input[i]=='-'&&input[i+1]=='-'&&i+1==(int)strlen(input)-1) {
                         num2_str="1";
                         i++;
                         break;
                     }
                     
-                    if (isSign(input[j]) == TRUE) {
+                    if (isSign(input[j]) == TRUE && j!=i+1) {
                         num2_str = substr(input, i + 1, j);
                         final_place=j;
                         break;
@@ -2841,7 +2867,9 @@ char* countFromExpression_with_alpha_for_fraction(char *var_value) {
                     }
                     // num1 is not string while num2 is . like   3+a+4+5
                     else if (stringIsDigit(num2_str)==FALSE){
-                        my_output_str=append(my_output_str, substr(input, i, final_place));  // get +a
+                        char *temp_str=substr(input, i, final_place);
+                        temp_str=replace(temp_str, "--", "");
+                        my_output_str=append(my_output_str, temp_str);  // get +a
                         previous_num=num1;
                         output=previous_num;
                         begin=TRUE;
@@ -2851,12 +2879,9 @@ char* countFromExpression_with_alpha_for_fraction(char *var_value) {
                         
                         
                         //#####################################################
-                        
-                        
                         previous_num = Walley_Operator(num1, num2, input[i]);
                         output = previous_num;
                         begin = TRUE;
-                        
                         //my_output_str=append(my_output_str, "+");
                         //my_output_str=append(my_output_str, numToCString(output));
                         
@@ -2881,9 +2906,11 @@ char* countFromExpression_with_alpha_for_fraction(char *var_value) {
                         
                     }
                 }
+                
+                i=j-1;
+                
             }
         }
-        //printf("output---->%f\n",output);
         //printf("END %s\n",my_output_str);
         char *temp_output=numToCString(output);
         if (output!=0) {
@@ -2919,7 +2946,6 @@ char *eval_simple_str_with_alpha_for_fraction(char *input_str){
     while(hasFirstOrderSignExist(input_str)==TRUE){
         input_str=countFirstOrderSignAndChangeTheStrOnlyOnce_with_alpha_for_fraction(input_str);
     }
-    //printf("$$$---> %s\n",input_str);
     // Afte running the above code.
     // input_str maybe like.
     // 3#time#x#time#y+5/3
@@ -3016,8 +3042,7 @@ char *eval_for_fraction_with_alpha(char *input_str){
     
     input_str=changeAllDecimalToFraction(input_str);
     //input_str=addParenthesisForPowerAndCalculateIfNecessary(input_str);
-    
-    
+        
     
     char **SAVE_EXPRESSION_THAT_HAS_ALPHA_IN_BRACKTER; // save (y*3*4/5^2+x) to #SAVED1#
     int INDEX_OFR_SAVE_EXPRESSION=0;                   //                             1
@@ -3068,7 +3093,6 @@ printf("Mistakes occurred while calling function eval:\nnum of ( != num of )");
     }
     
     input_str=eval_simple_str_with_alpha_for_fraction(input_str);
-
     
     x=INDEX_OFR_SAVE_EXPRESSION-1;
     for (; x>=0; x--) {
@@ -3078,6 +3102,8 @@ printf("Mistakes occurred while calling function eval:\nnum of ( != num of )");
     }
     input_str=changeOperatorStrToOriginalForWhoStr(input_str);
 
+    input_str=replace(input_str, "--","+");
+    
     //for calculate_for_division_for_fraction
     input_str=replace(input_str, "#LEFT#", "(");
     input_str=replace(input_str, "#RIGHT#", ")");
@@ -3110,8 +3136,171 @@ printf("Mistakes occurred while calling function eval:\nnum of ( != num of )");
         char *with_str=substr(replace_str_a, index_of_mark+1, (int)strlen(replace_str_a));
         input_str=replace(input_str,with_str,replace_str);
     }
+    if (input_str[0]=='+') {
+        input_str=substr(input_str, 1, (int)strlen(input_str));
+    }
+        
     return input_str;
     
+}
+
+// 3.0/4.0 ----> 3/4
+char *Walley_Mathomatic_Clean_Dot_0(char *input_str){
+    int i=0;
+    for (i=0;i<(int)strlen(input_str)-1;i++){
+        if (input_str[i]=='.'&&input_str[i+1]=='0'&&(i+2==(int)strlen(input_str)||isSign(input_str[i+2])||input_str[i+2]==' ')) {
+            input_str=replace_from_index_to_index(input_str,".0" ,"",i, i+2);
+            i=i-1;
+        }
+    }
+    return input_str;
+}
+
+
+char *Walley_Mathomatic_Parse_For_Fraction(char *input_str){
+    
+    // replace sin cos
+    // change  (sin(3)+1)/cos(3)--->(X1+1)/(X2)
+    //
+    
+    char **replace_str_list;
+    Str_initStringList(&replace_str_list);
+    int i=1;
+    while (count_str(input_str, "sin(")!=0) {
+        int index=find(input_str, "sin(");
+        int index_of_left=find_from_index(input_str, "(", index);
+        int index_of_right=indexOfMostOutterBracket(input_str, index_of_left);
+        char *replace_str=substr(input_str, index, index_of_right+1);
+        char *with_str=append("MATHH_", intToCString(i));
+        input_str=replace_from_index_to_index(input_str, replace_str, with_str, index, index_of_right+1);
+        replace_str_list[i]=append(replace_str, append("#", with_str));
+        i++;
+    }
+    while (count_str(input_str, "cos(")!=0) {
+        int index=find(input_str, "cos(");
+        int index_of_left=find_from_index(input_str, "(", index);
+        int index_of_right=indexOfMostOutterBracket(input_str, index_of_left);
+        char *replace_str=substr(input_str, index, index_of_right+1);
+        char *with_str=append("MATHH_", intToCString(i));
+        input_str=replace_from_index_to_index(input_str, replace_str, with_str, index, index_of_right+1);
+        replace_str_list[i]=append(replace_str, append("#", with_str));
+        i++;
+    }
+    while (count_str(input_str, "tan(")!=0) {
+        int index=find(input_str, "tan(");
+        int index_of_left=find_from_index(input_str, "(", index);
+        int index_of_right=indexOfMostOutterBracket(input_str, index_of_left);
+        char *replace_str=substr(input_str, index, index_of_right+1);
+        char *with_str=append("MATHH_", intToCString(i));
+        input_str=replace_from_index_to_index(input_str, replace_str, with_str, index, index_of_right+1);
+        replace_str_list[i]=append(replace_str, append("#", with_str));
+        i++;
+    }
+    while (count_str(input_str, "cot(")!=0) {
+        int index=find(input_str, "cot(");
+        int index_of_left=find_from_index(input_str, "(", index);
+        int index_of_right=indexOfMostOutterBracket(input_str, index_of_left);
+        char *replace_str=substr(input_str, index, index_of_right+1);
+        char *with_str=append("MATHH_", intToCString(i));
+        input_str=replace_from_index_to_index(input_str, replace_str, with_str, index, index_of_right+1);
+        replace_str_list[i]=append(replace_str, append("#", with_str));
+        i++;
+    }
+    while (count_str(input_str, "sec(")!=0) {
+        int index=find(input_str, "sec(");
+        int index_of_left=find_from_index(input_str, "(", index);
+        int index_of_right=indexOfMostOutterBracket(input_str, index_of_left);
+        char *replace_str=substr(input_str, index, index_of_right+1);
+        char *with_str=append("MATHH_", intToCString(i));
+        input_str=replace_from_index_to_index(input_str, replace_str, with_str, index, index_of_right+1);
+        replace_str_list[i]=append(replace_str, append("#", with_str));
+        i++;
+    }
+    while (count_str(input_str, "csc(")!=0) {
+        int index=find(input_str, "csc(");
+        int index_of_left=find_from_index(input_str, "(", index);
+        int index_of_right=indexOfMostOutterBracket(input_str, index_of_left);
+        char *replace_str=substr(input_str, index, index_of_right+1);
+        char *with_str=append("MATHH_", intToCString(i));
+        input_str=replace_from_index_to_index(input_str, replace_str, with_str, index, index_of_right+1);
+        replace_str_list[i]=append(replace_str, append("#", with_str));
+        i++;
+    }
+    while (count_str(input_str, "exp(")!=0) {
+        int index=find(input_str, "exp(");
+        int index_of_left=find_from_index(input_str, "(", index);
+        int index_of_right=indexOfMostOutterBracket(input_str, index_of_left);
+        char *replace_str=substr(input_str, index, index_of_right+1);
+        char *with_str=append("MATHH_", intToCString(i));
+        input_str=replace_from_index_to_index(input_str, replace_str, with_str, index, index_of_right+1);
+        replace_str_list[i]=append(replace_str, append("#", with_str));
+        i++;
+    }
+    while (count_str(input_str, "log10(")!=0) {
+        int index=find(input_str, "log10(");
+        int index_of_left=find_from_index(input_str, "(", index);
+        int index_of_right=indexOfMostOutterBracket(input_str, index_of_left);
+        char *replace_str=substr(input_str, index, index_of_right+1);
+        char *with_str=append("MATHH_", intToCString(i));
+        input_str=replace_from_index_to_index(input_str, replace_str, with_str, index, index_of_right+1);
+        replace_str_list[i]=append(replace_str, append("#", with_str));
+        i++;
+    }
+    
+    //printf("input_str now is %s\n",input_str);
+    
+    char *output;
+    char *temp=append("x=",input_str);    
+    
+    matho_parse(temp, NULL);
+    //matho_process("x", &output);
+    matho_process("code", &output);
+    //printf("output----> %s\n",output);
+    matho_clear();
+    output=substr(output, find(output, "=")+1, (int)strlen(output)-1);
+    output=trim(output);
+    //printf("output----> %s\n",output);
+    
+    // return sin cos tan cot sec csc exp log10
+    int a=1;
+    for (a=1; a<i; a++) {
+        char *replace_str_a=replace_str_list[a];
+        int index_of_mark=find(replace_str_a ,"#");
+        char *replace_str=substr(replace_str_a, 0, index_of_mark);
+        char *with_str=substr(replace_str_a, index_of_mark+1, (int)strlen(replace_str_a));
+        output=replace(output,with_str,replace_str);
+    }
+    
+    //printf("output is |%s|\n",output);
+    if (output[0]=='('&&output[(int)strlen(output)-1]==')') {
+        output=substr(output, 1, (int)strlen(output)-1);
+    }
+    output=Walley_Mathomatic_Clean_Dot_0(output);
+
+    return output;
+}
+
+char *Walley_Mathomatic_Parse_For_Decimal(char *input_str){
+    
+    char *output;
+    char *temp=append("x=",input_str);
+    
+    matho_parse(temp, NULL);
+    //matho_process("x", &output);
+    matho_process("code", &output);
+    matho_clear();
+    output=substr(output, find(output, "=")+1, (int)strlen(output)-1);
+    output=trim(output);
+    
+    if (output[0]=='('&&output[(int)strlen(output)-1]==')') {
+        output=substr(output, 1, (int)strlen(output)-1);
+    }
+    
+    
+    output=cleanDotZeroAfterNumAndKeepOneZero(output);
+    
+    //printf("Output is |%s|\n",output);
+    return output;
 }
 
 

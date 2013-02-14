@@ -44,6 +44,35 @@ char *cleanDotZeroAfterNum(char *num){
     }
 }
 
+// 12.0---->12.0
+// 13.60--->13.6
+char *cleanDotZeroAfterNumAndKeepOneZero(char *num){
+    if (find(num,".")==-1) {
+        return num;
+    }
+    else{
+        int length=(int)strlen(num);
+        int i=length-1;
+        int zero_that_need_to_delete=0;
+        for (; i>0; i--) {
+            if (num[i]=='0'&&num[i-1]!='.') {
+                zero_that_need_to_delete++;
+                continue;
+            }
+            if (num[i]!='0'||num[i]=='.') {
+                break;
+            }
+        }
+        if(zero_that_need_to_delete!=0){
+            num=substr(num, 0, length-zero_that_need_to_delete);
+        }
+        if (num[(int)strlen(num)-1]=='.') {
+            num=substr(num, 0, (int)strlen(num)-1);
+        }
+        return num;
+    }
+}
+
 bool isSign(char sign){
     bool is_sign=FALSE;
     if(sign=='+'||
@@ -1105,12 +1134,12 @@ char* countFromExpression_with_alpha(char *var_value) {
                 j = i + 1;
                 int final_place=0; // for a+b+4--->final_place=3
                 for (; j < (int) strlen(input); j++) {
-                    if (input[i]=='+'&&input[i+1]=='+') {
+                    if (input[i]=='+'&&input[i+1]=='+'&&i+1==(int)strlen(input)-1) {
                         num2_str="1";
                         i++;
                         break;
                     }
-                    if (input[i]=='-'&&input[i+1]=='-') {
+                    if (input[i]=='-'&&input[i+1]=='-'&&i+1==(int)strlen(input)-1) {
                         num2_str="1";
                         i++;
                         break;
@@ -1161,8 +1190,9 @@ char* countFromExpression_with_alpha(char *var_value) {
                     }
                     // num1 is not string while num2 is . like   3+a+4+5
                     else if (stringIsDigit(num2_str)==FALSE){
-                        my_output_str=append(my_output_str, substr(input, i, final_place));  // get +a
-                        previous_num=num1;
+                        char *temp_str=substr(input, i, final_place);
+                        temp_str=replace(temp_str, "--", "");
+                        my_output_str=append(my_output_str, temp_str);  // get +a                        previous_num=num1;
                         output=previous_num;
                         begin=TRUE;
                     }
@@ -1201,6 +1231,7 @@ char* countFromExpression_with_alpha(char *var_value) {
                         
                     }
                 }
+                i=j-1;
             }
         }
         //printf("END %s\n",my_output_str);

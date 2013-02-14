@@ -1,0 +1,23 @@
+def print(input_str):
+    exp:
+        print input_str
+    walley_print(input_str)
+   
+def println(input_str):
+    exp:
+        println input_str
+    walley_println(input_str)
+    
+def random(num1=0,num2=1):
+    exp:
+        random from num1 to num2
+    decimal mode
+    output=walley_random()*(num2-num1)+num1
+    return output
+
+def exit():
+    walley_exit()
+def sys(input_str):
+    walley_system(input_str)
+def sys_return_str(input_str):
+    return walley_system_return_str(input_str)

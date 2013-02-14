@@ -1349,7 +1349,7 @@ void Str_PrintStr(char **input_str){
     int length=atoi(input_str[0]);
     int i=1;
     while (i<length) {
-        printf("%s\n",input_str[i]);
+        printf("%d-> %s\n",i,input_str[i]);
         i++;
     }
 }
@@ -1358,9 +1358,23 @@ void Str_PrintStr(char **input_str){
  * replace __walley_function__.wy
  */
 void Str_addString(char ***input_str_list,char *add_str){
+    if (add_str==NULL) {
+        printf("STR IS NULL\n");
+        return;
+    }
     int length=atoi((*input_str_list)[0]);
     length=length+1;
     (*input_str_list)[0]=intToCString(length);
     (*input_str_list)=(char**)realloc(*input_str_list, sizeof(char*)*(length));
     (*input_str_list)[length-1]=add_str;
 }
+
+char *Str_appendSpaceAhead(char *input_str, int num_of_space){
+    int i=0;
+    for (; i<num_of_space; i++) {
+        input_str=append(input_str, " ");
+    }
+    return input_str;
+    
+}
+

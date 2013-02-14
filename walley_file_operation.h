@@ -44,7 +44,8 @@ void writeFunctionIntoVar(char *func_name,char *func_param_str, char ***to_funct
     strcat(input_message, ":");
     strcat(input_message, func_param_str);
     strcat(input_message, ":");
-    strcat(input_message, "\n");
+       
+    
     Str_addString(to_function_var, append("",input_message));
 }
 
@@ -61,7 +62,7 @@ void writeFunctionParameterOneByOneToVar(char *func_param_str, char ***function)
     if(strcmp("None",func_param_str)==0){
         //printf("This function has no parameters\n");
         //writeStringToFile("__walley_function__.wy","#### Finish Initialize Parameters ####\n");
-        printf("");
+        return ;
     } else {
         func_param_str=append(func_param_str, ",");
         
@@ -69,10 +70,10 @@ void writeFunctionParameterOneByOneToVar(char *func_param_str, char ***function)
             char *param=substr(func_param_str,0,find(func_param_str,","));
             //char *temp_temp;
             if(find(param,"=")==-1){
-                Str_addString(function, append(param, "=None\n"));
+                Str_addString(function, append(param, "=None"));
             }
             else{
-                Str_addString(function, append(param, "\n"));
+                Str_addString(function, param);
             }
             
             //writeStringToFile("__walley_function__.wy",temp_temp);

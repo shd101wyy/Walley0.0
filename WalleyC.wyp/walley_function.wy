@@ -1,0 +1,10 @@
+# len("Hello")--->5
+# len("[1,2]")--->2
+def len(input_str):
+    if type(input_str)=='list':
+        return input_str.length()
+    elif type(input_str)=='string':
+        return input_str.length()
+    else:
+        println "len() Does not support "+input_str+" Now"
+print len([1,2,3,4])

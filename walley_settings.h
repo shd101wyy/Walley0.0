@@ -69,9 +69,28 @@ bool CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=TRUE;  // if meet break, continue,
 
 // for while loop
 char **STRING_IN_WHILE_LOOP;
+char *LAST_WHILE_SENTENCE;  // while x<10:    x<10 is the LAST_WHILE_SENTENCE
+int SPACE_OF_FIRST_WHILE_SENTENCE; // |while x<10|    0---->SPACE_OF_FIRST_WHILE_SENTENCE
+bool NOW_WRITTING_WHILE;
 
 // for for loop
 char **STRING_IN_FOR_LOOP;
+char *I_VALUE_AFTER_IN;    // for i in range(3)   range(3) is I_VALUE_AFTER_IN
+char *I_IN_FOR_LOOP;       // for i in range(3)    i is I_IN_FOR_LOOP
+int SPACE_OF_FIRST_FOR_SENTENCE;  // |for i in range(3)|   0--->SPACE_OF_FIRST_FOR_SENTENCE
+bool NOW_WRITTING_FOR;
+
+
+// for function
+bool NOW_WRITTING_FUNCTION;
+int SPACE_OF_FIRST_DEF_SENTENCE;  // |def Hi():|  0--->SPACE_OF_FIRST_DEF_SENTENCE
+bool NOW_WRITTING_EXPRESSION=FALSE;
+
+// for class
+bool NOW_WRITTING_CLASS;
+int SPACE_OF_FIRST_CLASS_SENTENCE;  // |class a:|  0--->SPACE_OF_FIRST_CLASS_SENTENCE
+
+
 
 
 // For if elif sentence

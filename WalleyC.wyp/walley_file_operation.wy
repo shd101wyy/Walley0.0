@@ -1,0 +1,43 @@
+def walley_file_readlines(file_name):
+    println "file_name is "+file_name
+    exp:
+        get text from file file_name
+        text from file file_name
+    x=file_readlines(file_name)
+    return x
+
+def walley_file_writelines(file_name,write_str):
+    exp:
+        write write_str to file file_name
+    file_writelines(file_name,write_str)
+
+def walley_file_createfile(file_name):
+    exp:
+        create file file_name
+    create_file(file_name)
+
+def walley_file_deletefile(file_name):
+    exp:
+        delete file file_name
+        remove file file_name
+    remove_file(file_name)
+
+def walley_file_addstringtofile(file_name,add_str):
+    println "File name is "+file_name
+    exp:
+        add add_str to file file_name
+    file_addstrtofile(file_name,add_str)
+    
+
+def walley_files_indir(dir_name):
+    ############ EXP #####################
+    exp:
+        file names in dir dir_name
+        files names in dir dir_name
+        name of Files in dir dir_name
+        file names in directory dir_name
+        files names in directory dir_name
+        name of Files in directory dir_name
+    ######################################
+    return files_indir(dir_name)
+

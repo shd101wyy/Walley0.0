@@ -7,8 +7,6 @@
 
 //#include "walley_gui.h"
 #include "walley_table.h"
-
-
 //     1,2,3,4 index 0----->1
 //     This function now has some problems......
 //     I did not consider the , in list or ......
@@ -212,6 +210,88 @@ char *walley_is_fraction_mode(){
     }
     else{
         return "FALSE";
+    }
+}
+/*
+ range(3)--->[0,1,2]
+ range(1,5)-->[1,2,3,4]
+ range(0,2,0.5)-->[0,0.5,1,1.5]
+ 
+ */
+char *math_range(char *input_str){
+    int num_of_param=numOfParameters(input_str);
+    if (num_of_param==1) {
+        char *output="[";
+        int num=atoi(input_str);
+        
+        
+        if (num<0) {
+            printf("%s\n",append("range(", append(input_str, ")")));
+            printf("      ^\n");
+            printf("Error.. Num must be larger or equal than 0\n");
+            exit(0);
+        }
+        
+        int i=0;
+        for (; i<num; i++) {
+            output=append(output, intToCString(i));
+            output=append(output, ",");
+        }
+        output=substr(output, 0, (int)strlen(output)-1);
+        output=append(output, "]");
+        return output;
+    }
+    else if(num_of_param==2){
+        char *output="[";
+        int num1=atoi(getParamAccordingToIndex(input_str,0));
+        int num2=atoi(getParamAccordingToIndex(input_str,1));
+        
+        if (num2<num1) {
+            printf("%s\n",append("range(", append(input_str, ")")));
+            printf("      ^\n");
+            printf("Error.. 2nd num must be larget than 1st num\n");
+            exit(0);
+        }
+        
+        int i=0;
+        for (i=num1; i<num2; i++) {
+            output=append(output, intToCString(i));
+            output=append(output, ",");
+        }
+        output=substr(output, 0, (int)strlen(output)-1);
+        output=append(output, "]");
+        return output;
+    }
+    else if(num_of_param==3){
+        char *output="[";
+        double num1=atof(getParamAccordingToIndex(input_str,0));
+        double num2=atof(getParamAccordingToIndex(input_str,1));
+        double num3=atof(getParamAccordingToIndex(input_str,2));
+        if (num2<num1) {
+            printf("%s\n",append("range(", append(input_str, ")")));
+            printf("      ^\n");
+            printf("Error.. 2nd num must be larget than 1st num\n");
+            exit(0);
+        }
+        if (num3<=0) {
+            printf("%s\n",append("range(", append(input_str, ")")));
+            printf("Error, the final num must >0\n");
+            exit(0);
+        }
+        
+        double i=0;
+        for (i=num1; i<num2; i=i+num3) {
+            output=append(output, numToCString(i));
+            output=append(output, ",");
+        }
+        output=substr(output, 0, (int)strlen(output)-1);
+        output=append(output, "]");
+        return output;
+    }
+
+    else{
+        printf("Error.. Function range can only be the format like\nrange(2)-->[0,1] or range(1,3)-->[1,2]");
+        exit(0);
     }
 }
 

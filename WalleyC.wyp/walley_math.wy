@@ -1,0 +1,69 @@
+from walley_math_expression_parse import *
+def factorial(num):
+    i=1
+    output=1
+    while i<=num:
+        output=output*i
+        i=i+1
+    #here is some mistake
+    return output
+#end define factorial
+
+def range(num1=-1,num2=-1):
+    if num2==-1:
+        num2=num1
+        num1=0
+    x=[]
+    while num1<num2:
+        x.append(num1)
+        num1=num1+1
+    return x
+#end define range
+
+#log(2,8)---->3
+def log(base,num):
+    return log10(num)/log10(base)
+#end define log
+
+#this function can not run now
+#need Walley_Run_Fourth_Generation
+def ln(num1):
+    x=log(exp(1),num1)
+    return x
+#end define ln
+
+#ceil of 2.3 is 3.0
+#ceil of 3.8 is 4.0
+#ceil of -2.3 is -2.0
+#ceil of -3.8 is -3.0
+def ceil(num):
+    if num>0:
+        num=int(num)+1
+    else:
+        num=int(num)
+    return num
+
+#list_length_of_num(3)--->[0,0,0]
+def list_length_of_num(num):
+    println "num is ----> "+num
+    exp:
+        list of length num
+    i=0
+    output="["
+    while i<num:
+        output=output+"0,"
+        i=i+1
+    println "output---> "+output
+    output[output.length()-1]="]"
+    println "output---> "+output
+    return output    
+
+# len("Hello")--->5
+# len("[1,2]")--->2
+def len(input_str):
+    if type(input_str)=='list':
+        return input_str.length()
+    elif type(input_str)=='string':
+        return input_str.length()
+    else:
+        println "len() Does not support "+input_str+" Now"

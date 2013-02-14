@@ -196,6 +196,7 @@ bool checkWhetherSameVarNameExists(char *var_name){
 
 
 bool isFunctionFromVar(char **FUNCTION_functions, char *input_str){
+
     bool is_function=TRUE;
     input_str = removeAheadSpace(input_str);
     if(count_str(input_str,"(")==0 || count_str(input_str, ")")==0){
@@ -209,7 +210,10 @@ bool isFunctionFromVar(char **FUNCTION_functions, char *input_str){
         int row=0;
         int length_of_function=atoi(FUNCTION_functions[0]);
         while (row<length_of_function) {
-           // printf("->%s\n",FUNCTION[row]);
+            if (FUNCTION_functions[row]==NULL) {
+                row++;
+                continue;
+            }
             int index_of_maohao=find(FUNCTION_functions[row],":");
             if (index_of_maohao==-1) {
                 row++;
@@ -217,7 +221,6 @@ bool isFunctionFromVar(char **FUNCTION_functions, char *input_str){
             }
             char *temp=substr(FUNCTION_functions[row],0, index_of_maohao);
             if (strcmp(temp, function_name)==0) {
-               // printf("%s equals %s\n",temp,function_name);
                 is_function=TRUE;
                 break;
             }
@@ -268,8 +271,12 @@ char* variableValueType(char *variable_value){
     else if(index_of_first_list==-1){
         type="expression";
     }
+    /*
     else {
         type="unknown type";
+    }*/
+    else{
+        type="sym";
     }
     return type;
     
@@ -417,34 +424,68 @@ char* getStringFromFileExceptInclude(char *file_name){
 
 
 char* Walley_Eval(char *input_str){
-    //printf("Walley_Eval %s\n",input_str);
-    //return eval(input_str);
-    
     input_str=replace(input_str, "**","^");
     
     
     // here may be some problem....
     bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
     char *output;
-    if (fraction_mode==TRUE) {
         
-        
-        // 0.8+2 return 2.8  8/10+2 return 14/5
-        if (find(input_str,".")!=-1) {
-            return eval_for_decimal_with_alpha(input_str);
+    if (USING_MATHOMATIC) {
+        if (fraction_mode==TRUE) {
+            
+            
+            // 0.8+2 return 2.8  8/10+2 return 14/5
+            if (find(input_str,".")!=-1) {
+                
+                char *ocp;
+                matho_parse("set fraction 0", &ocp);
+                matho_process("set fraction 0", &ocp);
+
+                return Walley_Mathomatic_Parse_For_Decimal(input_str);
+            }
+            else{
+                
+                char *ocp;
+                matho_parse("set fraction 1", &ocp);
+                matho_process("set fraction 1", &ocp);
+                                
+                // I changed the code to use mathomatic
+                output=Walley_Mathomatic_Parse_For_Fraction(input_str);
+            }
         }
         else{
-            // I changed the code to use mathomatic
-            //output=eval_for_fraction_root_power(input_str);
-            output=eval_for_fraction_with_alpha(input_str);
-            //output=Walley_Mathomatic_Parse_For_Fraction(input_str);
+            
+            char *ocp;
+            matho_parse("set fraction 0", &ocp);
+            matho_process("set fraction 0", &ocp);
+
+            // I changed the code here to use mathomatic
+            output=Walley_Mathomatic_Parse_For_Decimal(input_str);
         }
     }
     else{
-        // I changed the code here to use mathomatic
-        //output=eval(input_str);
-        output=eval_for_decimal_with_alpha(input_str);
-        //output=Walley_Mathomatic_Parse_For_Decimal(input_str);
+        // using math parser written by Yiyi Wang
+        if (fraction_mode==TRUE) {
+            
+            
+            // 0.8+2 return 2.8  8/10+2 return 14/5
+            if (find(input_str,".")!=-1) {
+                return eval_for_decimal_with_alpha(input_str);
+            }
+            else{
+                // I changed the code to use mathomatic
+                //output=eval_for_fraction_root_power(input_str);
+                output=eval_for_fraction_with_alpha(input_str);
+                //output=Walley_Mathomatic_Parse_For_Fraction(input_str);
+            }
+        }
+        else{
+            // I changed the code here to use mathomatic
+            //output=eval(input_str);
+            output=eval_for_decimal_with_alpha(input_str);
+            //output=Walley_Mathomatic_Parse_For_Decimal(input_str);
+        }
     }
     return output;
 }
@@ -582,6 +623,9 @@ char *combineStringsToOneString(char *input_str){
 }
 
 bool stringIsEmpty(char *input_str){
+    if (input_str==NULL) {
+        return TRUE;
+    }
     input_str=trim(input_str);
     input_str=removeNFromBack(input_str);
     int i=0;
@@ -747,7 +791,7 @@ char* Walley_Eval_With_Variable_From_Var(struct VAR var[], char *input_str) {
  * input-->'3+4,2+5'---->'7,7'
  */
 char* Walley_Eval_All_From_Var(struct VAR struct_var[],char *input_str){
-    //printf("--->%s\n",input_str);
+    // printf("##Walley_Eval_All_From_Var --->%s\n",input_str);
     
     /* I delete this code on Dec 6
      * cause "x-->"+x can not be printed.
@@ -2194,7 +2238,7 @@ char *getFunctionNameAndReturnList(char **FUNCTION_functions){
     char *output="[";
     int length_of_Function_function=atoi(FUNCTION_functions[0]);
     while (i<length_of_Function_function) {
-        if (strcmp(FUNCTION_functions[i], "#~Begin\n")==0) {
+        if (strcmp(FUNCTION_functions[i], "#~Begin")==0) {
             char *function=FUNCTION_functions[i-1];
             function=substr(function, 0, find(function, ":"));
             output=append(output, append(function, ","));
@@ -2261,51 +2305,54 @@ char *getVarNameAndReturnList(struct VAR *struct_var){
 
 
 // eg deleteOneFunctionFromBehind(FUNCTION,"print") will delete print function from FUNCTION
-void deleteOneFunctionFromBehind(char **FUNCTION_functions, char *delete_func_name){
+void deleteOneFunctionFromBehind(char ***FUNCTION_functions, char *delete_func_name){
     int i=0;
-    Str_addString(&FUNCTION_functions, NULL);
-    while (FUNCTION_functions[i]!=NULL) {
-        i++;
-    }
-    i=i-1;
+    int length=atoi((*FUNCTION_functions)[0]);
+    i=length-1;
     int final=i;
     int start=0;
     int end=final;
     char *func_name=append(delete_func_name, ":");
     while (i>=0) {
-        if (find(FUNCTION_functions[i],func_name)==0) {
-            //printf("FIND FUNCTION, BEGIN TO DELETE\n");
+        if((*FUNCTION_functions)[i]==NULL){
+            i--;
+            continue;
+        }
+        if (find((*FUNCTION_functions)[i],func_name)==0) {
             start=i;
             break;
         }
         i--;
     }
     i=i+1;
-    while (FUNCTION_functions[i]!=NULL) {
-        //printf("------> |%s|\n",FUNCTION_functions[i]);
-        if (find(FUNCTION_functions[i],"#~End\n")==0) {
-            //printf("FIND END\n");
+    while (i<length) {
+        if (find((*FUNCTION_functions)[i],"#~End")==0) {
             end=i;
             break;
         }
         i++;
     }
     
-    char **new_functions=(char**)malloc(sizeof(char**)*(final-end));
-    i=0;
-    while (i<(final-end)) {
-        new_functions[i]=FUNCTION_functions[i+end];
-        i++;
-    }
-    i=start;
-    while (FUNCTION_functions[i]!=NULL) {
-        FUNCTION_functions[i]=NULL;
-        i++;
-    }
+    char **new_functions;
+    Str_initStringList(&new_functions);
     
-    i=0;
-    while (i<(final-end)) {
-        FUNCTION_functions[start+i]=new_functions[i];
+    i=1;
+    while (i<start) {
+        Str_addString(&new_functions,(*FUNCTION_functions)[i]);
+        i++;
+    }
+    i=end+1;
+    while(i<length){
+        Str_addString(&new_functions,(*FUNCTION_functions)[i]);
+        i++;
+    }
+   
+    
+    Str_initStringList(FUNCTION_functions);
+    
+    i=1;
+    while (i<atoi(new_functions[0])) {
+        Str_addString(FUNCTION_functions, new_functions[i]);
         i++;
     }
 }

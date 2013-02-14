@@ -1,0 +1,13 @@
+class VAR:
+    def self.init(var_name="",var_value="",var_type=""):
+        self.var_name=var_name
+        self.var_value=var_value
+        self.var_type=var_type
+    def self.show():
+        print self.var_name+":"
+        print self.var_value+":"
+        print self.var_type
+
+x={}
+x{"A"}=VAR("a","13","int")
+x{"A"}.show()

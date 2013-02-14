@@ -1,0 +1,35 @@
+from walley_math import *
+from walley_file_operation import *
+x=walley_get_current_terminal_commands()
+println x
+length=x.length()
+println "Length is "+length
+#support 
+#1) walley
+#2) walley file_name
+#3) walley compile file_name
+#4) walley exec file_name 
+    
+
+
+
+# e.g. str_add_double_quote("Hello")--->""Hello""
+def str_add_double_quote(input_str):
+    exp:
+        add double quote for input_str
+    if type(input_str)=="string":
+        input_str="\""+input_str
+        input_str=input_str+"\""
+    else:
+        input_str=str(input_str)
+    return input_str
+#x=<@add double quote for "Hello">
+#print x
+
+
+
+while TRUE:
+    x=input("\n---> ")
+    if x=='exit()':
+        walley_quit_program()
+    walley_run_str(x)

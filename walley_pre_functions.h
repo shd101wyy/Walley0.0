@@ -33,9 +33,14 @@ typedef int bool;
 
 #define TRUE 1
 #define FALSE 0
+
+
+#define USING_MATHOMATIC 1
+
 int main(int argc, char **argv);
 
 struct VAR;
+struct TOKEN;
 
 
 
@@ -56,7 +61,7 @@ void Walley_Update_Var_And_Var_Value_To_Var(struct VAR **struct_var, char *var_n
 void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_settings, char ***temp_file, char* existing_file,char ***FUNCTION_functions, char* input_str);
 bool Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(char *input_str, struct VAR **struct_var, char ***FUNCTION_functions);
 void Walley_Eval_And_Update_Var_And_Value_To_Var(struct VAR **struct_var,char ***FUNCTION_functions,char* input_str) ;
-void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,struct VAR **struct_settings,char ***FUNCTION_functions,char *input_str);
+void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,struct VAR **struct_settings,char ***FUNCTION_functions,char *input_str,struct TOKEN *token);
 char *Walley_Translate_To_Function_From_Var(char *input_str, char *best_match_sentence, struct VAR **struct_var);
 
 void Walley_Update_Functions_And_Vars_While_Importing(char *temp_file_to_run, struct VAR **struct_var, char ***FUNCTION_functions);
@@ -64,3 +69,6 @@ void Walley_Run(char *input_str);
 void Walley_Run_For_Appointed_Var_String_List(struct VAR **struct_var, struct VAR **struct_settings, char ***save_to_file, char *existing_file, char ***FUNCTION_functions, char **input_str);
 
 char *Walley_Slice(char *var_value, char *slice,struct VAR **struct_var, char ***FUNCTION_functions);
+
+
+char *cleanUpSentence(char *input_str);
