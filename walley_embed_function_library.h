@@ -1222,7 +1222,7 @@ char *walley_rotate(char *input_str){
 //################## Special Function Summary #############################*/
 
 
-char *Walley_Run_Special_Function_From_Var(char *function, struct VAR *struct_var) {
+char *Walley_Run_Special_Function_From_Var(char *function, struct VAR **struct_var) {
     //################### Special Function #########################################################
     /*
      * eg x="Hello"-----> x.find("He")----->0
@@ -1234,12 +1234,13 @@ char *Walley_Run_Special_Function_From_Var(char *function, struct VAR *struct_va
     //// printf("Begin to run special function like x=[1,2,3]  x.append(12)\n");
     //// printf("---->Function %s\n---->file_var_name %s\n",function,file_var_name);
     // eg x="Hello"  x.find("Hi")
-    char *user = substr(function, 0, find_not_in_str_list_dict_parenthesis(function, ".")); //------> x
-    char *user_function = substr(function, find_not_in_str_list_dict_parenthesis(function, ".") + 1, (int) strlen(function)); // -------->find("Hi")
+    // eg x.a=[]  x.a.append(3)  user x.a | func append(3)
+    char *user = substr(function, 0, find_from_behind_not_in_str_list_dict_parenthesis(function, ".")); //------> x
+    char *user_function = substr(function, find_from_behind_not_in_str_list_dict_parenthesis(function, ".") + 1, (int) strlen(function)); // -------->find("Hi")
     char *user_value; //= getValueFromValueName(file_var_name, user); // ------->x="Hello"
         
-    if (Var_Existed(struct_var, user)==TRUE) {
-        user_value = Var_getValueOfVar(struct_var, user);
+    if (Var_Existed(*struct_var, user)==TRUE) {
+        user_value = Var_getValueOfVar(*struct_var, user);
     } else {
         user_value=user;
     }
@@ -1254,6 +1255,13 @@ char *Walley_Run_Special_Function_From_Var(char *function, struct VAR *struct_va
                 return_value = string_find(user_value, user_function_parameter);
             else if (num_of_params == 2)
                 return_value = string_find_from_index(user_value, user_function_parameter);
+            else{
+                printf("%s\n",function);
+                int index_of_dot=find_from_behind_not_in_str_list_dict_parenthesis(function, ".");
+                printf("%s^\n",Str_appendSpaceAhead("", index_of_dot));
+                printf("Error, find() only needs 2 params\n");
+                exit(0);
+            }
         } else if (find(user_function, "replace(") == 0) {
             if (num_of_params==2) {
                 return_value=string_replace(user_value, user_function_parameter);
@@ -1261,6 +1269,9 @@ char *Walley_Run_Special_Function_From_Var(char *function, struct VAR *struct_va
             else if(num_of_params==3){
                 return_value=string_replace_from_index(user_value, user_function_parameter);
             }
+            printf("%s\n",function);
+            printf("Error, replace() needs 2 or 3 params\n");
+            exit(0);
         } else if (find(user_function, "count(") == 0) {
             return_value = string_count_str(user_value, user_function_parameter);
         } else if (find(user_function, "split(") == 0) {
@@ -1284,8 +1295,7 @@ char *Walley_Run_Special_Function_From_Var(char *function, struct VAR *struct_va
             return_value=string_islower(user_value);
         } else if (find(user_function,"reverse(")==0){
             return_value=string_reverse(user_value);
-        }
-        else {
+        } else {
             printf("This Special Function for String eg. x.find('x') is still under development\n");
         }
     }        // Special function for list
@@ -1295,14 +1305,12 @@ char *Walley_Run_Special_Function_From_Var(char *function, struct VAR *struct_va
             //printf("user value %s user_function_parameter %s\n",user_value,user_function_parameter);
             return_value = list_append(user_value, user_function_parameter);
             //changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name, user, return_value);
-            Var_changeValueOfVar(struct_var, user, return_value, "list");
+            Var_changeValueOfVar(*struct_var, user, return_value, "list");
             
             //// printf("#### FINISH APPEND ####\n");
         } else if (find(user_function, "remove_at_index(") == 0) {
             return_value = list_remove_at_index(user_value, user_function_parameter);
-            //changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name, user, return_value);
-            Walley_Update_Var_And_Var_Value_To_Var(&struct_var, user, return_value);
-
+            Walley_Update_Var_And_Var_Value_To_Var(struct_var, user, return_value);
         } else if (find(user_function, "length(") == 0) {
             return_value = list_length(user_value);
         } else if (find(user_function, "count(") == 0) {
@@ -1311,7 +1319,7 @@ char *Walley_Run_Special_Function_From_Var(char *function, struct VAR *struct_va
             return_value= list_remove_element(user_value,user_function_parameter);
             //changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name, user, return_value);
             //Var_changeValueOfVar(struct_var, user, return_value, "list");
-            Walley_Update_Var_And_Var_Value_To_Var(&struct_var, user, return_value);
+            Walley_Update_Var_And_Var_Value_To_Var(struct_var, user, return_value);
 
         }
     }        // Special function for dictionary
@@ -1322,7 +1330,10 @@ char *Walley_Run_Special_Function_From_Var(char *function, struct VAR *struct_va
             return_value = dict_key(user_value);
         }
     }
-    
+    else{
+        printf("Error\n");
+        exit(2);
+    }
     //// printf("RETURN VALUE %s\n",return_value);
     return return_value;
 }

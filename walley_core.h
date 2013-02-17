@@ -1678,7 +1678,12 @@ char *Walley_Run_One_Function_And_Return_Value_From_Var(char *input_str,struct V
     Walley_Initialize_Settings(&TEMP_VAR_settings);
     
     
-    
+    /* for instance var//
+    // copy instance var to TEMP_VAR_var
+    // and then copy it back
+     */
+    copyInstanceValueToStructVar(struct_var,&TEMP_VAR_var);
+
 
     char **TEMP_TEMP_FILE;Str_initStringList(&TEMP_TEMP_FILE);
     
@@ -1823,11 +1828,14 @@ char *Walley_Run_One_Function_And_Return_Value_From_Var(char *input_str,struct V
                 Walley_Run_For_Appointed_Var(&TEMP_VAR_var, &TEMP_VAR_settings, &TEMP_TEMP_FILE, "FUNCTION", FUNCTION_functions, arr);
             }
             else{
-                //printf("*************** GO THERE ***************");
+                //printf("*************** GO THERE *************** %s\n",arr);
                 // if is_instance_value is true, save like Rohit.age to VAR_var
                 bool is_instance_value=FALSE;
                 bool is_global_var=FALSE;
+                bool is_expresssion=FALSE;
+                char *user;
                 if(isExpression(arr)){
+                    is_expresssion=TRUE;
                     //printf("********* %s IT IS EXPRESSION ********\n",arr);
                     char *var_name2=variableName(arr);
                     char *user;
@@ -1852,8 +1860,26 @@ char *Walley_Run_One_Function_And_Return_Value_From_Var(char *input_str,struct V
                     }
                     
                 }
+                
+                // check like x.stack.push(4)
+                else{
+                    if (find(arr,".")==-1) {
+                        is_instance_value=FALSE;
+                    }
+                    else{
+                        user=substr(arr, 0, find(arr, "."));
+                        user=trim(user);
+                        if (checkWhetherSameInstanceExistedFromVar(*struct_var, user)==TRUE) {
+                            is_instance_value=TRUE;
+                        }
+                        else{
+                            is_instance_value=FALSE;
+                        }
+                    }
+                }
+                
                 if(is_instance_value==FALSE){
-                    // printf("********** Not INSTANCE VALUE *********\n");
+                    //printf("********** Not INSTANCE VALUE *********\n");
                    
                     // begin to define global var
                     if (find(trim(arr),"global ")==0) {
@@ -1882,15 +1908,27 @@ char *Walley_Run_One_Function_And_Return_Value_From_Var(char *input_str,struct V
                 else{
                     // printf("************ IT IS INSTANCE VALUE ************");
                     // printf("************ %s **********\n",arr);
-
-                    Walley_Run_For_Appointed_Var(&TEMP_VAR_var, &TEMP_VAR_settings, &TEMP_TEMP_FILE, "FUNCTION",FUNCTION_functions,arr);
-                    char *var_name3 = variableName(arr);
-                    char *var_value3 = Var_getValueOfVar(TEMP_VAR_var, var_name3);
+                    if (is_expresssion==TRUE) {
+                        Walley_Run_For_Appointed_Var(&TEMP_VAR_var, &TEMP_VAR_settings, &TEMP_TEMP_FILE, "FUNCTION",FUNCTION_functions,arr);
+                        char *var_name3 = variableName(arr);
+                        char *var_value3 = Var_getValueOfVar(TEMP_VAR_var, var_name3);
+                        
+                        // printf("VAR_NAME %s VAR_VALUE %s\n",var_name3,var_value3);
+                        Walley_Update_Var_And_Var_Value_To_Var(&VAR_var, var_name3, var_value3);
+                        
+                        //Var_PrintVar(VAR_var);
+                    }
                     
-                    // printf("VAR_NAME %s VAR_VALUE %s\n",var_name3,var_value3);
-                    Walley_Update_Var_And_Var_Value_To_Var(&VAR_var, var_name3, var_value3);
                     
-                    //Var_PrintVar(VAR_var);
+                    
+                    // x.stack.push()
+                    else{
+                        Walley_Run_For_Appointed_Var(&TEMP_VAR_var, &TEMP_VAR_settings, &TEMP_TEMP_FILE, "FUNCTION", FUNCTION_functions, arr);
+                    }
+                    
+                    
+                    
+                    
                 }
             }
             
@@ -2035,6 +2073,7 @@ char *Walley_Run_One_Function_And_Return_Value_From_Var(char *input_str,struct V
         a++;
     }
    
+    copyInstanceValueBackToVar(&TEMP_VAR_var, struct_var);
     
     function_in_def="";
     GLOBAL_VAR=global_var_back_up;
@@ -2096,7 +2135,6 @@ char *Walley_Translate_To_Function_From_Var(char *input_str, char *best_match_se
     output=append(output, ")");
     
     //// printf("WALLEY TRANSLATION |%s| |%s| |%s|\n",input_str,best_match_sentence,output);
-    
     return output;
 }
 
@@ -2513,9 +2551,12 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
                 
                 //bool same_function_existed_in_walley_function=checkWhetherSameFunctionNameExists(func_name);
                 
-                if (find(substr(function, 0, find(function, "(")), ".") != -1 && charIsInString(function, find(function, ".")) == FALSE) {
+                int index_of_dot=find_from_behind_not_in_str_list_dict_parenthesis(function, ".");
+                /*
+                if (find(substr(function, 0, find(function, "(")), ".") != -1 && charIsInString(function, index_of_dot) == FALSE) {
                     //// printf("It is instance function\n");
-                    char *user = substr(function, 0, find(function, "."));
+                    char *user = substr(function, 0, index_of_dot);
+                    printf("user---> %s  func---> %s\n",user,function);
                     bool instance_existed = checkWhetherSameInstanceExistedFromVar(*struct_var, user);
                     bool var_existed = Var_Existed(*struct_var,user);
                     
@@ -2535,18 +2576,43 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
                         } else {
                             return_value = Walley_Run_Special_Function_From_Var(function_temp, *struct_var);
                         }
-                        //printf("RETURN VALUE is %s\n",return_value);
+                    }
+                    else {                        
+                        return_value = Walley_Run_One_Function_And_Return_Value_From_Var(function, &VAR_var,FUNCTION_functions);
+                        
+                    }
+                    
+                }*/
+                if (find(substr(function, 0, find(function, "(")), ".") != -1 && charIsInString(function, index_of_dot) == FALSE) {
+                    //// printf("It is instance function\n");
+                    char *user = substr(function, 0, index_of_dot);
+                    //printf("user---> %s  func---> %s\n",user,function);
+                    bool instance_existed = checkWhetherSameInstanceExistedFromVar(*struct_var, user);
+                    bool var_existed = Var_Existed(*struct_var,user);
+                    
+                    bool only_var_existed = var_existed;
+                    
+                    char *user_value=Walley_Substitute_Var_And_Function_Return_Value_From_Var(user, struct_var,FUNCTION_functions);
+                    char *function_temp=replace_not_in_string(function, user, user_value);
+                    
+                    
+                    if (strcmp(variableValueType(user_value), "string")==0||strcmp(variableValueType(user_value), "list")==0) {
+                        var_existed=TRUE;
+                    }
+                    
+                    if (instance_existed == FALSE && var_existed==TRUE){
+                        if (only_var_existed==TRUE) {
+                            return_value=Walley_Run_Special_Function_From_Var(function, struct_var);
+                        } else {
+                            return_value = Walley_Run_Special_Function_From_Var(function_temp, struct_var);
+                        }
                     }
                     else {
-                        //printf("FIND INSTANCE, THIS IS A CLASS FUNCTION\n");
-
-                        
                         return_value = Walley_Run_One_Function_And_Return_Value_From_Var(function, &VAR_var,FUNCTION_functions);
                         
                     }
                     
                 }
-                
                 
                 //################### Embeded Function ###############################################################
                 else if (find(function, "int(") ==0) {

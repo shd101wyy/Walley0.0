@@ -577,10 +577,7 @@ char *listAppendOneElement(char *list, char *append_element){
  * listRemoveOneElementAtOneIndex("[1,[1,2],3]","1")----->[1,3]
  */
 
-char *listRemoveOneElementAtOneIndex(char *list, char *index){
-    //// printf("List is %s, index is %s",list,index);
-
-    
+char *listRemoveOneElementAtOneIndex(char *list, char *index){    
     index=trim(index);
     list=trim(list);
     if (index[0]=='['&&index[(int)strlen(index)-1]==']') {
@@ -611,7 +608,6 @@ char *listRemoveOneElementAtOneIndex(char *list, char *index){
     if(find_not_in_string(output,"[,")!=-1){
         output= replace_not_in_string(output,"[,","[");
     } 
-    
     return output; 
 }
 /*

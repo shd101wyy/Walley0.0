@@ -136,11 +136,12 @@ int space_ahead_for_formatStringInClass(char *string_in_class, int begin){
 char *formatStringInClass(char *instance_name, char *string_in_class){
     int index_of_self=-1;
     //printf("INSTANCE_NAME %s\n",instance_name);
-    //printf("STRING IN CLASS \n|%s|\n",string_in_class);
     string_in_class=toCString(string_in_class);
+
+    
+    // I forget what that is......
     while (TRUE) {
         index_of_self=find_from_index_not_in_string(string_in_class, "self.", index_of_self+1);
-        //printf("index_of_self is |%d|",index_of_self);
         if (index_of_self==-1) {
             break;
         }
@@ -151,11 +152,9 @@ char *formatStringInClass(char *instance_name, char *string_in_class){
         
     }
     
-   // if (find_not_in_string(string_in_class, "<@")!=-1) {
-   //     string_in_class=replace(string_in_class, "<@", append("<@", instance_name));
-   // }
-    
-   // printf("string_in_class |%s|\n",string_in_class);
+    // I add code below on Feb 17 to solve self.stack[self.stack.length()] problem
+    // change it to  x.stack[x.stack.length()]
+    string_in_class=replace_not_in_string(string_in_class, "self.", append(instance_name, "."));
     
     int begin=0;
     int index_of_exp=0;
@@ -481,3 +480,52 @@ bool checkWhetherSameClassExistedFromVar(struct VAR *struct_var, char *class_nam
     //printf("Existed ? %d\n",existed);
     return existed;
 }
+
+
+
+void copyInstanceValueToStructVar(struct VAR **struct_var, struct VAR **copy_to_var){
+    char *__class__=Var_getValueOfVar(*struct_var,"__instance_name__");
+    int num=valueNumOfList(__class__);
+    char *class_name;
+    
+    int length_of_struct_var=Var_length(*struct_var);
+    int i=0;
+    for(;i<num;i++){
+        class_name=valueOfListAtIndex(__class__,i);
+        class_name=toCString(class_name);
+        
+        char *temp=append(class_name, ".");
+        
+        int j=0;
+        for (; j<length_of_struct_var; j++) {
+            if (find((*struct_var+j)->var_name, temp)==0||strcmp(class_name, (*struct_var+j)->var_name)==0) {
+                // add it to copy_to_var
+                Var_addProperty(copy_to_var,(*struct_var+j)->var_name , (*struct_var+j)->var_value, (*struct_var+j)->var_type);
+            }
+        }
+    }
+}
+
+void copyInstanceValueBackToVar(struct VAR **struct_var, struct VAR **copy_to_var){
+    char *__class__=Var_getValueOfVar(*copy_to_var,"__instance_name__");
+    int num=valueNumOfList(__class__);
+    char *class_name;
+    
+    int length_of_struct_var=Var_length(*struct_var);
+    int i=0;
+    for(;i<num;i++){
+        class_name=valueOfListAtIndex(__class__,i);
+        class_name=toCString(class_name);
+        
+        char *temp=append(class_name, ".");
+        
+        int j=0;
+        for (; j<length_of_struct_var; j++) {
+            if (find((*struct_var+j)->var_name, temp)==0||strcmp(class_name, (*struct_var+j)->var_name)==0) {
+                // add it to copy_to_var
+                Var_changeValueOfVar(*copy_to_var,(*struct_var+j)->var_name , (*struct_var+j)->var_value, (*struct_var+j)->var_type);
+            }
+        }
+    }
+}
+

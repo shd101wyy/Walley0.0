@@ -1,0 +1,27 @@
+class stack:
+    def self.init():
+        self.stack=[]
+    def self.push(value):
+        self.stack.append(value)
+    def self.pop():
+        final_value=self.stack[self.stack.length()-1]
+        self.stack.remove_at_index(self.stack.length()-1)
+        return final_value
+    def self.length():
+        return self.stack.length()
+    def self.peek():
+        return stack[self.stack.length()-1]
+    def self.disp():
+        println self.stack
+#~
+x=stack()
+x.push(3)
+x.push(4)
+x.disp()
+x.pop()
+x.disp()
+x.push("Hello")
+print x.stack
+y=x.pop()
+print y
+~#

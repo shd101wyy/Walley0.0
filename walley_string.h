@@ -1113,6 +1113,44 @@ printf("Mistakes occurred which calling function find_from_index_not_in_str_list
         return index;
     }
 }
+
+int find_from_behind_not_in_str_list_dict_parenthesis(char *from_str, char *find_str){
+    int index = -1;
+    bool find_index = TRUE;
+    int i;
+    int j;
+    
+    for (i = (int) strlen(from_str)-1; i >=0; i--) {
+        // I add one code here.
+        find_index=TRUE;
+        if (from_str[i] == find_str[0] && charIsInString(from_str, i)==FALSE && charIsInDictionary(from_str, i)==FALSE &&
+            charIsInList(from_str, i)==FALSE && charIsInParenthesis(from_str, i)==FALSE) {
+            //printf("Find The same\n");
+            //char *temp = substr(from_str, i, i + (int) strlen(find_str));
+            //printf("############%d\n",i);
+            for (j = 0; j < (int) strlen(find_str); j++) {
+                if (i+j==(int)strlen(from_str)) {
+                    find_index=FALSE;
+                    break;
+                }
+                if (find_str[j] != from_str[i + j]) {
+                    //printf("!= %d %d\n",j,j+i);
+                    find_index = FALSE;
+                    break;
+                }
+            }
+            if (find_index == TRUE) {
+                //find_index = TRUE;
+                //printf("Fin_Index--->%d\n",i);
+                index = i;
+                break;
+            }
+        }
+    }
+    //printf("%d",index);
+    return index;
+
+}
 int count_str_not_in_str_list_dict(char *input_str, char *count_str){
     int count=0;
     int i=0;

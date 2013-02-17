@@ -251,4 +251,22 @@ char *Var_getValueOfVar(struct VAR *var, char *var_name){
 }
 
 
+int Var_length(struct VAR *struct_var){
+    
+    int length=0;
+    if (strcmp((struct_var)->var_name,"__size_of_array__")!=0) {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+        
+        printf("Var_getValueOfVar..Can not find __size_of_array__");
+        exit(0);
+    }
+    else{
+        length=atoi((struct_var)->var_value);
+    }
+    return length;
+    
+
+}
+
+
 
