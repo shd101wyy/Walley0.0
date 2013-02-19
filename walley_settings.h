@@ -100,7 +100,7 @@ int LOOP_TURN=0; // Count the loop num when meets for and while
                 // LOOP_TURN -- after one loop.
 
 
-
+bool NOW_IN_ANNOTATION=FALSE;
 
 
 

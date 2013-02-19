@@ -910,4 +910,17 @@ struct TOKEN *TOKEN_returnTokenWithoutWhitespaces(struct TOKEN *token){
     return return_token;
 }
 
+struct TOKEN *subtoken(struct TOKEN *token, int from_index, int to_index){
+    if (from_index<=0) {
+        printf("Error.. Token from_index <= 0\n");
+        exit(2);
+    }
+    
+    struct TOKEN *output_token;
+    int i=from_index;
+    for (; i<to_index; i++) {
+        TOKEN_addProperty(&output_token, token[i].TOKEN_CLASS, token[i].TOKEN_STRING, token[i].TOKEN_START, token[i].TOKEN_END);
+    }
+    return output_token;
+}
 

@@ -42,8 +42,6 @@ void Walley_Initialize_Settings(struct VAR **settings){
 
     Var_addProperty(settings, "space_of_first_if_sentence", "0", "int");
 
-    Var_addProperty(settings, "now_in_annotation", "0", "int");
-
     Var_addProperty(settings, "can_run_basic_input", "0", "int");
 
     Var_addProperty(settings, "turn", "0", "int");
@@ -358,24 +356,18 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
         
         
             
-    bool now_in_annotation = atoi(Var_getValueOfVar(*struct_settings, "now_in_annotation"));
     char *judge_annotation_string=trim(input_str);
     int length_of_judge_annotation_string=(int)strlen(judge_annotation_string);
     if (judge_annotation_string[length_of_judge_annotation_string-1]=='#' && judge_annotation_string[length_of_judge_annotation_string-2]=='~'){
        // printf("Now End Long Annotation");
-        now_in_annotation = 0;
-        char temp4[100];
-        sprintf(temp4, "%d", now_in_annotation);
-        Var_changeValueOfVar(*struct_settings,"now_in_annotation", append("",temp4), "int");
+        NOW_IN_ANNOTATION = 0;
+        
     }
     else if (judge_annotation_string[0] == '#' && judge_annotation_string[1] == '~') {
         //// printf("Now Begin Long Annotation");
-        now_in_annotation = 1;
-        char temp4[100];
-        sprintf(temp4, "%d", now_in_annotation);
-        Var_changeValueOfVar(*struct_settings, "now_in_annotation",append("",temp4), "int");
+        NOW_IN_ANNOTATION = 1;
     }
-    if(now_in_annotation==0 && stringIsEmpty(trim(input_str))==FALSE){
+    if(NOW_IN_ANNOTATION==0 && stringIsEmpty(trim(input_str))==FALSE){
                 
         Str_addString(save_to_file, input_str);
 
