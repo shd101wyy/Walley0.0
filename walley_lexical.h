@@ -223,7 +223,7 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
     int end=0;
     char type='b'; // 'i' for id, 'b' for blank 's' for judge sign or sign(operator),'t' for "" '' [] {} type, 'c' for :
     char t=' ';
-    if (isalpha(input_str[0])) {
+    if (isalpha(input_str[0])||isdigit(input_str[0])) {
         type='i';
     }
     if (input_str[0]=='"') {
