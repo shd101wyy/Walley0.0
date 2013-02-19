@@ -5,7 +5,7 @@
 //  Created by shd101wyy on 12-11-10.
 //  Copyright (c) 2012年 shd101wyy. All rights reserved.
 //
-#include "walley_operator_fraction.h"
+#include "walley_math_parser.h"
 /*
  // I GIVE UP THIS TEMPERIALY
  

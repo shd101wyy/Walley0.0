@@ -259,6 +259,36 @@ char *fraction_to_double(char *num){
     //printf("input_str is %s\n",input_str);
     return input_str;
 }
+char *fraction_power(char *num1_str, char *num2_str){
+    char *num1_d=denominator_of_fraction(num1_str);
+    char *num1_n=numerator_of_fraction(num1_str);
+    num1_str=simplify_fraction(num1_n, num1_d);
+    
+    char *num2_d=denominator_of_fraction(num2_str);
+    char *num2_n=numerator_of_fraction(num2_str);
+    num2_str=simplify_fraction(num2_n, num2_d);
+    
+    if (stringIsDigit(num2_str)) {
+        char *d=denominator_of_fraction(num1_str);
+        char *n=numerator_of_fraction(num1_str);
+        
+        d=cleanDotZeroAfterNum(numToCString(Walley_Operator(atof(d), atof(num2_str), '^')));
+        n=cleanDotZeroAfterNum(numToCString(Walley_Operator(atof(n), atof(num2_str), '^')));
+        
+        return simplify_fraction(n, d);
+    }
+    else{
+        if (stringIsDigit(num1_str)) {
+            return append(num1_str, append("^", append("(", append(num2_str, ")"))));
+        }
+        else{
+            num1_str=append("(", append(num1_str, ")"));
+            return append(num1_str, append("^", append("(", append(num2_str, ")"))));
+        }
+    }
+    
+    
+}
 
 char *Walley_Operator_For_Fraction(char *num1_str, char *num2_str, char sign){
     //printf("num1_str %s, num2_str %s, sign %c\n",num1_str,num2_str,sign);
@@ -273,6 +303,9 @@ char *Walley_Operator_For_Fraction(char *num1_str, char *num2_str, char sign){
     }
     else if (sign=='*'){
         return fraction_time(num1_str, num2_str);
+    }
+    else if(sign=='^'){
+        return fraction_power(num1_str,num2_str);
     }
     else{
         printf("Mistake occurred while calling function Walley_Operation_For_Fraction\nUnseen sign %c occurred\n",sign);

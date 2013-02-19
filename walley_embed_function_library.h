@@ -219,6 +219,9 @@ char *walley_is_fraction_mode(){
  
  */
 char *math_range(char *input_str){
+    if (strcmp(input_str, "0")==0) {
+        return "[0]";
+    }
     int num_of_param=numOfParameters(input_str);
     if (num_of_param==1) {
         char *output="[";

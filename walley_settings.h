@@ -91,6 +91,21 @@ bool NOW_WRITTING_CLASS;
 int SPACE_OF_FIRST_CLASS_SENTENCE;  // |class a:|  0--->SPACE_OF_FIRST_CLASS_SENTENCE
 
 
+// collect the string that will be displayed
+// after finished the loop
+// print them together
+bool PRINT_IN_WHILE_OR_FOR_LOOP=FALSE;
+char *PRINT_STRING_AFTER_LOOP="";
+int LOOP_TURN=0; // Count the loop num when meets for and while
+                // LOOP_TURN -- after one loop.
+
+
+
+
+
+
+
+
 
 
 // For if elif sentence

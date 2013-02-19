@@ -21,7 +21,7 @@
  * Created on August 17, 2012, 2:41 PM
  */
 //#include "walley_function.h"
-#include "walley_lexical.h"
+#include "walley_language.h"
 
 
 
@@ -376,7 +376,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
         Var_changeValueOfVar(*struct_settings, "now_in_annotation",append("",temp4), "int");
     }
     if(now_in_annotation==0 && stringIsEmpty(trim(input_str))==FALSE){
-        
+                
         Str_addString(save_to_file, input_str);
 
         int space = atoi(Var_getValueOfVar(*struct_settings , "space"));
@@ -506,9 +506,21 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                     
                 }
                 
-                
+                LOOP_TURN--;
                 CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=TRUE;
                 
+                
+                if (LOOP_TURN==0) {
+                    LOOP_TURN=0;
+                    
+                    // Finish Main Loop
+                    // Stop Collecting String
+                    PRINT_IN_WHILE_OR_FOR_LOOP=FALSE;
+                    printf("%s",PRINT_STRING_AFTER_LOOP);
+                    PRINT_STRING_AFTER_LOOP="";
+                    
+                }
+
               
             }
         }//############### Now Writting Function In Progress #####################
@@ -676,6 +688,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 //printf("################ Now Writting For ###################");
                 //printf("STRING IN FOR LOOP is |%s|\n", string_in_for_loop);
                 can_run_basic_input = FALSE;
+                
                 input_str = removeAheadSpaceForNum(input_str, space_of_first_for_sentence + 4);
                 
                 
@@ -687,7 +700,6 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
             else if (current_space <= space_of_first_for_sentence && current_space % 4 == 0) {
                 can_run_basic_input = TRUE;
                 NOW_WRITTING_FOR = FALSE;
-                //printf("----String in loop is %s\n",string_in_for_loop);
                 char temp3[100];
                 space=current_space;
                 sprintf(temp3, "%d", space);
@@ -696,10 +708,11 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 
                 char *i_value_after_in=I_VALUE_AFTER_IN;
                 char *i_in_for_loop = I_IN_FOR_LOOP;
+                
+               
 
                 if (strcmp(variableValueType(i_value_after_in), "list") == 0) {
                     
-                    //int value_num = valueNumOfList(temp_i_in_for_sentence);
                     int value_num = valueNumOfList(i_value_after_in);
                     
                     int x = 0;
@@ -714,18 +727,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                     
                     for (x = 0; x < value_num; x++) {
                         CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=TRUE;
-                        /*
-                        char temp_num[100];
-                        sprintf(temp_num, "%d", x);
                         
-                        char *index_temp = (char*)malloc(sizeof (char) *(3 + (int) strlen(temp_num)));
-                        strcpy(index_temp, "[");
-                        strcat(index_temp, temp_num);
-                        strcat(index_temp, "]");
-                        index_temp[2 + (int) strlen(temp_num)]=0;
-                        
-                        char *value_of_i_in_x = valueOfListAtIndexString(i_value_after_in, index_temp);
-                         */
                         char *value_of_i_in_x=valueOfListAtIndex(i_value_after_in, x);
                         
                         
@@ -743,6 +745,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                         
                         Walley_Run_For_Appointed_Var_String_List(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions, temp_string_list_in_foor_loop);
                         
+                        
                         if (CAN_BREAK) {
                             CAN_BREAK=FALSE;
                             break;
@@ -751,15 +754,29 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                             CAN_CONTINUE=FALSE;
                             continue;
                         }
-
+                        
+                        
                     }
                     CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=TRUE;
-                                        
-                   
+                    
+                    LOOP_TURN--;
+                    
                 }
                 else {
                     printf("#### For Sentence Only Support list Type At This Time\n");
                 }
+        
+                if (LOOP_TURN==0) {
+                    LOOP_TURN=0;
+                    
+                    // Finish Main Loop
+                    // Stop Collecting String
+                    PRINT_IN_WHILE_OR_FOR_LOOP=FALSE;
+                    printf("%s",PRINT_STRING_AFTER_LOOP);
+                    PRINT_STRING_AFTER_LOOP="";
+
+                }
+                
                 
             }
         }
@@ -898,10 +915,24 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 //Var_changeValueOfVar(*struct_settings, "can_continue", "1", "int");
             }
             else if (strcmp(first_none_whitespace_token.TOKEN_STRING,"print")==0){
-                printf("%s", Walley_Print(struct_var, FUNCTION_functions, substr(trim(input_str), 6, (int)strlen(trim(input_str)))));
+                char* temp_output = Walley_Print(struct_var,FUNCTION_functions, substr(trim(input_str), 6, (int)strlen(trim(input_str))));
+                if (PRINT_IN_WHILE_OR_FOR_LOOP==TRUE) {
+                    PRINT_STRING_AFTER_LOOP=append(PRINT_STRING_AFTER_LOOP, temp_output);
+                }
+                else{
+                    printf("%s", temp_output);
+                }
+
+                
             }
             else if (strcmp(first_none_whitespace_token.TOKEN_STRING,"println")==0){
-                printf("%s", Walley_Println(struct_var, FUNCTION_functions, substr(trim(input_str), 8, (int)strlen(trim(input_str)))));
+                char* temp_output = Walley_Println(struct_var,FUNCTION_functions, substr(trim(input_str), 8, (int)strlen(trim(input_str))));
+                if (PRINT_IN_WHILE_OR_FOR_LOOP==TRUE) {
+                    PRINT_STRING_AFTER_LOOP=append(PRINT_STRING_AFTER_LOOP, temp_output);
+                }
+                else{
+                    printf("%s", temp_output);
+                }
             }
             // add new symbolic math support
             else if(strcmp(first_none_whitespace_token.TOKEN_STRING,"syms")==0){
@@ -2291,7 +2322,8 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
         return Var_getValueOfVar(*struct_var, input_str);
     }
     else if (stringIsDigit(input_str)){
-        return Walley_Eval(input_str);
+        //return Walley_Eval(input_str);
+        return input_str;
     }
     
     
@@ -2426,7 +2458,6 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
     //// printf("input str is :%s\nlength is %d\n",input_str,(int)strlen(input_str));
     //printf("Required File is %s\n",file_var_name);
     
-    // printf("input_str----------> %s\n",input_str);
     
     bool find_alpha=FALSE;
     bool finish_find_var=FALSE;
@@ -2656,13 +2687,22 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
                 else if (find(input_str, "walley_println(") == 0) {
                     //printf("find println\ninput_str is |%s|\nstr in bracket is |%s|",input_str,strInBrackets(input_str));
                     char* temp_output = Walley_Println(struct_var,FUNCTION_functions, strInBrackets(input_str));
-                    printf("%s", temp_output);
+                    if (PRINT_IN_WHILE_OR_FOR_LOOP==TRUE) {
+                        PRINT_STRING_AFTER_LOOP=append(PRINT_STRING_AFTER_LOOP, temp_output);
+                    }
+                    else{
+                        printf("%s", temp_output);
+                    }
                     return_value="None";
                 }//#####################  print  ###################
                 else if (find(input_str, "walley_print(") == 0) {
                     char* temp_output = Walley_Print(struct_var,FUNCTION_functions, strInBrackets(input_str));
-                    printf("%s", temp_output);
-                    ////puts(output);
+                    if (PRINT_IN_WHILE_OR_FOR_LOOP==TRUE) {
+                        PRINT_STRING_AFTER_LOOP=append(PRINT_STRING_AFTER_LOOP, temp_output);
+                    }
+                    else{
+                        printf("%s", temp_output);
+                    }
                     return_value="None";
                 }
                 else if(find(input_str,"walley_run_str(")==0 || find(input_str,"walley_eval(")==0){
@@ -3931,7 +3971,16 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
             SPACE_OF_FIRST_WHILE_SENTENCE=space;
             space = space + 4;
 
+            LOOP_TURN++;
+            
+            
+            // Begin the while loop
+            // Begin to collect String
+            PRINT_IN_WHILE_OR_FOR_LOOP=TRUE;
         }
+                
+        
+        
     }        //#################### For Sentence #####################################
     else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "for") == 0) {// && removeBackSpace(input_str)[(int) strlen(removeBackSpace(input_str)) - 1] == ':') {
         //printf("#### Find For ####\n");
@@ -3972,6 +4021,13 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
         
         SPACE_OF_FIRST_FOR_SENTENCE=space;
         space = space + 4;
+        
+        LOOP_TURN++;
+        
+        
+        // Begin the for loop
+        // Begin to collect String
+        PRINT_IN_WHILE_OR_FOR_LOOP=TRUE;
         
         
         // Write temp_i_in_for_sentence to __temp_for__  eg

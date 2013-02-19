@@ -6,7 +6,7 @@
 //  Copyright (c) 2012年 shd101wyy. All rights reserved.
 //
 
-#include "walley_string.h"
+#include "walley_lexical.h"
 
 struct VAR{
     char *var_name;

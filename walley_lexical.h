@@ -6,7 +6,9 @@
 //  Copyright (c) 2013年 shd101wyy. All rights reserved.
 //
 
-#include "walley_language.h"
+#include "walley_string.h"
+bool isSign(char sign);
+bool isJudgeSign(char sign);
 
 struct TOKEN{
     char *TOKEN_CLASS;
