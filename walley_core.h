@@ -30,8 +30,6 @@
  */
 
 void Walley_Initialize_Settings(struct VAR **settings){
-    Var_addProperty(settings, "space", "0", "int");
-    
     Var_addProperty(settings, "current_space", "0", "int");
 
     Var_addProperty(settings, "now_run_if", "0", "int");
@@ -371,7 +369,6 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 
         Str_addString(save_to_file, input_str);
 
-        int space = atoi(Var_getValueOfVar(*struct_settings , "space"));
         bool now_run_if = atoi(Var_getValueOfVar(*struct_settings , "now_run_if"));
         char *last_if_sentence = Var_getValueOfVar(*struct_settings , "last_if_sentence");
         
@@ -397,7 +394,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
         input_str=cleanUpSentence(input_str);        
         
     
-        if (current_space > space) {
+        if (current_space > REQUIRED_SPACE) {
             can_run_basic_input = FALSE;
         }
         
@@ -428,20 +425,19 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
         
         //printf("-------Now input is |%s| required space %d current space %d\n", input_str,space,current_space);
 
-        //printf("--------------> |%s|\n",input_str);
+        //printf("--------------> |%s|, %d\n",input_str,REQUIRED_SPACE);
         
         //################## Now Run If #######################################
         if (now_run_if == TRUE && str_is_empty==FALSE&& CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==TRUE) {
-            if (current_space > space || current_space % 4 != 0) {
+            if (current_space > REQUIRED_SPACE || current_space % 4 != 0) {
                 printf("@@ |%s|\n",CURRENT_INPUT_STR);
-                printf("Space Mistake\nCurrent Space is %d\nRequired Space is %d\n", current_space, space);
+                printf("Space Mistake\nCurrent Space is %d\nRequired Space is %d\n", current_space, REQUIRED_SPACE);
                 exit(0);
             }
             // I do not know whether it is right or not.......
-            if (current_space < space) {
+            if (current_space < REQUIRED_SPACE) {
                 // change space and rewrite it to file
-                space=current_space;
-                Var_changeValueOfVar(*struct_settings , "space", intToCString(space), "int");
+                REQUIRED_SPACE=current_space;
                 Var_changeValueOfVar(*struct_settings , "current_space", intToCString(current_space), "int");
                 now_run_if=FALSE;
                 
@@ -469,9 +465,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 
                 
                 char temp3[100];
-                space=current_space;
-                sprintf(temp3, "%d", space);
-                Var_changeValueOfVar(*struct_settings , "space", append("",temp3), "int");
+                REQUIRED_SPACE=current_space;
                 
                 
                 char *temp_last_while_sentence=LAST_WHILE_SENTENCE;
@@ -520,35 +514,34 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
             can_run_basic_input = FALSE;
             //printf("//############### Now Writting Function In Progress #####################\n");
             //printf("--->%s\n",input_str);
-            //// printf("Current Space is %d, Required Space is %d\n",current_space,space);
             if (current_space % 4 != 0) {
                 printf("@@ |%s|\n",CURRENT_INPUT_STR);
 
-                printf("Space Mistake\nCurrent Space is %d\nRequired Space is %d\n", current_space, space);
+                printf("Space Mistake\nCurrent Space is %d\nRequired Space is %d\n", current_space, REQUIRED_SPACE);
                 exit(0);
             } else if (current_space <= SPACE_OF_FIRST_DEF_SENTENCE) {
                // printf("Finish_define_FUNCTION\n");
                 can_run_basic_input = TRUE;
                 NOW_WRITTING_FUNCTION = FALSE;
-                char temp2[100];
-                space=current_space;
-                sprintf(temp2, "%d", space);
-                Var_changeValueOfVar(*struct_settings , "space", append("",temp2), "int");
-                Str_addString(FUNCTION_functions, "#~End");
-              
+                REQUIRED_SPACE=current_space;
+                Str_addString(FUNCTION_functions, "#~End");              
 
-            } else {
+            }
+            else {
                 
                 
                 input_str = removeAheadSpaceForNum(input_str, SPACE_OF_FIRST_DEF_SENTENCE + 4);
                 
+                
                 if ((strcmp(first_none_whitespace_token.TOKEN_STRING, "exp")==0&&input_str[(int)strlen(input_str)-1]==':')|| NOW_WRITTING_EXPRESSION==TRUE) {
                     if (NOW_WRITTING_EXPRESSION==FALSE) {
                         NOW_WRITTING_EXPRESSION=TRUE;
+                        REQUIRED_SPACE+=4;
                     }
-                    else if (current_space==space) {
+                    else if (current_space<REQUIRED_SPACE) {
                         Str_addString(FUNCTION_functions, input_str);
                         NOW_WRITTING_EXPRESSION=FALSE;
+                        REQUIRED_SPACE=current_space;
                     }
                     else{
                         //printf("EXPRESSION----> %s\n",input_str);
@@ -622,14 +615,16 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                     
                     Str_addString(FUNCTION_functions, input_str);
                 }
-                space = current_space;
+                //REQUIRED_SPACE = current_space;
+                
+                // find another function
+                //if (find_from_index_to_index(removeAheadSpace(input_str), "def ", 0, (int)strlen(removeAheadSpace(input_str))) != -1) {
+                if (strcmp(first_none_whitespace_token.TOKEN_STRING, "def")==0) {
+                    REQUIRED_SPACE = REQUIRED_SPACE + 4;
+                }
             }
             
-            // find another function
-            //if (find_from_index_to_index(removeAheadSpace(input_str), "def ", 0, (int)strlen(removeAheadSpace(input_str))) != -1) {
-            if (strcmp(first_none_whitespace_token.TOKEN_STRING, "def")==0) {
-                space = space + 4;
-            }            
+                       
         }        //################### Now Writting Class ##############################
         else if (NOW_WRITTING_CLASS == TRUE && str_is_empty==FALSE&& CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==TRUE) {
             can_run_basic_input = FALSE;
@@ -641,18 +636,14 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
             else if (current_space<=SPACE_OF_FIRST_CLASS_SENTENCE){
                 NOW_WRITTING_CLASS=FALSE;
                 can_run_basic_input = TRUE;
-                space=current_space;
-                char temp2[100];
-                sprintf(temp2, "%d", space);
-                Var_changeValueOfVar(*struct_settings , "space", append("",temp2), "int");
-        
+                REQUIRED_SPACE=current_space;
             }
             else{
                 
                 //printf("Now Writting Class To File\n");
                 input_str = removeAheadSpaceForNum(input_str, SPACE_OF_FIRST_CLASS_SENTENCE + 4);
 
-                space=current_space;
+                REQUIRED_SPACE=current_space;
                 
                 char *__string_in_temp_class__=Var_getValueOfVar(*struct_var,"__string_in_temp_class__");
                 char *__class_now__=Var_getValueOfVar(*struct_var,"__temp_class_name_now_writting__");
@@ -692,11 +683,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
             else if (current_space <= space_of_first_for_sentence && current_space % 4 == 0) {
                 can_run_basic_input = TRUE;
                 NOW_WRITTING_FOR = FALSE;
-                char temp3[100];
-                space=current_space;
-                sprintf(temp3, "%d", space);
-                Var_changeValueOfVar(*struct_settings , "space", append("",temp3), "int");
-                
+                REQUIRED_SPACE=current_space;
                 
                 char *i_value_after_in=I_VALUE_AFTER_IN;
                 char *i_in_for_loop = I_IN_FOR_LOOP;
@@ -790,9 +777,10 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 
                 char *copy_SENTENCE_OF_SWITCH=SENTENCE_OF_SWITCH;
                 
-                char temp2[100];
-                sprintf(temp2, "%d", SPACE_OF_FIRST_SWITCH_SENTENCE);
-                Var_changeValueOfVar(*struct_settings , "space", append("",temp2), "int");
+                //char temp2[100];
+                //sprintf(temp2, "%d", SPACE_OF_FIRST_SWITCH_SENTENCE);
+                //Var_changeValueOfVar(*struct_settings , "space", append("",temp2), "int");
+                REQUIRED_SPACE=SPACE_OF_FIRST_SWITCH_SENTENCE;
                 
                 NOW_WRITTING_SWITCH=FALSE;
                 SENTENCE_OF_SWITCH="";
@@ -802,11 +790,8 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 //printf("TO RUN :|\n%s|\nspace is %d\n",copy_SENTENCE_OF_SWITCH,SPACE_OF_FIRST_SWITCH_SENTENCE);
                 Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions, copy_SENTENCE_OF_SWITCH);
                 
-                space=current_space;
-                sprintf(temp2, "%d", space);
-                Var_changeValueOfVar(*struct_settings , "space", append("",temp2), "int");
-                //sprintf(temp2, "%d", now_writting_switch);
-                //Var_changeValueOfVar(*struct_settings , "now_writting_switch", append("",temp2), "int");
+                REQUIRED_SPACE=current_space;
+                
             }
             else{
                 
@@ -862,8 +847,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                         
                         
                         SENTENCE_OF_SWITCH=append(SENTENCE_OF_SWITCH,append(temp_str, "\n"));
-                        space=current_space+4;
-                        Var_changeValueOfVar(*struct_settings, "space", intToCString(space), "int");
+                        REQUIRED_SPACE=current_space+4;
                     }
                 }
                 // string in case sentence
@@ -889,7 +873,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
         //##########################################################################################################
         //##########################################################################################################
         //// printf("can run basic input %d numOfSpaceAheadString %d required space %d\n",can_run_basic_input,numOfSpaceAheadString(input_str),space);
-        if (can_run_basic_input == TRUE && (numOfSpaceAheadString(input_str) == 0 || space==current_space)) {
+        if (can_run_basic_input == TRUE && (numOfSpaceAheadString(input_str) == 0 || REQUIRED_SPACE==current_space)) {
             // printf("CAN RUN BASIC INPUT\n");
             char *input_temp = removeAheadSpace(input_str);
             if (strcmp(first_none_whitespace_token.TOKEN_STRING, "pass")==0) {
@@ -1345,10 +1329,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                     }
                 }                // ##############  Is Not Expression ######################
                 
-                //#####################  Delete Space  ###################
-                //} else if(strcmp("",removeBackSpace(removeAheadSpace(input_str)))==0){
-                //    printf("Empty Input");
-                //space=space-4;
+                
                 
                 //#####################  Mistake  ###################
                 else {
@@ -1418,8 +1399,6 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 }
                 //// printf("#### Set Settings ####\n\n\n");
                 char temp2[100];
-                sprintf(temp2, "%d", space);
-                Var_changeValueOfVar(*struct_settings , "space", append("",temp2), "int");
                 sprintf(temp2, "%d", now_run_if);
                 Var_changeValueOfVar(*struct_settings , "now_run_if", append("",temp2), "int");
                 
@@ -3666,7 +3645,6 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
     int current_space=numOfSpaceAheadString(input_str);
     input_str = removeAheadSpace(input_str);
     
-    int space = atoi(Var_getValueOfVar(*struct_settings , "space"));
     bool now_run_if = atoi(Var_getValueOfVar(*struct_settings , "now_run_if"));
     char *last_if_sentence = Var_getValueOfVar(*struct_settings , "last_if_sentence");
     //I add this value here in order to run now_run_if.
@@ -3688,8 +3666,8 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
     }
     else if (strcmp(first_none_whitespace_token.TOKEN_STRING,"class")==0){
         NOW_WRITTING_CLASS=TRUE;
-        SPACE_OF_FIRST_CLASS_SENTENCE=space;
-        space=space+4;
+        SPACE_OF_FIRST_CLASS_SENTENCE=REQUIRED_SPACE;
+        REQUIRED_SPACE=REQUIRED_SPACE+4;
         
         char *class_name=className(input_str);
         char *class_mother=classMother(input_str);
@@ -3713,9 +3691,8 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
     }
     // ##############  Function  ##############################
     else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "def") == 0) {
-        
-        SPACE_OF_FIRST_DEF_SENTENCE = space;
-        space = space + 4;
+        SPACE_OF_FIRST_DEF_SENTENCE = REQUIRED_SPACE;
+        REQUIRED_SPACE = REQUIRED_SPACE + 4;
         
         NOW_WRITTING_FUNCTION = TRUE;
        
@@ -3743,7 +3720,7 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
         char *sentence = "";
         char *temp_for_sentence = removeAheadSpace(removeBackSpace(input_str));
         bool can_run=TRUE;
-        space=current_space;
+        REQUIRED_SPACE=current_space;
         
         
         if (strcmp(first_none_whitespace_token.TOKEN_STRING, "if") == 0) {
@@ -3762,7 +3739,9 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
             //}
             char *__temp_if_space__=Var_getValueOfVar(*struct_var,"__temp_if_space__");
             char temp_num[100];
-            sprintf(temp_num,"%d",space);
+            //sprintf(temp_num,"%d",space);
+            sprintf(temp_num,"%d",REQUIRED_SPACE);
+
             __temp_if_space__=listAppendOneElement(__temp_if_space__,temp_num);
             
             char *__has_run_if__=Var_getValueOfVar(*struct_var,"__has_run_if__");
@@ -3893,7 +3872,6 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
                 //// printf("number is %d\n",number);
                 //// printf("current space is %d\n",current_space);
                 if(number==current_space){
-                    //// printf("number is %d, current_space is %d\n",number,current_space);
                     index=i;
                     break;
                 }
@@ -3942,7 +3920,7 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
             //SPACE_OF_FIRST_IF_ELIF_ELSE_SENTENCE=current_space;
             //printf("space of first if sentence %d\n",current_space);
             now_run_if = TRUE;
-            space = space + 4;
+            REQUIRED_SPACE = REQUIRED_SPACE + 4;
         } else {
             now_run_if = FALSE;
         }
@@ -3960,8 +3938,8 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
             NOW_WRITTING_WHILE = FALSE;
         } else {
             NOW_WRITTING_WHILE = TRUE;
-            SPACE_OF_FIRST_WHILE_SENTENCE=space;
-            space = space + 4;
+            SPACE_OF_FIRST_WHILE_SENTENCE=REQUIRED_SPACE;
+            REQUIRED_SPACE = REQUIRED_SPACE + 4;
 
             LOOP_TURN++;
             
@@ -4011,8 +3989,8 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
         }
 
         
-        SPACE_OF_FIRST_FOR_SENTENCE=space;
-        space = space + 4;
+        SPACE_OF_FIRST_FOR_SENTENCE=REQUIRED_SPACE;
+        REQUIRED_SPACE = REQUIRED_SPACE + 4;
         
         LOOP_TURN++;
         
@@ -4028,7 +4006,7 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
     }
     else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "switch")==0){
         SPACE_OF_FIRST_SWITCH_SENTENCE = current_space;
-        space = current_space + 4;
+        REQUIRED_SPACE = current_space + 4;
         
         NOW_WRITTING_SWITCH = TRUE;
         
@@ -4041,8 +4019,6 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
     //#################### Set Settigns ################################
     //// printf("#### Set Settings ####\n\n\n");
     char temp2[100];
-    sprintf(temp2, "%d", space);
-    Var_changeValueOfVar(*struct_settings , "space", append("", temp2), "int");
     sprintf(temp2, "%d", now_run_if);
     Var_changeValueOfVar(*struct_settings , "now_run_if", append("",temp2), "int");
     

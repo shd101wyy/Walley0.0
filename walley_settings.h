@@ -102,7 +102,8 @@ int LOOP_TURN=0; // Count the loop num when meets for and while
 
 bool NOW_IN_ANNOTATION=FALSE;
 
-
+int REQUIRED_SPACE=0;
+int CURRENT_SPACE=0;
 
 
 
