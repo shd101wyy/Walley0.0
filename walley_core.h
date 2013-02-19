@@ -515,7 +515,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 can_run_basic_input = TRUE;
                 NOW_WRITTING_FUNCTION = FALSE;
                 REQUIRED_SPACE=CURRENT_SPACE;
-                Str_addString(FUNCTION_functions, "#~End");              
+                Str_addString(FUNCTION_functions, "#~End");
 
             }
             else {
@@ -524,7 +524,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 input_str = removeAheadSpaceForNum(input_str, SPACE_OF_FIRST_DEF_SENTENCE + 4);
                 
                 
-                if ((strcmp(first_none_whitespace_token.TOKEN_STRING, "exp")==0&&input_str[(int)strlen(input_str)-1]==':')|| NOW_WRITTING_EXPRESSION==TRUE) {
+                if ((strcmp(first_none_whitespace_token.TOKEN_STRING, "exp")==0&&input_str[(int)strlen(input_str)-1]==':'&&CURRENT_SPACE==SPACE_OF_FIRST_DEF_SENTENCE+4)|| NOW_WRITTING_EXPRESSION==TRUE) {
                     if (NOW_WRITTING_EXPRESSION==FALSE) {
                         NOW_WRITTING_EXPRESSION=TRUE;
                         REQUIRED_SPACE+=4;
@@ -602,17 +602,24 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 
                 
                 }
+                
                 else{
                     
                     Str_addString(FUNCTION_functions, input_str);
+                    if (CURRENT_SPACE<REQUIRED_SPACE) {
+                        REQUIRED_SPACE=CURRENT_SPACE;
+                    }
+                    
+                    // find another function
+                    //if (find_from_index_to_index(removeAheadSpace(input_str), "def ", 0, (int)strlen(removeAheadSpace(input_str))) != -1) {
+                    if (strcmp(first_none_whitespace_token.TOKEN_STRING, "def")==0) {
+                        REQUIRED_SPACE = REQUIRED_SPACE + 4;
+                    }
+
+
                 }
                 //REQUIRED_SPACE = current_space;
                 
-                // find another function
-                //if (find_from_index_to_index(removeAheadSpace(input_str), "def ", 0, (int)strlen(removeAheadSpace(input_str))) != -1) {
-                if (strcmp(first_none_whitespace_token.TOKEN_STRING, "def")==0) {
-                    REQUIRED_SPACE = REQUIRED_SPACE + 4;
-                }
             }
             
                        
@@ -2049,6 +2056,7 @@ char *Walley_Run_One_Function_And_Return_Value_From_Var(char *input_str,struct V
         printf("Function |%s| is not found\n Exit....\n",input_str);
         exit(0);
     }
+    
     
     
     Walley_Run_For_Appointed_Var(&TEMP_VAR_var, &TEMP_VAR_settings, &TEMP_TEMP_FILE, "FUNCTION", FUNCTION_functions,"#end function");
