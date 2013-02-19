@@ -662,7 +662,8 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 
             }
             
-        }     //################## Now Run For #######################################
+        }
+        //################## Now Run For #######################################
         else if (NOW_WRITTING_FOR == TRUE && str_is_empty==FALSE && CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==TRUE) {
             int space_of_first_for_sentence=SPACE_OF_FIRST_FOR_SENTENCE;
             if (CURRENT_SPACE > space_of_first_for_sentence && CURRENT_SPACE % 4 == 0) {
@@ -2287,12 +2288,11 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
     // printf("#### Walley_Substitute_Var_And_Function_Return_Value_From_File ####\n");
     //printf("$$$ input str is |%s| ####\n",input_str);
     
-    
+        
     if(stringIsAlphaAndSlash(input_str)){
         return Var_getValueOfVar(*struct_var, input_str);
     }
     else if (stringIsDigit(input_str)){
-        //return Walley_Eval(input_str);
         return input_str;
     }
     
@@ -2410,6 +2410,25 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
     }
     
     
+    
+    
+    struct TOKEN *token=Walley_Lexica_Analysis(input_str);
+    token=TOKEN_returnTokenWithoutWhitespaces(token);
+    int token_length=TOKEN_length(token);
+    TOKEN_PrintTOKEN(token);
+    
+    if (token_length==2) {
+        // string
+        if (strcmp("W_STRING", token[1].TOKEN_CLASS)==0)
+            return input_str;
+        // number
+        else if(strcmp("W_NUMBER", token[1].TOKEN_CLASS)==0)
+            return input_str;
+        
+    }
+
+    
+    
     // printf("AFTER REPLACE THE THING IN [] AND {}\nTHE INPUT IS |%s|\n",input_str);
     
     // I add new code here to solve print(input_str='1') problem
@@ -2445,7 +2464,15 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
     }
     output[(int)strlen(input_str)]=0;
     
+    
+    
+    
     bool has_var=FALSE;
+    
+    
+    
+    
+    
     for(i=0;i<(int)strlen(input_str);i++){
   
         // printf("output %s--->%c %d\n",output,input_str[i],i);
@@ -3176,8 +3203,12 @@ def random(num1=0,num2=1):\n\
         // printf("--End this loop, output is %s\n",output);
         
     }
+
     
-    //printf("output ----> %s\n",output);
+    
+    
+    
+    
     
     
     if (WALLEY_SUBSTITUTION_CAN_JUST_EVAL_IN_THE_END==TRUE) {
@@ -3414,6 +3445,7 @@ void Walley_Eval_And_Update_Var_And_Value_To_Var(struct VAR **struct_var,char **
     char *var_name = variableName(input_str);
     char *var_value = variableValue(input_str);
     char *var_value_type = variableValueType(var_value);
+    
     //printf("#### The Variable Name is :%s\n",var_name);
     //printf("#### The Variable Value is :%s\n", var_value);
     //printf("#### The Variable Value Type is :%s\n", var_value_type);
@@ -3565,12 +3597,11 @@ void Walley_Eval_And_Update_Var_And_Value_To_Var(struct VAR **struct_var,char **
     if (VAR_VALUE_INCOMPLETE==FALSE) {
     
         
-    //Walley_Substitute_Var_And_Function_Return_Value_From_File AND Walley_Eval_With_Variable_From_File
-    //Do not support operation of list and dictionary now
-    if(strcmp("list",var_value_type)!=0 && strcmp("dictionary",var_value_type)!=0){
-        // printf("var value type is not list or dictionary\n");
-        var_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(var_value, struct_var,FUNCTION_functions);
-    }
+            
+    var_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(var_value, struct_var,FUNCTION_functions);
+    
+        
+        
     // I delete the sentence below on October 22.
     //var_value = Walley_Eval_With_Variable_From_Var(struct_var, var_value);
     var_value_type = variableValueType(var_value);
