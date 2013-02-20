@@ -69,6 +69,6 @@ void Walley_Run(char *input_str);
 void Walley_Run_For_Appointed_Var_String_List(struct VAR **struct_var, struct VAR **struct_settings, char ***save_to_file, char *existing_file, char ***FUNCTION_functions, char **input_str);
 
 char *Walley_Slice(char *var_value, char *slice,struct VAR **struct_var, char ***FUNCTION_functions);
-
+void Walley_Next(struct TOKEN *token, int *current_index, char **current_value, struct VAR *struct_var, char **FUNCTION_functions);
 
 char *cleanUpSentence(char *input_str);

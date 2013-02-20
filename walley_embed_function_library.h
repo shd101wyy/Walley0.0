@@ -1340,3 +1340,5 @@ char *Walley_Run_Special_Function_From_Var(char *function, struct VAR **struct_v
     //// printf("RETURN VALUE %s\n",return_value);
     return return_value;
 }
+
+

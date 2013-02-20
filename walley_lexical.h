@@ -78,7 +78,6 @@ const char* W_RELATION[]={"and","or"};//2
 //const char* W_PUNCTUATION;        : , ;
 
 char * TOKEN_analyzeTokenClass(char *token_string){
-        
     if (strcmp(token_string, ":")==0||strcmp(token_string, ",")==0||strcmp(token_string, ";")==0) {
         return "W_PUNCTUATION";
     }
@@ -223,29 +222,107 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
     int end=0;
     char type='b'; // 'i' for id, 'b' for blank 's' for judge sign or sign(operator),'t' for "" '' [] {} type, 'c' for :
     char t=' ';
+    i=1;
     if (isalpha(input_str[0])||isdigit(input_str[0])) {
         type='i';
     }
     if (input_str[0]=='"') {
         type='t';
         t='s'; //string
+        int final_index=indexOfFinal(input_str, 0);
+        char *token_string=substr(input_str, 0,final_index+1);
+        char *token_class=TOKEN_analyzeTokenClass(token_string);
+        TOKEN_addProperty(&token, token_class, token_string,0,final_index);
+        i=final_index+1;
+        start=i;
+        
+        if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
+            type='s';
+        }
+        else if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
+            type='b';
+        }
+        else if(input_str[i]==':'||input_str[i]==';'||input_str[i]==',')
+            type='c';
+        else{
+            type='i';
+        }
+
+
     }
     if (input_str[0]=='\'') {
         type='t';
         t='s'; //string
+        int final_index=indexOfFinal(input_str, 0);
+        char *token_string=substr(input_str, 0,final_index+1);
+        char *token_class=TOKEN_analyzeTokenClass(token_string);
+        TOKEN_addProperty(&token, token_class, token_string,0,final_index);
+        i=final_index+1;
+        start=i;
+        
+        if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
+            type='s';
+        }
+        else if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
+            type='b';
+        }
+        else if(input_str[i]==':'||input_str[i]==';'||input_str[i]==',')
+            type='c';
+        else{
+            type='i';
+        }
+
     }
     if (input_str[0]=='{') {
         type='t';
         t='d'; //dict
+        int final_index=indexOfFinal(input_str, 0);
+        char *token_string=substr(input_str, 0,final_index+1);
+        char *token_class=TOKEN_analyzeTokenClass(token_string);
+        TOKEN_addProperty(&token, token_class, token_string,0,final_index);
+        i=final_index+1;
+        start=i;
+        
+        if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
+            type='s';
+        }
+        else if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
+            type='b';
+        }
+        else if(input_str[i]==':'||input_str[i]==';'||input_str[i]==',')
+            type='c';
+        else{
+            type='i';
+        }
+
     }
     if (input_str[0]=='[') {
         type='t';
         t='l'; //list or table
+        int final_index=indexOfFinal(input_str, 0);
+        char *token_string=substr(input_str, 0,final_index+1);
+        char *token_class=TOKEN_analyzeTokenClass(token_string);
+        TOKEN_addProperty(&token, token_class, token_string,0,final_index);
+        i=final_index+1;
+        start=i;
+        
+        if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
+            type='s';
+        }
+        else if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
+            type='b';
+        }
+        else if(input_str[i]==':'||input_str[i]==';'||input_str[i]==',')
+            type='c';
+        else{
+            type='i';
+        }
+
     }
     if (input_str[0]==':') {
         type='c';
     }
-    i=1;
+    
     for(;i<length;i++){
         if (type=='i'){
             //if (isalpha(input_str[i])||isdigit(input_str[i])||input_str[i]=='_') {
@@ -675,6 +752,7 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
             
         }
         
+        
     }
     
     
@@ -924,3 +1002,30 @@ struct TOKEN *subtoken(struct TOKEN *token, int from_index, int to_index){
     return output_token;
 }
 
+struct TOKEN TOKEN_nextToken(struct TOKEN *token, int index){
+    int length=TOKEN_length(token);
+    if (index+1==length) {
+        struct TOKEN token_temp;
+        token_temp.TOKEN_CLASS="None";
+        token_temp.TOKEN_STRING="None";
+        token_temp.TOKEN_START="None";
+        token_temp.TOKEN_END="None";
+        return token_temp;
+    }
+    else
+        return token[index+1];
+}
+
+void TOKEN_addToken(struct TOKEN **token, struct TOKEN add_token){
+    TOKEN_addProperty(token, add_token.TOKEN_CLASS, add_token.TOKEN_STRING, add_token.TOKEN_START, add_token.TOKEN_END);
+}
+
+char *TOKEN_toString(struct TOKEN *token){
+    int length=TOKEN_length(token);
+    int i=1;
+    char *output="";
+    for (; i<length; i++) {
+        output=append(output, token[i].TOKEN_STRING);
+    }
+    return output;
+}

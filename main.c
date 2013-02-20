@@ -258,6 +258,7 @@ def random(num1=0,num2=1):\\n\\\n\
         else if(strcmp(param1, "lex")==0){
             printf("Begin Lexical Analysis Test\n");
             printf("Begin to test |%s|\n",param2);
+            param2=toCString(param2);
             struct TOKEN *token=Walley_Lexica_Analysis(param2);
             TOKEN_PrintTOKEN(token);
         }
