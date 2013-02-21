@@ -332,4 +332,33 @@ void CLASS_PrintCLASS(struct CLASS *class_list){
     }
 }
 
+char *CLASS_classMother(struct CLASS *class_list,char *class_name){
+    int length=CLASS_Length(class_list);
+    int row=1;
+    while (row<length) {
+        if (strcmp(class_name, class_list[row].class_name)==0) {
+            return class_list[row].class_mother_name;
+        }
+        
+        row++;
+    }
+    printf("Error.. Can not find required class_name %s\n",class_name);
+    exit(0);
+}
+
+char *CLASS_stringInClass(struct CLASS *class_list,char *class_name){
+    int length=CLASS_Length(class_list);
+    int row=1;
+    while (row<length) {
+        if (strcmp(class_name, class_list[row].class_name)==0) {
+            return class_list[row].string_in_class;
+        }
+        
+        row++;
+    }
+    printf("Error.. Can not find required string_in_class %s\n",class_name);
+    exit(0);
+}
+
+
 

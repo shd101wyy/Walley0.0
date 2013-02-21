@@ -45,18 +45,7 @@ void Walley_Initialize_Settings(struct VAR **settings){
 void Walley_Initialize_Var(struct VAR **var){
 
 
-
-
-    Var_addProperty(var, "__temp_class__", "{}", "dictionary");
-
-    Var_addProperty(var, "__temp_class_name_now_writting__", "'None'", "string");
-
-    Var_addProperty(var, "__string_in_temp_class__", "{}", "dictionary");
-
-    Var_addProperty(var, "__instance_name__", "[]", "list");
-
-    Var_addProperty(var, "__instance_var__", "[]", "list");
-
+    // now this function did nothing
     
     
 }
@@ -716,26 +705,9 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 
                 input_str = removeAheadSpaceForNum(input_str, SPACE_OF_FIRST_CLASS_SENTENCE + 4);
                 
-                CLASS_LIST[CLASS_NUM].string_in_class=append(CLASS_LIST[CLASS_NUM].string_in_class, input_str);
+                CLASS_LIST[CLASS_NUM].string_in_class=append(CLASS_LIST[CLASS_NUM].string_in_class, append(input_str,"\\n"));
 
                 REQUIRED_SPACE=CURRENT_SPACE;
-                
-                char *__string_in_temp_class__=Var_getValueOfVar(*struct_var,"__string_in_temp_class__");
-                char *__class_now__=Var_getValueOfVar(*struct_var,"__temp_class_name_now_writting__");
-                char *string_in_class=valueAtKey(__string_in_temp_class__,__class_now__);
-
-                
-                char *temp_in_class=append(substr(string_in_class, 0, (int) strlen(string_in_class) - 1), input_str);
-                temp_in_class=append(temp_in_class, "\\n\"");
-                string_in_class=temp_in_class;
-                
-                char *dict_var_name=(char*)malloc(sizeof(char)*(2+(int)strlen("__string_in_temp_class__{}")+(int)strlen(__class_now__)));
-                strcpy(dict_var_name,"__string_in_temp_class__{");
-                strcat(dict_var_name,__class_now__);
-                strcat(dict_var_name,"}");
-                dict_var_name[1+(int)strlen("__string_in_temp_class__{}")+(int)strlen(__class_now__)]=0;
-                //changeTheOneVarValueFromItsInitialOneFromFileOrAddVarNameAndValueForDictionary(struct_var,dict_var_name,string_in_class);
-                changeTheOneVarValueFromItsInitialOneFromVarOrAddVarNameAndValueForDictionary(struct_var, dict_var_name, string_in_class);
                 
             }
             
@@ -1020,7 +992,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
             else {
                 input_str = trim(input_str);
                 //#####################  Init class  #####################
-                if((find_not_in_string(input_str, "=")!=-1&&find_not_in_string(input_str,"(")!=-1&& (find_not_in_string(input_str, "=")<find_not_in_string(input_str,"(")) &&checkWhetherSameClassExistedFromVar(*struct_var,trim(substr(input_str,find_not_in_string(input_str, "=")+1,find_not_in_string(input_str,"("))))==TRUE)
+                if((find_not_in_string(input_str, "=")!=-1&&find_not_in_string(input_str,"(")!=-1&& (find_not_in_string(input_str, "=")<find_not_in_string(input_str,"(")) &&checkWhetherSameClassExistedFromVar(CLASS_LIST,trim(substr(input_str,find_not_in_string(input_str, "=")+1,find_not_in_string(input_str,"("))))==TRUE)
                     ) {
                                         
                     //printf("#### Begin to initialize class ####\n");
@@ -1033,16 +1005,16 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                     instance_name = trim(instance_name);
                     __class__ = trim(__class__);
                     char *parameter=substr(__class__,find(__class__,"(")+1,find_not_in_string(__class__,")"));
-                    
+                    char *class_name=substr(__class__, 0, find(__class__,"("));
         
                     
-                    char *after_change=formatStringInClassWithExtendFromVar(*struct_var,input_str);
+                    char *after_change=formatStringInClassWithExtendFromVar(*struct_var,CLASS_LIST,class_name,instance_name);
                     //printf("#### AFTER CHANGE\n|%s|\n####\n",after_change);
 
                     Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file,FUNCTION_functions, after_change);
-                    addInstanceNameToVar(instance_name,*struct_var);
+                    addInstanceNameToVar(&INSTANCE_NAMES_LIST,instance_name);
+            
                     
-                    Str_addString(&INSTANCE_NAMES, instance_name);
                     
                     
                     // For list instance like x[0]=a()
@@ -1758,8 +1730,7 @@ char *Walley_Run_One_Function_And_Return_Value_From_Var(char *input_str,struct V
     // copy instance var to TEMP_VAR_var
     // and then copy it back
      */
-    copyInstanceValueToStructVar(struct_var,&TEMP_VAR_var);
-
+    copyInstanceValueToStructVar(struct_var,&TEMP_VAR_var,INSTANCE_NAMES_LIST);
 
     char **TEMP_TEMP_FILE;Str_initStringList(&TEMP_TEMP_FILE);
     
@@ -1917,7 +1888,7 @@ char *Walley_Run_One_Function_And_Return_Value_From_Var(char *input_str,struct V
                     char *user;
                     if(find_not_in_string(var_name2,".")!=-1){
                         user=substr(var_name2,0,find_not_in_string(var_name2,"."));
-                        bool is_instance=checkWhetherSameInstanceExistedFromVar(VAR_var,user);
+                        bool is_instance=checkWhetherSameInstanceExistedFromVar(INSTANCE_NAMES_LIST,user);
                         if(is_instance)
                             is_instance_value=TRUE;
                         else
@@ -1945,7 +1916,7 @@ char *Walley_Run_One_Function_And_Return_Value_From_Var(char *input_str,struct V
                     else{
                         user=substr(arr, 0, find(arr, "."));
                         user=trim(user);
-                        if (checkWhetherSameInstanceExistedFromVar(*struct_var, user)==TRUE) {
+                        if (checkWhetherSameInstanceExistedFromVar(INSTANCE_NAMES_LIST, user)==TRUE) {
                             is_instance_value=TRUE;
                         }
                         else{
@@ -2150,7 +2121,7 @@ char *Walley_Run_One_Function_And_Return_Value_From_Var(char *input_str,struct V
         a++;
     }
    
-    copyInstanceValueBackToVar(&TEMP_VAR_var, struct_var);
+    copyInstanceValueBackToVar(&TEMP_VAR_var, struct_var,INSTANCE_NAMES_LIST);
     
     function_in_def="";
     GLOBAL_VAR=global_var_back_up;
@@ -2588,7 +2559,7 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
                     //// printf("It is instance function\n");
                     char *user = substr(function, 0, index_of_dot);
                     //printf("user---> %s  func---> %s\n",user,function);
-                    bool instance_existed = checkWhetherSameInstanceExistedFromVar(*struct_var, user);
+                    bool instance_existed = checkWhetherSameInstanceExistedFromVar(INSTANCE_NAMES_LIST, user);
                     bool var_existed = Var_Existed(*struct_var,user);
                     
                     bool only_var_existed = var_existed;
@@ -4166,7 +4137,7 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
     else if (strcmp(first_none_whitespace_token.TOKEN_STRING,"class")==0){
         CLASS_NUM++;
         if (HAVE_INIT_CLASS_LIST==FALSE) {
-            Str_initStringList(&INSTANCE_NAMES);
+            Str_initStringList(&INSTANCE_NAMES_LIST);
             CLASS_initCLASSList(&CLASS_LIST);
             HAVE_INIT_CLASS_LIST=TRUE;
         }
@@ -4177,25 +4148,8 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
         char *class_name=className(input_str);
         char *class_mother=classMother(input_str);
         
-        CLASS_addProperty(&CLASS_LIST, class_name, class_mother, "#Begin to define class...\\n");
+        CLASS_addProperty(&CLASS_LIST, class_name, class_mother, "#Begin to define class...\n");
         //CLASS_PrintCLASS(CLASS_LIST);
-
-        char *__temp_class__=Var_getValueOfVar(*struct_var,"__temp_class__");
-
-        __temp_class__=dictionaryAddKeyAndValue(__temp_class__,toString(class_name),toString(class_mother));
-        changeTheWholeVarValueFromItsInitialOneFromVarForDictionary(struct_var, "__temp_class__", __temp_class__);
-
-        
-        char *__string_in_temp_class__=Var_getValueOfVar(*struct_var,"__string_in_temp_class__");
-        __string_in_temp_class__=dictionaryAddKeyAndValue(__string_in_temp_class__,toString(class_name),toString("#Begin to define class...\\n"));
-                
-        //// printf("__string_in_temp_class__ is %s\n",__string_in_temp_class__);
-        //changeTheWholeVarValueFromItsInitialOneFromFileForDictionary(file_var_name,"__string_in_temp_class__",__string_in_temp_class__);
-        changeTheWholeVarValueFromItsInitialOneFromVarForDictionary(struct_var, "__string_in_temp_class__", __string_in_temp_class__);
-        
-        //printf("class_name is %s, class extends %s\n",class_name,class_mother);
-        
-        Var_changeValueOfVar(struct_var,"__temp_class_name_now_writting__",toString(class_name),"string");
     }
     // ##############  Function  ##############################
     else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "def") == 0) {
@@ -4608,11 +4562,6 @@ def random(num1=0,num2=1):\n\
         char *var_name=temp_struct_var[i].var_name;
         // prevent from deleting those important variables.
         if (
-            find(var_name, "__temp_class__")==0||
-            find(var_name, "__temp_class_name_now_writting__")==0||
-            find(var_name, "__string_in_temp_class__")==0||
-            find(var_name, "__instance_name__")==0||
-            find(var_name, "__instance_var__")==0||
             find(var_name, "__size_of_array__")==0
             ) {
         }
@@ -4625,7 +4574,7 @@ def random(num1=0,num2=1):\n\
     }
         
     
-    
+    /*
     char *__temp_class__=Var_getValueOfVar(temp_struct_var, "__temp_class__");
     char *__string_in_temp_class__=Var_getValueOfVar(temp_struct_var, "__string_in_temp_class__");
     char *class_list=keyOfDictionaryAsList(__temp_class__);
@@ -4645,7 +4594,7 @@ def random(num1=0,num2=1):\n\
         char *change_dictionary2=append("__temp_class__", append("{", append( toString(new_class_name), "}")));
         changeTheOneVarValueFromItsInitialOneFromVarOrAddVarNameAndValueForDictionary(struct_var, change_dictionary2, mother);
 
-    }
+    }*/
     
    
     char *function_list=getFunctionNameAndReturnList(temp_FUNCTION_functions);

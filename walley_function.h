@@ -2131,11 +2131,6 @@ void Walley_Clean_Variables(char *existing_file, struct VAR struct_var[], int fr
 
                 // prevent from deleting those important variables.
                 if (
-                    find(var_name, "__temp_class__")==0||
-                    find(var_name, "__temp_class_name_now_writting__")==0||
-                    find(var_name, "__string_in_temp_class__")==0||
-                    find(var_name, "__instance_name__")==0||
-                    find(var_name, "__instance_var__")==0||
                     find(var_name, "__size_of_array__")==0
 
                     ) {
@@ -2307,11 +2302,6 @@ char *getVarNameAndReturnList(struct VAR *struct_var){
         char *var_name=struct_var[i].var_name;
         // prevent from deleting those important variables.
         if (
-            find(var_name, "__temp_class__")==0||
-            find(var_name, "__temp_class_name_now_writting__")==0||
-            find(var_name, "__string_in_temp_class__")==0||
-            find(var_name, "__instance_name__")==0||
-            find(var_name, "__instance_var__")==0||
             find(var_name, "__size_of_array__")==0
 
             ) {

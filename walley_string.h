@@ -1415,6 +1415,10 @@ char *Str_appendSpaceAhead(char *input_str, int num_of_space){
     return input_str;
     
 }
+int Str_length(char **input_str_list){
+    return atoi(input_str_list[0]);
+
+}
 
 
 // init dynamic string

@@ -92,7 +92,7 @@ int SPACE_OF_FIRST_CLASS_SENTENCE;  // |class a:|  0--->SPACE_OF_FIRST_CLASS_SEN
 bool HAVE_INIT_CLASS_LIST=FALSE;
 struct CLASS *CLASS_LIST;
 int CLASS_NUM=0; // class num
-char **INSTANCE_NAMES;
+char **INSTANCE_NAMES_LIST;
 
 
 // collect the string that will be displayed

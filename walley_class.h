@@ -229,22 +229,20 @@ char *formatStringInClass(char *instance_name, char *string_in_class){
  * eg x is hi()
  * add x to __instance_name__ in VAR_var
  */
-void addInstanceNameToVar(char *instance_name,struct VAR struct_var[]){
-    //char *__instance_name__=getValueFromValueName(file_name,"__instance_name__");
-    char *__instance_name__=Var_getValueOfVar(struct_var,"__instance_name__");
-    __instance_name__=listAppendOneElement(__instance_name__,toString(instance_name));
-    
-    //changeTheWholeVarValueFromItsInitialOneFromFileForList(file_name,"__instance_name__",__instance_name__);
-    Var_changeValueOfVar(&struct_var, "__instance_name__", __instance_name__,"list");
+void addInstanceNameToVar(char ***instance_names_list,char *instance_name){
+    Str_addString(instance_names_list, instance_name);
 }
 
-bool checkWhetherSameInstanceExistedFromVar(struct VAR *struct_var, char *instance_name){
-    char *__instance_name__=Var_getValueOfVar(struct_var,"__instance_name__");
-    instance_name=toString(instance_name);
-    if(find(__instance_name__,instance_name)!=-1)
-        return TRUE;
-    else
-        return FALSE;
+bool checkWhetherSameInstanceExistedFromVar(char **instance_names_list, char *instance_name){
+    int length=Str_length(instance_names_list);
+    int row=1;
+    while (row<length) {
+        if (strcmp(instance_names_list[row], instance_name)==0) {
+            return TRUE;
+        }
+        row++;
+    }
+    return FALSE;
 }
 
 
@@ -263,36 +261,22 @@ bool checkWhetherSameInstanceExistedFromVar(struct VAR *struct_var, char *instan
 
 
 
-char *formatStringInAnyClassFromVar(struct VAR *struct_var, char *instance_name, char *class_name) {
+char *formatStringInAnyClassFromVar(struct VAR *struct_var, struct CLASS *class_list,char *instance_name, char *class_name) {
     //char *instance_name=son;
     //printf("\n\n#### formatStringInAnyClassFromFile ####\n");
+   
     
-    if (class_name[0] != '\"')
-        class_name = toString(class_name);
+    char *string_in_class =CLASS_stringInClass(class_list, class_name);
     
-    char *__string_in_temp_class__ = Var_getValueOfVar(struct_var, "__string_in_temp_class__");
-    //printf("----%s----\n",__string_in_temp_class__);
-    //printf("----%s----\n",class_name);
-    //char *__class_now__ = toString(class_name);
-    char *string_in_class = valueAtKey(__string_in_temp_class__, class_name);
-    //printf("\nhere\n");
-    char *__temp_class__ = Var_getValueOfVar(struct_var, "__temp_class__");
-    char *mother = valueAtKey(__temp_class__, class_name);
-    //char *string_in_mother_class = valueAtKey(__string_in_temp_class__, mother);
-    
-    //printf("string_in_class %s\n",string_in_class);
-    //printf("mother          %s\n",mother);
-    //printf("class name      %s\n",class_name);
-    
-   // printf("################%s\n",valueAtKey(__temp_class__, <#char *key#>))
-    
+    char *mother=CLASS_classMother(class_list, class_name);
+   
     char *output="";
     if (strcmp(toCString(mother), "None")!=0) {
-        output=append(output, formatStringInAnyClassFromVar(struct_var,instance_name,mother));
+        output=append(output, formatStringInAnyClassFromVar(struct_var,class_list,instance_name,mother));
     }
     //output=append(output, formatStringInClass(instance_name, string_in_class));
     output=append(output, toCString(string_in_class));
-    
+
     int index_of_super=-1;
     while (TRUE) {
         index_of_super=find_from_index_not_in_string(output, "super.",index_of_super+1);
@@ -318,8 +302,9 @@ char *formatStringInAnyClassFromVar(struct VAR *struct_var, char *instance_name,
             char *replace_str=substr(output, index_of_super, gang_n);
             //printf("replace str is |%s|\n",replace_str);
             
-            char *string_in_mother_class=valueAtKey(__string_in_temp_class__, mother);
-            string_in_mother_class=toCString(string_in_mother_class);
+           
+            char *string_in_mother_class=CLASS_stringInClass(class_list, mother);
+            
             char *find_str_in_mother=replace_not_in_string(replace_str, "super.", "self.");
             find_str_in_mother=substr(find_str_in_mother, 0, find(find_str_in_mother,"(")+1);
             //printf("find_str_in_mother is |%s|\n",find_str_in_mother);
@@ -426,74 +411,48 @@ char *formatStringInAnyClassFromVar(struct VAR *struct_var, char *instance_name,
  */
 //formatStringInClassWithExtendFromFile("__walley__.wy","Rohit is person():")
 
-
-char *formatStringInClassWithExtendFromVar(struct VAR *struct_var, char *input_str) {
-    //// printf("#### formatStringInClassWithExtendFromFile ####");
-    input_str=trim(input_str);
-    char *instance_name = substr(input_str, 0, find_not_in_string(input_str, "="));
-    char *__class__ = substr(input_str, find_not_in_string(input_str, "=") + 1, (int) strlen(input_str));
-    instance_name = trim(instance_name);
-    __class__ = trim(__class__);
-    char *class_name = substr(__class__, 0, find(__class__, "("));
-    //char *parameter = substr(__class__, find(__class__, "(") + 1, find_not_in_string(__class__, ")"));
+char *formatStringInClassWithExtendFromVar(struct VAR *struct_var, struct CLASS *class_list,char *class_name,char *instance_name) {
+    //printf("#### formatStringInClassWithExtendFromFile ####");
+        
+    char *mother=CLASS_classMother(class_list, class_name);
+    char *string_in_class=CLASS_stringInClass(class_list, class_name);
     
-    char *__string_in_temp_class__ = Var_getValueOfVar(struct_var, "__string_in_temp_class__");
-    char *__class_now__ = toString(class_name);
-    char *string_in_class = valueAtKey(__string_in_temp_class__, __class_now__);
-    string_in_class=trim(string_in_class);
-
-    
-    char *__temp_class__ = Var_getValueOfVar(struct_var, "__temp_class__");
-    //printf("__temp_class__ %s\n",__temp_class__);
-    char *mother = valueAtKey(__temp_class__, __class_now__);
-    mother=toCString(mother);
-    //printf("mothe is %s\n",mother);
     // has no extends
     if (strcmp("None", mother) == 0) {
-        //printf("EXTENDS Nothing\n");
         return formatStringInClass(instance_name, string_in_class);
-    }        // has extends
+    }
+    // has extends
     else {
-        return formatStringInAnyClassFromVar(struct_var,instance_name,__class_now__);
+        return formatStringInAnyClassFromVar(struct_var,class_list,instance_name,class_name);
         
     }
 }
 
 
 
-bool checkWhetherSameClassExistedFromVar(struct VAR *struct_var, char *class_name){
-    //printf("#### checkWhetherSameClassExisted ####\n");
-    class_name=toString(class_name);
-    //// printf("class_name %s\n",class_name);
-    char *__class__=Var_getValueOfVar(struct_var,"__temp_class__");
-    char *key_list=keyOfDictionaryAsList(__class__);
-    int num=valueNumOfList(key_list);
-    int i=0;
-    bool existed=FALSE;
-    for(i=0;i<num;i++){
-        char *value=valueOfListAtIndex(key_list,i);
-        if(strcmp(value,class_name)==0){
-            existed=TRUE;
-            break;
+bool checkWhetherSameClassExistedFromVar(struct CLASS *class_list, char *class_name){
+    int length=CLASS_Length(class_list);
+    int row=1;
+    while (row<length) {
+        if (strcmp(class_list[row].class_name, class_name)==0) {
+            return TRUE;
         }
+        row++;
     }
-    //printf("Existed ? %d\n",existed);
-    return existed;
+    return FALSE;
 }
 
 
 
-void copyInstanceValueToStructVar(struct VAR **struct_var, struct VAR **copy_to_var){
-    char *__class__=Var_getValueOfVar(*struct_var,"__instance_name__");
-    int num=valueNumOfList(__class__);
+void copyInstanceValueToStructVar(struct VAR **struct_var,struct VAR **copy_to_var, char **instance_names_list){
     char *class_name;
+
+    int length=Str_length(instance_names_list);
     
     int length_of_struct_var=Var_length(*struct_var);
-    int i=0;
-    for(;i<num;i++){
-        class_name=valueOfListAtIndex(__class__,i);
-        class_name=toCString(class_name);
-        
+    int i=1;
+    for(i=1;i<length;i++){
+        class_name=instance_names_list[i];
         char *temp=append(class_name, ".");
         
         int j=0;
@@ -506,17 +465,14 @@ void copyInstanceValueToStructVar(struct VAR **struct_var, struct VAR **copy_to_
     }
 }
 
-void copyInstanceValueBackToVar(struct VAR **struct_var, struct VAR **copy_to_var){
-    char *__class__=Var_getValueOfVar(*copy_to_var,"__instance_name__");
-    int num=valueNumOfList(__class__);
+void copyInstanceValueBackToVar(struct VAR **struct_var, struct VAR **copy_to_var,char **instance_names_list){
+    int length=Str_length(instance_names_list);
     char *class_name;
     
     int length_of_struct_var=Var_length(*struct_var);
-    int i=0;
-    for(;i<num;i++){
-        class_name=valueOfListAtIndex(__class__,i);
-        class_name=toCString(class_name);
-        
+    int i=1;
+    for(;i<length;i++){
+        class_name=instance_names_list[i];
         char *temp=append(class_name, ".");
         
         int j=0;
