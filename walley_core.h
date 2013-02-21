@@ -447,6 +447,8 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
             if (CURRENT_SPACE==SPACE_OF_FIRST_IF_SENTENCE) {
                 //ELIF
                 if (strcmp(first_none_whitespace_token.TOKEN_STRING, "ELIF")==0) {
+                    Str_addString(&(IF_ELIF_ELSE.content[INDEX_OF_IF_ELIF_ELSE])
+                                  , "#end");
                     INDEX_OF_IF_ELIF_ELSE++;
                     char *trim_input_str=trim(input_str);
                     char *string_in_elif=substr(trim_input_str, find(trim_input_str,"ELIF ")+5, find_from_behind(trim_input_str, ":"));
@@ -457,6 +459,8 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 }
                 //ELSE
                 else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "ELSE")==0){
+                    Str_addString(&(IF_ELIF_ELSE.content[INDEX_OF_IF_ELIF_ELSE])
+                                  , "#end");
                     INDEX_OF_IF_ELIF_ELSE++;
                     Str_addString(&IF_ELIF_ELSE.if_elif_else, "#~ELSE~#");
                     IF_ELIF_ELSE.content=(char***)realloc(IF_ELIF_ELSE.content,sizeof(char**)*(INDEX_OF_IF_ELIF_ELSE+1));
@@ -467,7 +471,8 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 else{
                     //printf("Begin to run if.. exit here temp..\n");
                     //IF_PrintIf(IF_ELIF_ELSE, INDEX_OF_IF_ELIF_ELSE+1);
-                    
+                    Str_addString(&(IF_ELIF_ELSE.content[INDEX_OF_IF_ELIF_ELSE])
+                                  , "#end");
                     NOW_WRITTING_IF=FALSE;
                     SPACE_OF_FIRST_IF_SENTENCE=0;
                     REQUIRED_SPACE=CURRENT_SPACE;
