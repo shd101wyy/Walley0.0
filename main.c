@@ -17,6 +17,8 @@ int main(int argc, char **argv){
     ARGV=argv;
     ARGC=argc;
 
+    Str_initStringList(&INSTANCE_NAMES_LIST);
+    
     ////char cwd[1000];
     ////getcwd(cwd, sizeof (cwd));
     ////printf("Current Working Directory%s\n\n\n\n\n",cwd);
