@@ -195,23 +195,23 @@ void Var_removeVar(struct VAR **var, char *remove_var_name){
        
 }
 
-void Var_changeValueOfVar(struct VAR *var, char *var_name, char *var_value, char *var_type){
+void Var_changeValueOfVar(struct VAR **var, char *var_name, char *var_value, char *var_type){
     int i=0;
     int length=0;
-    if (strcmp((var)->var_name,"__size_of_array__")!=0) {
+    if (strcmp((*var)->var_name,"__size_of_array__")!=0) {
         printf("@@ |%s|\n",CURRENT_INPUT_STR);
 
         printf("Can not find __size_of_array__");
         exit(0);
     }
     else{
-        length=atoi((var)->var_value);
+        length=atoi((*var)->var_value);
     }
     
     while (i<length) {
-        if (strcmp((var+i)->var_name,var_name)==0) {
-            (var+i)->var_value=var_value;
-            (var+i)->var_type=var_type;
+        if (strcmp((*var+i)->var_name,var_name)==0) {
+            (*var+i)->var_value=var_value;
+            (*var+i)->var_type=var_type;
             break;
         }
         i=i+1;

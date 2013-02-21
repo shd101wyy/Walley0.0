@@ -866,7 +866,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
         //#####################################################################################
         char temp5[10];
         sprintf(temp5, "%d", can_run_basic_input);
-        Var_changeValueOfVar(*struct_settings , "can_run_basic_input", append("",temp5), "int");
+        Var_changeValueOfVar(struct_settings , "can_run_basic_input", append("",temp5), "int");
         //##########################################################################################################
         //##########################################################################################################
         //##########################################################################################################
@@ -917,7 +917,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 for (; i<num_of_vars; i++) {
                     char *var_name=getParamAccordingToIndex(sym_vars,i);
                     if (Var_Existed(*struct_var, var_name)) {
-                        Var_changeValueOfVar(*struct_var, var_name, var_name, "sym");
+                        Var_changeValueOfVar(struct_var, var_name, var_name, "sym");
                     }
                     else{
                         Var_addProperty(struct_var, var_name, var_name, "sym");
@@ -1399,9 +1399,9 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 //// printf("#### Set Settings ####\n\n\n");
                 char temp2[100];
                 sprintf(temp2, "%d", now_run_if);
-                Var_changeValueOfVar(*struct_settings , "now_run_if", append("",temp2), "int");
+                Var_changeValueOfVar(struct_settings , "now_run_if", append("",temp2), "int");
                 
-                Var_changeValueOfVar(*struct_settings , "last_if_sentence", last_if_sentence, "string");
+                Var_changeValueOfVar(struct_settings , "last_if_sentence", last_if_sentence, "string");
                             }
             
         }
@@ -1513,7 +1513,7 @@ void Walley_Update_Var_And_Var_Value_To_Var(struct VAR **struct_var, char *var_n
                 char *temp_var_value=Var_getValueOfVar(*struct_var, ahead);
                 if (strcmp(variableValueType(temp_var_value), "table")==0) {
                     var_value=Table_addValueOrChangeValue(temp_var_value, string_index, var_value);
-                    Var_changeValueOfVar(*struct_var, ahead, var_value, "table");
+                    Var_changeValueOfVar(struct_var, ahead, var_value, "table");
                 }
             }
             else {
@@ -1533,7 +1533,7 @@ void Walley_Update_Var_And_Var_Value_To_Var(struct VAR **struct_var, char *var_n
                     Table_updateTableToStructVar(struct_var, var_name, var_value);
                 }
                 else{
-                    Var_changeValueOfVar(*struct_var, var_name, var_value, var_value_type);
+                    Var_changeValueOfVar(struct_var, var_name, var_value, var_value_type);
                     
                 }
             }
@@ -1594,7 +1594,7 @@ void Walley_Update_Var_And_Var_Value_To_Var(struct VAR **struct_var, char *var_n
             char *temp_var_value=Var_getValueOfVar(*struct_var, ahead);
             if (strcmp(variableValueType(temp_var_value), "table")==0) {
                 var_value=Table_addValueOrChangeValue(temp_var_value, string_index, var_value);
-                Var_changeValueOfVar(*struct_var, ahead, var_value, "table");
+                Var_changeValueOfVar(struct_var, ahead, var_value, "table");
             }
             else if(strcmp(variableValueType(temp_var_value), "list")==0){
                 var_value=Table_addValueOrChangeValue(temp_var_value, string_index, var_value);
@@ -2848,7 +2848,7 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
                     temp_value = Walley_Eval_With_Variable_From_Var(*struct_var, temp_value);
                     return_value = var_input(temp_value);
                 } else if(strcmp(func_name,"walley_fraction_mode")==0){
-                    Var_changeValueOfVar(VAR_settings, "fraction_mode","1", "int");
+                    Var_changeValueOfVar(&VAR_settings, "fraction_mode","1", "int");
                     
                     //char *ocp;
                     //matho_parse("set fraction 1", &ocp);
@@ -2857,7 +2857,7 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
                     
                     return_value="None";
                 } else if(strcmp(func_name,"walley_decimal_mode")==0){
-                    Var_changeValueOfVar(VAR_settings, "fraction_mode","0", "int");
+                    Var_changeValueOfVar(&VAR_settings, "fraction_mode","0", "int");
                     
                     //char *ocp;
                     //matho_parse("set fraction 0", &ocp);
@@ -4113,7 +4113,7 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
         
         //printf("class_name is %s, class extends %s\n",class_name,class_mother);
         
-        Var_changeValueOfVar(*struct_var,"__temp_class_name_now_writting__",toString(class_name),"string");
+        Var_changeValueOfVar(struct_var,"__temp_class_name_now_writting__",toString(class_name),"string");
     }
     // ##############  Function  ##############################
     else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "def") == 0) {
@@ -4446,9 +4446,9 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
     //// printf("#### Set Settings ####\n\n\n");
     char temp2[100];
     sprintf(temp2, "%d", now_run_if);
-    Var_changeValueOfVar(*struct_settings , "now_run_if", append("",temp2), "int");
+    Var_changeValueOfVar(struct_settings , "now_run_if", append("",temp2), "int");
     
-    Var_changeValueOfVar(*struct_settings , "last_if_sentence", last_if_sentence, "string");
+    Var_changeValueOfVar(struct_settings , "last_if_sentence", last_if_sentence, "string");
    // printf("2##############\n");
    // Var_PrintVar(struct_settings);
    // printf("END\n");

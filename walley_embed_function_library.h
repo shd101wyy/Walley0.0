@@ -1314,7 +1314,7 @@ char *Walley_Run_Special_Function_From_Var(char *function, struct VAR **struct_v
             //printf("user value %s user_function_parameter %s\n",user_value,user_function_parameter);
             return_value = list_append(user_value, user_function_parameter);
             //changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name, user, return_value);
-            Var_changeValueOfVar(*struct_var, user, return_value, "list");
+            Var_changeValueOfVar(struct_var, user, return_value, "list");
             
             //// printf("#### FINISH APPEND ####\n");
         } else if (find(user_function, "remove_at_index(") == 0) {

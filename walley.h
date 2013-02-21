@@ -154,7 +154,7 @@ void Walley_Run_File(char *file_name){
         //fputs(input_message, fp);
         //Walley_Run_For_Appointed_File("__walley__.wy","__walley_settings__.wy","__walley_file__.wy",file_name,"#end");
         Walley_Run_For_Appointed_Var(&VAR_var,&VAR_settings,&TEMP_FILE,file_name,&FUNCTION,"#end");
-        Var_changeValueOfVar(VAR_settings , "turn", "0", "int");
+        Var_changeValueOfVar(&VAR_settings , "turn", "0", "int");
         fclose(fp);
     }
     }

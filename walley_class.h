@@ -235,7 +235,7 @@ void addInstanceNameToVar(char *instance_name,struct VAR struct_var[]){
     __instance_name__=listAppendOneElement(__instance_name__,toString(instance_name));
     
     //changeTheWholeVarValueFromItsInitialOneFromFileForList(file_name,"__instance_name__",__instance_name__);
-    Var_changeValueOfVar(struct_var, "__instance_name__", __instance_name__,"list");
+    Var_changeValueOfVar(&struct_var, "__instance_name__", __instance_name__,"list");
 }
 
 bool checkWhetherSameInstanceExistedFromVar(struct VAR *struct_var, char *instance_name){
@@ -523,7 +523,7 @@ void copyInstanceValueBackToVar(struct VAR **struct_var, struct VAR **copy_to_va
         for (; j<length_of_struct_var; j++) {
             if (find((*struct_var+j)->var_name, temp)==0||strcmp(class_name, (*struct_var+j)->var_name)==0) {
                 // add it to copy_to_var
-                Var_changeValueOfVar(*copy_to_var,(*struct_var+j)->var_name , (*struct_var+j)->var_value, (*struct_var+j)->var_type);
+                Var_changeValueOfVar(copy_to_var,(*struct_var+j)->var_name , (*struct_var+j)->var_value, (*struct_var+j)->var_type);
             }
         }
     }
