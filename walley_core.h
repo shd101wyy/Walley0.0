@@ -469,6 +469,9 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 }
                 //FINISH IF
                 else{
+                    struct IF If_copy=IF_ELIF_ELSE;
+                    int index_of_if_copy=INDEX_OF_IF_ELIF_ELSE;
+                    
                     //printf("Begin to run if.. exit here temp..\n");
                     //IF_PrintIf(IF_ELIF_ELSE, INDEX_OF_IF_ELIF_ELSE+1);
                     Str_addString(&(IF_ELIF_ELSE.content[INDEX_OF_IF_ELIF_ELSE])
@@ -476,29 +479,32 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                     NOW_WRITTING_IF=FALSE;
                     SPACE_OF_FIRST_IF_SENTENCE=0;
                     REQUIRED_SPACE=CURRENT_SPACE;
+                    INDEX_OF_IF_ELIF_ELSE=0;
+                    memset(&IF_ELIF_ELSE, 0, sizeof(IF_ELIF_ELSE));
+                    
+                    CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=TRUE;
+                    can_run_basic_input=TRUE;
 
                     // Begin to Run Code
                     int i=0;
-                    for (; i<=INDEX_OF_IF_ELIF_ELSE; i++) {
-                        char *to_judge=IF_ELIF_ELSE.if_elif_else[i+1];
-                        CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=TRUE;
-                        can_run_basic_input=TRUE;
+                    for (; i<=index_of_if_copy; i++) {
+                        char *to_judge=If_copy.if_elif_else[i+1];
+                        
 
                         if (strcmp(to_judge, "#~ELSE~#")==0) {
                             //printf("run else\n");
-                            Walley_Run_For_Appointed_Var_String_List(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions, IF_ELIF_ELSE.content[i]);
+                            Walley_Run_For_Appointed_Var_String_List(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions, If_copy.content[i]);
                             break;
                         }
                         bool can_run=Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(to_judge, struct_var, FUNCTION_functions);
                         if (can_run) {
                             //printf("run if elif \n");
-                            Walley_Run_For_Appointed_Var_String_List(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions, IF_ELIF_ELSE.content[i]);
+                            Walley_Run_For_Appointed_Var_String_List(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions, If_copy.content[i]);
                             break;
                         }
                     }
                     //printf("FINISH Running If\n");
                     
-                    INDEX_OF_IF_ELIF_ELSE=0;
 
                     //exit(1);
                 }
@@ -1005,6 +1011,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 NOW_WRITTING_IF=TRUE;
                 SPACE_OF_FIRST_IF_SENTENCE=CURRENT_SPACE;
                 REQUIRED_SPACE=SPACE_OF_FIRST_IF_SENTENCE+4;
+                
                 
                 char *trim_input_str=trim(input_str);
                 
