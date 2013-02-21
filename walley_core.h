@@ -43,13 +43,9 @@ void Walley_Initialize_Settings(struct VAR **settings){
 }
 
 void Walley_Initialize_Var(struct VAR **var){
-    Var_addProperty(var, "__temp_while_space__", "[]", "list");
 
-    Var_addProperty(var, "__temp_if__", "[]", "list");
 
-    Var_addProperty(var, "__temp_if_space__", "[]", "list");
 
-    Var_addProperty(var, "__has_run_if__", "[]", "list");
 
     Var_addProperty(var, "__temp_class__", "{}", "dictionary");
 
@@ -4596,10 +4592,7 @@ def random(num1=0,num2=1):\n\
     while (i<length_of_temp_struct_var) {
         char *var_name=temp_struct_var[i].var_name;
         // prevent from deleting those important variables.
-        if (find(var_name, "__temp_while_space__")==0||
-            find(var_name, "__temp_if__")==0||
-            find(var_name, "__temp_if_space__")==0||
-            find(var_name, "__has_run_if__")==0||
+        if (
             find(var_name, "__temp_class__")==0||
             find(var_name, "__temp_class_name_now_writting__")==0||
             find(var_name, "__string_in_temp_class__")==0||

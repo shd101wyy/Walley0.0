@@ -1085,20 +1085,11 @@ char *walley_show_var(struct VAR *struct_var){
 
     while (row<length) {
         char *var_name=struct_var[row].var_name;
-        if (find(var_name, "__temp_while__")==0||
-            find(var_name, "__temp_while_space__")==0||
-            find(var_name, "__temp_string_in_while_loop__")==0||
-            find(var_name, "__temp_if__")==0||
-            find(var_name, "__temp_if_space__")==0||
-            find(var_name, "__has_run_if__")==0||
-            find(var_name, "__temp_for__")==0||
-            find(var_name, "__temp_i__")==0||
-            find(var_name, "__temp_string_in_for_loop__")==0||
+        if (
             find(var_name, "__temp_class__")==0||
             find(var_name, "__temp_class_name_now_writting__")==0||
             find(var_name, "__string_in_temp_class__")==0||
             find(var_name, "__instance_name__")==0||
-            find(var_name, "__instance_var__")==0||
             find(var_name, "__instance_var__")==0||
             find(var_name, "__size_of_array__")==0
             ) {

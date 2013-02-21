@@ -2130,23 +2130,14 @@ void Walley_Clean_Variables(char *existing_file, struct VAR struct_var[], int fr
             if (exist==FALSE) {
 
                 // prevent from deleting those important variables.
-                if (find(var_name, "__temp_while__")==0||
-                    find(var_name, "__temp_while_space__")==0||
-                    find(var_name, "__temp_string_in_while_loop__")==0||
-                    find(var_name, "__temp_if__")==0||
-                    find(var_name, "__temp_if__")==0||
-                    find(var_name, "__temp_if_space__")==0||
-                    find(var_name, "__has_run_if__")==0||
-                    find(var_name, "__temp_for__")==0||
-                    find(var_name, "__temp_i__")==0||
-                    find(var_name, "__temp_string_in_for_loop__")==0||
+                if (
                     find(var_name, "__temp_class__")==0||
-                    find(var_name, "__temp_if__")==0||
                     find(var_name, "__temp_class_name_now_writting__")==0||
                     find(var_name, "__string_in_temp_class__")==0||
                     find(var_name, "__instance_name__")==0||
                     find(var_name, "__instance_var__")==0||
                     find(var_name, "__size_of_array__")==0
+
                     ) {
                     i++;
                     continue;
@@ -2315,20 +2306,14 @@ char *getVarNameAndReturnList(struct VAR *struct_var){
     while (i<length) {
         char *var_name=struct_var[i].var_name;
         // prevent from deleting those important variables.
-        if (find(var_name, "__temp_while__")==0||
-            find(var_name, "__temp_while_space__")==0||
-            find(var_name, "__temp_string_in_while_loop__")==0||
-            find(var_name, "__temp_if__")==0||
-            find(var_name, "__temp_if_space__")==0||
-            find(var_name, "__has_run_if__")==0||
-            find(var_name, "__temp_for__")==0||
-            find(var_name, "__temp_i__")==0||
-            find(var_name, "__temp_string_in_for_loop__")==0||
+        if (
             find(var_name, "__temp_class__")==0||
             find(var_name, "__temp_class_name_now_writting__")==0||
             find(var_name, "__string_in_temp_class__")==0||
             find(var_name, "__instance_name__")==0||
-            find(var_name, "__instance_var__")==0
+            find(var_name, "__instance_var__")==0||
+            find(var_name, "__size_of_array__")==0
+
             ) {
         }
         else{
