@@ -1416,3 +1416,20 @@ char *Str_appendSpaceAhead(char *input_str, int num_of_space){
     
 }
 
+
+// init dynamic string
+void d_string(char **input_str, char *copy_str){
+    *input_str=(char*)malloc(sizeof(char)*((int)strlen(copy_str))+sizeof(char));
+    
+    strcpy(*input_str, copy_str);
+}
+
+// dynamic string concat
+int d_strcat(char **buffer,char *addition)
+{
+    (*buffer) = (char*)realloc((*buffer),sizeof(char)*((int)strlen((*buffer)) + (int)strlen(addition) )+ sizeof(char));
+    if (!(*buffer))
+        return 0;
+    strcat(*buffer, addition);
+    return 1 ;
+}
