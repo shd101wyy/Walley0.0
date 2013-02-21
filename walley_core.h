@@ -31,11 +31,6 @@
 
 void Walley_Initialize_Settings(struct VAR **settings){
 
-    Var_addProperty(settings, "now_run_if", "0", "int");
-
-    Var_addProperty(settings, "last_if_sentence", "\"None\"", "string");
-
-    Var_addProperty(settings, "space_of_first_if_sentence", "0", "int");
 
     Var_addProperty(settings, "can_run_basic_input", "0", "int");
 
@@ -366,8 +361,6 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 
         Str_addString(save_to_file, input_str);
 
-        bool now_run_if = atoi(Var_getValueOfVar(*struct_settings , "now_run_if"));
-        char *last_if_sentence = Var_getValueOfVar(*struct_settings , "last_if_sentence");
         
         //I add this value here in order to run now_run_if.
         bool can_run_basic_input = TRUE;
@@ -424,6 +417,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
 
         //printf("--------------> |%s|, %d\n",input_str,REQUIRED_SPACE);
         
+        /*
         //################## Now Run If #######################################
         if (now_run_if == TRUE && str_is_empty==FALSE&& CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==TRUE) {
             if (CURRENT_SPACE > REQUIRED_SPACE || CURRENT_SPACE % 4 != 0) {
@@ -440,25 +434,27 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
             }
             
         }
+        */
         
+        //################## Now Run If #######################################
         if (NOW_WRITTING_IF == TRUE && str_is_empty==FALSE && CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==TRUE) {
             can_run_basic_input=FALSE;
             // elif else or finish
             if (CURRENT_SPACE==SPACE_OF_FIRST_IF_SENTENCE) {
                 //ELIF
-                if (strcmp(first_none_whitespace_token.TOKEN_STRING, "ELIF")==0) {
+                if (strcmp(first_none_whitespace_token.TOKEN_STRING, "elif")==0) {
                     Str_addString(&(IF_ELIF_ELSE.content[INDEX_OF_IF_ELIF_ELSE])
                                   , "#end");
                     INDEX_OF_IF_ELIF_ELSE++;
                     char *trim_input_str=trim(input_str);
-                    char *string_in_elif=substr(trim_input_str, find(trim_input_str,"ELIF ")+5, find_from_behind(trim_input_str, ":"));
+                    char *string_in_elif=substr(trim_input_str, find(trim_input_str,"elif ")+5, find_from_behind(trim_input_str, ":"));
                     Str_addString(&IF_ELIF_ELSE.if_elif_else, string_in_elif);
                     IF_ELIF_ELSE.content=(char***)realloc(IF_ELIF_ELSE.content,sizeof(char**)*(INDEX_OF_IF_ELIF_ELSE+1));
 
                     Str_initStringList(&IF_ELIF_ELSE.content[INDEX_OF_IF_ELIF_ELSE]);
                 }
                 //ELSE
-                else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "ELSE")==0){
+                else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "else")==0){
                     Str_addString(&(IF_ELIF_ELSE.content[INDEX_OF_IF_ELIF_ELSE])
                                   , "#end");
                     INDEX_OF_IF_ELIF_ELSE++;
@@ -520,7 +516,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
         }
         
         //############### Now Writting While In Progress ########################
-        if (NOW_WRITTING_WHILE == TRUE && str_is_empty==FALSE && CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==TRUE) {
+        else if (NOW_WRITTING_WHILE == TRUE && str_is_empty==FALSE && CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==TRUE) {
             int space_of_first_while_sentence=SPACE_OF_FIRST_WHILE_SENTENCE;
             if (CURRENT_SPACE > space_of_first_while_sentence && CURRENT_SPACE % 4 == 0) {
                 can_run_basic_input = FALSE;
@@ -857,6 +853,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 can_run_basic_input = TRUE;
                 
                 char *copy_SENTENCE_OF_SWITCH=SENTENCE_OF_SWITCH;
+                copy_SENTENCE_OF_SWITCH=append(copy_SENTENCE_OF_SWITCH, "#end");
                 
                 //char temp2[100];
                 //sprintf(temp2, "%d", SPACE_OF_FIRST_SWITCH_SENTENCE);
@@ -1006,25 +1003,6 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                     }
                 }
             }
-            //=======TEMP CODE HERE===========
-            else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "IF") == 0 ){
-                NOW_WRITTING_IF=TRUE;
-                SPACE_OF_FIRST_IF_SENTENCE=CURRENT_SPACE;
-                REQUIRED_SPACE=SPACE_OF_FIRST_IF_SENTENCE+4;
-                
-                
-                char *trim_input_str=trim(input_str);
-                
-                Str_initStringList(&IF_ELIF_ELSE.if_elif_else);
-                char *string_in_if=trim(substr(trim_input_str, find(trim_input_str,"if ")+3, find_from_behind(trim_input_str, ":")));
-                Str_addString(&IF_ELIF_ELSE.if_elif_else,string_in_if);
-                
-                IF_ELIF_ELSE.content=(char***)malloc(sizeof(char**)*(INDEX_OF_IF_ELIF_ELSE+1));
-                Str_initStringList(&IF_ELIF_ELSE.content[0]);
-                
-                
-            }
-            //=======TEMP CODE HERE===========
             else if (input_temp[0] == '#' ||
                 strcmp(first_none_whitespace_token.TOKEN_STRING, "for") == 0 ||
                 strcmp(first_none_whitespace_token.TOKEN_STRING, "while") == 0 ||
@@ -1497,13 +1475,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                     
                 }
                 }
-                //// printf("#### Set Settings ####\n\n\n");
-                char temp2[100];
-                sprintf(temp2, "%d", now_run_if);
-                Var_changeValueOfVar(struct_settings , "now_run_if", append("",temp2), "int");
-                
-                Var_changeValueOfVar(struct_settings , "last_if_sentence", last_if_sentence, "string");
-                            }
+            }
             
         }
         if (continue_run == TRUE && run_goto == FALSE) {
@@ -4172,8 +4144,6 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
     int current_space=numOfSpaceAheadString(input_str);
     input_str = removeAheadSpace(input_str);
     
-    bool now_run_if = atoi(Var_getValueOfVar(*struct_settings , "now_run_if"));
-    char *last_if_sentence = Var_getValueOfVar(*struct_settings , "last_if_sentence");
     //I add this value here in order to run now_run_if.
     //bool can_run_basic_input = TRUE;
     //bool run_goto = FALSE;
@@ -4242,6 +4212,25 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
                 Str_addString(FUNCTION_functions, "##Finish Init Params");
             }
     }//################## Judge Whether this whether an if sentence ##########################
+    //======= New Version of if sentence ===========
+    else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "if") == 0 ){
+        NOW_WRITTING_IF=TRUE;
+        SPACE_OF_FIRST_IF_SENTENCE=CURRENT_SPACE;
+        REQUIRED_SPACE=SPACE_OF_FIRST_IF_SENTENCE+4;
+        
+        
+        char *trim_input_str=trim(input_str);
+        
+        Str_initStringList(&IF_ELIF_ELSE.if_elif_else);
+        char *string_in_if=trim(substr(trim_input_str, find(trim_input_str,"if ")+3, find_from_behind(trim_input_str, ":")));
+        Str_addString(&IF_ELIF_ELSE.if_elif_else,string_in_if);
+        
+        IF_ELIF_ELSE.content=(char***)malloc(sizeof(char**)*(INDEX_OF_IF_ELIF_ELSE+1));
+        Str_initStringList(&IF_ELIF_ELSE.content[0]);
+        
+        
+    }
+    /*
     else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "if") == 0 || strcmp(first_none_whitespace_token.TOKEN_STRING, "elif") == 0 || strcmp(first_none_whitespace_token.TOKEN_STRING, "else") == 0) {
         // printf("now judge if sentence\n");
         char *sentence = "";
@@ -4451,7 +4440,9 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
         } else {
             now_run_if = FALSE;
         }
-    }//#################### While Sentence ##################################
+    }*/
+     
+     //#################### While Sentence ##################################
     else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "while") == 0) {
         char *last_while_sentence = removeAheadSpace(input_str);
         last_while_sentence = substr(last_while_sentence, 6, find(last_while_sentence, ":"));
@@ -4543,16 +4534,7 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
         
     }
     
-    //#################### Set Settigns ################################
-    //// printf("#### Set Settings ####\n\n\n");
-    char temp2[100];
-    sprintf(temp2, "%d", now_run_if);
-    Var_changeValueOfVar(struct_settings , "now_run_if", append("",temp2), "int");
-    
-    Var_changeValueOfVar(struct_settings , "last_if_sentence", last_if_sentence, "string");
-   // printf("2##############\n");
-   // Var_PrintVar(struct_settings);
-   // printf("END\n");
+   
 }
 
 
