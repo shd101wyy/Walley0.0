@@ -284,3 +284,52 @@ void IF_PrintIf(struct IF If_elif_else,int length_of_content){
     }
 }
 
+//======================================================
+
+struct CLASS{
+    char *class_name;
+    char *class_mother_name;  //extend class
+    char *string_in_class;
+};
+void CLASS_initCLASSList(struct CLASS **var){
+    *var=(struct CLASS*)malloc(sizeof(struct CLASS)*1);
+    (*var)->class_name="__size_of_array__";
+    (*var)->string_in_class="1";
+}
+int CLASS_Length(struct CLASS *class_list){
+    
+    int length=0;
+    if (strcmp((class_list)->class_name,"__size_of_array__")!=0) {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+        
+        printf("CLASS_Length..Can not find __size_of_array__");
+        exit(0);
+    }
+    else{
+        length=atoi((class_list)->string_in_class);
+    }
+    return length;
+}
+
+void CLASS_addProperty(struct CLASS **class_list,char *class_name, char *class_mother_name, char *string_in_class){
+    
+    int length=CLASS_Length(*class_list);
+    (*class_list)->string_in_class=intToCString(1+atoi((*class_list)->string_in_class));
+    
+    *class_list=(struct CLASS*)realloc(*class_list, sizeof(struct CLASS)*(length+1));
+    (*class_list+length)->class_name=class_name;
+    (*class_list+length)->class_mother_name=class_mother_name;
+    (*class_list+length)->string_in_class=string_in_class;
+}
+
+
+void CLASS_PrintCLASS(struct CLASS *class_list){
+    int row=1;
+    int length=CLASS_Length(class_list);
+    while (row<length) {
+        printf("class: %s\nextend: %s\nstring: %s\n\n",class_list[row].class_name,class_list[row].class_mother_name,class_list[row].string_in_class);
+        row++;
+    }
+}
+
+

@@ -712,8 +712,11 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
             }
             else{
                 
-                //printf("Now Writting Class To File\n");
+                
+                
                 input_str = removeAheadSpaceForNum(input_str, SPACE_OF_FIRST_CLASS_SENTENCE + 4);
+                
+                CLASS_LIST[CLASS_NUM].string_in_class=append(CLASS_LIST[CLASS_NUM].string_in_class, input_str);
 
                 REQUIRED_SPACE=CURRENT_SPACE;
                 
@@ -1019,6 +1022,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 //#####################  Init class  #####################
                 if((find_not_in_string(input_str, "=")!=-1&&find_not_in_string(input_str,"(")!=-1&& (find_not_in_string(input_str, "=")<find_not_in_string(input_str,"(")) &&checkWhetherSameClassExistedFromVar(*struct_var,trim(substr(input_str,find_not_in_string(input_str, "=")+1,find_not_in_string(input_str,"("))))==TRUE)
                     ) {
+                                        
                     //printf("#### Begin to initialize class ####\n");
                     // ## a is hello()
                     // ## a is instance_name
@@ -1028,16 +1032,18 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                     char *__class__ = substr(input_str, find_not_in_string(input_str, "=") + 1, (int) strlen(input_str));
                     instance_name = trim(instance_name);
                     __class__ = trim(__class__);
-                    //char *class_name=substr(__class__,0,find(__class__,"("));
                     char *parameter=substr(__class__,find(__class__,"(")+1,find_not_in_string(__class__,")"));
                     
-                   
+        
                     
                     char *after_change=formatStringInClassWithExtendFromVar(*struct_var,input_str);
                     //printf("#### AFTER CHANGE\n|%s|\n####\n",after_change);
 
                     Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file,FUNCTION_functions, after_change);
                     addInstanceNameToVar(instance_name,*struct_var);
+                    
+                    Str_addString(&INSTANCE_NAMES, instance_name);
+                    
                     
                     // For list instance like x[0]=a()
                     if (find(instance_name,"[")!=-1) {
@@ -4158,12 +4164,21 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
         printf("");
     }
     else if (strcmp(first_none_whitespace_token.TOKEN_STRING,"class")==0){
+        CLASS_NUM++;
+        if (HAVE_INIT_CLASS_LIST==FALSE) {
+            Str_initStringList(&INSTANCE_NAMES);
+            CLASS_initCLASSList(&CLASS_LIST);
+            HAVE_INIT_CLASS_LIST=TRUE;
+        }
         NOW_WRITTING_CLASS=TRUE;
         SPACE_OF_FIRST_CLASS_SENTENCE=REQUIRED_SPACE;
         REQUIRED_SPACE=REQUIRED_SPACE+4;
         
         char *class_name=className(input_str);
         char *class_mother=classMother(input_str);
+        
+        CLASS_addProperty(&CLASS_LIST, class_name, class_mother, "#Begin to define class...\\n");
+        //CLASS_PrintCLASS(CLASS_LIST);
 
         char *__temp_class__=Var_getValueOfVar(*struct_var,"__temp_class__");
 

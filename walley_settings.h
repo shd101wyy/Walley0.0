@@ -89,6 +89,10 @@ bool NOW_WRITTING_EXPRESSION=FALSE;
 // for class
 bool NOW_WRITTING_CLASS;
 int SPACE_OF_FIRST_CLASS_SENTENCE;  // |class a:|  0--->SPACE_OF_FIRST_CLASS_SENTENCE
+bool HAVE_INIT_CLASS_LIST=FALSE;
+struct CLASS *CLASS_LIST;
+int CLASS_NUM=0; // class num
+char **INSTANCE_NAMES;
 
 
 // collect the string that will be displayed
