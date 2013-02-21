@@ -386,6 +386,10 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
         
         input_str=cleanUpSentence(input_str);        
         
+        if (CURRENT_SPACE%4!=0) {
+            printf("Error.. Current Space is incorrect\n");
+            exit(0);
+        }
     
         if (CURRENT_SPACE > REQUIRED_SPACE) {
             can_run_basic_input = FALSE;
@@ -435,6 +439,73 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 
             }
             
+        }
+        
+        if (NOW_WRITTING_IF == TRUE && str_is_empty==FALSE && CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==TRUE) {
+            can_run_basic_input=FALSE;
+            // elif else or finish
+            if (CURRENT_SPACE==SPACE_OF_FIRST_IF_SENTENCE) {
+                //ELIF
+                if (strcmp(first_none_whitespace_token.TOKEN_STRING, "ELIF")==0) {
+                    INDEX_OF_IF_ELIF_ELSE++;
+                    char *trim_input_str=trim(input_str);
+                    char *string_in_elif=substr(trim_input_str, find(trim_input_str,"ELIF ")+5, find_from_behind(trim_input_str, ":"));
+                    Str_addString(&IF_ELIF_ELSE.if_elif_else, string_in_elif);
+                    IF_ELIF_ELSE.content=(char***)realloc(IF_ELIF_ELSE.content,sizeof(char**)*(INDEX_OF_IF_ELIF_ELSE+1));
+
+                    Str_initStringList(&IF_ELIF_ELSE.content[INDEX_OF_IF_ELIF_ELSE]);
+                }
+                //ELSE
+                else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "ELSE")==0){
+                    INDEX_OF_IF_ELIF_ELSE++;
+                    Str_addString(&IF_ELIF_ELSE.if_elif_else, "#~ELSE~#");
+                    IF_ELIF_ELSE.content=(char***)realloc(IF_ELIF_ELSE.content,sizeof(char**)*(INDEX_OF_IF_ELIF_ELSE+1));
+                    Str_initStringList(&IF_ELIF_ELSE.content[INDEX_OF_IF_ELIF_ELSE]);
+
+                }
+                //FINISH IF
+                else{
+                    //printf("Begin to run if.. exit here temp..\n");
+                    //IF_PrintIf(IF_ELIF_ELSE, INDEX_OF_IF_ELIF_ELSE+1);
+                    
+                    NOW_WRITTING_IF=FALSE;
+                    SPACE_OF_FIRST_IF_SENTENCE=0;
+                    REQUIRED_SPACE=CURRENT_SPACE;
+
+                    // Begin to Run Code
+                    int i=0;
+                    for (; i<=INDEX_OF_IF_ELIF_ELSE; i++) {
+                        char *to_judge=IF_ELIF_ELSE.if_elif_else[i+1];
+                        CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=TRUE;
+                        can_run_basic_input=TRUE;
+
+                        if (strcmp(to_judge, "#~ELSE~#")==0) {
+                            //printf("run else\n");
+                            Walley_Run_For_Appointed_Var_String_List(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions, IF_ELIF_ELSE.content[i]);
+                            break;
+                        }
+                        bool can_run=Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(to_judge, struct_var, FUNCTION_functions);
+                        if (can_run) {
+                            //printf("run if elif \n");
+                            Walley_Run_For_Appointed_Var_String_List(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions, IF_ELIF_ELSE.content[i]);
+                            break;
+                        }
+                    }
+                    //printf("FINISH Running If\n");
+                    
+                    INDEX_OF_IF_ELIF_ELSE=0;
+
+                    //exit(1);
+                }
+            }
+            
+            // add string.
+            else{
+                input_str = removeAheadSpaceForNum(input_str, SPACE_OF_FIRST_IF_SENTENCE + 4);
+                Str_addString(&(IF_ELIF_ELSE.content[INDEX_OF_IF_ELIF_ELSE])
+                              , input_str);
+                
+            }
         }
         
         //############### Now Writting While In Progress ########################
@@ -924,6 +995,24 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                     }
                 }
             }
+            //=======TEMP CODE HERE===========
+            else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "IF") == 0 ){
+                NOW_WRITTING_IF=TRUE;
+                SPACE_OF_FIRST_IF_SENTENCE=CURRENT_SPACE;
+                REQUIRED_SPACE=SPACE_OF_FIRST_IF_SENTENCE+4;
+                
+                char *trim_input_str=trim(input_str);
+                
+                Str_initStringList(&IF_ELIF_ELSE.if_elif_else);
+                char *string_in_if=trim(substr(trim_input_str, find(trim_input_str,"if ")+3, find_from_behind(trim_input_str, ":")));
+                Str_addString(&IF_ELIF_ELSE.if_elif_else,string_in_if);
+                
+                IF_ELIF_ELSE.content=(char***)malloc(sizeof(char**)*(INDEX_OF_IF_ELIF_ELSE+1));
+                Str_initStringList(&IF_ELIF_ELSE.content[0]);
+                
+                
+            }
+            //=======TEMP CODE HERE===========
             else if (input_temp[0] == '#' ||
                 strcmp(first_none_whitespace_token.TOKEN_STRING, "for") == 0 ||
                 strcmp(first_none_whitespace_token.TOKEN_STRING, "while") == 0 ||

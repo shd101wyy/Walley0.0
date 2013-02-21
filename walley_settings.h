@@ -106,6 +106,11 @@ int REQUIRED_SPACE=0;
 int CURRENT_SPACE=0;
 
 
+// for if
+bool NOW_WRITTING_IF;
+int SPACE_OF_FIRST_IF_SENTENCE;
+struct IF IF_ELIF_ELSE;
+int INDEX_OF_IF_ELIF_ELSE=0; // if elif , then INDEX_OF... ++, if else, then ++. if finish if, then -> 0
 
 
 

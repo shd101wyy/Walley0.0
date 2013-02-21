@@ -269,4 +269,18 @@ int Var_length(struct VAR *struct_var){
 }
 
 
+//=====================================================
+
+struct IF{
+    char **if_elif_else;
+    char ***content;
+};
+
+void IF_PrintIf(struct IF If_elif_else,int length_of_content){
+    Str_PrintStr(If_elif_else.if_elif_else);
+    int i=0;
+    for (; i<length_of_content; i++) {
+        Str_PrintStr(If_elif_else.content[i]);
+    }
+}
 
