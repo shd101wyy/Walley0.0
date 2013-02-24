@@ -116,7 +116,7 @@ int SPACE_OF_FIRST_IF_SENTENCE;
 struct IF IF_ELIF_ELSE;
 int INDEX_OF_IF_ELIF_ELSE=0; // if elif , then INDEX_OF... ++, if else, then ++. if finish if, then -> 0
 
-
+char *SAVE_VAR_NAME_TO_CHECK_WHETHER_IT_IS_INSTANCE="";
 
 // For if elif sentence
 /*

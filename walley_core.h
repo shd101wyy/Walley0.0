@@ -1014,29 +1014,31 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                     Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file,FUNCTION_functions, after_change);
                     addInstanceNameToVar(&INSTANCE_NAMES_LIST,instance_name);
             
+                    printf("HERE\n");
                     
-                    
+                    printf("instance name %s\n",instance_name);
                     
                     // For list instance like x[0]=a()
                     if (find(instance_name,"[")!=-1) {
                         int right=(int)strlen(instance_name)-1;
                         if (instance_name[right]==']') {
-                            changeTheOneVarValueFromItsInitialOneFromVarForList(struct_var, substr(instance_name,0,right+1), toString(__class__));
+                            Walley_Update_Var_And_Var_Value_To_Var(struct_var, instance_name, toString(__class__));
+                            //changeTheOneVarValueFromItsInitialOneFromVarForList(struct_var, substr(instance_name,0,right+1), toString(__class__));
                         }
                     }
                     
                     
                     //For dictionary like x{"A"}=a()
-                    if (find(instance_name,"{")!=-1) {
+                    else if (find(instance_name,"{")!=-1) {
                         int right=(int)strlen(instance_name)-1;
                         if (instance_name[right]=='}') {
                             changeTheOneVarValueFromItsInitialOneFromVarOrAddVarNameAndValueForDictionary(struct_var, instance_name, toString(__class__));
                         }
                     }
                     
-                    Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file,FUNCTION_functions, append("syms ", instance_name));
-
-                    
+                    else{
+                        Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file,FUNCTION_functions, append("syms ", instance_name));
+                    }
                     // run init() function
                     // a.init()
                     if (find(after_change,".init(")!=-1) {
@@ -1046,8 +1048,9 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                         strcat(init,parameter);
                         strcat(init,")");
                         init[sizeof(char)*((int)strlen(instance_name)+(int)strlen(".init()")+(int)strlen(parameter))]=0;
-                        //printf("BEGIN TO INITIALIZE %s\n",init);
-                        Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions,init);
+
+                        Walley_Run_One_Function_And_Return_Value_From_Var(init, struct_var, FUNCTION_functions);
+                        //Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions,init);
                     }
                     //printf("After Initializing\n");
                 
@@ -2531,6 +2534,9 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
             // x[0]
             // x[0][0]
             if (strcmp(next.TOKEN_CLASS,"W_LIST_TABLE")==0||next.TOKEN_STRING[0]=='.') {
+                
+                SAVE_VAR_NAME_TO_CHECK_WHETHER_IT_IS_INSTANCE=token_string;
+                
                 char *var_value=Var_getValueOfVar(*struct_var, token_string);
                 i=i+1;
                 Walley_Next(token, &i, &var_value, *struct_var, *FUNCTION_functions);
@@ -2545,7 +2551,6 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
             
             // it is function
             else{
-                //printf("1------> %s\n",token_string);
                 
                 char *function = token_string;
                 
@@ -2553,7 +2558,7 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
                 
                 char *func_name=substr(function, 0, find(function,"("));
                 
-                int index_of_dot=find_from_behind_not_in_str_list_dict_parenthesis(function, ".");
+                int index_of_dot=find_from_behind_not_in_str_list_dict_parenthesis(function, ".");/*
                 if (find(substr(function, 0, find(function, "(")), ".") != -1 && charIsInString(function, index_of_dot) == FALSE) {
                     //// printf("It is instance function\n");
                     char *user = substr(function, 0, index_of_dot);
@@ -2584,9 +2589,9 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
                     }
                     
                 }
-                
+                */
                 //################### Embeded Function ###############################################################
-                else if (strcmp(func_name, "int") ==0) {
+                if (strcmp(func_name, "int") ==0) {
                     char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
                     char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
                     temp_value = Walley_Eval_With_Variable_From_Var(*struct_var, temp_value);
@@ -4685,17 +4690,33 @@ void Walley_Next(struct TOKEN *token, int *current_index, char **current_value, 
     }
     if (strcmp(token_class, "W_STRING")==0) {
         // "Hello"[0,2]
-        if (strcmp(token[*current_index].TOKEN_CLASS, "W_LIST_TABLE")==0) {
+        if (strcmp(token[*current_index].TOKEN_CLASS, "W_LIST_TABLE")==0) {            
             char *var_value=Walley_Slice(*current_value, token[*current_index].TOKEN_STRING, &struct_var, &FUNCTION_functions);
             *current_value=var_value;
             *current_index=*current_index+1;
             Walley_Next(token, current_index, current_value, struct_var, FUNCTION_functions);
+            
         }
         // "Hello".length()
         else if (token[*current_index].TOKEN_STRING[0]=='.'){
-            *current_value=Walley_Run_Special_Function_From_Var(append(*current_value,token[*current_index].TOKEN_STRING ), &struct_var);
-            *current_index=*current_index+1;
-            Walley_Next(token, current_index, current_value, struct_var, FUNCTION_functions);
+            if (checkWhetherSameInstanceExistedFromVar(INSTANCE_NAMES_LIST, SAVE_VAR_NAME_TO_CHECK_WHETHER_IT_IS_INSTANCE)) {
+                printf("It is instance\n");
+                char *output=Walley_Run_One_Function_And_Return_Value_From_Var(append(append(SAVE_VAR_NAME_TO_CHECK_WHETHER_IT_IS_INSTANCE,"."), token[*current_index+1].TOKEN_STRING), &struct_var, &FUNCTION_functions);
+                if (strcmp(output, "None")==0) {
+                    return;
+                }
+                else{
+                    *current_value=output;
+                    *current_index=*current_index+2;
+                    Walley_Next(token, current_index, current_value, struct_var, FUNCTION_functions);
+
+                }
+            }
+            else{
+                *current_value=Walley_Run_Special_Function_From_Var(append(append(*current_value,"."),token[*current_index+1].TOKEN_STRING ), &struct_var);
+                *current_index=*current_index+2;
+                Walley_Next(token, current_index, current_value, struct_var, FUNCTION_functions);
+            }
 
         }
         else{
@@ -4706,6 +4727,8 @@ void Walley_Next(struct TOKEN *token, int *current_index, char **current_value, 
     else if (strcmp(token_class, "W_LIST_TABLE")==0) {
         // [1,2,3,4][0]
         if (strcmp(token[*current_index].TOKEN_CLASS, "W_LIST_TABLE")==0) {
+            SAVE_VAR_NAME_TO_CHECK_WHETHER_IT_IS_INSTANCE=append(SAVE_VAR_NAME_TO_CHECK_WHETHER_IT_IS_INSTANCE, token[*current_index].TOKEN_STRING);
+
             char *var_value=Walley_Slice(*current_value, token[*current_index].TOKEN_STRING, &struct_var, &FUNCTION_functions);
             *current_value=var_value;
             *current_index=*current_index+1;
@@ -4713,10 +4736,9 @@ void Walley_Next(struct TOKEN *token, int *current_index, char **current_value, 
         }
         // [1,2,3,4].length()
         else if (token[*current_index].TOKEN_STRING[0]=='.'){
-            *current_value=Walley_Run_Special_Function_From_Var(append(*current_value,token[*current_index].TOKEN_STRING ), &struct_var);
-            *current_index=*current_index+1;
+            *current_value=Walley_Run_Special_Function_From_Var(append(append(*current_value,"."),token[*current_index+1].TOKEN_STRING ), &struct_var);
+            *current_index=*current_index+2;
             Walley_Next(token, current_index, current_value, struct_var, FUNCTION_functions);
-            
         }
         else{
             return ;
