@@ -229,95 +229,18 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
     if (input_str[0]=='"') {
         type='t';
         t='s'; //string
-        int final_index=indexOfFinal(input_str, 0);
-        char *token_string=substr(input_str, 0,final_index+1);
-        char *token_class=TOKEN_analyzeTokenClass(token_string);
-        TOKEN_addProperty(&token, token_class, token_string,0,final_index);
-        i=final_index+1;
-        start=i;
-        
-        if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
-            type='s';
-        }
-        else if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
-            type='b';
-        }
-        else if(input_str[i]==':'||input_str[i]==';'||input_str[i]==',')
-            type='c';
-        else{
-            type='i';
-        }
-
-
     }
     if (input_str[0]=='\'') {
         type='t';
         t='s'; //string
-        int final_index=indexOfFinal(input_str, 0);
-        char *token_string=substr(input_str, 0,final_index+1);
-        char *token_class=TOKEN_analyzeTokenClass(token_string);
-        TOKEN_addProperty(&token, token_class, token_string,0,final_index);
-        i=final_index+1;
-        start=i;
-        
-        if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
-            type='s';
-        }
-        else if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
-            type='b';
-        }
-        else if(input_str[i]==':'||input_str[i]==';'||input_str[i]==',')
-            type='c';
-        else{
-            type='i';
-        }
-
     }
     if (input_str[0]=='{') {
         type='t';
         t='d'; //dict
-        int final_index=indexOfFinal(input_str, 0);
-        char *token_string=substr(input_str, 0,final_index+1);
-        char *token_class=TOKEN_analyzeTokenClass(token_string);
-        TOKEN_addProperty(&token, token_class, token_string,0,final_index);
-        i=final_index+1;
-        start=i;
-        
-        if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
-            type='s';
-        }
-        else if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
-            type='b';
-        }
-        else if(input_str[i]==':'||input_str[i]==';'||input_str[i]==',')
-            type='c';
-        else{
-            type='i';
-        }
-
     }
     if (input_str[0]=='[') {
         type='t';
         t='l'; //list or table
-        int final_index=indexOfFinal(input_str, 0);
-        char *token_string=substr(input_str, 0,final_index+1);
-        char *token_class=TOKEN_analyzeTokenClass(token_string);
-        TOKEN_addProperty(&token, token_class, token_string,0,final_index);
-        i=final_index+1;
-        start=i;
-        
-        if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
-            type='s';
-        }
-        else if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
-            type='b';
-        }
-        else if(input_str[i]==':'||input_str[i]==';'||input_str[i]==',')
-            type='c';
-        else{
-            type='i';
-        }
-
     }
     if (input_str[0]==':') {
         type='c';

@@ -34,7 +34,7 @@ void Walley_Initialize_Settings(struct VAR **settings){
 
     Var_addProperty(settings, "can_run_basic_input", "0", "int");
 
-    Var_addProperty(settings, "turn", "0", "int");
+    //Var_addProperty(settings, "turn", "0", "int");
 
     Var_addProperty(settings, "fraction_mode", "1", "int");
 
