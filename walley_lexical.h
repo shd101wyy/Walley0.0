@@ -76,6 +76,7 @@ const char* W_RELATION[]={"and","or"};//2
 //const char* W_LIST_TABLE;   [1,2,3]  [["a"]=12,[0]=2]
 //const char* W_ASSIGNMENT_OPERATOR;  = sign
 //const char* W_PUNCTUATION;        : , ;
+//const char* W_UNFINISHED_VAR  '123  ||  "123 || [123,1
 
 char * TOKEN_analyzeTokenClass(char *token_string){
     if (strcmp(token_string, ":")==0||strcmp(token_string, ",")==0||strcmp(token_string, ";")==0) {
@@ -207,8 +208,9 @@ int indexOfFinal(char *input_str, int first_index){
         }
 
     }
-printf("Error! Can not find the final index of |%s|\n",input_str);
-exit(0);
+    return -1;
+    //printf("Error! Can not find the final index of |%s|\n",input_str);
+    //exit(0);
 }
 
 
@@ -250,6 +252,11 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
         if(type=='t'){
             start=i-1;
             int final_index=indexOfFinal(input_str, i-1);
+            if (final_index==-1) {
+                char *token_string=substr(input_str, i-1, (int)strlen(input_str));
+                TOKEN_addProperty(&token, "W_UNFINISHED_VAR", token_string,i-1,(int)strlen(input_str));
+                return token;
+            }
             char *token_string=substr(input_str, i-1, final_index+1);
             char *token_class=TOKEN_analyzeTokenClass(token_string);
             TOKEN_addProperty(&token, token_class, token_string,i-1,final_index);
@@ -622,7 +629,8 @@ void TOKEN_checkError(struct TOKEN *token,char *input_str){
             strcmp(token_class,"W_NUMBER")!=0&&
             strcmp(token_class, "W_DICTIONARY")!=0&&
             strcmp(token_class, "W_LIST_TABLE")!=0&&
-            strcmp(token_class, "W_ID")!=0) {
+            strcmp(token_class, "W_ID")!=0&&
+            strcmp(token_class, "W_UNFINISHED_VAR")!=0) {
             int start=final_token.TOKEN_START;
             printf("%s\n",input_str);
             char *temp_str="";
