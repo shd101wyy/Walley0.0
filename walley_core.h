@@ -1645,7 +1645,6 @@ void Walley_Update_Var_And_Var_Value_To_Var(struct VAR **struct_var, char *var_n
             }
             else if(strcmp(variableValueType(temp_var_value), "list")==0){
                 var_value=Table_addValueOrChangeValue(temp_var_value, string_index, var_value);
-                //printf("var_value is %s\n",var_value);
                 Var_removeVar(struct_var, ahead);
 
                 Var_addProperty(struct_var, ahead, var_value, "table");
@@ -4041,8 +4040,7 @@ void Walley_Eval_And_Update_Var_And_Value_To_Var(struct VAR **struct_var,char **
         
             
     var_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(var_value, struct_var,FUNCTION_functions);
-    
-        
+            
         
     // I delete the sentence below on October 22.
     //var_value = Walley_Eval_With_Variable_From_Var(struct_var, var_value);

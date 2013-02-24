@@ -255,15 +255,21 @@ char *Table_addValueOrChangeValue(char *table, char *string_index, char *change_
     else{
         // [[0]=1] # [1] # 2
         if (index_that_does_not_exist==0) {
-
             char *output=substr(table, 1, (int)strlen(table)-1);
             // [0]=1
             //char *temp=append(string_index, append("=", change_to_value));
             char *temp=Table_formatTableThatDoesNotExist(string_index, change_to_value);
             // temp is [1]=2
-            output=append(output, append(",", temp));
+            
+            if (stringIsEmpty(output)) {
+                output=temp;
+            }
+            else{
+                output=append(output, append(",", temp));
+            }
             // output is  [0]=1,[1]=2
             output=append("[",append(output, "]"));
+           
             return Table_formatTable(output);
         }
         // [[0]=[[0]=1]]  #  [0][1]  #  2
