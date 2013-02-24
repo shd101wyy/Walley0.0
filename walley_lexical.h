@@ -324,7 +324,30 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
     }
     
     for(;i<length;i++){
-        if (type=='i'){
+        if(type=='t'){
+            start=i-1;
+            int final_index=indexOfFinal(input_str, i-1);
+            char *token_string=substr(input_str, i-1, final_index+1);
+            char *token_class=TOKEN_analyzeTokenClass(token_string);
+            TOKEN_addProperty(&token, token_class, token_string,i-1,final_index);
+            i=final_index+1;
+            start=i;
+            
+            if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
+                type='s';
+            }
+            else if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
+                type='b';
+            }
+            else if(input_str[i]==':'||input_str[i]==';'||input_str[i]==',')
+                type='c';
+            else if(input_str[i]=='"'||input_str[i]=='\''||input_str[i]=='P'||input_str[i]=='[')
+                type='t';
+            else{
+                type='i';
+            }
+        }
+        else if (type=='i'){
             //if (isalpha(input_str[i])||isdigit(input_str[i])||input_str[i]=='_') {
             if (charIsInParenthesis(input_str, i)==TRUE||(input_str[i]!=' '&&input_str[i]!='\n'&&input_str[i]!='\t'&&isJudgeSign(input_str[i])==FALSE&&isSign(input_str[i])==FALSE&&
                 input_str[i]!='"'&&input_str[i]!='\''&&input_str[i]!='{'&&input_str[i]!='['
@@ -345,86 +368,18 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
                 else if (input_str[i]=='"') {
                     type='t';
                     t='s'; //string
-                    int final_index=indexOfFinal(input_str, i);
-                    char *token_string=substr(input_str, i, final_index+1);
-                    char *token_class=TOKEN_analyzeTokenClass(token_string);
-                    TOKEN_addProperty(&token, token_class, token_string,i,final_index);
-                    i=final_index+1;
-                    start=i;
-                    if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
-                        type='s';
-                    }
-                    else if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
-                        type='b';
-                    }
-                    else if(input_str[i]==':'||input_str[i]==';'||input_str[i]==',')
-                        type='c';
-                    else{
-                        type='i';
-                    }
                 }
                 else if (input_str[i]=='\'') {
                     type='t';
                     t='s'; //string
-                    int final_index=indexOfFinal(input_str, i);
-                    char *token_string=substr(input_str, i, final_index+1);
-                    char *token_class=TOKEN_analyzeTokenClass(token_string);
-                    TOKEN_addProperty(&token, token_class, token_string,i,final_index);
-                    i=final_index+1;
-                    start=i;
-                    if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
-                        type='s';
-                    }
-                    else if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
-                        type='b';
-                    }
-                    else if(input_str[i]==':'||input_str[i]==';'||input_str[i]==',')
-                        type='c';
-                    else{
-                        type='i';
-                    }
                 }
                 else if (input_str[i]=='{') {
                     type='t';
                     t='d'; //dict
-                    int final_index=indexOfFinal(input_str, i);
-                    char *token_string=substr(input_str, i, final_index+1);
-                    char *token_class=TOKEN_analyzeTokenClass(token_string);
-                    TOKEN_addProperty(&token, token_class, token_string,i,final_index);
-                    i=final_index+1;
-                    start=i;
-                    if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
-                        type='s';
-                    }
-                    else if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
-                        type='b';
-                    }
-                    else if(input_str[i]==':'||input_str[i]==';'||input_str[i]==',')
-                        type='c';
-                    else{
-                        type='i';
-                    }
                 }
                 else if (input_str[i]=='[') {
                     type='t';
                     t='l'; //list or table
-                    int final_index=indexOfFinal(input_str, i);
-                    char *token_string=substr(input_str, i, final_index+1);
-                    char *token_class=TOKEN_analyzeTokenClass(token_string);
-                    TOKEN_addProperty(&token, token_class, token_string,i,final_index);
-                    i=final_index+1;
-                    start=i;
-                    if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
-                        type='s';
-                    }
-                    else if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
-                        type='b';
-                    }
-                    else if(input_str[i]==':'||input_str[i]==';'||input_str[i]==',')
-                        type='c';
-                    else{
-                        type='i';
-                    }
                 }
                 else if(input_str[i]==':'||input_str[i]==';'||input_str[i]==',')
                     type='c';
@@ -450,86 +405,18 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
                 else if (input_str[i]=='"') {
                     type='t';
                     t='s'; //string
-                    int final_index=indexOfFinal(input_str, i);
-                    char *token_string=substr(input_str, i, final_index+1);
-                    char *token_class=TOKEN_analyzeTokenClass(token_string);
-                    TOKEN_addProperty(&token, token_class, token_string,i,final_index);
-                    i=final_index+1;
-                    start=i;
-                    if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
-                        type='s';
-                    }
-                    else if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
-                        type='b';
-                    }
-                    else if(input_str[i]==':'||input_str[i]==';'||input_str[i]==',')
-                        type='c';
-                    else{
-                        type='i';
-                    }
                 }
                 else if (input_str[i]=='\'') {
                     type='t';
                     t='s'; //string
-                    int final_index=indexOfFinal(input_str, i);
-                    char *token_string=substr(input_str, i, final_index+1);
-                    char *token_class=TOKEN_analyzeTokenClass(token_string);
-                    TOKEN_addProperty(&token, token_class, token_string,i,final_index);
-                    i=final_index+1;
-                    start=i;
-                    if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
-                        type='s';
-                    }
-                    else if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
-                        type='b';
-                    }
-                    else if(input_str[i]==':'||input_str[i]==';'||input_str[i]==',')
-                        type='c';
-                    else{
-                        type='i';
-                    }
                 }
                 else if (input_str[i]=='{') {
                     type='t';
                     t='d'; //dict
-                    int final_index=indexOfFinal(input_str, i);
-                    char *token_string=substr(input_str, i, final_index+1);
-                    char *token_class=TOKEN_analyzeTokenClass(token_string);
-                    TOKEN_addProperty(&token, token_class, token_string,i,final_index);
-                    i=final_index+1;
-                    start=i;
-                    if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
-                        type='s';
-                    }
-                    else if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
-                        type='b';
-                    }
-                    else if(input_str[i]==':'||input_str[i]==';'||input_str[i]==',')
-                        type='c';
-                    else{
-                        type='i';
-                    }
                 }
                 else if (input_str[i]=='[') {
                     type='t';
                     t='l'; //list or table
-                    int final_index=indexOfFinal(input_str, i);
-                    char *token_string=substr(input_str, i, final_index+1);
-                    char *token_class=TOKEN_analyzeTokenClass(token_string);
-                    TOKEN_addProperty(&token, token_class, token_string,i,final_index);
-                    i=final_index+1;
-                    start=i;
-                    if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
-                        type='s';
-                    }
-                    else if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
-                        type='b';
-                    }
-                    else if(input_str[i]==':'||input_str[i]==';'||input_str[i]==',')
-                        type='c';
-                    else{
-                        type='i';
-                    }
                 }
                 else if(input_str[i]==':'||input_str[i]==';'||input_str[i]==',')
                     type='c';
@@ -556,86 +443,18 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
                 else if (input_str[i]=='"') {
                     type='t';
                     t='s'; //string
-                    int final_index=indexOfFinal(input_str, i);
-                    char *token_string=substr(input_str, i, final_index+1);
-                    char *token_class=TOKEN_analyzeTokenClass(token_string);
-                    TOKEN_addProperty(&token, token_class, token_string,i,final_index);
-                    i=final_index+1;
-                    start=i;
-                    if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
-                        type='s';
-                    }
-                    else if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
-                        type='b';
-                    }
-                    else if(input_str[i]==':'||input_str[i]==';'||input_str[i]==',')
-                        type='c';
-                    else{
-                        type='i';
-                    }
                 }
                 else if (input_str[i]=='\'') {
                     type='t';
                     t='s'; //string
-                    int final_index=indexOfFinal(input_str, i);
-                    char *token_string=substr(input_str, i, final_index+1);
-                    char *token_class=TOKEN_analyzeTokenClass(token_string);
-                    TOKEN_addProperty(&token, token_class, token_string,i,final_index);
-                    i=final_index+1;
-                    start=i;
-                    if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
-                        type='s';
-                    }
-                    else if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
-                        type='b';
-                    }
-                    else if(input_str[i]==':'||input_str[i]==';'||input_str[i]==',')
-                        type='c';
-                    else{
-                        type='i';
-                    }
                 }
                 else if (input_str[i]=='{') {
                     type='t';
                     t='d'; //dict
-                    int final_index=indexOfFinal(input_str, i);
-                    char *token_string=substr(input_str, i, final_index+1);
-                    char *token_class=TOKEN_analyzeTokenClass(token_string);
-                    TOKEN_addProperty(&token, token_class, token_string,i,final_index);
-                    i=final_index+1;
-                    start=i;
-                    if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
-                        type='s';
-                    }
-                    else if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
-                        type='b';
-                    }
-                    else if(input_str[i]==':'||input_str[i]==';'||input_str[i]==',')
-                        type='c';
-                    else{
-                        type='i';
-                    }
                 }
                 else if (input_str[i]=='[') {
                     type='t';
                     t='l'; //list or table
-                    int final_index=indexOfFinal(input_str, i);
-                    char *token_string=substr(input_str, i, final_index+1);
-                    char *token_class=TOKEN_analyzeTokenClass(token_string);
-                    TOKEN_addProperty(&token, token_class, token_string,i,final_index);
-                    i=final_index+1;
-                    start=i;
-                    if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
-                        type='s';
-                    }
-                    else if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
-                        type='b';
-                    }
-                    else if(input_str[i]==':'||input_str[i]==';'||input_str[i]==',')
-                        type='c';
-                    else{
-                        type='i';
-                    }
                 }
                 else if(input_str[i]==':'||input_str[i]==';'||input_str[i]==',')
                     type='c';
@@ -662,87 +481,20 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
             else if (input_str[i]=='"') {
                 type='t';
                 t='s'; //string
-                int final_index=indexOfFinal(input_str, i);
-                char *token_string=substr(input_str, i, final_index+1);
-                char *token_class=TOKEN_analyzeTokenClass(token_string);
-                TOKEN_addProperty(&token, token_class, token_string,i,final_index);
-                i=final_index+1;
-                start=i;
-                if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
-                    type='s';
-                }
-                else if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
-                    type='b';
-                }
-                else if(input_str[i]==':'||input_str[i]==';'||input_str[i]==',')
-                    type='c';
-                else{
-                    type='i';
-                }
             }
             else if (input_str[i]=='\'') {
                 type='t';
                 t='s'; //string
-                int final_index=indexOfFinal(input_str, i);
-                char *token_string=substr(input_str, i, final_index+1);
-                char *token_class=TOKEN_analyzeTokenClass(token_string);
-                TOKEN_addProperty(&token, token_class, token_string,i,final_index);
-                i=final_index+1;
-                start=i;
-                if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
-                    type='s';
-                }
-                else if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
-                    type='b';
-                }
-                else if(input_str[i]==':'||input_str[i]==';'||input_str[i]==',')
-                    type='c';
-                else{
-                    type='i';
-                }
             }
             else if (input_str[i]=='{') {
                 type='t';
                 t='d'; //dict
-                int final_index=indexOfFinal(input_str, i);
-                char *token_string=substr(input_str, i, final_index+1);
-                char *token_class=TOKEN_analyzeTokenClass(token_string);
-                TOKEN_addProperty(&token, token_class, token_string,i,final_index);
-                i=final_index+1;
-                start=i;
-                if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
-                    type='s';
-                }
-                else if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
-                    type='b';
-                }
-                else if(input_str[i]==':'||input_str[i]==';'||input_str[i]==',')
-                    type='c';
-                else{
-                    type='i';
-                }
             }
             else if (input_str[i]=='[') {
                 type='t';
                 t='l'; //list or table
-                int final_index=indexOfFinal(input_str, i);
-                char *token_string=substr(input_str, i, final_index+1);
-                char *token_class=TOKEN_analyzeTokenClass(token_string);
-                TOKEN_addProperty(&token, token_class, token_string,i,final_index);
-                i=final_index+1;
-                start=i;
-                if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
-                    type='s';
-                }
-                else if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
-                    type='b';
-                }
-                else if(input_str[i]==':'||input_str[i]==';'||input_str[i]==',')
-                    type='c';
-                else{
-                    type='i';
-                }
             }
+
             else if (input_str[i]==' '||input_str[i]=='\t'||input_str[i]=='\n')
                 type='b';
             else if(input_str[i]==':'||input_str[i]==';'||input_str[i]==',')
