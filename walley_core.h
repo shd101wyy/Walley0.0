@@ -393,14 +393,14 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
         
         struct TOKEN *token=Walley_Lexica_Analysis(input_str);
         TOKEN_checkError(token, input_str);
-        int length_of_token=TOKEN_length(token);
+        //int length_of_token=TOKEN_length(token);
         int index_of_first_none_whitespace=TOKEN_indexOfFirstNoneWhiteSpaceToken(token);
         struct TOKEN first_none_whitespace_token=token[index_of_first_none_whitespace];
         
         
         //printf("-------Now input is |%s| required space %d current space %d\n", input_str,space,current_space);
 
-        //printf("--------------> |%s|, %d\n",input_str,REQUIRED_SPACE);
+        //printf("input_str --------------> |%s|, %d\n",input_str,REQUIRED_SPACE);
         
         /*
         //################## Now Run If #######################################
@@ -958,6 +958,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 else{
                     printf("%s", temp_output);
                 }
+                
             }
             // add new symbolic math support
             else if(strcmp(first_none_whitespace_token.TOKEN_STRING,"syms")==0){
@@ -982,7 +983,13 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 strcmp(first_none_whitespace_token.TOKEN_STRING,"class")==0
                      // new code here to support switch
                      || strcmp(first_none_whitespace_token.TOKEN_STRING,"switch")==0) {
+
+                if (first_none_whitespace_token.TOKEN_STRING[0]=='#') {
+                    printf("");
+                }
+                else{
                 Walley_Judge_Run_Anotation_For_While_Def_Class(struct_var, struct_settings, FUNCTION_functions,input_str,token);
+                }
 
             }// ##################################### CHECK RETURN IN FUNCTION, CHECK WHETHER IT CAN RUN OR NOT
             else if (strcmp(first_none_whitespace_token.TOKEN_STRING,"return")==0){
@@ -1672,8 +1679,6 @@ void Walley_Update_Var_And_Var_Value_To_Var(struct VAR **struct_var, char *var_n
 
 // Not Modify....
 char *Walley_Run_One_Function_And_Return_Value_From_Var(char *input_str,struct VAR **struct_var, char ***FUNCTION_functions){
-    //printf("\n#### Walley_Run_One_Function_And_Return_Value ####\n");
-    //printf("#### %s\n",input_str);
     char *global_var_back_up=GLOBAL_VAR;
 
     char *function_in_def="[]";
@@ -1732,8 +1737,9 @@ char *Walley_Run_One_Function_And_Return_Value_From_Var(char *input_str,struct V
     // copy instance var to TEMP_VAR_var
     // and then copy it back
      */
-    copyInstanceValueToStructVar(struct_var,&TEMP_VAR_var,INSTANCE_NAMES_LIST);
+    copyInstanceValueToStructVar(*struct_var,&TEMP_VAR_var,INSTANCE_NAMES_LIST);
 
+    
     char **TEMP_TEMP_FILE;Str_initStringList(&TEMP_TEMP_FILE);
     
     bool find_function = FALSE;
@@ -1847,9 +1853,7 @@ char *Walley_Run_One_Function_And_Return_Value_From_Var(char *input_str,struct V
         
         if(finish_init_param==TRUE && finish==FALSE){
             strcat(output,arr);
-        
-            // printf("----------> %s\n",arr);
-            
+                
             char *temp=trim(arr);
             
             // For def function in a function
@@ -1879,10 +1883,11 @@ char *Walley_Run_One_Function_And_Return_Value_From_Var(char *input_str,struct V
             else{
                 //printf("*************** GO THERE *************** %s\n",arr);
                 // if is_instance_value is true, save like Rohit.age to VAR_var
-                bool is_instance_value=FALSE;
+                //bool is_instance_value=FALSE;
                 bool is_global_var=FALSE;
-                bool is_expresssion=FALSE;
-                char *user;
+                //bool is_expresssion=FALSE;
+                //char *user;
+                /*
                 if(isExpression(arr)){
                     is_expresssion=TRUE;
                     //printf("********* %s IT IS EXPRESSION ********\n",arr);
@@ -1926,9 +1931,8 @@ char *Walley_Run_One_Function_And_Return_Value_From_Var(char *input_str,struct V
                         }
                     }
                 }
-                
-                if(is_instance_value==FALSE){
-                    //printf("********** Not INSTANCE VALUE *********\n");
+                */
+                //if(is_instance_value==FALSE){
                    
                     // begin to define global var
                     if (find(trim(arr),"global ")==0) {
@@ -1953,7 +1957,9 @@ char *Walley_Run_One_Function_And_Return_Value_From_Var(char *input_str,struct V
                         // printf("ELSE--->|%s|\n",(*FUNCTION_functions)[row]);
                         Walley_Run_For_Appointed_Var(&TEMP_VAR_var,&TEMP_VAR_settings,&TEMP_TEMP_FILE,"FUNCTION",FUNCTION_functions,arr);
                     }
-                }
+                    
+                //}
+                /*
                 else{
                     // printf("************ IT IS INSTANCE VALUE ************");
                     // printf("************ %s **********\n",arr);
@@ -1979,6 +1985,7 @@ char *Walley_Run_One_Function_And_Return_Value_From_Var(char *input_str,struct V
                     
                     
                 }
+                 */
             }
             
         }
@@ -2122,9 +2129,8 @@ char *Walley_Run_One_Function_And_Return_Value_From_Var(char *input_str,struct V
         deleteOneFunctionFromBehind(FUNCTION_functions, temp_func_name);
         a++;
     }
-   
-    copyInstanceValueBackToVar(&TEMP_VAR_var, struct_var,INSTANCE_NAMES_LIST);
     
+    copyInstanceValueBackToVar(TEMP_VAR_var, struct_var,INSTANCE_NAMES_LIST);
     function_in_def="";
     GLOBAL_VAR=global_var_back_up;
     
@@ -2529,7 +2535,6 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
         char *token_string=token[i].TOKEN_STRING;
         struct TOKEN next=TOKEN_nextToken(token, i);
         
-
         
         if (strcmp(token_class, "W_ID")==0) {
             
@@ -2542,7 +2547,7 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
                 
                 char *var_value=Var_getValueOfVar(*struct_var, token_string);
                 i=i+1;
-                Walley_Next(token, &i, &var_value, *struct_var, *FUNCTION_functions);
+                Walley_Next(token, &i, &var_value, struct_var, *FUNCTION_functions);
                 i=i-1;
                 temp_token.TOKEN_STRING=var_value;
             }
@@ -2950,7 +2955,7 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
             if (strcmp(next.TOKEN_CLASS,"W_LIST_TABLE")==0||next.TOKEN_STRING[0]=='.') {
                 char *var_value=token_string;
                 i=i+1;
-                Walley_Next(token, &i, &var_value, *struct_var, *FUNCTION_functions);
+                Walley_Next(token, &i, &var_value, struct_var, *FUNCTION_functions);
                 i=i-1;
                 temp_token.TOKEN_STRING=var_value;
             }
@@ -2980,7 +2985,7 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
             if (strcmp(next.TOKEN_CLASS,"W_LIST_TABLE")==0||next.TOKEN_STRING[0]=='.') {
                 char *var_value=Var_getValueOfVar(*struct_var, token_string);
                 i=i+1;
-                Walley_Next(token, &i, &var_value, *struct_var, *FUNCTION_functions);
+                Walley_Next(token, &i, &var_value, struct_var, *FUNCTION_functions);
                 i=i-1;
                 temp_token.TOKEN_STRING=var_value;
             }
@@ -3677,9 +3682,8 @@ def random(num1=0,num2=1):\n\
 
 
 char *Walley_Print(struct VAR **struct_var, char ***FUNCTION_functions,char *input_str){
-    //printf("#### Walley_Print ####\n");
+    //printf("#### Walley_Print ####    %s\n",input_str);
     input_str=Walley_Substitute_Var_And_Function_Return_Value_From_Var(input_str,struct_var,FUNCTION_functions);
-    //printf("after eval-->|%s|\n",input_str);
     char *after_eval=input_str;
     if (stringIsAlpha(input_str)==FALSE) {
         Walley_Eval_With_Variable_From_Var(*struct_var,input_str);
@@ -4686,7 +4690,7 @@ def random(num1=0,num2=1):\n\
  
  
  */
-void Walley_Next(struct TOKEN *token, int *current_index, char **current_value, struct VAR *struct_var, char **FUNCTION_functions)
+void Walley_Next(struct TOKEN *token, int *current_index, char **current_value, struct VAR **struct_var, char **FUNCTION_functions)
 {
 
     //printf("current_value %s\n",*current_value);
@@ -4697,7 +4701,7 @@ void Walley_Next(struct TOKEN *token, int *current_index, char **current_value, 
     if (strcmp(token_class, "W_STRING")==0) {
         // "Hello"[0,2]
         if (strcmp(token[*current_index].TOKEN_CLASS, "W_LIST_TABLE")==0) {            
-            char *var_value=Walley_Slice(*current_value, token[*current_index].TOKEN_STRING, &struct_var, &FUNCTION_functions);
+            char *var_value=Walley_Slice(*current_value, token[*current_index].TOKEN_STRING, struct_var, &FUNCTION_functions);
             *current_value=var_value;
             *current_index=*current_index+1;
             Walley_Next(token, current_index, current_value, struct_var, FUNCTION_functions);
@@ -4708,8 +4712,9 @@ void Walley_Next(struct TOKEN *token, int *current_index, char **current_value, 
             if (checkWhetherSameInstanceExistedFromVar(INSTANCE_NAMES_LIST, SAVE_VAR_NAME_TO_CHECK_WHETHER_IT_IS_INSTANCE)) {
                 //printf("It is instance\n");
                 if (find(token[*current_index+1].TOKEN_STRING, "(")==-1) {
-                    char *output=Var_getValueOfVar(struct_var, append(SAVE_VAR_NAME_TO_CHECK_WHETHER_IT_IS_INSTANCE, append(".",token[*current_index+1].TOKEN_STRING)));
+                    char *output=Var_getValueOfVar(*struct_var, append(SAVE_VAR_NAME_TO_CHECK_WHETHER_IT_IS_INSTANCE, append(".",token[*current_index+1].TOKEN_STRING)));
                     if (strcmp(output, "None")==0) {
+                        *current_index=*current_index+2;
                         return;
                     }
                     else{
@@ -4721,8 +4726,10 @@ void Walley_Next(struct TOKEN *token, int *current_index, char **current_value, 
 
                 }
                 else{
-                    char *output=Walley_Run_One_Function_And_Return_Value_From_Var(append(append(SAVE_VAR_NAME_TO_CHECK_WHETHER_IT_IS_INSTANCE,"."), token[*current_index+1].TOKEN_STRING), &struct_var, &FUNCTION_functions);
+                    char *output=Walley_Run_One_Function_And_Return_Value_From_Var(append(append(SAVE_VAR_NAME_TO_CHECK_WHETHER_IT_IS_INSTANCE,"."), token[*current_index+1].TOKEN_STRING), struct_var, &FUNCTION_functions);
+                    //printf("OUTPUT----> %s\n",output);
                     if (strcmp(output, "None")==0) {
+                        *current_index=*current_index+2;
                         return;
                     }
                     else{
@@ -4734,7 +4741,7 @@ void Walley_Next(struct TOKEN *token, int *current_index, char **current_value, 
                 }
             }
             else{
-                *current_value=Walley_Run_Special_Function_From_Var(append(append(*current_value,"."),token[*current_index+1].TOKEN_STRING ), &struct_var);
+                *current_value=Walley_Run_Special_Function_From_Var(append(append(*current_value,"."),token[*current_index+1].TOKEN_STRING ), struct_var);
                 *current_index=*current_index+2;
                 Walley_Next(token, current_index, current_value, struct_var, FUNCTION_functions);
             }
@@ -4750,14 +4757,14 @@ void Walley_Next(struct TOKEN *token, int *current_index, char **current_value, 
         if (strcmp(token[*current_index].TOKEN_CLASS, "W_LIST_TABLE")==0) {
             SAVE_VAR_NAME_TO_CHECK_WHETHER_IT_IS_INSTANCE=append(SAVE_VAR_NAME_TO_CHECK_WHETHER_IT_IS_INSTANCE, token[*current_index].TOKEN_STRING);
 
-            char *var_value=Walley_Slice(*current_value, token[*current_index].TOKEN_STRING, &struct_var, &FUNCTION_functions);
+            char *var_value=Walley_Slice(*current_value, token[*current_index].TOKEN_STRING, struct_var, &FUNCTION_functions);
             *current_value=var_value;
             *current_index=*current_index+1;
             Walley_Next(token, current_index, current_value, struct_var, FUNCTION_functions);
         }
         // [1,2,3,4].length()
         else if (token[*current_index].TOKEN_STRING[0]=='.'){
-            *current_value=Walley_Run_Special_Function_From_Var(append(append(*current_value,"."),token[*current_index+1].TOKEN_STRING ), &struct_var);
+            *current_value=Walley_Run_Special_Function_From_Var(append(append(*current_value,"."),token[*current_index+1].TOKEN_STRING ), struct_var);
             *current_index=*current_index+2;
             Walley_Next(token, current_index, current_value, struct_var, FUNCTION_functions);
         }

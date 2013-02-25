@@ -444,32 +444,39 @@ bool checkWhetherSameClassExistedFromVar(struct CLASS *class_list, char *class_n
 
 
 
-void copyInstanceValueToStructVar(struct VAR **struct_var,struct VAR **copy_to_var, char **instance_names_list){
+void copyInstanceValueToStructVar(struct VAR *struct_var,struct VAR **copy_to_var, char **instance_names_list){
     char *class_name;
 
     int length=Str_length(instance_names_list);
     
-    int length_of_struct_var=Var_length(*struct_var);
+    int length_of_struct_var=Var_length(struct_var);
     int i=1;
     for(i=1;i<length;i++){
         class_name=instance_names_list[i];
         char *temp=append(class_name, ".");
+        char *class_name2;
+        if (find(class_name, "[")!=-1) {
+            class_name2=substr(class_name, 0, find(class_name, "["));
+        }
+        else{
+            class_name2="";
+        }
         
         int j=0;
         for (; j<length_of_struct_var; j++) {
-            if (find((*struct_var+j)->var_name, temp)==0||strcmp(class_name, (*struct_var+j)->var_name)==0) {
+            if (find((struct_var+j)->var_name, temp)==0||strcmp(class_name, (struct_var+j)->var_name)==0 ||(strcmp(class_name2, "")!=0&&find((struct_var+j)->var_name, class_name2))==0) {
                 // add it to copy_to_var
-                Var_addProperty(copy_to_var,(*struct_var+j)->var_name , (*struct_var+j)->var_value, (*struct_var+j)->var_type);
+                Var_addProperty(copy_to_var,(struct_var+j)->var_name , (struct_var+j)->var_value, (struct_var+j)->var_type);
             }
         }
     }
 }
 
-void copyInstanceValueBackToVar(struct VAR **struct_var, struct VAR **copy_to_var,char **instance_names_list){
+void copyInstanceValueBackToVar(struct VAR *struct_var, struct VAR **copy_to_var,char **instance_names_list){
     int length=Str_length(instance_names_list);
     char *class_name;
     
-    int length_of_struct_var=Var_length(*struct_var);
+    int length_of_struct_var=Var_length(struct_var);
     int i=1;
     for(;i<length;i++){
         class_name=instance_names_list[i];
@@ -477,9 +484,9 @@ void copyInstanceValueBackToVar(struct VAR **struct_var, struct VAR **copy_to_va
         
         int j=0;
         for (; j<length_of_struct_var; j++) {
-            if (find((*struct_var+j)->var_name, temp)==0||strcmp(class_name, (*struct_var+j)->var_name)==0) {
+            if (find((struct_var+j)->var_name, temp)==0||strcmp(class_name, (struct_var+j)->var_name)==0) {
                 // add it to copy_to_var
-                Var_changeValueOfVar(copy_to_var,(*struct_var+j)->var_name , (*struct_var+j)->var_value, (*struct_var+j)->var_type);
+                Walley_Update_Var_And_Var_Value_To_Var(copy_to_var, (struct_var+j)->var_name, (struct_var+j)->var_value);
             }
         }
     }
