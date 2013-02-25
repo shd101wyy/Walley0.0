@@ -484,7 +484,7 @@ void changeTheOneVarValueFromItsInitialOneFromVarForList(struct VAR **struct_var
  * eg: isListElement("__walley__.wy","a[1]");
  */
 bool isListElementForVar(struct VAR *struct_var, char *var_name){
-    if (find_not_in_string(var_name, "[")==-1) {
+    if (find_not_in_string(var_name, "[")==-1 || find(var_name, ".")!=-1) {
         return FALSE;
     }
     char *list_var_name=substr(var_name,0,find_not_in_string(var_name,"["));//a[0]-->a
