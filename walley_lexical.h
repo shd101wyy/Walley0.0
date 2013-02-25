@@ -773,3 +773,40 @@ char *TOKEN_toString(struct TOKEN *token){
     }
     return output;
 }
+
+
+//####################################################################################
+// TOKEN ARRAY is the Array that consists TOKEN LIST
+struct TOKEN_ARRAY{
+    int length;
+    struct TOKEN **token_list;
+};
+
+void TA_init(struct TOKEN_ARRAY *token_array){
+    (*token_array).length=1;
+    (*token_array).token_list=(struct TOKEN **)malloc(sizeof(struct TOKEN *)*1);
+    TOKEN_initTOKEN(&((*token_array).token_list[0]));
+}
+
+int TA_length(struct TOKEN_ARRAY token_array){
+    return token_array.length;
+}
+
+void TA_addToken(struct TOKEN_ARRAY *token_array, struct TOKEN token){
+    int length=TA_length(*token_array);
+    TOKEN_addToken(&((*token_array).token_list[length-1]), token);
+}
+
+void TA_addTokenList(struct TOKEN_ARRAY *token_array, struct TOKEN *token_list){
+    (*token_array).length=(*token_array).length+1;
+    (*token_array).token_list=(struct TOKEN **)realloc((*token_array).token_list, sizeof(struct TOKEN *)*(*token_array).length);
+    
+    int length_of_token_list=TOKEN_length(token_list);
+    int i=0;
+    for (; i<length_of_token_list; i++) {
+        TA_addToken(token_array, token_list[i]);
+    }
+}
+//###################################################################################
+
+
