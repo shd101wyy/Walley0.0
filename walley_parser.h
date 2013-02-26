@@ -1254,10 +1254,6 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
                             Walley_Print_Error(input_str, "You need to assign value to var", token_list[index_of_assignment].TOKEN_END+1);
                         }
                         
-                        TL_PrintTOKEN(var_name_token_list);
-                        printf("===========\n");
-                        TL_PrintTOKEN(var_value_token_list);
-                        printf("===========\n");
 
                         int length_of_var_name_token_list=TL_length(var_name_token_list);
                         int length_of_var_value_token_list=TL_length(var_value_token_list);
@@ -1351,19 +1347,12 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
                             else {
                                 input_str = Walley_Substitute_Var_And_Function_Return_Value_From_Var(input_str, struct_var,FUNCTION_functions);
                                 Walley_Eval_With_Variable_From_Var(*struct_var, input_str);
-                            }
-                            // printf("End\n");
-                            
+                            }                            
                         }
                     }
                 }
                 
             }
-                        /* Disable setmark and goto.....
-             if (run_goto == TRUE) {
-             //// printf("@@@@ Run GOTO @@@@\n");
-             Walley_Run_For_Appointed_Var(struct_var, struct_settings, temp_file, existing_file, getStringFromFile(temp_file_name));
-             }*/
         }
         
     }
