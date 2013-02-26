@@ -1215,8 +1215,11 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
                         var_value_token_list=subtoken(token_list, index_of_assignment+1, length_of_token_list);
                         
                         var_name_token_list=TL_returnTokenListWithoutPunctuation(var_name_token_list);
-                        var_value_token_list=TL_returnTokenListWithoutPunctuation(var_value_token_list);
                         
+                        //var_value_token_list=TL_returnTokenListWithoutPunctuation(var_value_token_list);
+                        
+                        char **var_value_str_list=TL_returnStringListWithoutPunctuation(var_value_token_list);
+                        //Str_PrintStr(var_value_str_list);
                         
                         if (TL_length(var_value_token_list)==1) {
                             Walley_Print_Error(input_str, "You need to assign value to var", token_list[index_of_assignment].TOKEN_END+1);
@@ -1224,18 +1227,21 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
                         
 
                         int length_of_var_name_token_list=TL_length(var_name_token_list);
-                        int length_of_var_value_token_list=TL_length(var_value_token_list);
+                        int length_of_var_value_str_list=Str_length(var_value_str_list);
                         
                         int i=1;
                         for (; i<length_of_var_name_token_list; i++) {
                             char *var_name=var_name_token_list[i].TOKEN_STRING;
                             char *var_value;
-                            if (i>=length_of_var_value_token_list-1) {
-                                var_value=var_value_token_list[length_of_var_value_token_list-1].TOKEN_STRING;
+                            if (i>=length_of_var_value_str_list-1) {
+                                var_value=var_value_str_list[length_of_var_value_str_list-1];
                             }
                             else{
-                                var_value=var_value_token_list[i].TOKEN_STRING;
+                                var_value=var_value_str_list[i];
                             }
+                            
+                            //printf("var_name---> %s\n",var_name);
+                            //printf("var_value--> %s\n",var_value);
                             
                             // it is class
                             if (checkWhetherSameClassExistedFromVar(CLASS_LIST, var_value)==TRUE) {
@@ -1248,6 +1254,7 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
                                 Walley_Eval_And_Update_Var_And_Value_To_Var(struct_var,FUNCTION_functions, temp);
                             }
                         }
+                        //exit(0);
                         
                     }
                     // ##############  Is Not Expression ######################

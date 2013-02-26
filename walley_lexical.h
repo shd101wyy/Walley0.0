@@ -944,6 +944,29 @@ struct TOKEN *TL_returnTokenListWithoutPunctuation(struct TOKEN *token_list){
     return output_token_list;
 }
 
+char** TL_returnStringListWithoutPunctuation(struct TOKEN *token_list){
+    char **output_str_list;
+    Str_initStringList(&output_str_list);
+    int length=TL_length(token_list);
+    int i=1;
+    char *append_str="";
+    for (; i<length; i++) {
+        if (strcmp(token_list[i].TOKEN_CLASS, "W_PUNCTUATION")!=0) {
+            append_str=append(append_str, token_list[i].TOKEN_STRING);
+        }
+        else{
+            Str_addString(&output_str_list, append_str);
+            append_str="";
+            
+        }
+    }
+    Str_addString(&output_str_list, append_str);
+
+    return output_str_list;
+}
+
+
+
 //####################################################################################
 // TOKEN ARRAY is the Array that consists TOKEN LIST
 struct TOKEN_ARRAY{
