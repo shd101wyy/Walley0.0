@@ -1437,3 +1437,63 @@ int d_strcat(char **buffer,char *addition)
     strcat(*buffer, addition);
     return 1 ;
 }
+
+/*
+ This function will remove \n behind input_str;
+ */
+
+
+char *removeNFromBack(char *input_str){
+    while (input_str[(int)strlen(input_str)-1]=='\n') {
+        if ((int)strlen(input_str)-1==0) {
+            return "";
+        }
+        input_str=substr(input_str, 0,(int)strlen(input_str)-1);
+    }
+    return input_str;
+}
+
+
+bool stringIsEmpty(char *input_str){
+    if (input_str==NULL) {
+        return TRUE;
+    }
+    input_str=trim(input_str);
+    input_str=removeNFromBack(input_str);
+    int i=0;
+    bool isEmpty=TRUE;
+    for(; i<(int)strlen(input_str);i++){
+        if(input_str[i]!=' ')
+            isEmpty=FALSE;
+    }
+    if (strcmp("\n", input_str)==0) {
+        isEmpty=TRUE;
+    }
+    //// printf("Input Str |%s|,length %d,isEmpty %d\n",input_str,(int)strlen(input_str),isEmpty);
+    return isEmpty;
+}
+
+
+// a\nb\n
+// 0:a
+// 1:b
+char **Str_stringToStringList(char *input_str){
+    char **output_str_list;
+    Str_initStringList(&output_str_list);
+    int begin=0;
+    int end=find_not_in_str_list_dict_parenthesis(input_str, "\\n");
+    while (end!=-1) {
+        char *str=substr(input_str, begin, end);
+        if (stringIsEmpty(str)==FALSE) {
+            Str_addString(&output_str_list, str);
+        }
+        begin=end+1;
+        end=find_from_index_not_in_str_list_dict_parenthesis(input_str, "\\n",begin);
+    }
+    char *str=substr(input_str, begin, (int)strlen(input_str));
+    if (stringIsEmpty(str)==FALSE) {
+        Str_addString(&output_str_list, str);
+    }
+    return output_str_list;
+}
+

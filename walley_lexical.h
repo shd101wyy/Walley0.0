@@ -723,6 +723,8 @@ int TL_indexOfFirstNoneWhiteSpaceToken(struct TOKEN *token){
 
 
 
+
+
 // Token Errors
 void TOKEN_checkError(struct TOKEN *token,char *input_str){
     int length=0;
@@ -848,7 +850,7 @@ struct TOKEN *TL_returnTokenListWithoutWhitespaces(struct TOKEN *token){
     int length=TL_length(token);
     int row=1;
     while (row<length) {
-        if (strcmp("WHITESPACES", token[row].TOKEN_CLASS)!=0) {
+        if (strcmp("W_WHITESPACES", token[row].TOKEN_CLASS)!=0) {
             TL_addProperty(&return_token, token[row].TOKEN_CLASS, token[row].TOKEN_STRING, token[row].TOKEN_START, token[row].TOKEN_END);
         }
         row++;
@@ -863,6 +865,7 @@ struct TOKEN *subtoken(struct TOKEN *token, int from_index, int to_index){
     }
     
     struct TOKEN *output_token;
+    TL_initTokenList(&output_token);
     int i=from_index;
     for (; i<to_index; i++) {
         TL_addProperty(&output_token, token[i].TOKEN_CLASS, token[i].TOKEN_STRING, token[i].TOKEN_START, token[i].TOKEN_END);
@@ -895,6 +898,23 @@ void TL_addTokenList(struct TOKEN **token, struct TOKEN *add_token_list){
     }
 }
 
+// num is the n th token that has required TOKEN_CLASS
+// num starts from 0.
+int TL_indexOfTokenAccordingTokenClassAndNum(struct TOKEN *token,char *token_class, int num){
+    int length=TL_length(token);
+    int i=0;
+    int count=-1;
+    for (i=1; i<length; i++) {
+        if (strcmp(token[i].TOKEN_CLASS, token_class)==0) {
+            count++;
+            if (count==num) {
+                return i;
+            }
+        }
+    }
+return -1;
+}
+
 char *TL_toString(struct TOKEN *token){
     int length=TL_length(token);
     int i=1;
@@ -905,6 +925,24 @@ char *TL_toString(struct TOKEN *token){
     return output;
 }
 
+struct TOKEN *TL_cleanTokenList(struct TOKEN **token_list){
+    char *input_str=TL_toString(*token_list);
+    return Walley_Lexica_Analysis(input_str);
+}
+
+//const char* W_PUNCTUATION;        : , ;
+struct TOKEN *TL_returnTokenListWithoutPunctuation(struct TOKEN *token_list){
+    struct TOKEN *output_token_list;
+    TL_initTokenList(&output_token_list);
+    int length=TL_length(token_list);
+    int i=1;
+    for (; i<length; i++) {
+        if (strcmp(token_list[i].TOKEN_CLASS, "W_PUNCTUATION")!=0) {
+            TL_addToken(&output_token_list, token_list[i]);
+        }
+    }
+    return output_token_list;
+}
 
 //####################################################################################
 // TOKEN ARRAY is the Array that consists TOKEN LIST
@@ -939,5 +977,14 @@ void TA_addTokenList(struct TOKEN_ARRAY *token_array, struct TOKEN *token_list){
     }
 }
 //###################################################################################
+
+
+
+void Walley_Print_Error(char *input_str,char *error_message,int error_start_index){
+    printf("Error.. %s\n",error_message);
+    printf("%s\n",input_str);
+    printf("%s^\n",Str_appendSpaceAhead("", error_start_index));
+    exit(0);
+}
 
 

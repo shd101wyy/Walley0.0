@@ -13,20 +13,6 @@
 // function deleteOneFunctionFromBehind has problems.
 
 
-/*
- This function will remove \n behind input_str;
- */
-
-
-char *removeNFromBack(char *input_str){
-    while (input_str[(int)strlen(input_str)-1]=='\n') {
-        if ((int)strlen(input_str)-1==0) {
-            return "";
-        }
-        input_str=substr(input_str, 0,(int)strlen(input_str)-1);
-    }
-    return input_str;
-}
 
 /*
  * make string in c to string in walley
@@ -662,25 +648,6 @@ char *combineStringsToOneString(char *input_str){
     char *output=append("", temp);
     return output;
     
-}
-
-bool stringIsEmpty(char *input_str){
-    if (input_str==NULL) {
-        return TRUE;
-    }
-    input_str=trim(input_str);
-    input_str=removeNFromBack(input_str);
-    int i=0;
-    bool isEmpty=TRUE;
-    for(; i<(int)strlen(input_str);i++){
-        if(input_str[i]!=' ')
-            isEmpty=FALSE;
-    }
-    if (strcmp("\n", input_str)==0) {
-        isEmpty=TRUE;
-    }
-    //// printf("Input Str |%s|,length %d,isEmpty %d\n",input_str,(int)strlen(input_str),isEmpty);
-    return isEmpty;
 }
 
 /*

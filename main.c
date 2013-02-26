@@ -21,6 +21,7 @@ int main(int argc, char **argv){
 
     
     Str_initStringList(&INSTANCE_NAMES_LIST);
+    CLASS_initCLASSList(&CLASS_LIST);
     //TL_initTokenList(&VAR_VALUE_TO_BE_COMPLETE);
     ////char cwd[1000];
     ////getcwd(cwd, sizeof (cwd));
@@ -106,6 +107,22 @@ def random(num1=0,num2=1):\n\
         }
         else if(strcmp(param, "version")==0){
             printf("Walley Version Now---->1.19\n");
+        }
+        else if(strcmp(param, "parse")==0){
+            printf("Use Walley_Parse_Simple_String which is still under development\n");
+                Walley_Initialize();
+                //Walley_Parse(string_in_out_wy);
+                Walley_Parse("print \"Welcome to Walley's World\"");
+                while (TRUE) {
+                    printf("\n>>> ");
+                    char input_str[10000];
+                    gets(input_str);
+                    if (strcmp(input_str, "exit()") == 0)
+                        break;
+                    Walley_Parse(input_str);
+                }
+                
+                Walley_Finalize();
         }
         else {
             Walley_Initialize();

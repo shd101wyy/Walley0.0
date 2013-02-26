@@ -4,7 +4,7 @@
  *
  * Created on September 6, 2012, 12:01 AM
  */
-#include "walley_core.h"
+#include "walley_parser.h"
 /*void Walley_Run(char *input_str){
    //// printf("#### Walley Run ####\n");
     char *file_name = "__walley__.wy";
@@ -18,6 +18,11 @@
 void Walley_Run(char *input_str){
     char *existing_file="None";
     Walley_Run_For_Appointed_Var(&VAR_var,&VAR_settings,&TEMP_FILE,existing_file,&FUNCTION,input_str);
+}
+
+void Walley_Parse(char *input_str){
+    char *existing_file="None";
+    Walley_Parse_Simple_String(&VAR_var,&VAR_settings,existing_file,&FUNCTION,input_str);
 }
 /*
 void Walley_Agent_Run(char *input_str,char *existing_file){

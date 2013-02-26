@@ -406,10 +406,10 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
             
             
             struct TOKEN *token=Walley_Lexica_Analysis(input_str);
+            token=TL_returnTokenListWithoutWhitespaces(token);
             TOKEN_checkError(token, input_str);
             //int length_of_token=TOKEN_length(token);
-            int index_of_first_none_whitespace=TL_indexOfFirstNoneWhiteSpaceToken(token);
-            struct TOKEN first_none_whitespace_token=token[index_of_first_none_whitespace];
+            struct TOKEN first_none_whitespace_token=token[1];
             
             
             //printf("-------Now input is |%s| required space %d current space %d\n", input_str,space,current_space);
@@ -3908,7 +3908,6 @@ bool Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(char *
 //############################### If is expression, DO THAT ###################################
 
 void Walley_Eval_And_Update_Var_And_Value_To_Var(struct VAR **struct_var,char ***FUNCTION_functions,char* input_str) {
-    //else if (isExpression(input_str)==TRUE){
     //printf("#### Walley_Eval_And_Update_Var_And_Value_To_File ####  %s\n",input_str);
     char *var_name = variableName(input_str);
     char *var_value = variableValue(input_str);
@@ -4150,9 +4149,7 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
     //printf("##current_space is %d\n",current_space);
     
     
-    int index_of_first_none_whitespace=TL_indexOfFirstNoneWhiteSpaceToken(token);
-    int length_of_token=TL_length(token);
-    struct TOKEN first_none_whitespace_token=token[index_of_first_none_whitespace];
+    struct TOKEN first_none_whitespace_token=token[1];
     
     //#####################  Anotation  ###################
     if (input_str[0] == '#') {
@@ -4220,222 +4217,11 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
         
         
     }
-    /*
-    else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "if") == 0 || strcmp(first_none_whitespace_token.TOKEN_STRING, "elif") == 0 || strcmp(first_none_whitespace_token.TOKEN_STRING, "else") == 0) {
-        // printf("now judge if sentence\n");
-        char *sentence = "";
-        char *temp_for_sentence = removeAheadSpace(removeBackSpace(input_str));
-        bool can_run=TRUE;
-        REQUIRED_SPACE=current_space;
-        
-        
-        if (strcmp(first_none_whitespace_token.TOKEN_STRING, "if") == 0) {
-            
-            //// printf("Find If\n");
-            sentence = substr(temp_for_sentence, find(temp_for_sentence, "if ") + 3, (int) strlen(temp_for_sentence) - 1);
-            last_if_sentence = sentence;
-            can_run = Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(sentence, struct_var,FUNCTION_functions);
-            //printf("++++++can run is %d\n",can_run);
-            
-            // if can run.
-            // Write last_if_sentence to __temp_if__
-            char *__temp_if__=Var_getValueOfVar(*struct_var,"__temp_if__");
-            __temp_if__=listAppendOneElement(__temp_if__,last_if_sentence);
-            changeTheWholeVarValueFromItsInitialOneFromVarForList(struct_var, "__temp_if__", __temp_if__);
-            //}
-            char *__temp_if_space__=Var_getValueOfVar(*struct_var,"__temp_if_space__");
-            char temp_num[100];
-            //sprintf(temp_num,"%d",space);
-            sprintf(temp_num,"%d",REQUIRED_SPACE);
-
-            __temp_if_space__=listAppendOneElement(__temp_if_space__,temp_num);
-            
-            char *__has_run_if__=Var_getValueOfVar(*struct_var,"__has_run_if__");
-            sprintf(temp_num,"%d",can_run);
-            __has_run_if__=listAppendOneElement(__has_run_if__,temp_num);
-            
-            
-            // Delete the same // eg delete one 4 from [0,4,4]
-            int num_of_temp_if_space=valueNumOfList(__temp_if_space__);
-            if (num_of_temp_if_space > 1) {
-                char *previous = valueOfListAtIndex(__temp_if_space__, num_of_temp_if_space - 2);
-                char *now = valueOfListAtIndex(__temp_if_space__, num_of_temp_if_space - 1);
-                if (atoi(previous) == atoi(now)) {
-                    //// printf("--------Find Another If--------\n");
-                    char temp_length[100];
-                    int index = num_of_temp_if_space - 2;
-                    sprintf(temp_length, "%d", index);
-                    char *index_str = (char*)malloc(sizeof (char) *((int) strlen(temp_length) + 3));
-                    strcpy(index_str, "[");
-                    strcat(index_str, temp_length);
-                    strcat(index_str, "]");
-                    index_str[(int) strlen(temp_length) + 2]=0;
-                    __temp_if_space__ = listRemoveOneElementAtOneIndex(__temp_if_space__, index_str);
-                    __temp_if__=listRemoveOneElementAtOneIndex(__temp_if__,index_str);
-                    __has_run_if__=listRemoveOneElementAtOneIndex(__has_run_if__,index_str);
-                    //changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name,"__temp_if__",__temp_if__);
-                    changeTheWholeVarValueFromItsInitialOneFromVarForList(struct_var, "__temp_if__", __temp_if__);
-
-                    
-                }
-                
-                
-            }
-            //changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name,"__has_run_if__",__has_run_if__);
-            //changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name,"__temp_if_space__",__temp_if_space__);
-            changeTheWholeVarValueFromItsInitialOneFromVarForList(struct_var, "__has_run_if__", __has_run_if__);
-            changeTheWholeVarValueFromItsInitialOneFromVarForList(struct_var, "__temp_if_space__", __temp_if_space__);
-
-            
-        } else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "elif") == 0) {
-            
-            
-            char *__temp_if__=Var_getValueOfVar(*struct_var,"__temp_if__");
-            int length=valueNumOfList(__temp_if__);
-            char temp_length[100];
-            
-            char *__has_run_if__=Var_getValueOfVar(*struct_var,"__has_run_if__");
-            
-            int i=0;
-            int index;
-            char *__temp_if_space__=Var_getValueOfVar(*struct_var,"__temp_if_space__");
-            for(i=0;i<length;i++){
-                int number=atoi(valueOfListAtIndex(__temp_if_space__,i));
-                //// printf("number is %d\n",number);
-                if(number==current_space){
-                    index=i;
-                    break;
-                }
-            }
-            
-            //sprintf(temp_length,"%d",length-1);
-            sprintf(temp_length,"%d",index);
-            char *index_str=(char*)malloc(sizeof(char)*((int)strlen(temp_length)+3));
-            strcpy(index_str,"[");
-            strcat(index_str,temp_length);
-            strcat(index_str,"]");
-            index_str[(int)strlen(temp_length)+2]=0;
-            last_if_sentence=valueOfListAtIndexString(__temp_if__,index_str);
-            bool has_run_if=atoi(valueOfListAtIndexString(__has_run_if__,index_str));
-            
-            
-            
-            sentence = substr(temp_for_sentence, find(temp_for_sentence, "elif ") + 5, (int) strlen(temp_for_sentence) - 1);
-            
-            last_if_sentence = sentence;
-            // if can run.
-            // Write last_if_sentence to __temp_if__
-            //if(can_run==TRUE){
-            __temp_if__ = Var_getValueOfVar(*struct_var, "__temp_if__");
-            length = valueNumOfList(__temp_if__);
-            //char temp_length[100];
-            sprintf(temp_length, "%d", length - 1);
-            char *var_name_str =(char*) malloc(sizeof (char) *((int) strlen(temp_length) + 3 + (int) strlen("__temp_if__")));
-            strcpy(var_name_str, "__temp_if__[");
-            strcat(var_name_str, temp_length);
-            strcat(var_name_str, "]");
-            var_name_str[(int) strlen(temp_length) + 2 + (int) strlen("__temp_if__")]=0;
-
-            changeTheOneVarValueFromItsInitialOneFromVarForList(struct_var, var_name_str, sentence);
-            //}
-            if(has_run_if==TRUE){
-                //// printf("********* HAS RUN IF **********");
-                can_run=FALSE;
-            }else{
-                can_run = Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(sentence, struct_var,FUNCTION_functions);
-
-                 if (can_run==TRUE){
-                    int length_of_has_run_if__=valueNumOfList(__has_run_if__);
-                    char temp4[100];
-                    sprintf(temp4,"%d",length_of_has_run_if__-1);
-                    char *var_name_str2=(char*)malloc(sizeof(char)*((int)strlen("__has_run_if__")+3+(int)strlen(temp4)));
-                    strcpy(var_name_str2,"__has_run_if__[");
-                    strcat(var_name_str2,temp4);
-                    strcat(var_name_str2,"]");
-                    var_name_str2[(int)strlen("__has_run_if__")+2+(int)strlen(temp4)]=0;
-                    //changeTheOneVarValueFromItsInitialOneFromFileForList(struct_var,var_name_str2,"1");
-                    changeTheOneVarValueFromItsInitialOneFromVarForList(struct_var, var_name_str2, "1");
-                }
-            }
-            
-        }
-        
-        
-        
-        else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "else") == 0) {
-            
-            char *__temp_if__=Var_getValueOfVar(*struct_var,"__temp_if__");
-            int length=valueNumOfList(__temp_if__);
-            char temp_length[100];
-            
-            char *__has_run_if__=Var_getValueOfVar(*struct_var,"__has_run_if__");
-            
-            int i=0;
-            int index;
-            char *__temp_if_space__=Var_getValueOfVar(*struct_var,"__temp_if_space__");
-            for(i=0;i<length;i++){
-                int number=atoi(valueOfListAtIndex(__temp_if_space__,i));
-                //// printf("number is %d\n",number);
-                //// printf("current space is %d\n",current_space);
-                if(number==current_space){
-                    index=i;
-                    break;
-                }
-            }
-                        
-            //sprintf(temp_length,"%d",length-1);
-            sprintf(temp_length,"%d",index);
-            char *index_str=(char*)malloc(sizeof(char)*((int)strlen(temp_length)+3));
-            strcpy(index_str,"[");
-            strcat(index_str,temp_length);
-            strcat(index_str,"]");
-            index_str[(int)strlen(temp_length)+2]=0;
-            last_if_sentence=valueOfListAtIndexString(__temp_if__,index_str);
-            bool has_run_if=atoi(valueOfListAtIndexString(__has_run_if__,index_str));
-            
-           
-            last_if_sentence = "\"None\"";
-            
-            //Delete the final __temp_if__ in file
-            //// printf("index str is %s\n",index_str);
-            __temp_if__=listRemoveOneElementAtOneIndex(__temp_if__,index_str);
-            //changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name,"__temp_if__",__temp_if__);
-            changeTheWholeVarValueFromItsInitialOneFromVarForList(struct_var, "__temp_if__", __temp_if__);
-            
-            __temp_if_space__=listRemoveOneElementAtOneIndex(__temp_if_space__,index_str);
-            //changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name,"__temp_if_space__",__temp_if_space__);
-            changeTheWholeVarValueFromItsInitialOneFromVarForList(struct_var, "__temp_if_space__", __temp_if_space__);
-
-            __has_run_if__=listRemoveOneElementAtOneIndex(__has_run_if__,index_str);
-            //changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name,"__has_run_if__",__has_run_if__);
-            changeTheWholeVarValueFromItsInitialOneFromVarForList(struct_var, "__has_run_if__", __has_run_if__);
-
-            if(has_run_if==TRUE){
-                can_run=FALSE;
-            }
-            else{
-                can_run=TRUE;
-            }
-            
-            
-        }
-        //// printf("Enter here\n");
-        //// printf("Sentence is |%s|\nLength is %d\n", sentence, (int) strlen(sentence));
-        //bool can_run = Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(sentence, file_name);
-        if (can_run) {
-            //SPACE_OF_FIRST_IF_ELIF_ELSE_SENTENCE=current_space;
-            //printf("space of first if sentence %d\n",current_space);
-            now_run_if = TRUE;
-            REQUIRED_SPACE = REQUIRED_SPACE + 4;
-        } else {
-            now_run_if = FALSE;
-        }
-    }*/
      
      //#################### While Sentence ##################################
     else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "while") == 0) {
         char *last_while_sentence = removeAheadSpace(input_str);
-        last_while_sentence = substr(last_while_sentence, 6, find(last_while_sentence, ":"));
+        last_while_sentence = substr(last_while_sentence, 6, find_not_in_string(last_while_sentence, ":"));
         last_while_sentence = removeBackSpace(last_while_sentence);
         
         LAST_WHILE_SENTENCE=last_while_sentence;
@@ -4470,8 +4256,8 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
             exit(0);
         }
                 
-        if (strcmp(token[index_of_first_none_whitespace+4].TOKEN_STRING,"in")!=0) {
-            int start=token[index_of_first_none_whitespace+4].TOKEN_START;
+        if (strcmp(token[3].TOKEN_STRING,"in")!=0) {
+            int start=token[3].TOKEN_START;
             printf("%s\n",input_str);
             char *temp_str="";
             temp_str=Str_appendSpaceAhead(temp_str, start);
@@ -4483,9 +4269,9 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
         
         //char *temp_i = substr(input_str, find(input_str, "for ") + 4, find(input_str, " in"));
         //temp_i = removeAheadSpace(removeBackSpace(temp_i));
-        char *temp_i=token[index_of_first_none_whitespace+2].TOKEN_STRING;
+        char *temp_i=token[2].TOKEN_STRING;
         //char *in_what = substr(input_str, find(input_str, " in ") + 4, (int) strlen(removeBackSpace(input_str)) - 1);
-        char *in_what=token[index_of_first_none_whitespace+6].TOKEN_STRING;
+        char *in_what=token[4].TOKEN_STRING;
         in_what = Walley_Substitute_Var_And_Function_Return_Value_From_Var(in_what, struct_var,FUNCTION_functions);
         I_VALUE_AFTER_IN=in_what;
         I_IN_FOR_LOOP=temp_i;
@@ -4519,7 +4305,7 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
         NOW_WRITTING_SWITCH = TRUE;
         
         //char *switch_object=substr(input_str, 7, find_from_behind(input_str, ":"));
-        char *switch_object=token[index_of_first_none_whitespace+2].TOKEN_STRING;
+        char *switch_object=token[2].TOKEN_STRING;
         SWITCH_OBJECT=trim(switch_object);
         
     }
