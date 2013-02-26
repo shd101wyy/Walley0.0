@@ -225,7 +225,7 @@ char *math_range(char *input_str){
     
     int num_of_param=numOfParameters(input_str);
     if (num_of_param==1) {
-        //char *output="[";
+
         char *output;
         d_string(&output, "[");
         int num=atoi(input_str);
@@ -240,15 +240,12 @@ char *math_range(char *input_str){
         
         int i=0;
         for (; i<num; i++) {
-            //output=append(output, intToCString(i));
-            //output=append(output, ",");
             d_strcat(&output, intToCString(i));
             d_strcat(&output, ",");
         }
-        //output=substr(output, 0, (int)strlen(output)-1);
-        //output=append(output, "]");
         output[(int)strlen(output)-1]=']';
         return output;
+       
     }
     else if(num_of_param==2){
         char *output="[";

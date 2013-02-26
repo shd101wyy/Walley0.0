@@ -76,7 +76,7 @@ void Walley_Init_Class(struct VAR **struct_var, struct VAR **struct_settings, ch
 }
 
 void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_settings, char* existing_file, char ***FUNCTION_functions, char *input_str){ //struct TOKEN *token_list) {
-    printf("-----> %s\n",input_str);
+    //printf("-----> %s\n",input_str);
     struct TOKEN *token_list=Walley_Lexica_Analysis(input_str);
     token_list=TL_returnTokenListWithoutWhitespaces(token_list);
     
@@ -288,7 +288,7 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
             //// printf("Now Begin Long Annotation");
             NOW_IN_ANNOTATION = 1;
         }
-        if(NOW_IN_ANNOTATION==0){
+        if(NOW_IN_ANNOTATION==0 && length_of_token_list!=1){
                         
             
             //I add this value here in order to run now_run_if.
