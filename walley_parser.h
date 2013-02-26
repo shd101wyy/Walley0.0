@@ -76,7 +76,7 @@ void Walley_Init_Class(struct VAR **struct_var, struct VAR **struct_settings, ch
 }
 
 void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_settings, char* existing_file, char ***FUNCTION_functions, char *input_str){ //struct TOKEN *token_list) {
-    //printf("-----> %s\n",input_str);
+    printf("-----> %s\n",input_str);
     struct TOKEN *token_list=Walley_Lexica_Analysis(input_str);
     token_list=TL_returnTokenListWithoutWhitespaces(token_list);
     
@@ -275,38 +275,6 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
         
     }
     else{
-        
-        
-        // printf("######### Run Function Walley_Run_For_Appointed_Var ######\n");
-        // check whether in #~ ~# at first
-        
-        // I stop auto clean temporiaryly
-        /*
-         //####################  Auto clean variables  #########################################
-         int turn = atoi(Var_getValueOfVar(struct_settings , "turn"));
-         if (turn%10==0&&turn!=0) {
-         
-         Walley_Clean_Variables(existing_file, struct_var, turn);
-         }
-         
-         //#####################################################################################
-         */
-        
-        
-        /*  These codes have problem
-         // New code here on Dec 10.
-         //####################  Auto clean variables  #########################################
-         if (strcmp(existing_file, FIRST_RUNNING_FILE)==0) {
-         
-         
-         int turn = TURN;
-         if (turn%10==0&&turn!=0) {
-         Walley_Clean_Variables(existing_file, struct_var, turn);
-         }
-         }
-         
-         //#####################################################################################
-         */
         
         
         

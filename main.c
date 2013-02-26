@@ -18,6 +18,10 @@ int main(int argc, char **argv){
     
     ARGV=argv;
     ARGC=argc;
+    
+    clock_t start,end;
+    double run_time;
+    start= clock();
 
     
     Str_initStringList(&INSTANCE_NAMES_LIST);
@@ -376,6 +380,13 @@ def random(num1=0,num2=1):\\n\\\n\
     }
     
 
+    
+    end=clock();
+    run_time = (end - start) / (double) CLOCKS_PER_SEC ;
+    printf("\n\nFinish Program\n");
+    printf ("Run time is %g seconds\n", run_time);
+    printf ("press any key to quit\n");
+    getchar();
     
     return 0;
 }
