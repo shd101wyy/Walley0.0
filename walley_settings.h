@@ -34,7 +34,9 @@ char *CURRENT_DIRECTORY="./";           // File Directory
 
 bool VAR_VALUE_INCOMPLETE=FALSE;        // eg:  x="12  incomplete  x="123" complete
 char *VAR_VALUE_INCOMPLETE_TYPE="";     // save incomplete var value type
-char *VAR_VALUE_TO_BE_COMPLETE="";      // save incomplete var_value
+//struct TOKEN *VAR_VALUE_TO_BE_COMPLETE; // save incomplete var_value
+char *VAR_VALUE_TO_BE_COMPLETE; // save incomplete var_value
+
 char *VAR_NAME_TO_BE_COMPLETE="";       // save incomplete var_name
 char *VAR_VALUE_TYPE_TO_BE_COMPLETE=""; // save incomplete var_value_type
 

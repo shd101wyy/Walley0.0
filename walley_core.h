@@ -26,10 +26,8 @@
  ################################################################################################################################
  ############################################ Attention #########################################################################
  ################################################################################################################################
+ 1.  The Token List here are all Token Without W_WHITESPACES 
  
- 1.  The Token List here are all Token Without W_WHITESPACES
- 
- ################################################################################################################################
  ################################################################################################################################
  ################################################################################################################################
  
@@ -141,7 +139,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 }
                 VAR_VALUE_TO_BE_COMPLETE=append(VAR_VALUE_TO_BE_COMPLETE, input_str);
             }
-        
+            
         }
         
         else if (strcmp(VAR_VALUE_INCOMPLETE_TYPE, "string'")==0){
@@ -169,7 +167,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 }
                 VAR_VALUE_TO_BE_COMPLETE=append(VAR_VALUE_TO_BE_COMPLETE, input_str);
             }
-
+            
         }
         
         else if (strcmp(VAR_VALUE_INCOMPLETE_TYPE, "list")==0){
@@ -246,9 +244,9 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                 VAR_VALUE_TO_BE_COMPLETE=append(VAR_VALUE_TO_BE_COMPLETE, " ");
                 VAR_VALUE_TO_BE_COMPLETE=append(VAR_VALUE_TO_BE_COMPLETE, trim(input_str));
             }
-
+            
         }
-
+        
     }
     else if (EXPRESSION_INCOMPLETE==TRUE){
         char *trim_input_str=trim(input_str);
@@ -287,507 +285,269 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
         }
     }
     else{
-    
-    
-   // printf("######### Run Function Walley_Run_For_Appointed_Var ######\n");
-    // check whether in #~ ~# at first
-       
-    // I stop auto clean temporiaryly
-    /*
-    //####################  Auto clean variables  #########################################
-    int turn = atoi(Var_getValueOfVar(struct_settings , "turn"));
-    if (turn%10==0&&turn!=0) {
-       
-        Walley_Clean_Variables(existing_file, struct_var, turn);
-    }
-    
-    //#####################################################################################
-    */
-    
-    
-    /*  These codes have problem
-     // New code here on Dec 10. 
-     //####################  Auto clean variables  #########################################
-    if (strcmp(existing_file, FIRST_RUNNING_FILE)==0) {
-        
-    
-        int turn = TURN;
-        if (turn%10==0&&turn!=0) {
-            Walley_Clean_Variables(existing_file, struct_var, turn);
-        }
-    }
-    
-     //#####################################################################################
-     */
-
-    
-    
-    
-    bool continue_run = FALSE;
-    bool find_gang_gang = FALSE;
-    bool str_is_empty=FALSE;
-    bool run_goto = FALSE;
-    
-    char *temp_input_str=input_str;
         
         
+        // printf("######### Run Function Walley_Run_For_Appointed_Var ######\n");
+        // check whether in #~ ~# at first
         
-        
-    if (find_not_in_string(input_str, "\n") != -1) {
-        continue_run = TRUE;
-        input_str = substr(input_str, 0, find_not_in_string(input_str, "\n"));
-    }
-    
-    if (find_not_in_string(input_str, "\\n") != -1) {
-        continue_run = TRUE;
-        find_gang_gang = TRUE;
-        input_str = substr(input_str, 0, find_not_in_string(input_str, "\\n"));
-    }
-    input_str=removeNFromBack(input_str);
-        
-        
-            
-    char *judge_annotation_string=trim(input_str);
-    int length_of_judge_annotation_string=(int)strlen(judge_annotation_string);
-    if (judge_annotation_string[length_of_judge_annotation_string-1]=='#' && judge_annotation_string[length_of_judge_annotation_string-2]=='~'){
-       // printf("Now End Long Annotation");
-        NOW_IN_ANNOTATION = 0;
-        
-    }
-    else if (judge_annotation_string[0] == '#' && judge_annotation_string[1] == '~') {
-        //// printf("Now Begin Long Annotation");
-        NOW_IN_ANNOTATION = 1;
-    }
-    if(NOW_IN_ANNOTATION==0 && stringIsEmpty(trim(input_str))==FALSE){
-                
-        Str_addString(save_to_file, input_str);
-
-        
-        //I add this value here in order to run now_run_if.
-        bool can_run_basic_input = TRUE;
-        
-        
-        CURRENT_SPACE = numOfSpaceAheadString(input_str);
-        
-        //printf("\n\n\n\n|%s|\n\n\n\n",input_str);
-        
-        // delete #.... after sentence
-        char *temp_input_str2=trim(input_str);
-        int index_of_jing=find_not_in_string(temp_input_str2, "#");
-        if(index_of_jing!=-1 && index_of_jing !=0){
-            input_str=substr(input_str, 0, find_not_in_string(input_str, "#"));
-        }
-        
-        input_str=cleanUpSentence(input_str);        
-        
-        if (CURRENT_SPACE%4!=0) {
-            printf("Error.. Current Space is incorrect\n");
-            exit(0);
-        }
-    
-        if (CURRENT_SPACE > REQUIRED_SPACE) {
-            can_run_basic_input = FALSE;
-        }
-        
-        
-        if (input_str[(int)strlen(input_str)-1]==';') {
-            printf("%s\n",input_str);
-            char *temp_str="";
-            temp_str=Str_appendSpaceAhead(temp_str, (int)strlen(input_str)-1);
-            printf("%s^\n",temp_str);
-            printf("Error. Walley does not need ; in sentence\n");
-            exit(0);        }
-        
-        
-        if(CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==FALSE){
-            can_run_basic_input=FALSE;
-        }
-        
-        CURRENT_INPUT_STR=input_str;
-        
-        
-        
-        struct TOKEN *token=Walley_Lexica_Analysis(input_str);
-        TOKEN_checkError(token, input_str);
-        //int length_of_token=TOKEN_length(token);
-        int index_of_first_none_whitespace=TOKEN_indexOfFirstNoneWhiteSpaceToken(token);
-        struct TOKEN first_none_whitespace_token=token[index_of_first_none_whitespace];
-        
-        
-        //printf("-------Now input is |%s| required space %d current space %d\n", input_str,space,current_space);
-
-        //printf("input_str --------------> |%s|, %d\n",input_str,REQUIRED_SPACE);
-        
+        // I stop auto clean temporiaryly
         /*
-        //################## Now Run If #######################################
-        if (now_run_if == TRUE && str_is_empty==FALSE&& CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==TRUE) {
-            if (CURRENT_SPACE > REQUIRED_SPACE || CURRENT_SPACE % 4 != 0) {
-                printf("@@ |%s|\n",CURRENT_INPUT_STR);
-                printf("Space Mistake\nCurrent Space is %d\nRequired Space is %d\n", CURRENT_SPACE, REQUIRED_SPACE);
+         //####################  Auto clean variables  #########################################
+         int turn = atoi(Var_getValueOfVar(struct_settings , "turn"));
+         if (turn%10==0&&turn!=0) {
+         
+         Walley_Clean_Variables(existing_file, struct_var, turn);
+         }
+         
+         //#####################################################################################
+         */
+        
+        
+        /*  These codes have problem
+         // New code here on Dec 10.
+         //####################  Auto clean variables  #########################################
+         if (strcmp(existing_file, FIRST_RUNNING_FILE)==0) {
+         
+         
+         int turn = TURN;
+         if (turn%10==0&&turn!=0) {
+         Walley_Clean_Variables(existing_file, struct_var, turn);
+         }
+         }
+         
+         //#####################################################################################
+         */
+        
+        
+        
+        
+        bool continue_run = FALSE;
+        bool find_gang_gang = FALSE;
+        bool str_is_empty=FALSE;
+        bool run_goto = FALSE;
+        
+        char *temp_input_str=input_str;
+        
+        
+        
+        
+        if (find_not_in_string(input_str, "\n") != -1) {
+            continue_run = TRUE;
+            input_str = substr(input_str, 0, find_not_in_string(input_str, "\n"));
+        }
+        
+        if (find_not_in_string(input_str, "\\n") != -1) {
+            continue_run = TRUE;
+            find_gang_gang = TRUE;
+            input_str = substr(input_str, 0, find_not_in_string(input_str, "\\n"));
+        }
+        input_str=removeNFromBack(input_str);
+        
+        
+        
+        char *judge_annotation_string=trim(input_str);
+        int length_of_judge_annotation_string=(int)strlen(judge_annotation_string);
+        if (judge_annotation_string[length_of_judge_annotation_string-1]=='#' && judge_annotation_string[length_of_judge_annotation_string-2]=='~'){
+            // printf("Now End Long Annotation");
+            NOW_IN_ANNOTATION = 0;
+            
+        }
+        else if (judge_annotation_string[0] == '#' && judge_annotation_string[1] == '~') {
+            //// printf("Now Begin Long Annotation");
+            NOW_IN_ANNOTATION = 1;
+        }
+        if(NOW_IN_ANNOTATION==0 && stringIsEmpty(trim(input_str))==FALSE){
+            
+            Str_addString(save_to_file, input_str);
+            
+            
+            //I add this value here in order to run now_run_if.
+            bool can_run_basic_input = TRUE;
+            
+            
+            CURRENT_SPACE = numOfSpaceAheadString(input_str);
+            
+            //printf("\n\n\n\n|%s|\n\n\n\n",input_str);
+            
+            // delete #.... after sentence
+            char *temp_input_str2=trim(input_str);
+            int index_of_jing=find_not_in_string(temp_input_str2, "#");
+            if(index_of_jing!=-1 && index_of_jing !=0){
+                input_str=substr(input_str, 0, find_not_in_string(input_str, "#"));
+            }
+            
+            input_str=cleanUpSentence(input_str);
+            
+            if (CURRENT_SPACE%4!=0) {
+                printf("Error.. Current Space is incorrect\n");
                 exit(0);
             }
-            // I do not know whether it is right or not.......
-            if (CURRENT_SPACE < REQUIRED_SPACE) {
-                // change space and rewrite it to file
-                REQUIRED_SPACE=CURRENT_SPACE;
-                now_run_if=FALSE;
-                
-            }
             
-        }
-        */
-        
-        //################## Now Run If #######################################
-        if (NOW_WRITTING_IF == TRUE && str_is_empty==FALSE && CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==TRUE) {
-            can_run_basic_input=FALSE;
-            // elif else or finish
-            if (CURRENT_SPACE==SPACE_OF_FIRST_IF_SENTENCE) {
-                //ELIF
-                if (strcmp(first_none_whitespace_token.TOKEN_STRING, "elif")==0) {
-                    Str_addString(&(IF_ELIF_ELSE.content[INDEX_OF_IF_ELIF_ELSE])
-                                  , "#end");
-                    INDEX_OF_IF_ELIF_ELSE++;
-                    char *trim_input_str=trim(input_str);
-                    char *string_in_elif=substr(trim_input_str, find(trim_input_str,"elif ")+5, find_from_behind(trim_input_str, ":"));
-                    Str_addString(&IF_ELIF_ELSE.if_elif_else, string_in_elif);
-                    IF_ELIF_ELSE.content=(char***)realloc(IF_ELIF_ELSE.content,sizeof(char**)*(INDEX_OF_IF_ELIF_ELSE+1));
-
-                    Str_initStringList(&IF_ELIF_ELSE.content[INDEX_OF_IF_ELIF_ELSE]);
-                }
-                //ELSE
-                else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "else")==0){
-                    Str_addString(&(IF_ELIF_ELSE.content[INDEX_OF_IF_ELIF_ELSE])
-                                  , "#end");
-                    INDEX_OF_IF_ELIF_ELSE++;
-                    Str_addString(&IF_ELIF_ELSE.if_elif_else, "#~ELSE~#");
-                    IF_ELIF_ELSE.content=(char***)realloc(IF_ELIF_ELSE.content,sizeof(char**)*(INDEX_OF_IF_ELIF_ELSE+1));
-                    Str_initStringList(&IF_ELIF_ELSE.content[INDEX_OF_IF_ELIF_ELSE]);
-
-                }
-                //FINISH IF
-                else{
-                    struct IF If_copy=IF_ELIF_ELSE;
-                    int index_of_if_copy=INDEX_OF_IF_ELIF_ELSE;
-                    
-                    //printf("Begin to run if.. exit here temp..\n");
-                    //IF_PrintIf(IF_ELIF_ELSE, INDEX_OF_IF_ELIF_ELSE+1);
-                    Str_addString(&(IF_ELIF_ELSE.content[INDEX_OF_IF_ELIF_ELSE])
-                                  , "#end");
-                    NOW_WRITTING_IF=FALSE;
-                    SPACE_OF_FIRST_IF_SENTENCE=0;
-                    REQUIRED_SPACE=CURRENT_SPACE;
-                    INDEX_OF_IF_ELIF_ELSE=0;
-                    memset(&IF_ELIF_ELSE, 0, sizeof(IF_ELIF_ELSE));
-                    
-                    CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=TRUE;
-                    can_run_basic_input=TRUE;
-
-                    // Begin to Run Code
-                    int i=0;
-                    for (; i<=index_of_if_copy; i++) {
-                        char *to_judge=If_copy.if_elif_else[i+1];
-                        
-
-                        if (strcmp(to_judge, "#~ELSE~#")==0) {
-                            //printf("run else\n");
-                            Walley_Run_For_Appointed_Var_String_List(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions, If_copy.content[i]);
-                            break;
-                        }
-                        bool can_run=Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(to_judge, struct_var, FUNCTION_functions);
-                        if (can_run) {
-                            //printf("run if elif \n");
-                            Walley_Run_For_Appointed_Var_String_List(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions, If_copy.content[i]);
-                            break;
-                        }
-                    }
-                    //printf("FINISH Running If\n");
-                    
-
-                    //exit(1);
-                }
-            }
-            
-            // add string.
-            else{
-                input_str = removeAheadSpaceForNum(input_str, SPACE_OF_FIRST_IF_SENTENCE + 4);
-                Str_addString(&(IF_ELIF_ELSE.content[INDEX_OF_IF_ELIF_ELSE])
-                              , input_str);
-                
-            }
-        }
-        
-        //############### Now Writting While In Progress ########################
-        else if (NOW_WRITTING_WHILE == TRUE && str_is_empty==FALSE && CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==TRUE) {
-            int space_of_first_while_sentence=SPACE_OF_FIRST_WHILE_SENTENCE;
-            if (CURRENT_SPACE > space_of_first_while_sentence && CURRENT_SPACE % 4 == 0) {
+            if (CURRENT_SPACE > REQUIRED_SPACE) {
                 can_run_basic_input = FALSE;
-                input_str = removeAheadSpaceForNum(input_str, space_of_first_while_sentence + 4);
-                
-                if (stringIsEmpty(input_str)==FALSE) {
-                    Str_addString(&STRING_IN_WHILE_LOOP, input_str);
-
-                }
-                
             }
-            else if (CURRENT_SPACE <= space_of_first_while_sentence && CURRENT_SPACE % 4 == 0) {
-                //printf("Begin to Run While, input_str %s, current_space %d, space_of_first %d\n",input_str,current_space,space_of_first_while_sentence);
-                can_run_basic_input = TRUE;
-                NOW_WRITTING_WHILE = FALSE;
-                
-                
-                REQUIRED_SPACE=CURRENT_SPACE;
-                
-                
-                char *temp_last_while_sentence=LAST_WHILE_SENTENCE;
-                
-                Str_addString(&STRING_IN_WHILE_LOOP, "#end");
-                char **temp_string_list_in_while_loop=STRING_IN_WHILE_LOOP;
-                Str_initStringList(&STRING_IN_WHILE_LOOP);
-                
-               // while (Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(last_while_sentence2, struct_var,FUNCTION_functions) == TRUE) {
-                while (Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(temp_last_while_sentence, struct_var,FUNCTION_functions) == TRUE) {
-
-                    CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=TRUE;
-                    
-                    Walley_Run_For_Appointed_Var_String_List(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions, temp_string_list_in_while_loop);
-                    
-                    if (CAN_BREAK) {
-                        CAN_BREAK=FALSE;
-                        break;
-                    }
-                    if (CAN_CONTINUE) {
-                        CAN_CONTINUE=FALSE;
-                        continue;
-                    }
-                    
-                }
-                
-                LOOP_TURN--;
-                CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=TRUE;
-                
-                
-                if (LOOP_TURN==0) {
-                    LOOP_TURN=0;
-                    
-                    // Finish Main Loop
-                    // Stop Collecting String
-                    PRINT_IN_WHILE_OR_FOR_LOOP=FALSE;
-                    printf("%s",PRINT_STRING_AFTER_LOOP);
-                    PRINT_STRING_AFTER_LOOP="";
-                    
-                }
-
-              
+            
+            
+            if (input_str[(int)strlen(input_str)-1]==';') {
+                printf("%s\n",input_str);
+                char *temp_str="";
+                temp_str=Str_appendSpaceAhead(temp_str, (int)strlen(input_str)-1);
+                printf("%s^\n",temp_str);
+                printf("Error. Walley does not need ; in sentence\n");
+                exit(0);        }
+            
+            
+            if(CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==FALSE){
+                can_run_basic_input=FALSE;
             }
-        }//############### Now Writting Function In Progress #####################
-        else if (NOW_WRITTING_FUNCTION == TRUE && str_is_empty==FALSE&& CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==TRUE) {
-            can_run_basic_input = FALSE;
-            //printf("//############### Now Writting Function In Progress #####################\n");
-            //printf("--->%s\n",input_str);
-            if (CURRENT_SPACE % 4 != 0) {
-                printf("@@ |%s|\n",CURRENT_INPUT_STR);
-
-                printf("Space Mistake\nCurrent Space is %d\nRequired Space is %d\n", CURRENT_SPACE, REQUIRED_SPACE);
-                exit(0);
-            } else if (CURRENT_SPACE <= SPACE_OF_FIRST_DEF_SENTENCE) {
-               // printf("Finish_define_FUNCTION\n");
-                can_run_basic_input = TRUE;
-                NOW_WRITTING_FUNCTION = FALSE;
-                REQUIRED_SPACE=CURRENT_SPACE;
-                Str_addString(FUNCTION_functions, "#~End");
-
-            }
-            else {
-                
-                
-                input_str = removeAheadSpaceForNum(input_str, SPACE_OF_FIRST_DEF_SENTENCE + 4);
-                
-                
-                if ((strcmp(first_none_whitespace_token.TOKEN_STRING, "exp")==0&&input_str[(int)strlen(input_str)-1]==':'&&CURRENT_SPACE==SPACE_OF_FIRST_DEF_SENTENCE+4)|| NOW_WRITTING_EXPRESSION==TRUE) {
-                    if (NOW_WRITTING_EXPRESSION==FALSE) {
-                        NOW_WRITTING_EXPRESSION=TRUE;
-                        REQUIRED_SPACE+=4;
+            
+            CURRENT_INPUT_STR=input_str;
+            
+            
+            
+            struct TOKEN *token=Walley_Lexica_Analysis(input_str);
+            TOKEN_checkError(token, input_str);
+            //int length_of_token=TOKEN_length(token);
+            int index_of_first_none_whitespace=TL_indexOfFirstNoneWhiteSpaceToken(token);
+            struct TOKEN first_none_whitespace_token=token[index_of_first_none_whitespace];
+            
+            
+            //printf("-------Now input is |%s| required space %d current space %d\n", input_str,space,current_space);
+            
+            //printf("input_str --------------> |%s|, %d\n",input_str,REQUIRED_SPACE);
+            
+            /*
+             //################## Now Run If #######################################
+             if (now_run_if == TRUE && str_is_empty==FALSE&& CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==TRUE) {
+             if (CURRENT_SPACE > REQUIRED_SPACE || CURRENT_SPACE % 4 != 0) {
+             printf("@@ |%s|\n",CURRENT_INPUT_STR);
+             printf("Space Mistake\nCurrent Space is %d\nRequired Space is %d\n", CURRENT_SPACE, REQUIRED_SPACE);
+             exit(0);
+             }
+             // I do not know whether it is right or not.......
+             if (CURRENT_SPACE < REQUIRED_SPACE) {
+             // change space and rewrite it to file
+             REQUIRED_SPACE=CURRENT_SPACE;
+             now_run_if=FALSE;
+             
+             }
+             
+             }
+             */
+            
+            //################## Now Run If #######################################
+            if (NOW_WRITTING_IF == TRUE && str_is_empty==FALSE && CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==TRUE) {
+                can_run_basic_input=FALSE;
+                // elif else or finish
+                if (CURRENT_SPACE==SPACE_OF_FIRST_IF_SENTENCE) {
+                    //ELIF
+                    if (strcmp(first_none_whitespace_token.TOKEN_STRING, "elif")==0) {
+                        Str_addString(&(IF_ELIF_ELSE.content[INDEX_OF_IF_ELIF_ELSE])
+                                      , "#end");
+                        INDEX_OF_IF_ELIF_ELSE++;
+                        char *trim_input_str=trim(input_str);
+                        char *string_in_elif=substr(trim_input_str, find(trim_input_str,"elif ")+5, find_from_behind(trim_input_str, ":"));
+                        Str_addString(&IF_ELIF_ELSE.if_elif_else, string_in_elif);
+                        IF_ELIF_ELSE.content=(char***)realloc(IF_ELIF_ELSE.content,sizeof(char**)*(INDEX_OF_IF_ELIF_ELSE+1));
+                        
+                        Str_initStringList(&IF_ELIF_ELSE.content[INDEX_OF_IF_ELIF_ELSE]);
                     }
-                    else if (CURRENT_SPACE<REQUIRED_SPACE) {
-                        Str_addString(FUNCTION_functions, input_str);
-                        NOW_WRITTING_EXPRESSION=FALSE;
-                        REQUIRED_SPACE=CURRENT_SPACE;
+                    //ELSE
+                    else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "else")==0){
+                        Str_addString(&(IF_ELIF_ELSE.content[INDEX_OF_IF_ELIF_ELSE])
+                                      , "#end");
+                        INDEX_OF_IF_ELIF_ELSE++;
+                        Str_addString(&IF_ELIF_ELSE.if_elif_else, "#~ELSE~#");
+                        IF_ELIF_ELSE.content=(char***)realloc(IF_ELIF_ELSE.content,sizeof(char**)*(INDEX_OF_IF_ELIF_ELSE+1));
+                        Str_initStringList(&IF_ELIF_ELSE.content[INDEX_OF_IF_ELIF_ELSE]);
+                        
                     }
+                    //FINISH IF
                     else{
-                        //printf("EXPRESSION----> %s\n",input_str);
-                        //char *sentence_after_analysize=Walley_Analyze_Sentence_By_Known_Variable(input_str,TEMP_FUNCTION_PARAMETER);
-                        //printf("sentence_after_analysize %s\n",sentence_after_analysize);
+                        struct IF If_copy=IF_ELIF_ELSE;
+                        int index_of_if_copy=INDEX_OF_IF_ELIF_ELSE;
                         
-                        //printf("TEMP FUNCTION NAME %s\n",TEMP_FUNCTION_NAME);
+                        //printf("Begin to run if.. exit here temp..\n");
+                        //IF_PrintIf(IF_ELIF_ELSE, INDEX_OF_IF_ELIF_ELSE+1);
+                        Str_addString(&(IF_ELIF_ELSE.content[INDEX_OF_IF_ELIF_ELSE])
+                                      , "#end");
+                        NOW_WRITTING_IF=FALSE;
+                        SPACE_OF_FIRST_IF_SENTENCE=0;
+                        REQUIRED_SPACE=CURRENT_SPACE;
+                        INDEX_OF_IF_ELIF_ELSE=0;
+                        memset(&IF_ELIF_ELSE, 0, sizeof(IF_ELIF_ELSE));
                         
+                        CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=TRUE;
+                        can_run_basic_input=TRUE;
                         
-                        // new code here on Jan 6
-                        
-
-                        if (EXPRESSION_INCOMPLETE==FALSE) {
+                        // Begin to Run Code
+                        int i=0;
+                        for (; i<=index_of_if_copy; i++) {
+                            char *to_judge=If_copy.if_elif_else[i+1];
                             
                             
-                            char *trim_input_str=trim(input_str);
-                            //printf("-->|%s|\n",trim_input_str);
-                            
-                            
-                            // basic expression without boundary
-                            // like
-                            /*
-                             def add(num1,num2):
-                             exp:
-                             add num1 num2  # just add "add num1 num2" as expression
-                             */
-
-                            if ( trim_input_str[0]!='<'&&trim_input_str[1]!='@') {
-                                // add exression...                                                   //problem here, I add trim. No problem before.
-                                Str_addString(&WALLEY_EXPRESSION, append(TEMP_FUNCTION_NAME,append("|",trim(input_str))));
+                            if (strcmp(to_judge, "#~ELSE~#")==0) {
+                                //printf("run else\n");
+                                Walley_Run_For_Appointed_Var_String_List(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions, If_copy.content[i]);
+                                break;
                             }
-                            
-                            
-                            // basic expression with boundary but only in one row
-                            // like
-                            /*
-                             def add(num1,num2):
-                                exp:
-                                    <@add num1 num2>  # just add "add num1 num2" as expression
-                             */
-                            
-                            else if (trim_input_str[0]=='<'&&trim_input_str[1]=='@'&&trim_input_str[(int)strlen(trim_input_str)-1]=='>'){
-                                Str_addString(&WALLEY_EXPRESSION, append(TEMP_FUNCTION_NAME,append("|",substr(trim_input_str, 2, (int)strlen(trim_input_str)-1))));
-                            }
-                            
-                            
-                            // basic expression with boundary and not only in one row
-                            // like
-                            /*
-                             def add(num1,num2):
-                             exp:
-                             <@add
-                               num1
-                               num2
-                             >
-                             
-                             */
-                            else{
-                                EXPRESSION_INCOMPLETE=TRUE;
-                                EXPRESSION_TO_BE_COMPLETE=trim_input_str;
-                                //printf("--->|%s|\n",EXPRESSION_TO_BE_COMPLETE);
+                            bool can_run=Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(to_judge, struct_var, FUNCTION_functions);
+                            if (can_run) {
+                                //printf("run if elif \n");
+                                Walley_Run_For_Appointed_Var_String_List(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions, If_copy.content[i]);
+                                break;
                             }
                         }
+                        //printf("FINISH Running If\n");
+                        
+                        
+                        //exit(1);
+                    }
+                }
+                
+                // add string.
+                else{
+                    input_str = removeAheadSpaceForNum(input_str, SPACE_OF_FIRST_IF_SENTENCE + 4);
+                    Str_addString(&(IF_ELIF_ELSE.content[INDEX_OF_IF_ELIF_ELSE])
+                                  , input_str);
+                    
+                }
+            }
+            
+            //############### Now Writting While In Progress ########################
+            else if (NOW_WRITTING_WHILE == TRUE && str_is_empty==FALSE && CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==TRUE) {
+                int space_of_first_while_sentence=SPACE_OF_FIRST_WHILE_SENTENCE;
+                if (CURRENT_SPACE > space_of_first_while_sentence && CURRENT_SPACE % 4 == 0) {
+                    can_run_basic_input = FALSE;
+                    input_str = removeAheadSpaceForNum(input_str, space_of_first_while_sentence + 4);
+                    
+                    if (stringIsEmpty(input_str)==FALSE) {
+                        Str_addString(&STRING_IN_WHILE_LOOP, input_str);
                         
                     }
-               
-                
-                
-                }
-                
-                else{
-                    
-                    Str_addString(FUNCTION_functions, input_str);
-                    if (CURRENT_SPACE<REQUIRED_SPACE) {
-                        REQUIRED_SPACE=CURRENT_SPACE;
-                    }
-                    
-                    // find another function
-                    //if (find_from_index_to_index(removeAheadSpace(input_str), "def ", 0, (int)strlen(removeAheadSpace(input_str))) != -1) {
-                    if (strcmp(first_none_whitespace_token.TOKEN_STRING, "def")==0) {
-                        REQUIRED_SPACE = REQUIRED_SPACE + 4;
-                    }
-
-
-                }
-                //REQUIRED_SPACE = current_space;
-                
-            }
-            
-                       
-        }        //################### Now Writting Class ##############################
-        else if (NOW_WRITTING_CLASS == TRUE && str_is_empty==FALSE&& CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==TRUE) {
-            can_run_basic_input = FALSE;
-            // printf("#### Now_Writting_Class In Progress ####\n");
-            
-            if(CURRENT_SPACE % 4 !=0){
-                printf("Space Mistake occurred while defining a class\n");
-            }
-            else if (CURRENT_SPACE<=SPACE_OF_FIRST_CLASS_SENTENCE){
-                NOW_WRITTING_CLASS=FALSE;
-                can_run_basic_input = TRUE;
-                REQUIRED_SPACE=CURRENT_SPACE;
-            }
-            else{
-                
-                
-                
-                input_str = removeAheadSpaceForNum(input_str, SPACE_OF_FIRST_CLASS_SENTENCE + 4);
-                
-                CLASS_LIST[CLASS_NUM].string_in_class=append(CLASS_LIST[CLASS_NUM].string_in_class, append(input_str,"\\n"));
-
-                REQUIRED_SPACE=CURRENT_SPACE;
-                
-            }
-            
-        }
-        //################## Now Run For #######################################
-        else if (NOW_WRITTING_FOR == TRUE && str_is_empty==FALSE && CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==TRUE) {
-            int space_of_first_for_sentence=SPACE_OF_FIRST_FOR_SENTENCE;
-            if (CURRENT_SPACE > space_of_first_for_sentence && CURRENT_SPACE % 4 == 0) {
-                //printf("################ Now Writting For ###################");
-                //printf("STRING IN FOR LOOP is |%s|\n", string_in_for_loop);
-                can_run_basic_input = FALSE;
-                
-                input_str = removeAheadSpaceForNum(input_str, space_of_first_for_sentence + 4);
-                
-                
-                if (stringIsEmpty(input_str)==FALSE) {
-                    Str_addString(&STRING_IN_FOR_LOOP, input_str);
                     
                 }
-            }
-            else if (CURRENT_SPACE <= space_of_first_for_sentence && CURRENT_SPACE % 4 == 0) {
-                can_run_basic_input = TRUE;
-                NOW_WRITTING_FOR = FALSE;
-                REQUIRED_SPACE=CURRENT_SPACE;
-                
-                char *i_value_after_in=I_VALUE_AFTER_IN;
-                char *i_in_for_loop = I_IN_FOR_LOOP;
-                
-               
-
-                if (strcmp(variableValueType(i_value_after_in), "list") == 0) {
-                    
-                    int value_num = valueNumOfList(i_value_after_in);
-                    
-                    int x = 0;
-                    
-                    // Idk Why I must add #end here.. But if I
-                    // do not add, it will have problems
-                    Str_addString(&STRING_IN_FOR_LOOP, "#end");
-                    
-                    char **temp_string_list_in_foor_loop=STRING_IN_FOR_LOOP;
-                    Str_initStringList(&STRING_IN_FOR_LOOP);
+                else if (CURRENT_SPACE <= space_of_first_while_sentence && CURRENT_SPACE % 4 == 0) {
+                    //printf("Begin to Run While, input_str %s, current_space %d, space_of_first %d\n",input_str,current_space,space_of_first_while_sentence);
+                    can_run_basic_input = TRUE;
+                    NOW_WRITTING_WHILE = FALSE;
                     
                     
-                    for (x = 0; x < value_num; x++) {
+                    REQUIRED_SPACE=CURRENT_SPACE;
+                    
+                    
+                    char *temp_last_while_sentence=LAST_WHILE_SENTENCE;
+                    
+                    Str_addString(&STRING_IN_WHILE_LOOP, "#end");
+                    char **temp_string_list_in_while_loop=STRING_IN_WHILE_LOOP;
+                    Str_initStringList(&STRING_IN_WHILE_LOOP);
+                    
+                    // while (Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(last_while_sentence2, struct_var,FUNCTION_functions) == TRUE) {
+                    while (Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(temp_last_while_sentence, struct_var,FUNCTION_functions) == TRUE) {
+                        
                         CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=TRUE;
                         
-                        char *value_of_i_in_x=valueOfListAtIndex(i_value_after_in, x);
-                        
-                        
-                        char *init_temp_i = (char*)malloc(sizeof (char) *((int) strlen(i_in_for_loop) + 2 + (int) strlen(value_of_i_in_x)));
-                        strcpy(init_temp_i, i_in_for_loop);
-                        strcat(init_temp_i, "=");
-                        strcat(init_temp_i, value_of_i_in_x);
-                        init_temp_i[(int) strlen(i_in_for_loop) + 1 + (int) strlen(value_of_i_in_x)]=0;
-                        
-                        
-                        Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions,init_temp_i);
-                      
-                        
-                     
-                        
-                        Walley_Run_For_Appointed_Var_String_List(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions, temp_string_list_in_foor_loop);
-                        
+                        Walley_Run_For_Appointed_Var_String_List(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions, temp_string_list_in_while_loop);
                         
                         if (CAN_BREAK) {
                             CAN_BREAK=FALSE;
@@ -798,712 +558,950 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                             continue;
                         }
                         
-                        
                     }
-                    CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=TRUE;
                     
                     LOOP_TURN--;
+                    CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=TRUE;
+                    
+                    
+                    if (LOOP_TURN==0) {
+                        LOOP_TURN=0;
+                        
+                        // Finish Main Loop
+                        // Stop Collecting String
+                        PRINT_IN_WHILE_OR_FOR_LOOP=FALSE;
+                        printf("%s",PRINT_STRING_AFTER_LOOP);
+                        PRINT_STRING_AFTER_LOOP="";
+                        
+                    }
+                    
+                    
+                }
+            }//############### Now Writting Function In Progress #####################
+            else if (NOW_WRITTING_FUNCTION == TRUE && str_is_empty==FALSE&& CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==TRUE) {
+                can_run_basic_input = FALSE;
+                //printf("//############### Now Writting Function In Progress #####################\n");
+                //printf("--->%s\n",input_str);
+                if (CURRENT_SPACE % 4 != 0) {
+                    printf("@@ |%s|\n",CURRENT_INPUT_STR);
+                    
+                    printf("Space Mistake\nCurrent Space is %d\nRequired Space is %d\n", CURRENT_SPACE, REQUIRED_SPACE);
+                    exit(0);
+                } else if (CURRENT_SPACE <= SPACE_OF_FIRST_DEF_SENTENCE) {
+                    // printf("Finish_define_FUNCTION\n");
+                    can_run_basic_input = TRUE;
+                    NOW_WRITTING_FUNCTION = FALSE;
+                    REQUIRED_SPACE=CURRENT_SPACE;
+                    Str_addString(FUNCTION_functions, "#~End");
                     
                 }
                 else {
-                    printf("#### For Sentence Only Support list Type At This Time\n");
-                }
-        
-                if (LOOP_TURN==0) {
-                    LOOP_TURN=0;
                     
-                    // Finish Main Loop
-                    // Stop Collecting String
-                    PRINT_IN_WHILE_OR_FOR_LOOP=FALSE;
-                    printf("%s",PRINT_STRING_AFTER_LOOP);
-                    PRINT_STRING_AFTER_LOOP="";
-
-                }
-                
-                
-            }
-        }
-        
-        if(CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==FALSE){
-            can_run_basic_input=FALSE;
-        }
-        
-        //############### New code here on Jan 10 #############################################
-        //############### To support switch sentence ##########################################
-        if(NOW_WRITTING_SWITCH == TRUE && str_is_empty==FALSE && CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==TRUE){
-            
-            can_run_basic_input = FALSE;
-            if(CURRENT_SPACE % 4 !=0){
-                printf("Space Mistake occurred while defining a switch\n");
-            }
-            else if (CURRENT_SPACE<=SPACE_OF_FIRST_SWITCH_SENTENCE){
-                can_run_basic_input = TRUE;
-                
-                char *copy_SENTENCE_OF_SWITCH=SENTENCE_OF_SWITCH;
-                copy_SENTENCE_OF_SWITCH=append(copy_SENTENCE_OF_SWITCH, "#end");
-                
-                //char temp2[100];
-                //sprintf(temp2, "%d", SPACE_OF_FIRST_SWITCH_SENTENCE);
-                //Var_changeValueOfVar(*struct_settings , "space", append("",temp2), "int");
-                REQUIRED_SPACE=SPACE_OF_FIRST_SWITCH_SENTENCE;
-                
-                NOW_WRITTING_SWITCH=FALSE;
-                SENTENCE_OF_SWITCH="";
-                SWITCH_OBJECT="";
-                SPACE_OF_FIRST_SWITCH_SENTENCE=0;
-                
-                //printf("TO RUN :|\n%s|\nspace is %d\n",copy_SENTENCE_OF_SWITCH,SPACE_OF_FIRST_SWITCH_SENTENCE);
-                Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions, copy_SENTENCE_OF_SWITCH);
-                
-                REQUIRED_SPACE=CURRENT_SPACE;
-                
-            }
-            else{
-                
-                // case sentence
-                if (strcmp(first_none_whitespace_token.TOKEN_STRING,"case")==0&& CURRENT_SPACE==SPACE_OF_FIRST_SWITCH_SENTENCE+4) {
-                    if (CURRENT_SPACE%4!=0 && CURRENT_SPACE<SPACE_OF_FIRST_SWITCH_SENTENCE+4) {
-                        printf("@@ |%s|\n",CURRENT_INPUT_STR);
-                        printf("Space mistake occurred while running |%s|\n",input_str);
-                        exit(0);
-                    }
-                    else{
-                        char *temp_str="";
-                        char *trim_input_str=trim(input_str);
-                        
-                        // case "Hello":    str_after_case = "Hello"
-                        char *str_after_case=substr(trim_input_str, 5, find_from_behind(trim_input_str, ":"));
-                        
-                        
-                        // str_after_case -> 1 or 2
-                        // change to  -----> 1 or x==2
-                        str_after_case=replace_not_in_string(str_after_case, " or ", append(" or ", append(SWITCH_OBJECT, "==")));
-                        str_after_case=replace_not_in_string(str_after_case, " and ", append(" and ", append(SWITCH_OBJECT, "==")));
-
-                        
-                        str_after_case=trim(str_after_case);
-                        int a=0;
-                        for (; a<SPACE_OF_FIRST_SWITCH_SENTENCE; a++) {
-                            temp_str=append(" ", temp_str);
+                    
+                    input_str = removeAheadSpaceForNum(input_str, SPACE_OF_FIRST_DEF_SENTENCE + 4);
+                    
+                    
+                    if ((strcmp(first_none_whitespace_token.TOKEN_STRING, "exp")==0&&input_str[(int)strlen(input_str)-1]==':'&&CURRENT_SPACE==SPACE_OF_FIRST_DEF_SENTENCE+4)|| NOW_WRITTING_EXPRESSION==TRUE) {
+                        if (NOW_WRITTING_EXPRESSION==FALSE) {
+                            NOW_WRITTING_EXPRESSION=TRUE;
+                            REQUIRED_SPACE+=4;
                         }
-                        // has defined if sentence
-                        if (find(trim(SENTENCE_OF_SWITCH),"if")==0) {
+                        else if (CURRENT_SPACE<REQUIRED_SPACE) {
+                            Str_addString(FUNCTION_functions, input_str);
+                            NOW_WRITTING_EXPRESSION=FALSE;
+                            REQUIRED_SPACE=CURRENT_SPACE;
+                        }
+                        else{
+                            //printf("EXPRESSION----> %s\n",input_str);
+                            //char *sentence_after_analysize=Walley_Analyze_Sentence_By_Known_Variable(input_str,TEMP_FUNCTION_PARAMETER);
+                            //printf("sentence_after_analysize %s\n",sentence_after_analysize);
                             
-                            // else
-                            if (strcmp(str_after_case, "default")==0) {
-                                temp_str=append(temp_str, "else:");
+                            //printf("TEMP FUNCTION NAME %s\n",TEMP_FUNCTION_NAME);
+                            
+                            
+                            // new code here on Jan 6
+                            
+                            
+                            if (EXPRESSION_INCOMPLETE==FALSE) {
+                                
+                                
+                                char *trim_input_str=trim(input_str);
+                                //printf("-->|%s|\n",trim_input_str);
+                                
+                                
+                                // basic expression without boundary
+                                // like
+                                /*
+                                 def add(num1,num2):
+                                 exp:
+                                 add num1 num2  # just add "add num1 num2" as expression
+                                 */
+                                
+                                if ( trim_input_str[0]!='<'&&trim_input_str[1]!='@') {
+                                    // add exression...                                                   //problem here, I add trim. No problem before.
+                                    Str_addString(&WALLEY_EXPRESSION, append(TEMP_FUNCTION_NAME,append("|",trim(input_str))));
+                                }
+                                
+                                
+                                // basic expression with boundary but only in one row
+                                // like
+                                /*
+                                 def add(num1,num2):
+                                 exp:
+                                 <@add num1 num2>  # just add "add num1 num2" as expression
+                                 */
+                                
+                                else if (trim_input_str[0]=='<'&&trim_input_str[1]=='@'&&trim_input_str[(int)strlen(trim_input_str)-1]=='>'){
+                                    Str_addString(&WALLEY_EXPRESSION, append(TEMP_FUNCTION_NAME,append("|",substr(trim_input_str, 2, (int)strlen(trim_input_str)-1))));
+                                }
+                                
+                                
+                                // basic expression with boundary and not only in one row
+                                // like
+                                /*
+                                 def add(num1,num2):
+                                 exp:
+                                 <@add
+                                 num1
+                                 num2
+                                 >
+                                 
+                                 */
+                                else{
+                                    EXPRESSION_INCOMPLETE=TRUE;
+                                    EXPRESSION_TO_BE_COMPLETE=trim_input_str;
+                                    //printf("--->|%s|\n",EXPRESSION_TO_BE_COMPLETE);
+                                }
                             }
                             
-                            // elif
+                        }
+                        
+                        
+                        
+                    }
+                    
+                    else{
+                        
+                        Str_addString(FUNCTION_functions, input_str);
+                        if (CURRENT_SPACE<REQUIRED_SPACE) {
+                            REQUIRED_SPACE=CURRENT_SPACE;
+                        }
+                        
+                        // find another function
+                        //if (find_from_index_to_index(removeAheadSpace(input_str), "def ", 0, (int)strlen(removeAheadSpace(input_str))) != -1) {
+                        if (strcmp(first_none_whitespace_token.TOKEN_STRING, "def")==0) {
+                            REQUIRED_SPACE = REQUIRED_SPACE + 4;
+                        }
+                        
+                        
+                    }
+                    //REQUIRED_SPACE = current_space;
+                    
+                }
+                
+                
+            }        //################### Now Writting Class ##############################
+            else if (NOW_WRITTING_CLASS == TRUE && str_is_empty==FALSE&& CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==TRUE) {
+                can_run_basic_input = FALSE;
+                // printf("#### Now_Writting_Class In Progress ####\n");
+                
+                if(CURRENT_SPACE % 4 !=0){
+                    printf("Space Mistake occurred while defining a class\n");
+                }
+                else if (CURRENT_SPACE<=SPACE_OF_FIRST_CLASS_SENTENCE){
+                    NOW_WRITTING_CLASS=FALSE;
+                    can_run_basic_input = TRUE;
+                    REQUIRED_SPACE=CURRENT_SPACE;
+                }
+                else{
+                    
+                    
+                    
+                    input_str = removeAheadSpaceForNum(input_str, SPACE_OF_FIRST_CLASS_SENTENCE + 4);
+                    
+                    CLASS_LIST[CLASS_NUM].string_in_class=append(CLASS_LIST[CLASS_NUM].string_in_class, append(input_str,"\\n"));
+                    
+                    REQUIRED_SPACE=CURRENT_SPACE;
+                    
+                }
+                
+            }
+            //################## Now Run For #######################################
+            else if (NOW_WRITTING_FOR == TRUE && str_is_empty==FALSE && CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==TRUE) {
+                int space_of_first_for_sentence=SPACE_OF_FIRST_FOR_SENTENCE;
+                if (CURRENT_SPACE > space_of_first_for_sentence && CURRENT_SPACE % 4 == 0) {
+                    //printf("################ Now Writting For ###################");
+                    //printf("STRING IN FOR LOOP is |%s|\n", string_in_for_loop);
+                    can_run_basic_input = FALSE;
+                    
+                    input_str = removeAheadSpaceForNum(input_str, space_of_first_for_sentence + 4);
+                    
+                    
+                    if (stringIsEmpty(input_str)==FALSE) {
+                        Str_addString(&STRING_IN_FOR_LOOP, input_str);
+                        
+                    }
+                }
+                else if (CURRENT_SPACE <= space_of_first_for_sentence && CURRENT_SPACE % 4 == 0) {
+                    can_run_basic_input = TRUE;
+                    NOW_WRITTING_FOR = FALSE;
+                    REQUIRED_SPACE=CURRENT_SPACE;
+                    
+                    char *i_value_after_in=I_VALUE_AFTER_IN;
+                    char *i_in_for_loop = I_IN_FOR_LOOP;
+                    
+                    
+                    
+                    if (strcmp(variableValueType(i_value_after_in), "list") == 0) {
+                        
+                        int value_num = valueNumOfList(i_value_after_in);
+                        
+                        int x = 0;
+                        
+                        // Idk Why I must add #end here.. But if I
+                        // do not add, it will have problems
+                        Str_addString(&STRING_IN_FOR_LOOP, "#end");
+                        
+                        char **temp_string_list_in_foor_loop=STRING_IN_FOR_LOOP;
+                        Str_initStringList(&STRING_IN_FOR_LOOP);
+                        
+                        
+                        for (x = 0; x < value_num; x++) {
+                            CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=TRUE;
+                            
+                            char *value_of_i_in_x=valueOfListAtIndex(i_value_after_in, x);
+                            
+                            
+                            char *init_temp_i = (char*)malloc(sizeof (char) *((int) strlen(i_in_for_loop) + 2 + (int) strlen(value_of_i_in_x)));
+                            strcpy(init_temp_i, i_in_for_loop);
+                            strcat(init_temp_i, "=");
+                            strcat(init_temp_i, value_of_i_in_x);
+                            init_temp_i[(int) strlen(i_in_for_loop) + 1 + (int) strlen(value_of_i_in_x)]=0;
+                            
+                            
+                            Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions,init_temp_i);
+                            
+                            
+                            
+                            
+                            Walley_Run_For_Appointed_Var_String_List(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions, temp_string_list_in_foor_loop);
+                            
+                            
+                            if (CAN_BREAK) {
+                                CAN_BREAK=FALSE;
+                                break;
+                            }
+                            if (CAN_CONTINUE) {
+                                CAN_CONTINUE=FALSE;
+                                continue;
+                            }
+                            
+                            
+                        }
+                        CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=TRUE;
+                        
+                        LOOP_TURN--;
+                        
+                    }
+                    else {
+                        printf("#### For Sentence Only Support list Type At This Time\n");
+                    }
+                    
+                    if (LOOP_TURN==0) {
+                        LOOP_TURN=0;
+                        
+                        // Finish Main Loop
+                        // Stop Collecting String
+                        PRINT_IN_WHILE_OR_FOR_LOOP=FALSE;
+                        printf("%s",PRINT_STRING_AFTER_LOOP);
+                        PRINT_STRING_AFTER_LOOP="";
+                        
+                    }
+                    
+                    
+                }
+            }
+            
+            if(CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==FALSE){
+                can_run_basic_input=FALSE;
+            }
+            
+            //############### New code here on Jan 10 #############################################
+            //############### To support switch sentence ##########################################
+            if(NOW_WRITTING_SWITCH == TRUE && str_is_empty==FALSE && CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==TRUE){
+                
+                can_run_basic_input = FALSE;
+                if(CURRENT_SPACE % 4 !=0){
+                    printf("Space Mistake occurred while defining a switch\n");
+                }
+                else if (CURRENT_SPACE<=SPACE_OF_FIRST_SWITCH_SENTENCE){
+                    can_run_basic_input = TRUE;
+                    
+                    char *copy_SENTENCE_OF_SWITCH=SENTENCE_OF_SWITCH;
+                    copy_SENTENCE_OF_SWITCH=append(copy_SENTENCE_OF_SWITCH, "#end");
+                    
+                    //char temp2[100];
+                    //sprintf(temp2, "%d", SPACE_OF_FIRST_SWITCH_SENTENCE);
+                    //Var_changeValueOfVar(*struct_settings , "space", append("",temp2), "int");
+                    REQUIRED_SPACE=SPACE_OF_FIRST_SWITCH_SENTENCE;
+                    
+                    NOW_WRITTING_SWITCH=FALSE;
+                    SENTENCE_OF_SWITCH="";
+                    SWITCH_OBJECT="";
+                    SPACE_OF_FIRST_SWITCH_SENTENCE=0;
+                    
+                    //printf("TO RUN :|\n%s|\nspace is %d\n",copy_SENTENCE_OF_SWITCH,SPACE_OF_FIRST_SWITCH_SENTENCE);
+                    Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions, copy_SENTENCE_OF_SWITCH);
+                    
+                    REQUIRED_SPACE=CURRENT_SPACE;
+                    
+                }
+                else{
+                    
+                    // case sentence
+                    if (strcmp(first_none_whitespace_token.TOKEN_STRING,"case")==0&& CURRENT_SPACE==SPACE_OF_FIRST_SWITCH_SENTENCE+4) {
+                        if (CURRENT_SPACE%4!=0 && CURRENT_SPACE<SPACE_OF_FIRST_SWITCH_SENTENCE+4) {
+                            printf("@@ |%s|\n",CURRENT_INPUT_STR);
+                            printf("Space mistake occurred while running |%s|\n",input_str);
+                            exit(0);
+                        }
+                        else{
+                            char *temp_str="";
+                            char *trim_input_str=trim(input_str);
+                            
+                            // case "Hello":    str_after_case = "Hello"
+                            char *str_after_case=substr(trim_input_str, 5, find_from_behind(trim_input_str, ":"));
+                            
+                            
+                            // str_after_case -> 1 or 2
+                            // change to  -----> 1 or x==2
+                            str_after_case=replace_not_in_string(str_after_case, " or ", append(" or ", append(SWITCH_OBJECT, "==")));
+                            str_after_case=replace_not_in_string(str_after_case, " and ", append(" and ", append(SWITCH_OBJECT, "==")));
+                            
+                            
+                            str_after_case=trim(str_after_case);
+                            int a=0;
+                            for (; a<SPACE_OF_FIRST_SWITCH_SENTENCE; a++) {
+                                temp_str=append(" ", temp_str);
+                            }
+                            // has defined if sentence
+                            if (find(trim(SENTENCE_OF_SWITCH),"if")==0) {
+                                
+                                // else
+                                if (strcmp(str_after_case, "default")==0) {
+                                    temp_str=append(temp_str, "else:");
+                                }
+                                
+                                // elif
+                                else{
+                                    temp_str=append(temp_str,"elif ");
+                                    temp_str=append(temp_str, append(SWITCH_OBJECT, append("==", str_after_case)));
+                                    temp_str=append(temp_str, ":");
+                                    
+                                }
+                                
+                            }
+                            // have not defined if sentence
                             else{
-                                temp_str=append(temp_str,"elif ");
+                                temp_str=append(temp_str, "if ");
                                 temp_str=append(temp_str, append(SWITCH_OBJECT, append("==", str_after_case)));
                                 temp_str=append(temp_str, ":");
-
                             }
                             
+                            
+                            SENTENCE_OF_SWITCH=append(SENTENCE_OF_SWITCH,append(temp_str, "\n"));
+                            REQUIRED_SPACE=CURRENT_SPACE+4;
                         }
-                        // have not defined if sentence
-                        else{
-                            temp_str=append(temp_str, "if ");
-                            temp_str=append(temp_str, append(SWITCH_OBJECT, append("==", str_after_case)));
-                            temp_str=append(temp_str, ":");
-                        }
-                        
-                        
-                        SENTENCE_OF_SWITCH=append(SENTENCE_OF_SWITCH,append(temp_str, "\n"));
-                        REQUIRED_SPACE=CURRENT_SPACE+4;
                     }
+                    // string in case sentence
+                    else{
+                        
+                        char *temp_str=trim(input_str);
+                        int a=0;
+                        for (; a<CURRENT_SPACE-4; a++) {
+                            temp_str=append(" ", temp_str);
+                        }
+                        SENTENCE_OF_SWITCH=append(SENTENCE_OF_SWITCH, temp_str);
+                        SENTENCE_OF_SWITCH=append(SENTENCE_OF_SWITCH, "\n");
+                    }
+                    //
                 }
-                // string in case sentence
-                else{
+            }
+            //#####################################################################################
+            char temp5[10];
+            sprintf(temp5, "%d", can_run_basic_input);
+            Var_changeValueOfVar(struct_settings , "can_run_basic_input", append("",temp5), "int");
+            //##########################################################################################################
+            //##########################################################################################################
+            //##########################################################################################################
+            //##########################################################################################################
+            //// printf("can run basic input %d numOfSpaceAheadString %d required space %d\n",can_run_basic_input,numOfSpaceAheadString(input_str),space);
+            if (can_run_basic_input == TRUE && (numOfSpaceAheadString(input_str) == 0 || REQUIRED_SPACE==CURRENT_SPACE)) {
+                // printf("CAN RUN BASIC INPUT\n");
+                char *input_temp = removeAheadSpace(input_str);
+                if (strcmp(first_none_whitespace_token.TOKEN_STRING, "pass")==0) {
+                    CAN_BREAK=TRUE;
+                    CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=FALSE;
+                }
+                else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "break")==0) {
+                    CAN_BREAK=TRUE;
+                    CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=FALSE;
+                }
+                else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "continue")==0) {
+                    CAN_CONTINUE=TRUE;
+                    CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=FALSE;
                     
-                    char *temp_str=trim(input_str);
-                    int a=0;
-                    for (; a<CURRENT_SPACE-4; a++) {
-                        temp_str=append(" ", temp_str);
-                    }
-                    SENTENCE_OF_SWITCH=append(SENTENCE_OF_SWITCH, temp_str);
-                    SENTENCE_OF_SWITCH=append(SENTENCE_OF_SWITCH, "\n");
+                    //Var_changeValueOfVar(*struct_settings, "can_continue", "1", "int");
                 }
-                //
-            }
-        }
-        //#####################################################################################
-        char temp5[10];
-        sprintf(temp5, "%d", can_run_basic_input);
-        Var_changeValueOfVar(struct_settings , "can_run_basic_input", append("",temp5), "int");
-        //##########################################################################################################
-        //##########################################################################################################
-        //##########################################################################################################
-        //##########################################################################################################
-        //// printf("can run basic input %d numOfSpaceAheadString %d required space %d\n",can_run_basic_input,numOfSpaceAheadString(input_str),space);
-        if (can_run_basic_input == TRUE && (numOfSpaceAheadString(input_str) == 0 || REQUIRED_SPACE==CURRENT_SPACE)) {
-            // printf("CAN RUN BASIC INPUT\n");
-            char *input_temp = removeAheadSpace(input_str);
-            if (strcmp(first_none_whitespace_token.TOKEN_STRING, "pass")==0) {
-                CAN_BREAK=TRUE;
-                CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=FALSE;
-            }
-            else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "break")==0) {
-                CAN_BREAK=TRUE;
-                CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=FALSE;
-            }
-            else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "continue")==0) {
-                CAN_CONTINUE=TRUE;
-                CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=FALSE;
-
-                //Var_changeValueOfVar(*struct_settings, "can_continue", "1", "int");
-            }
-            else if (strcmp(first_none_whitespace_token.TOKEN_STRING,"print")==0){
-                char* temp_output = Walley_Print(struct_var,FUNCTION_functions, substr(trim(input_str), 6, (int)strlen(trim(input_str))));
-                if (PRINT_IN_WHILE_OR_FOR_LOOP==TRUE) {
-                    PRINT_STRING_AFTER_LOOP=append(PRINT_STRING_AFTER_LOOP, temp_output);
-                }
-                else{
-                    printf("%s", temp_output);
-                }
-
-                
-            }
-            else if (strcmp(first_none_whitespace_token.TOKEN_STRING,"println")==0){
-                char* temp_output = Walley_Println(struct_var,FUNCTION_functions, substr(trim(input_str), 8, (int)strlen(trim(input_str))));
-                if (PRINT_IN_WHILE_OR_FOR_LOOP==TRUE) {
-                    PRINT_STRING_AFTER_LOOP=append(PRINT_STRING_AFTER_LOOP, temp_output);
-                }
-                else{
-                    printf("%s", temp_output);
-                }
-                
-            }
-            // add new symbolic math support
-            else if(strcmp(first_none_whitespace_token.TOKEN_STRING,"syms")==0){
-                char *sym_vars=substr(trim(input_str), 5, (int)strlen(trim(input_str)));
-                int num_of_vars=count_str(sym_vars, ",")+1;
-                int i=0;
-                for (; i<num_of_vars; i++) {
-                    char *var_name=getParamAccordingToIndex(sym_vars,i);
-                    if (Var_Existed(*struct_var, var_name)) {
-                        Var_changeValueOfVar(struct_var, var_name, var_name, "sym");
+                else if (strcmp(first_none_whitespace_token.TOKEN_STRING,"print")==0){
+                    char* temp_output = Walley_Print(struct_var,FUNCTION_functions, substr(trim(input_str), 6, (int)strlen(trim(input_str))));
+                    if (PRINT_IN_WHILE_OR_FOR_LOOP==TRUE) {
+                        PRINT_STRING_AFTER_LOOP=append(PRINT_STRING_AFTER_LOOP, temp_output);
                     }
                     else{
-                        Var_addProperty(struct_var, var_name, var_name, "sym");
+                        printf("%s", temp_output);
+                    }
+                    
+                    
+                }
+                else if (strcmp(first_none_whitespace_token.TOKEN_STRING,"println")==0){
+                    char* temp_output = Walley_Println(struct_var,FUNCTION_functions, substr(trim(input_str), 8, (int)strlen(trim(input_str))));
+                    if (PRINT_IN_WHILE_OR_FOR_LOOP==TRUE) {
+                        PRINT_STRING_AFTER_LOOP=append(PRINT_STRING_AFTER_LOOP, temp_output);
+                    }
+                    else{
+                        printf("%s", temp_output);
+                    }
+                    
+                }
+                // add new symbolic math support
+                else if(strcmp(first_none_whitespace_token.TOKEN_STRING,"syms")==0){
+                    char *sym_vars=substr(trim(input_str), 5, (int)strlen(trim(input_str)));
+                    int num_of_vars=count_str(sym_vars, ",")+1;
+                    int i=0;
+                    for (; i<num_of_vars; i++) {
+                        char *var_name=getParamAccordingToIndex(sym_vars,i);
+                        if (Var_Existed(*struct_var, var_name)) {
+                            Var_changeValueOfVar(struct_var, var_name, var_name, "sym");
+                        }
+                        else{
+                            Var_addProperty(struct_var, var_name, var_name, "sym");
+                        }
                     }
                 }
-            }
-            else if (input_temp[0] == '#' ||
-                strcmp(first_none_whitespace_token.TOKEN_STRING, "for") == 0 ||
-                strcmp(first_none_whitespace_token.TOKEN_STRING, "while") == 0 ||
-                strcmp(first_none_whitespace_token.TOKEN_STRING, "if") == 0 || strcmp(first_none_whitespace_token.TOKEN_STRING, "elif") == 0 || strcmp(first_none_whitespace_token.TOKEN_STRING, "else") == 0 ||
-                strcmp(first_none_whitespace_token.TOKEN_STRING, "def") == 0 ||
-                strcmp(first_none_whitespace_token.TOKEN_STRING,"class")==0
-                     // new code here to support switch
-                     || strcmp(first_none_whitespace_token.TOKEN_STRING,"switch")==0) {
-
-                if (first_none_whitespace_token.TOKEN_STRING[0]=='#') {
+                else if (input_temp[0] == '#' ||
+                         strcmp(first_none_whitespace_token.TOKEN_STRING, "for") == 0 ||
+                         strcmp(first_none_whitespace_token.TOKEN_STRING, "while") == 0 ||
+                         strcmp(first_none_whitespace_token.TOKEN_STRING, "if") == 0 || strcmp(first_none_whitespace_token.TOKEN_STRING, "elif") == 0 || strcmp(first_none_whitespace_token.TOKEN_STRING, "else") == 0 ||
+                         strcmp(first_none_whitespace_token.TOKEN_STRING, "def") == 0 ||
+                         strcmp(first_none_whitespace_token.TOKEN_STRING,"class")==0
+                         // new code here to support switch
+                         || strcmp(first_none_whitespace_token.TOKEN_STRING,"switch")==0) {
+                    
+                    if (first_none_whitespace_token.TOKEN_STRING[0]=='#') {
+                        printf("");
+                    }
+                    else{
+                        Walley_Judge_Run_Anotation_For_While_Def_Class(struct_var, struct_settings, FUNCTION_functions,input_str,token);
+                    }
+                    
+                }// ##################################### CHECK RETURN IN FUNCTION, CHECK WHETHER IT CAN RUN OR NOT
+                else if (strcmp(first_none_whitespace_token.TOKEN_STRING,"return")==0){
                     printf("");
                 }
-                else{
-                Walley_Judge_Run_Anotation_For_While_Def_Class(struct_var, struct_settings, FUNCTION_functions,input_str,token);
-                }
-
-            }// ##################################### CHECK RETURN IN FUNCTION, CHECK WHETHER IT CAN RUN OR NOT
-            else if (strcmp(first_none_whitespace_token.TOKEN_STRING,"return")==0){
-                printf("");
-            }
-            //#################### Basic Input To Run #############################
-            else {
-                input_str = trim(input_str);
-                //#####################  Init class  #####################
-                if((find_not_in_string(input_str, "=")!=-1&&find_not_in_string(input_str,"(")!=-1&& (find_not_in_string(input_str, "=")<find_not_in_string(input_str,"(")) &&checkWhetherSameClassExistedFromVar(CLASS_LIST,trim(substr(input_str,find_not_in_string(input_str, "=")+1,find_not_in_string(input_str,"("))))==TRUE)
-                    ) {
-                                        
-                    //printf("#### Begin to initialize class ####\n");
-                    // ## a is hello()
-                    // ## a is instance_name
-                    // ## hello() is __class__
-                    // ## in hello("Hello"), "Hello" is parameter.
-                    char *instance_name = substr(input_str, 0, find_not_in_string(input_str, "="));
-                    char *__class__ = substr(input_str, find_not_in_string(input_str, "=") + 1, (int) strlen(input_str));
-                    instance_name = trim(instance_name);
-                    __class__ = trim(__class__);
-                    char *parameter=substr(__class__,find(__class__,"(")+1,find_not_in_string(__class__,")"));
-                    char *class_name=substr(__class__, 0, find(__class__,"("));
-        
-                    
-                    char *after_change=formatStringInClassWithExtendFromVar(*struct_var,CLASS_LIST,class_name,instance_name);
-                    //printf("#### AFTER CHANGE\n|%s|\n####\n",after_change);
-
-                    Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file,FUNCTION_functions, after_change);
-                    addInstanceNameToVar(&INSTANCE_NAMES_LIST,instance_name);
-            
-                    
-                    // For list instance like x[0]=a()
-                    if (find(instance_name,"[")!=-1) {
-                        int right=(int)strlen(instance_name)-1;
-                        if (instance_name[right]==']') {
-                            Walley_Update_Var_And_Var_Value_To_Var(struct_var, instance_name, toString(__class__));
-                            //changeTheOneVarValueFromItsInitialOneFromVarForList(struct_var, substr(instance_name,0,right+1), toString(__class__));
-                        }
-                    }
-                    
-                    
-                    //For dictionary like x{"A"}=a()
-                    else if (find(instance_name,"{")!=-1) {
-                        int right=(int)strlen(instance_name)-1;
-                        if (instance_name[right]=='}') {
-                            changeTheOneVarValueFromItsInitialOneFromVarOrAddVarNameAndValueForDictionary(struct_var, instance_name, toString(__class__));
-                        }
-                    }
-                    
-                    else{
-                        Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file,FUNCTION_functions, append("syms ", instance_name));
-                    }
-                    // run init() function
-                    // a.init()
-                    if (find(after_change,".init(")!=-1) {
-                        char *init=(char*)malloc(sizeof(char)*((int)strlen(instance_name)+1+(int)strlen(".init()")+(int)strlen(parameter)));
-                        strcpy(init,instance_name);
-                        strcat(init,".init(");
-                        strcat(init,parameter);
-                        strcat(init,")");
-                        init[sizeof(char)*((int)strlen(instance_name)+(int)strlen(".init()")+(int)strlen(parameter))]=0;
-
-                        Walley_Run_One_Function_And_Return_Value_From_Var(init, struct_var, FUNCTION_functions);
-                        //Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions,init);
-                    }
-                    //printf("After Initializing\n");
-                
-                }
-                //#################### import ####################
-                // Only Import File Module, Can not import the specific function from Module.
-                else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "import") == 0) {
-                    // Now only support import a   does not support import a,b,c ... at same row
-                    //printf("ENTER HERE1\n");
-                    
-                    
-                    char *name_of_file_to_run = substr(input_str, find(input_str, "import ") + 7, (int) strlen(input_str));
-                    name_of_file_to_run = removeAheadSpace(removeBackSpace(name_of_file_to_run));
-                                        
-                    char *as_name="";
-                    if(find_not_in_string(name_of_file_to_run," as ")!=-1){
-                        as_name=substr(name_of_file_to_run,find_not_in_string(name_of_file_to_run," as ")+4,(int)strlen(name_of_file_to_run));
-                        name_of_file_to_run=substr(name_of_file_to_run,0,find_not_in_string(name_of_file_to_run," as "));
-                    } else {
-                        as_name=name_of_file_to_run;
-                    }
-                    
-                    name_of_file_to_run=trim(name_of_file_to_run);
-                    as_name=trim(as_name);
-                    
-                    //printf("Name of file to run %s\n",name_of_file_to_run);
-                    
-                    /*
-                     // I changed the code below on Dec 17
-                    char *module_path=getModulePathFromDirectory(name_of_file_to_run,"./");
-                     */
-                    char *module_path=getModulePathFromDirectory(name_of_file_to_run,CURRENT_DIRECTORY);
-                    
-                    
-                    if (module_path[(int)strlen(module_path)-1]=='p') {
-                        printf("@@ |%s|\n",CURRENT_INPUT_STR);
-                        printf("Can not import folder\nPlease try to import the file in that folder");
-                        exit(0);
-                    }
-                    //printf("MODULE_PATH is %s\n",module_path);
-                    
-                    
-                    // CHECK WHETHER IMPORTING CORRECTLY OR NOT
-                    int length_of_module_path=(int)strlen(module_path);
-                    int a=length_of_module_path-1;
-                    for (; a>=0; a--) {
-                        if (module_path[a]=='/') {
-                            break;
-                        }
-                    }
-                    char *final_module=substr(module_path, a+1, length_of_module_path);
-                    final_module=substr(final_module, 0, find(final_module,"."));
-                    
-                    int length_of_name_of_file_to_run=(int)strlen(name_of_file_to_run);
-                    a=length_of_name_of_file_to_run-1;
-                    
-                    //printf("FINAL MODULE IS %s\n",final_module);
-                    for (; a>=0; a--) {
-                        if (name_of_file_to_run[a]=='.') {
-                            break;
-                        }
-                    }
-                    char *final_module2=substr(name_of_file_to_run, a+1, length_of_name_of_file_to_run);
-                    //printf("FINAL MODULE2 IS %s\n",final_module2);
-                    if (strcmp(final_module2, final_module)!=0) {
-                        printf("@@ |%s|\n",CURRENT_INPUT_STR);
-                        printf("No File called %s found\nYou can only import .wy file\n",append(final_module2, ".wy"));
-                        exit(0);
-                    }
-                    
-                    
-                    // Assign Value to AS_NAME
-                    AS_NAME=append(AS_NAME, append(".", as_name));  // AS_NAME= ".a"  AS_NAME= ".a.b"
-                    
-                                    
-                    
-                    /*
-                     * I modified the code below on Dec 5
-                     *
-                    char *temp_file_to_run;
-                    int length_of_name_of_file_to_run=(int)strlen(name_of_file_to_run);
-                    if (name_of_file_to_run[length_of_name_of_file_to_run-1]=='y'&&name_of_file_to_run[length_of_name_of_file_to_run-2]=='w'&&name_of_file_to_run[length_of_name_of_file_to_run-3]=='.') {
-                        temp_file_to_run=name_of_file_to_run;
-                    } else {
-                        temp_file_to_run=append(name_of_file_to_run, ".wy");
-                    }*/
-                    
-                    
-                    char *temp_file_to_run=module_path;
-                    /*
-                    // I changed the code below to fix the import problem on Dec 4 and also changed the function
-                    // functionOrClassAddAheadName in order to fix a.y ('a' is as name) like problem
-                    //char *content_of_file = functionOrClassAddAheadName(temp_file_to_run,as_name);
-                    */
-                    
-                    /* I add new codes here on Dec 5 to solve importing problem
-                    // This code below refresh the struct_var and FUNCTION_functions while can not update the class
-                    // Update:::: IMPORTANT !!!!!!!
-                    // It now can support class update*/
-                    Walley_Update_Functions_And_Vars_While_Importing(temp_file_to_run, struct_var, FUNCTION_functions);
-                    
-                    
-                    
-                    //printf("Finish loading file %s\n",temp_file_to_run);
-                    
-                    // Remove the last value of AS_NAME
-                    a=(int)strlen(AS_NAME)-1;
-                    for (; a>=0; a--) {
-                        if (AS_NAME[a]=='.') {
-                            break;
-                        }
-                    }
-                    if (a==0) {
-                        AS_NAME="";
-                    }else{
-                        AS_NAME=substr(AS_NAME, 0, a);
-                    }
-                    //printf("AS_NAME IS %s\n",AS_NAME);
-                
-
-                }
-                //This is also import
-                else if (strcmp(first_none_whitespace_token.TOKEN_STRING,"from")==0){
-                    //printf("ENTER HERE2\n");
-
-                    //printf("\nNow input_str is |%s|\n",input_str);
-                    input_str=replace_not_in_string(input_str, "*as", "* as");
-                    
-                    input_str=trim(input_str);
-                    if(find_not_in_string(input_str," import ")==-1){
-                        printf("@@ |%s|\n",CURRENT_INPUT_STR);
-                        printf("Mistake occurred while importing\n no ' import ' found");
-                        exit(0);
-                    }
-                    char *import_file=substr(input_str,5,find_not_in_string(input_str," import "));
-                    char *import_module="";
-                    char *as_name="";
-                    
-                    if(find_not_in_string(input_str," as ")!=-1){
-                        import_module=substr(input_str,find_not_in_string(input_str," import ")+8,find_not_in_string(input_str," as "));
-                        as_name=substr(input_str,find_not_in_string(input_str," as ")+4,(int)strlen(input_str));
-                    } else {
-                        import_module=substr(input_str,find_not_in_string(input_str," import ")+8,(int)strlen(input_str));
-                        as_name=import_module;
-                    }
-                    import_file=trim(import_file);
-                    import_module=trim(import_module);
-                    as_name=trim(as_name);
-                    
-                    //printf("import_file %s\nimport_module %s\nas_name %s\n",import_file,import_module,as_name);
-                    
-                    /*
-                    // I changed the code below on Dec 17 
-                    char *module_path=getModulePathFromDirectory(import_file,"./");*/
-                    char *module_path=getModulePathFromDirectory(import_file,CURRENT_DIRECTORY);
-                    CURRENT_DIRECTORY=substr(module_path, 0, find_from_behind(module_path, "/")+1);
-                    
-                    //printf("module_path --> %s\n",module_path);
-                    
-                    // Assign Value to AS_NAME
-                    AS_NAME=append(AS_NAME, append(".", as_name));  // AS_NAME= ".a"  AS_NAME= ".a.b"
-                    
-                    
-                    /*
-                     * I modified the code below on Dec 5
-                     *
-                    int length_of_import_file=(int)strlen(import_file);
-                    char *temp_file_to_run;
-                    char *type=substr(import_file, length_of_import_file-3,length_of_import_file);
-                    //printf("type is %s\n",type);
-                    if (strcmp(type,".wy")!=0) {
-                        temp_file_to_run=append(import_file, ".wy");
-                    }
-                    else{
-                        temp_file_to_run=import_file;
-                    }*/
-                    
-                    char *temp_file_to_run=module_path;
-                    if (temp_file_to_run[(int)strlen(temp_file_to_run)-1]!='y') {
-                        module_path=getModulePathFromDirectory(import_module, append(temp_file_to_run,"/"));
-                        //printf("MODULE PATH %s\n",module_path);
-                        temp_file_to_run=module_path;
+                //#################### Basic Input To Run #############################
+                else {
+                    input_str = trim(input_str);
+                    //#####################  Init class  #####################
+                    if((find_not_in_string(input_str, "=")!=-1&&find_not_in_string(input_str,"(")!=-1&& (find_not_in_string(input_str, "=")<find_not_in_string(input_str,"(")) &&checkWhetherSameClassExistedFromVar(CLASS_LIST,trim(substr(input_str,find_not_in_string(input_str, "=")+1,find_not_in_string(input_str,"("))))==TRUE)
+                       ) {
                         
-                        int a=(int)strlen(temp_file_to_run);
+                        //printf("#### Begin to initialize class ####\n");
+                        // ## a is hello()
+                        // ## a is instance_name
+                        // ## hello() is __class__
+                        // ## in hello("Hello"), "Hello" is parameter.
+                        char *instance_name = substr(input_str, 0, find_not_in_string(input_str, "="));
+                        char *__class__ = substr(input_str, find_not_in_string(input_str, "=") + 1, (int) strlen(input_str));
+                        instance_name = trim(instance_name);
+                        __class__ = trim(__class__);
+                        char *parameter=substr(__class__,find(__class__,"(")+1,find_not_in_string(__class__,")"));
+                        char *class_name=substr(__class__, 0, find(__class__,"("));
+                        
+                        
+                        char *after_change=formatStringInClassWithExtendFromVar(*struct_var,CLASS_LIST,class_name,instance_name);
+                        //printf("#### AFTER CHANGE\n|%s|\n####\n",after_change);
+                        
+                        Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file,FUNCTION_functions, after_change);
+                        addInstanceNameToVar(&INSTANCE_NAMES_LIST,instance_name);
+                        
+                        
+                        // For list instance like x[0]=a()
+                        if (find(instance_name,"[")!=-1) {
+                            int right=(int)strlen(instance_name)-1;
+                            if (instance_name[right]==']') {
+                                Walley_Update_Var_And_Var_Value_To_Var(struct_var, instance_name, toString(__class__));
+                                //changeTheOneVarValueFromItsInitialOneFromVarForList(struct_var, substr(instance_name,0,right+1), toString(__class__));
+                            }
+                        }
+                        
+                        
+                        //For dictionary like x{"A"}=a()
+                        else if (find(instance_name,"{")!=-1) {
+                            int right=(int)strlen(instance_name)-1;
+                            if (instance_name[right]=='}') {
+                                changeTheOneVarValueFromItsInitialOneFromVarOrAddVarNameAndValueForDictionary(struct_var, instance_name, toString(__class__));
+                            }
+                        }
+                        
+                        else{
+                            Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file,FUNCTION_functions, append("syms ", instance_name));
+                        }
+                        // run init() function
+                        // a.init()
+                        if (find(after_change,".init(")!=-1) {
+                            char *init=(char*)malloc(sizeof(char)*((int)strlen(instance_name)+1+(int)strlen(".init()")+(int)strlen(parameter)));
+                            strcpy(init,instance_name);
+                            strcat(init,".init(");
+                            strcat(init,parameter);
+                            strcat(init,")");
+                            init[sizeof(char)*((int)strlen(instance_name)+(int)strlen(".init()")+(int)strlen(parameter))]=0;
+                            
+                            Walley_Run_One_Function_And_Return_Value_From_Var(init, struct_var, FUNCTION_functions);
+                            //Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions,init);
+                        }
+                        //printf("After Initializing\n");
+                        
+                    }
+                    //#################### import ####################
+                    // Only Import File Module, Can not import the specific function from Module.
+                    else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "import") == 0) {
+                        // Now only support import a   does not support import a,b,c ... at same row
+                        //printf("ENTER HERE1\n");
+                        
+                        
+                        char *name_of_file_to_run = substr(input_str, find(input_str, "import ") + 7, (int) strlen(input_str));
+                        name_of_file_to_run = removeAheadSpace(removeBackSpace(name_of_file_to_run));
+                        
+                        char *as_name="";
+                        if(find_not_in_string(name_of_file_to_run," as ")!=-1){
+                            as_name=substr(name_of_file_to_run,find_not_in_string(name_of_file_to_run," as ")+4,(int)strlen(name_of_file_to_run));
+                            name_of_file_to_run=substr(name_of_file_to_run,0,find_not_in_string(name_of_file_to_run," as "));
+                        } else {
+                            as_name=name_of_file_to_run;
+                        }
+                        
+                        name_of_file_to_run=trim(name_of_file_to_run);
+                        as_name=trim(as_name);
+                        
+                        //printf("Name of file to run %s\n",name_of_file_to_run);
+                        
+                        /*
+                         // I changed the code below on Dec 17
+                         char *module_path=getModulePathFromDirectory(name_of_file_to_run,"./");
+                         */
+                        char *module_path=getModulePathFromDirectory(name_of_file_to_run,CURRENT_DIRECTORY);
+                        
+                        
+                        if (module_path[(int)strlen(module_path)-1]=='p') {
+                            printf("@@ |%s|\n",CURRENT_INPUT_STR);
+                            printf("Can not import folder\nPlease try to import the file in that folder");
+                            exit(0);
+                        }
+                        //printf("MODULE_PATH is %s\n",module_path);
+                        
+                        
+                        // CHECK WHETHER IMPORTING CORRECTLY OR NOT
+                        int length_of_module_path=(int)strlen(module_path);
+                        int a=length_of_module_path-1;
                         for (; a>=0; a--) {
-                            if (temp_file_to_run[a]=='/') {
+                            if (module_path[a]=='/') {
                                 break;
                             }
                         }
-                        char *temp_file=substr(temp_file_to_run, a+1, (int)strlen(temp_file_to_run)-2);
-                        //printf("temp_file is %s\n",temp_file);
+                        char *final_module=substr(module_path, a+1, length_of_module_path);
+                        final_module=substr(final_module, 0, find(final_module,"."));
                         
-                        import_module=substr(import_module, find(import_module,temp_file)+(int)strlen(temp_file),(int)strlen(import_module));
-                                                
-                        //printf("import_module is %s\n",import_module);
-                    }
-                    
-
-                    char *content_of_file="";
-                    if (strcmp(import_module, "")==0) {
-                        import_module="all";
-                        as_name=import_module;
-                        //printf("MODULE PATH %s\n",temp_file_to_run);
-                        content_of_file = functionOrClassAddAheadName(temp_file_to_run,substr(AS_NAME, 1, (int)strlen(AS_NAME)));
-                    }
-                    // import all functions or classes from module
-                    else if(strcmp(import_module,"all")==0||strcmp(import_module,"*")==0){
-                        if(strcmp(import_module,as_name)==0){
-                            // THIS PART IS CORRECT
-                            as_name="";
-                            content_of_file = getStringFromFile(temp_file_to_run);
-                            
-                            //printf("content_of_file:\n##########################################\n%s\n################################################\n",content_of_file);
-                            
-                        } else {
+                        int length_of_name_of_file_to_run=(int)strlen(name_of_file_to_run);
+                        a=length_of_name_of_file_to_run-1;
+                        
+                        //printf("FINAL MODULE IS %s\n",final_module);
+                        for (; a>=0; a--) {
+                            if (name_of_file_to_run[a]=='.') {
+                                break;
+                            }
+                        }
+                        char *final_module2=substr(name_of_file_to_run, a+1, length_of_name_of_file_to_run);
+                        //printf("FINAL MODULE2 IS %s\n",final_module2);
+                        if (strcmp(final_module2, final_module)!=0) {
                             printf("@@ |%s|\n",CURRENT_INPUT_STR);
-                            printf("Can not run\n from A import all/* as B\n");
+                            printf("No File called %s found\nYou can only import .wy file\n",append(final_module2, ".wy"));
                             exit(0);
-                            //content_of_file = functionOrClassAddAheadName(temp_file_to_run,substr(AS_NAME, 1, (int)strlen(AS_NAME)));
                         }
-                    }
-                    else{
-                        //content_of_file = getOneFunctionFromFileAndFormatItgetOneFunctionFromFile(temp_file_to_run,import_module,as_name);
-                        //printf("Import module %s, as name %s\n",import_module,as_name);
-                        content_of_file = getOneFunctionFromFileAndFormatItgetOneFunctionFromFile(temp_file_to_run,import_module,substr(AS_NAME, 1, (int)strlen(AS_NAME)));
-                    }
-                    
-                    
-                    //printf("content of file is |%s|\n", content_of_file);
-                    Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file,FUNCTION_functions, content_of_file);
-                    Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions,"#End Importing");
-                    
-                    // Remove the last value of AS_NAME
-                    int a=(int)strlen(AS_NAME)-1;
-                    for (; a>=0; a--) {
-                        if (AS_NAME[a]=='.') {
-                            break;
-                        }
-                    }
-                    if (a==0) {
-                        AS_NAME="";
-                    }else{
-                        AS_NAME=substr(AS_NAME, 0, a);
-                    }
-                }
-                
-                // Disable Setmark and Goto
-                /*
-                //##################### setmark ##################
-                else if (find(removeAheadSpace(input_str), "setmark ") == 0) {
-                    //// printf("#### Find setmark ####");
-                }//#################### goto ######################
-                else if (find(removeAheadSpace(input_str), "goto ") == 0) {
-                    char *mark_name = substr(input_str, find(input_str, "goto ") + 5, (int) strlen(input_str));
-                    //// printf("Mark Name :%s\n", mark_name);
-                    mark_name = removeBackSpace(removeAheadSpace(mark_name));
-                    //// printf("#### Find goto ####");
-                    char *string_to_run;
-                    if (strcmp("None", existing_file) == 0) {
-                        string_to_run = getStringFromFile(temp_file_name);
-                    } else {
-                        string_to_run = getStringFromFile(existing_file);
-                    }
-                    //// printf("String in File is |%s|\n", getStringFromFile(temp_file_name));
-                    char *setmark = malloc(sizeof (char) *((int) strlen("setmark ")+(int) strlen(mark_name)));
-                    strcat(setmark, "setmark ");
-                    strcat(setmark, mark_name);
-                    if (find(string_to_run, setmark) == -1) {
-                        printf("Mistake Occurred while calling function Walley_To_Mark\nMark not found");
-                        exit(1);
-                    } else {
-                        string_to_run = substr(string_to_run, find(string_to_run, "setmark "), (int) strlen(string_to_run));
-                        FILE *fp = fopen(temp_file_name, "w");
-                        fputs("", fp);
-                        fclose(fp);
-                        //// printf("$$$ \n|%s|\n", string_to_run);
-                        //clearTextInFile(temp_file_name);
-                        writeStringToFile(temp_file_name, string_to_run);
-                        writeStringToFile(temp_file_name, "\n");
-                        run_goto = TRUE;
-                        //Walley_Run_Second_Generation(struct_var,setting_file,temp_file_name,string_to_run);
-                    }
-                }*/      
-                 //#####################  Eval  ###################
-                else if (TOKEN_numOfTOKEN_CLASS(token, "W_ASSIGNMENT_OPERATOR")==1){
-               // else if (isExpression(input_str) == TRUE) {
-                    // x=12
-                    // or x,y=12,13
-                    char *var_name=variableName(input_str);
-                    // x,y=12,13 more than one var
-                    if (find(var_name,",")!=-1) {
-                        int num_of_space_ahead=numOfSpaceAheadString(input_str);
-                        char *var_value=variableValue(input_str);
-                        var_name=append(var_name, ",");
-                        char *last_var_value=substr(var_value, find_from_behind(var_value, ",")+1, (int)strlen(var_value));
-                        var_value=append(var_value, ",");
-                        int num_of_comma=count_str(var_name, ",");
-                        int a=0;
-                        for (; a<num_of_comma; a++) {
-                            int index_of_comma=find(var_name,",");
-                            char *temp_var_name=substr(var_name, 0, index_of_comma);
-                            var_name=substr(var_name, index_of_comma+1, (int)strlen(var_name));
-                            
-                            int index_of_comma2=find(var_value,",");
-                            char *temp_var_value;
-                            if (index_of_comma2==-1) {
-                                temp_var_value=last_var_value;
+                        
+                        
+                        // Assign Value to AS_NAME
+                        AS_NAME=append(AS_NAME, append(".", as_name));  // AS_NAME= ".a"  AS_NAME= ".a.b"
+                        
+                        
+                        
+                        /*
+                         * I modified the code below on Dec 5
+                         *
+                         char *temp_file_to_run;
+                         int length_of_name_of_file_to_run=(int)strlen(name_of_file_to_run);
+                         if (name_of_file_to_run[length_of_name_of_file_to_run-1]=='y'&&name_of_file_to_run[length_of_name_of_file_to_run-2]=='w'&&name_of_file_to_run[length_of_name_of_file_to_run-3]=='.') {
+                         temp_file_to_run=name_of_file_to_run;
+                         } else {
+                         temp_file_to_run=append(name_of_file_to_run, ".wy");
+                         }*/
+                        
+                        
+                        char *temp_file_to_run=module_path;
+                        /*
+                         // I changed the code below to fix the import problem on Dec 4 and also changed the function
+                         // functionOrClassAddAheadName in order to fix a.y ('a' is as name) like problem
+                         //char *content_of_file = functionOrClassAddAheadName(temp_file_to_run,as_name);
+                         */
+                        
+                        /* I add new codes here on Dec 5 to solve importing problem
+                         // This code below refresh the struct_var and FUNCTION_functions while can not update the class
+                         // Update:::: IMPORTANT !!!!!!!
+                         // It now can support class update*/
+                        Walley_Update_Functions_And_Vars_While_Importing(temp_file_to_run, struct_var, FUNCTION_functions);
+                        
+                        
+                        
+                        //printf("Finish loading file %s\n",temp_file_to_run);
+                        
+                        // Remove the last value of AS_NAME
+                        a=(int)strlen(AS_NAME)-1;
+                        for (; a>=0; a--) {
+                            if (AS_NAME[a]=='.') {
+                                break;
                             }
-                            else{
-                                temp_var_value=substr(var_value, 0, index_of_comma2);
-                                var_value=substr(var_value, index_of_comma2+1, (int)strlen(var_value));
-                            }
+                        }
+                        if (a==0) {
+                            AS_NAME="";
+                        }else{
+                            AS_NAME=substr(AS_NAME, 0, a);
+                        }
+                        //printf("AS_NAME IS %s\n",AS_NAME);
+                        
+                        
+                    }
+                    //This is also import
+                    else if (strcmp(first_none_whitespace_token.TOKEN_STRING,"from")==0){
+                        //printf("ENTER HERE2\n");
+                        
+                        //printf("\nNow input_str is |%s|\n",input_str);
+                        input_str=replace_not_in_string(input_str, "*as", "* as");
+                        
+                        input_str=trim(input_str);
+                        if(find_not_in_string(input_str," import ")==-1){
+                            printf("@@ |%s|\n",CURRENT_INPUT_STR);
+                            printf("Mistake occurred while importing\n no ' import ' found");
+                            exit(0);
+                        }
+                        char *import_file=substr(input_str,5,find_not_in_string(input_str," import "));
+                        char *import_module="";
+                        char *as_name="";
+                        
+                        if(find_not_in_string(input_str," as ")!=-1){
+                            import_module=substr(input_str,find_not_in_string(input_str," import ")+8,find_not_in_string(input_str," as "));
+                            as_name=substr(input_str,find_not_in_string(input_str," as ")+4,(int)strlen(input_str));
+                        } else {
+                            import_module=substr(input_str,find_not_in_string(input_str," import ")+8,(int)strlen(input_str));
+                            as_name=import_module;
+                        }
+                        import_file=trim(import_file);
+                        import_module=trim(import_module);
+                        as_name=trim(as_name);
+                        
+                        //printf("import_file %s\nimport_module %s\nas_name %s\n",import_file,import_module,as_name);
+                        
+                        /*
+                         // I changed the code below on Dec 17
+                         char *module_path=getModulePathFromDirectory(import_file,"./");*/
+                        char *module_path=getModulePathFromDirectory(import_file,CURRENT_DIRECTORY);
+                        CURRENT_DIRECTORY=substr(module_path, 0, find_from_behind(module_path, "/")+1);
+                        
+                        //printf("module_path --> %s\n",module_path);
+                        
+                        // Assign Value to AS_NAME
+                        AS_NAME=append(AS_NAME, append(".", as_name));  // AS_NAME= ".a"  AS_NAME= ".a.b"
+                        
+                        
+                        /*
+                         * I modified the code below on Dec 5
+                         *
+                         int length_of_import_file=(int)strlen(import_file);
+                         char *temp_file_to_run;
+                         char *type=substr(import_file, length_of_import_file-3,length_of_import_file);
+                         //printf("type is %s\n",type);
+                         if (strcmp(type,".wy")!=0) {
+                         temp_file_to_run=append(import_file, ".wy");
+                         }
+                         else{
+                         temp_file_to_run=import_file;
+                         }*/
+                        
+                        char *temp_file_to_run=module_path;
+                        if (temp_file_to_run[(int)strlen(temp_file_to_run)-1]!='y') {
+                            module_path=getModulePathFromDirectory(import_module, append(temp_file_to_run,"/"));
+                            //printf("MODULE PATH %s\n",module_path);
+                            temp_file_to_run=module_path;
                             
-                            
-                            char *temp_temp="";
-                            temp_var_name=trim(temp_var_name);
-                            temp_var_value=trim(temp_var_value);
-                            int b=0;
-                            for (; b<num_of_space_ahead; b++) {
-                                temp_temp=append(temp_temp, " ");
+                            int a=(int)strlen(temp_file_to_run);
+                            for (; a>=0; a--) {
+                                if (temp_file_to_run[a]=='/') {
+                                    break;
+                                }
                             }
-                            temp_temp=append(temp_temp, temp_var_name);
-                            temp_temp=append(temp_temp, "=");
-                            temp_temp=append(temp_temp, temp_var_value);
-                            Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions, temp_temp);
+                            char *temp_file=substr(temp_file_to_run, a+1, (int)strlen(temp_file_to_run)-2);
+                            //printf("temp_file is %s\n",temp_file);
+                            
+                            import_module=substr(import_module, find(import_module,temp_file)+(int)strlen(temp_file),(int)strlen(import_module));
+                            
+                            //printf("import_module is %s\n",import_module);
                         }
-                    }
-                    // x=13      only one var
-                    else{
-                        Walley_Eval_And_Update_Var_And_Value_To_Var(struct_var,FUNCTION_functions, input_str);
-                    }
-                }                // ##############  Is Not Expression ######################
-                
-                
-                
-                //#####################  Mistake  ###################
-                else {
-                    
-                    // new code on Jan 6 to run
-                    // <@Hello
-                    // World>
-                    // kind code
-                    char *trim_input_str=trim(input_str);
-                    
-                    if (trim_input_str[0]=='<'&&trim_input_str[1]=='@'&&trim_input_str[(int)strlen(trim_input_str)-1]!='>') {
-                        RUN_EXPRESSION_INCOMPLETE=TRUE;
-                        RUN_EXPRESSION_TO_BE_COMPLETE=input_str;
-                    }
-                    else{
-                    
-                    // make print 'hello'----><print 'hello'>
-                    int sentence_num=numOfSmallSentences(input_str);
-                    if (sentence_num>1) {
-                        if (input_str[0]!='<') {
-                            input_str=append("<@", input_str);
-                            input_str=append(input_str, ">");
+                        
+                        
+                        char *content_of_file="";
+                        if (strcmp(import_module, "")==0) {
+                            import_module="all";
+                            as_name=import_module;
+                            //printf("MODULE PATH %s\n",temp_file_to_run);
+                            content_of_file = functionOrClassAddAheadName(temp_file_to_run,substr(AS_NAME, 1, (int)strlen(AS_NAME)));
                         }
-                    }
-
-                    bool can_just_eval = TRUE;
-                    int index_of_dot = find_not_in_string(input_str, ".");
-                    if (index_of_dot > 0) {
-                        char temp_char = input_str[index_of_dot - 1];
-                        if (isalpha(temp_char)||temp_char=='_')
-                            can_just_eval = FALSE;
-                    }
-                    if (isFunctionFromVar(*FUNCTION_functions,input_str) == TRUE) {
-                        //// printf("Yes it is function\n");
-                        can_just_eval = FALSE;
-                    }
-                    if (can_just_eval) {
-                        int length_of_input_str=(int)strlen(input_str);
-                        if(input_str[length_of_input_str-1]=='+'&&input_str[length_of_input_str-2]=='+') {
-                            //printf("++\n");
-                            char *temp_var_name=substr(input_str, 0, length_of_input_str-2);
-                            temp_var_name=trim(temp_var_name);
-                            temp_var_name=append(temp_var_name, "=");
-                            char *temp_to_run=append(temp_var_name, input_str);
-                            Walley_Eval_And_Update_Var_And_Value_To_Var(struct_var,FUNCTION_functions,temp_to_run);
-                        }
-                        else if (input_str[length_of_input_str-1]=='-'&&input_str[length_of_input_str-2]=='-') {
-                            char *temp_var_name=substr(input_str, 0, length_of_input_str-2);
-                            temp_var_name=trim(temp_var_name);
-                            temp_var_name=append(temp_var_name, "=");
-                            char *temp_to_run=append(temp_var_name, input_str);
-                            Walley_Eval_And_Update_Var_And_Value_To_Var(struct_var,FUNCTION_functions,temp_to_run);
+                        // import all functions or classes from module
+                        else if(strcmp(import_module,"all")==0||strcmp(import_module,"*")==0){
+                            if(strcmp(import_module,as_name)==0){
+                                // THIS PART IS CORRECT
+                                as_name="";
+                                content_of_file = getStringFromFile(temp_file_to_run);
+                                
+                                //printf("content_of_file:\n##########################################\n%s\n################################################\n",content_of_file);
+                                
+                            } else {
+                                printf("@@ |%s|\n",CURRENT_INPUT_STR);
+                                printf("Can not run\n from A import all/* as B\n");
+                                exit(0);
+                                //content_of_file = functionOrClassAddAheadName(temp_file_to_run,substr(AS_NAME, 1, (int)strlen(AS_NAME)));
+                            }
                         }
                         else{
-                            char *temp2=append("__temp__=",input_str);
-                            Walley_Eval_And_Update_Var_And_Value_To_Var(struct_var,FUNCTION_functions, temp2);
-                            Var_removeVar(struct_var, "__temp__");
+                            //content_of_file = getOneFunctionFromFileAndFormatItgetOneFunctionFromFile(temp_file_to_run,import_module,as_name);
+                            //printf("Import module %s, as name %s\n",import_module,as_name);
+                            content_of_file = getOneFunctionFromFileAndFormatItgetOneFunctionFromFile(temp_file_to_run,import_module,substr(AS_NAME, 1, (int)strlen(AS_NAME)));
+                        }
+                        
+                        
+                        //printf("content of file is |%s|\n", content_of_file);
+                        Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file,FUNCTION_functions, content_of_file);
+                        Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions,"#End Importing");
+                        
+                        // Remove the last value of AS_NAME
+                        int a=(int)strlen(AS_NAME)-1;
+                        for (; a>=0; a--) {
+                            if (AS_NAME[a]=='.') {
+                                break;
+                            }
+                        }
+                        if (a==0) {
+                            AS_NAME="";
+                        }else{
+                            AS_NAME=substr(AS_NAME, 0, a);
                         }
                     }
-                    else {
-                        input_str = Walley_Substitute_Var_And_Function_Return_Value_From_Var(input_str, struct_var,FUNCTION_functions);
-                        Walley_Eval_With_Variable_From_Var(*struct_var, input_str);
-                    }
-                   // printf("End\n");
                     
+                    // Disable Setmark and Goto
+                    /*
+                     //##################### setmark ##################
+                     else if (find(removeAheadSpace(input_str), "setmark ") == 0) {
+                     //// printf("#### Find setmark ####");
+                     }//#################### goto ######################
+                     else if (find(removeAheadSpace(input_str), "goto ") == 0) {
+                     char *mark_name = substr(input_str, find(input_str, "goto ") + 5, (int) strlen(input_str));
+                     //// printf("Mark Name :%s\n", mark_name);
+                     mark_name = removeBackSpace(removeAheadSpace(mark_name));
+                     //// printf("#### Find goto ####");
+                     char *string_to_run;
+                     if (strcmp("None", existing_file) == 0) {
+                     string_to_run = getStringFromFile(temp_file_name);
+                     } else {
+                     string_to_run = getStringFromFile(existing_file);
+                     }
+                     //// printf("String in File is |%s|\n", getStringFromFile(temp_file_name));
+                     char *setmark = malloc(sizeof (char) *((int) strlen("setmark ")+(int) strlen(mark_name)));
+                     strcat(setmark, "setmark ");
+                     strcat(setmark, mark_name);
+                     if (find(string_to_run, setmark) == -1) {
+                     printf("Mistake Occurred while calling function Walley_To_Mark\nMark not found");
+                     exit(1);
+                     } else {
+                     string_to_run = substr(string_to_run, find(string_to_run, "setmark "), (int) strlen(string_to_run));
+                     FILE *fp = fopen(temp_file_name, "w");
+                     fputs("", fp);
+                     fclose(fp);
+                     //// printf("$$$ \n|%s|\n", string_to_run);
+                     //clearTextInFile(temp_file_name);
+                     writeStringToFile(temp_file_name, string_to_run);
+                     writeStringToFile(temp_file_name, "\n");
+                     run_goto = TRUE;
+                     //Walley_Run_Second_Generation(struct_var,setting_file,temp_file_name,string_to_run);
+                     }
+                     }*/
+                    //#####################  Eval  ###################
+                    else if (TL_numOfTOKEN_CLASS(token, "W_ASSIGNMENT_OPERATOR")==1){
+                        // else if (isExpression(input_str) == TRUE) {
+                        // x=12
+                        // or x,y=12,13
+                        char *var_name=variableName(input_str);
+                        // x,y=12,13 more than one var
+                        if (find(var_name,",")!=-1) {
+                            int num_of_space_ahead=numOfSpaceAheadString(input_str);
+                            char *var_value=variableValue(input_str);
+                            var_name=append(var_name, ",");
+                            char *last_var_value=substr(var_value, find_from_behind(var_value, ",")+1, (int)strlen(var_value));
+                            var_value=append(var_value, ",");
+                            int num_of_comma=count_str(var_name, ",");
+                            int a=0;
+                            for (; a<num_of_comma; a++) {
+                                int index_of_comma=find(var_name,",");
+                                char *temp_var_name=substr(var_name, 0, index_of_comma);
+                                var_name=substr(var_name, index_of_comma+1, (int)strlen(var_name));
+                                
+                                int index_of_comma2=find(var_value,",");
+                                char *temp_var_value;
+                                if (index_of_comma2==-1) {
+                                    temp_var_value=last_var_value;
+                                }
+                                else{
+                                    temp_var_value=substr(var_value, 0, index_of_comma2);
+                                    var_value=substr(var_value, index_of_comma2+1, (int)strlen(var_value));
+                                }
+                                
+                                
+                                char *temp_temp="";
+                                temp_var_name=trim(temp_var_name);
+                                temp_var_value=trim(temp_var_value);
+                                int b=0;
+                                for (; b<num_of_space_ahead; b++) {
+                                    temp_temp=append(temp_temp, " ");
+                                }
+                                temp_temp=append(temp_temp, temp_var_name);
+                                temp_temp=append(temp_temp, "=");
+                                temp_temp=append(temp_temp, temp_var_value);
+                                Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions, temp_temp);
+                            }
+                        }
+                        // x=13      only one var
+                        else{
+                            Walley_Eval_And_Update_Var_And_Value_To_Var(struct_var,FUNCTION_functions, input_str);
+                        }
+                    }                // ##############  Is Not Expression ######################
+                    
+                    
+                    
+                    //#####################  Mistake  ###################
+                    else {
+                        
+                        // new code on Jan 6 to run
+                        // <@Hello
+                        // World>
+                        // kind code
+                        char *trim_input_str=trim(input_str);
+                        
+                        if (trim_input_str[0]=='<'&&trim_input_str[1]=='@'&&trim_input_str[(int)strlen(trim_input_str)-1]!='>') {
+                            RUN_EXPRESSION_INCOMPLETE=TRUE;
+                            RUN_EXPRESSION_TO_BE_COMPLETE=input_str;
+                        }
+                        else{
+                            
+                            // make print 'hello'----><print 'hello'>
+                            int sentence_num=numOfSmallSentences(input_str);
+                            if (sentence_num>1) {
+                                if (input_str[0]!='<') {
+                                    input_str=append("<@", input_str);
+                                    input_str=append(input_str, ">");
+                                }
+                            }
+                            
+                            bool can_just_eval = TRUE;
+                            int index_of_dot = find_not_in_string(input_str, ".");
+                            if (index_of_dot > 0) {
+                                char temp_char = input_str[index_of_dot - 1];
+                                if (isalpha(temp_char)||temp_char=='_')
+                                    can_just_eval = FALSE;
+                            }
+                            if (isFunctionFromVar(*FUNCTION_functions,input_str) == TRUE) {
+                                //// printf("Yes it is function\n");
+                                can_just_eval = FALSE;
+                            }
+                            if (can_just_eval) {
+                                int length_of_input_str=(int)strlen(input_str);
+                                if(input_str[length_of_input_str-1]=='+'&&input_str[length_of_input_str-2]=='+') {
+                                    //printf("++\n");
+                                    char *temp_var_name=substr(input_str, 0, length_of_input_str-2);
+                                    temp_var_name=trim(temp_var_name);
+                                    temp_var_name=append(temp_var_name, "=");
+                                    char *temp_to_run=append(temp_var_name, input_str);
+                                    Walley_Eval_And_Update_Var_And_Value_To_Var(struct_var,FUNCTION_functions,temp_to_run);
+                                }
+                                else if (input_str[length_of_input_str-1]=='-'&&input_str[length_of_input_str-2]=='-') {
+                                    char *temp_var_name=substr(input_str, 0, length_of_input_str-2);
+                                    temp_var_name=trim(temp_var_name);
+                                    temp_var_name=append(temp_var_name, "=");
+                                    char *temp_to_run=append(temp_var_name, input_str);
+                                    Walley_Eval_And_Update_Var_And_Value_To_Var(struct_var,FUNCTION_functions,temp_to_run);
+                                }
+                                else{
+                                    char *temp2=append("__temp__=",input_str);
+                                    Walley_Eval_And_Update_Var_And_Value_To_Var(struct_var,FUNCTION_functions, temp2);
+                                    Var_removeVar(struct_var, "__temp__");
+                                }
+                            }
+                            else {
+                                input_str = Walley_Substitute_Var_And_Function_Return_Value_From_Var(input_str, struct_var,FUNCTION_functions);
+                                Walley_Eval_With_Variable_From_Var(*struct_var, input_str);
+                            }
+                            // printf("End\n");
+                            
+                        }
+                    }
                 }
+                
+            }
+            if (continue_run == TRUE && run_goto == FALSE) {
+                if (find_gang_gang == TRUE) {
+                    Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file,FUNCTION_functions, substr(temp_input_str, find_not_in_string(temp_input_str, "\\n") + 2, (int) strlen(temp_input_str)));
+                    
+                } else {
+                    Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file,FUNCTION_functions, substr(temp_input_str, find_not_in_string(temp_input_str, "\n") + 1, (int) strlen(temp_input_str)));
                 }
             }
-            
+            /* Disable setmark and goto.....
+             if (run_goto == TRUE) {
+             //// printf("@@@@ Run GOTO @@@@\n");
+             Walley_Run_For_Appointed_Var(struct_var, struct_settings, temp_file, existing_file, getStringFromFile(temp_file_name));
+             }*/
         }
-        if (continue_run == TRUE && run_goto == FALSE) {
+        
+        
+        // I add new Codes Here to solve Annotation Problem...... on Dec 6
+        else if (continue_run == TRUE && run_goto == FALSE) {
+            //// printf("continue run\n");
             if (find_gang_gang == TRUE) {
                 Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file,FUNCTION_functions, substr(temp_input_str, find_not_in_string(temp_input_str, "\\n") + 2, (int) strlen(temp_input_str)));
                 
             } else {
+                //// printf("STRING LEFT is %s\n",substr(temp_input_str,find(temp_input_str,"\n")+1,(int)strlen(temp_input_str)));
                 Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file,FUNCTION_functions, substr(temp_input_str, find_not_in_string(temp_input_str, "\n") + 1, (int) strlen(temp_input_str)));
             }
         }
-        /* Disable setmark and goto.....
-        if (run_goto == TRUE) {
-            //// printf("@@@@ Run GOTO @@@@\n");
-            Walley_Run_For_Appointed_Var(struct_var, struct_settings, temp_file, existing_file, getStringFromFile(temp_file_name));
-        }*/
     }
     
-    
-    // I add new Codes Here to solve Annotation Problem...... on Dec 6
-    else if (continue_run == TRUE && run_goto == FALSE) {
-        //// printf("continue run\n");
-        if (find_gang_gang == TRUE) {
-            Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file,FUNCTION_functions, substr(temp_input_str, find_not_in_string(temp_input_str, "\\n") + 2, (int) strlen(temp_input_str)));
-            
-        } else {
-            //// printf("STRING LEFT is %s\n",substr(temp_input_str,find(temp_input_str,"\n")+1,(int)strlen(temp_input_str)));
-            Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file,FUNCTION_functions, substr(temp_input_str, find_not_in_string(temp_input_str, "\n") + 1, (int) strlen(temp_input_str)));
-        }
-    }
-}
-
 }
 
 
@@ -2483,11 +2481,11 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
     
     
     struct TOKEN *token=Walley_Lexica_Analysis(input_str);
-    token=TOKEN_returnTokenWithoutWhitespaces(token);
-    int token_length=TOKEN_length(token);
+    token=TL_returnTokenListWithoutWhitespaces(token);
+    int length_of_token=TL_length(token);
     //TOKEN_PrintTOKEN(token);
     
-    if (token_length==2) {
+    if (length_of_token==2) {
         // string
         if (strcmp("W_STRING", token[1].TOKEN_CLASS)==0)
             return input_str;
@@ -2540,12 +2538,12 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
     //bool has_var=FALSE;
     
     struct TOKEN *output_token;
-    TOKEN_initTOKEN(&output_token);
+    TL_initTokenList(&output_token);
     
     struct TOKEN temp_token;
     
     i=1;
-    for (; i<token_length; i++) {
+    for (; i<length_of_token; i++) {
         
         char *token_class=token[i].TOKEN_CLASS;
         char *token_string=token[i].TOKEN_STRING;
@@ -3016,7 +3014,7 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
         
         
         temp_token.TOKEN_CLASS=TOKEN_analyzeTokenClass(temp_token.TOKEN_STRING);
-        TOKEN_addToken(&output_token, temp_token);
+        TL_addToken(&output_token, temp_token);
     }
     
     
@@ -3675,9 +3673,9 @@ def random(num1=0,num2=1):\n\
     
     
     //TOKEN_PrintTOKEN(output_token);
-    //char *output2=TOKEN_toString(output_token);
+    //char *output2=TL_toString(output_token);
     //printf("output2---> %s\n",output2);
-    output=TOKEN_toString(output_token);
+    output=TL_toString(output_token);
     
     
     
@@ -4152,8 +4150,8 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
     //printf("##current_space is %d\n",current_space);
     
     
-    int index_of_first_none_whitespace=TOKEN_indexOfFirstNoneWhiteSpaceToken(token);
-    int length_of_token=TOKEN_length(token);
+    int index_of_first_none_whitespace=TL_indexOfFirstNoneWhiteSpaceToken(token);
+    int length_of_token=TL_length(token);
     struct TOKEN first_none_whitespace_token=token[index_of_first_none_whitespace];
     
     //#####################  Anotation  ###################
@@ -4464,7 +4462,7 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class(struct VAR **struct_var,stru
     }        //#################### For Sentence #####################################
     else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "for") == 0) {// && removeBackSpace(input_str)[(int) strlen(removeBackSpace(input_str)) - 1] == ':') {
         //printf("#### Find For ####\n");
-        int non_white_space_token_num=TOKEN_numOfNoneWhitespaces(token);
+        int non_white_space_token_num=TL_numOfNoneWhitespaces(token);
         if (non_white_space_token_num!=5) {
             printf("%s\n",input_str);
             printf("Error.  For statement wrong\n");
@@ -4711,7 +4709,7 @@ void Walley_Next(struct TOKEN *token, int *current_index, char **current_value, 
 
     //printf("current_value %s\n",*current_value);
     char *token_class=TOKEN_analyzeTokenClass(*current_value);
-    if (*current_index==TOKEN_length(token)) {
+    if (*current_index==TL_length(token)) {
         return;
     }
     if (strcmp(token_class, "W_STRING")==0) {

@@ -16,7 +16,9 @@ struct TOKEN{
     int TOKEN_START;
     int TOKEN_END; // |"Hello"|  index of final "
 };
-void TOKEN_PrintTOKEN(struct TOKEN *token){
+
+// Token list
+void TL_PrintTOKEN(struct TOKEN *token){
     int row=1;
     int length=0;
     if (strcmp((token)->TOKEN_CLASS,"__size_of_array__")!=0) {
@@ -34,19 +36,19 @@ void TOKEN_PrintTOKEN(struct TOKEN *token){
     }
 }
 
-void TOKEN_initTOKEN(struct TOKEN **token){
+void TL_initTokenList(struct TOKEN **token){
     *token=(struct TOKEN*)malloc(sizeof(struct TOKEN)*1);
     (*token)->TOKEN_CLASS="__size_of_array__";
     (*token)->TOKEN_STRING="1";
 }
 
-void TOKEN_addProperty(struct TOKEN **token,char *token_class, char *token_string, int token_start, int token_end){
+void TL_addProperty(struct TOKEN **token,char *token_class, char *token_string, int token_start, int token_end){
     
     int length=0;
     if (strcmp((*token)->TOKEN_CLASS,"__size_of_array__")!=0) {
         printf("@@ |%s|\n",CURRENT_INPUT_STR);
         
-        printf("TOKEN_addProperty..Can not find __size_of_array__");
+        printf("TL_addProperty..Can not find __size_of_array__");
         exit(0);
     }
     else{
@@ -78,8 +80,13 @@ const char* W_RELATION[]={"and","or"};//2
 //const char* W_PUNCTUATION;        : , ;
 //const char* W_UNFINISHED_VAR  '123  ||  "123 || [123,1
 //const char  W_DOT  .  // it is for .show(), if input_str is 1.6, then the . is not dot
+//const char* W_LONG_ANNOTATION_LEFT  #~
+//const char* W_LONG_ANNOTATION_RIGHT ~#
+//const char* W_SHORT_ANNOTATION      #
 
-//                                  
+
+// 1.6
+// 012 ---> FALSE
 char *isW_Dot(char *input_str, int index_of_dot){
     if (input_str[index_of_dot]!='.') {
         return FALSE;
@@ -95,7 +102,43 @@ char *isW_Dot(char *input_str, int index_of_dot){
     }
 }
 
+// check if it is # #~ or ~#
+char *isW_Annotation(char *input_str, int index_of_dot){
+    if (input_str[index_of_dot]!='#'&&input_str[index_of_dot]!='~') {
+        return FALSE;
+    }
+    if (input_str[index_of_dot]=='#') {
+        return TRUE;
+    }
+    if (input_str[index_of_dot]=='#') {
+        if (index_of_dot<(int)strlen(input_str)-1) {
+            if (input_str[index_of_dot+1]=='~') {
+                return TRUE;
+            }
+        }
+    }
+    if (input_str[index_of_dot]=='~') {
+        if (index_of_dot<(int)strlen(input_str)-1) {
+            if (input_str[index_of_dot+1]=='#') {
+                return TRUE;
+            }
+        }
+    }
+    
+    return FALSE;
+}
+
+
 char * TOKEN_analyzeTokenClass(char *token_string){
+    if (strcmp(token_string, "#")==0) {
+        return "W_SHORT_ANNOTATION";
+    }
+    if (strcmp(token_string, "#~")==0) {
+        return "W_LONG_ANNOTATION_LEFT";
+    }
+    if (strcmp(token_string, "~#")==0) {
+        return "W_LONG_ANNOTATION_RIGHT";
+    }
     if (strcmp(token_string, ".")==0) {
         return "W_DOT";
     }
@@ -233,19 +276,37 @@ int indexOfFinal(char *input_str, int first_index){
     //exit(0);
 }
 
-
+int TL_length(struct TOKEN *token){
+    int length=0;
+    if (strcmp((token)->TOKEN_CLASS,"__size_of_array__")!=0) {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+        
+        printf("TL_length..Can not find __size_of_array__");
+        exit(0);
+    }
+    else{
+        length=atoi((token)->TOKEN_STRING);
+    }
+    
+    return length;
+}
 
 struct TOKEN* Walley_Lexica_Analysis(char *input_str){
     struct TOKEN *token=NULL;
-    TOKEN_initTOKEN(&token);
+    TL_initTokenList(&token);
     int length=(int)strlen(input_str);
     int i=0;
     int start=0;
     int end=0;
-    char type='b'; // 'i' for id, 'b' for blank 's' for judge sign or sign(operator),'t' for "" '' [] {} type, 'c' for :
+    char type='i'; // 'i' for id, 'b' for blank 's' for judge sign or sign(operator),'t' for "" '' [] {} type, 'c' for :
                    // 'd' for dot
+                   // 'a' for annotation
+                
     char t=' ';
     i=1;
+    if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
+        type='b';
+    }
     if (isalpha(input_str[0])||isdigit(input_str[0])) {
         type='i';
     }
@@ -268,13 +329,71 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
     if (input_str[0]==':') {
         type='c';
     }
+    if (isW_Annotation(input_str, 0)) {
+        type='a';
+    }
     
     for(;i<length;i++){
         //printf("%c\n",input_str[i]);
-        if (type=='d') {
+        if (type=='a') {
+            //# or ~#
+            if (input_str[i-1]=='#') {
+                //#~
+                if (input_str[i]=='~') {
+                    end=i+1;
+                    char *token_string=substr(input_str, i-1, end);
+                    char *token_class=TOKEN_analyzeTokenClass(token_string);
+                    TL_addProperty(&token, token_class, token_string,start,end-1);
+                    start=end;
+                    i=start;
+                }
+                
+                //#
+                else{
+                    end=i;
+                    char *token_string=substr(input_str, i-1, end);
+                    char *token_class=TOKEN_analyzeTokenClass(token_string);
+                    TL_addProperty(&token, token_class, token_string,start,end-1);
+                    start=end;
+                    i=start;
+                }
+            }
+            // ~#
+            else{
+                end=i+1;
+                char *token_string=substr(input_str, i-1, end);
+                char *token_class=TOKEN_analyzeTokenClass(token_string);
+                TL_addProperty(&token, token_class, token_string,start,end-1);
+                start=end;
+                i=start;
+            }
+            
+            if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
+                type='s';
+            }
+            else if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
+                type='b';
+            }
+            else if(input_str[i]==':'||input_str[i]==';'||input_str[i]==',')
+                type='c';
+            else if(input_str[i]=='"'||input_str[i]=='\''||input_str[i]=='P'||input_str[i]=='[')
+                type='t';
+            else if(isW_Dot(input_str, i)){
+                type='d';
+            }
+            else if(isW_Annotation(input_str, i)){
+                type='a';
+            }
+            else{
+                type='i';
+            }
+
+            
+        }
+        else if (type=='d') {
             char *token_string=".";
             char *token_class="W_DOT";
-            TOKEN_addProperty(&token, token_class, token_string,i-1,i);
+            TL_addProperty(&token, token_class, token_string,i-1,i);
             start=i;
             if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
                 type='s';
@@ -289,6 +408,9 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
             else if(isW_Dot(input_str, i)){
                 type='d';
             }
+            else if(isW_Annotation(input_str, i)){
+                type='a';
+            }
             else{
                 type='i';
             }
@@ -299,12 +421,12 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
             int final_index=indexOfFinal(input_str, i-1);
             if (final_index==-1) {
                 char *token_string=substr(input_str, i-1, (int)strlen(input_str));
-                TOKEN_addProperty(&token, "W_UNFINISHED_VAR", token_string,i-1,(int)strlen(input_str));
+                TL_addProperty(&token, "W_UNFINISHED_VAR", token_string,i-1,(int)strlen(input_str));
                 return token;
             }
             char *token_string=substr(input_str, i-1, final_index+1);
             char *token_class=TOKEN_analyzeTokenClass(token_string);
-            TOKEN_addProperty(&token, token_class, token_string,i-1,final_index);
+            TL_addProperty(&token, token_class, token_string,i-1,final_index);
             i=final_index+1;
             start=i;
             
@@ -321,6 +443,9 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
             else if(isW_Dot(input_str, i)){
                 type='d';
             }
+            else if(isW_Annotation(input_str, i)){
+                type='a';
+            }
             else{
                 type='i';
             }
@@ -329,14 +454,14 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
             //if (isalpha(input_str[i])||isdigit(input_str[i])||input_str[i]=='_') {
             if (charIsInParenthesis(input_str, i)==TRUE||(input_str[i]!=' '&&input_str[i]!='\n'&&input_str[i]!='\t'&&isJudgeSign(input_str[i])==FALSE&&isSign(input_str[i])==FALSE&&
                 input_str[i]!='"'&&input_str[i]!='\''&&input_str[i]!='{'&&input_str[i]!='['
-                &&input_str[i]!=':'&&input_str[i]!=','&&input_str[i]!=';'&&isW_Dot(input_str, i)==FALSE)) {
+                &&input_str[i]!=':'&&input_str[i]!=','&&input_str[i]!=';'&&isW_Dot(input_str, i)==FALSE&&isW_Annotation(input_str, i)==FALSE)) {
                 continue;
             }
             else{
                 end=i;
                 char *token_string=substr(input_str, start, end);
                 char *token_class=TOKEN_analyzeTokenClass(token_string);
-                TOKEN_addProperty(&token, token_class, token_string,start,end-1);
+                TL_addProperty(&token, token_class, token_string,start,end-1);
                 start=end;
                 
                 
@@ -363,6 +488,9 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
                     type='c';
                 else if(isW_Dot(input_str, i)){
                     type='d';
+                }
+                else if(isW_Annotation(input_str, i)){
+                    type='a';
                 }
                 else{
                     type='b';
@@ -378,7 +506,7 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
                 end=i;
                 char *token_string=substr(input_str, start, end);
                 char *token_class=TOKEN_analyzeTokenClass(token_string);
-                TOKEN_addProperty(&token, token_class, token_string,start,end-1);
+                TL_addProperty(&token, token_class, token_string,start,end-1);
                 start=end;
                 if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
                     type='s';
@@ -404,6 +532,9 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
                 else if(isW_Dot(input_str, i)){
                     type='d';
                 }
+                else if(isW_Annotation(input_str, i)){
+                    type='a';
+                }
                 else{
                     type='i';
                 }
@@ -418,7 +549,7 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
                 end=i;
                 char *token_string=substr(input_str, start, end);
                 char *token_class=TOKEN_analyzeTokenClass(token_string);
-                TOKEN_addProperty(&token, token_class, token_string,start,end-1);
+                TL_addProperty(&token, token_class, token_string,start,end-1);
                 start=end;
                 if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
                     type='b';
@@ -444,6 +575,9 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
                 else if(isW_Dot(input_str, i)){
                     type='d';
                 }
+                else if(isW_Annotation(input_str, i)){
+                    type='a';
+                }
                 else{
                     type='i';
                 }
@@ -459,7 +593,7 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
                 printf("Error. Walley does not need ; in sentence\n");
                 exit(0);
             }
-            TOKEN_addProperty(&token, "W_PUNCTUATION", charToString(input_str[i-1]),i-1,i-1);
+            TL_addProperty(&token, "W_PUNCTUATION", charToString(input_str[i-1]),i-1,i-1);
             start=i;
             if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
                 type='s';
@@ -488,6 +622,9 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
             else if(isW_Dot(input_str, i)){
                 type='d';
             }
+            else if(isW_Annotation(input_str, i)){
+                type='a';
+            }
             else
                 type='i';
             
@@ -503,20 +640,20 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
     if (start<end) {
         char *token_string=substr(input_str, start, end);
         char *token_class=TOKEN_analyzeTokenClass(token_string);
-        TOKEN_addProperty(&token, token_class, token_string,start,end-1);
+        TL_addProperty(&token, token_class, token_string,start,end-1);
     }
 
     
         return token;
 }
 
-int TOKEN_numOfTOKEN_CLASS(struct TOKEN *token,char *token_class){
+int TL_numOfTOKEN_CLASS(struct TOKEN *token,char *token_class){
     int row=0;
     int length=0;
     if (strcmp((token)->TOKEN_CLASS,"__size_of_array__")!=0) {
         printf("@@ |%s|\n",CURRENT_INPUT_STR);
         
-        printf("TOKEN_numOfTOKEN_CLASS..Can not find __size_of_array__");
+        printf("TL_numOfTOKEN_CLASS..Can not find __size_of_array__");
         exit(0);
     }
     else{
@@ -533,13 +670,13 @@ int TOKEN_numOfTOKEN_CLASS(struct TOKEN *token,char *token_class){
 }
 
 // index_of_token_class starts from 0.
-struct TOKEN TOKEN_returnTokenAccordingToIndexAndTokenClass(struct TOKEN *token,char *token_class, int index_of_token_class){
+struct TOKEN TL_returnTokenAccordingToIndexAndTokenClass(struct TOKEN *token,char *token_class, int index_of_token_class){
     int row=0;
     int length=0;
     if (strcmp((token)->TOKEN_CLASS,"__size_of_array__")!=0) {
         printf("@@ |%s|\n",CURRENT_INPUT_STR);
         
-        printf("TOKEN_numOfTOKEN_CLASS..Can not find __size_of_array__");
+        printf("TL_numOfTOKEN_CLASS..Can not find __size_of_array__");
         exit(0);
     }
     else{
@@ -556,18 +693,18 @@ struct TOKEN TOKEN_returnTokenAccordingToIndexAndTokenClass(struct TOKEN *token,
         row++;
     }
     
-    printf("Mistake occurred whiling calling function TOKEN_returnTokenAccordingToIndexAndTokenClass\nNo token found according to class %s and index %d",token_class,index_of_token_class);
+    printf("Mistake occurred whiling calling function TL_returnTokenAccordingToIndexAndTokenClass\nNo token found according to class %s and index %d",token_class,index_of_token_class);
     exit(0);
 
 }
 
 
-int TOKEN_indexOfFirstNoneWhiteSpaceToken(struct TOKEN *token){
+int TL_indexOfFirstNoneWhiteSpaceToken(struct TOKEN *token){
     int length=0;
     if (strcmp((token)->TOKEN_CLASS,"__size_of_array__")!=0) {
         printf("@@ |%s|\n",CURRENT_INPUT_STR);
         
-        printf("TOKEN_numOfTOKEN_CLASS..Can not find __size_of_array__");
+        printf("TL_numOfTOKEN_CLASS..Can not find __size_of_array__");
         exit(0);
     }
     else{
@@ -584,20 +721,7 @@ int TOKEN_indexOfFirstNoneWhiteSpaceToken(struct TOKEN *token){
     exit(0);
 }
 
-int TOKEN_length(struct TOKEN *token){
-    int length=0;
-    if (strcmp((token)->TOKEN_CLASS,"__size_of_array__")!=0) {
-        printf("@@ |%s|\n",CURRENT_INPUT_STR);
-        
-        printf("TOKEN_length..Can not find __size_of_array__");
-        exit(0);
-    }
-    else{
-        length=atoi((token)->TOKEN_STRING);
-    }
 
-    return length;
-}
 
 // Token Errors
 void TOKEN_checkError(struct TOKEN *token,char *input_str){
@@ -612,13 +736,13 @@ void TOKEN_checkError(struct TOKEN *token,char *input_str){
         length=atoi((token)->TOKEN_STRING);
     }
 
-    int num_of_keyword=TOKEN_numOfTOKEN_CLASS(token, "W_KEYWORDS");
-    int num_of_W_ASSIGNMENT_OPERATOR=TOKEN_numOfTOKEN_CLASS(token, "W_ASSIGNMENT_OPERATOR");
+    int num_of_keyword=TL_numOfTOKEN_CLASS(token, "W_KEYWORDS");
+    int num_of_W_ASSIGNMENT_OPERATOR=TL_numOfTOKEN_CLASS(token, "W_ASSIGNMENT_OPERATOR");
     
     // Error 1.. More Keywords
     // eg "if if x==1:"
     if (num_of_keyword>1) {
-        struct TOKEN more_token=TOKEN_returnTokenAccordingToIndexAndTokenClass(token, "W_KEYWORDS", 1);
+        struct TOKEN more_token=TL_returnTokenAccordingToIndexAndTokenClass(token, "W_KEYWORDS", 1);
         int start=more_token.TOKEN_START;
         printf("%s\n",input_str);
         char *temp_str="";
@@ -630,7 +754,7 @@ void TOKEN_checkError(struct TOKEN *token,char *input_str){
     
     // Error 2.. Miss :
     // eg "if x==1"
-    if (num_of_keyword==1 && strcmp(token[TOKEN_indexOfFirstNoneWhiteSpaceToken(token)].TOKEN_STRING,"W_KEYWORDS")==0) {
+    if (num_of_keyword==1 && strcmp(token[TL_indexOfFirstNoneWhiteSpaceToken(token)].TOKEN_STRING,"W_KEYWORDS")==0) {
         struct TOKEN final_token=token[length-1];
         if (strcmp(final_token.TOKEN_STRING, ":")!=0) {
             int end=final_token.TOKEN_END+1;
@@ -640,7 +764,7 @@ void TOKEN_checkError(struct TOKEN *token,char *input_str){
             printf("%s^\n",temp_str);
             printf("Error. Miss |:| at the end of sentence\n");
 
-            TOKEN_PrintTOKEN(token);
+            TL_PrintTOKEN(token);
             exit(0);
         }
     }
@@ -661,7 +785,7 @@ void TOKEN_checkError(struct TOKEN *token,char *input_str){
     // Error 4.. if x=12:
     // = should be ==
     if (num_of_keyword==1 && num_of_W_ASSIGNMENT_OPERATOR>=1) {
-        int start=TOKEN_returnTokenAccordingToIndexAndTokenClass(token, "W_ASSIGNMENT_OPERATOR", 0).TOKEN_START;
+        int start=TL_returnTokenAccordingToIndexAndTokenClass(token, "W_ASSIGNMENT_OPERATOR", 0).TOKEN_START;
         printf("%s\n",input_str);
         char *temp_str="";
         temp_str=Str_appendSpaceAhead(temp_str, start);
@@ -672,7 +796,7 @@ void TOKEN_checkError(struct TOKEN *token,char *input_str){
    
     // Error 5.. x=12=34
     if (num_of_W_ASSIGNMENT_OPERATOR>1) {
-        int start=TOKEN_returnTokenAccordingToIndexAndTokenClass(token, "W_ASSIGNMENT_OPERATOR", 1).TOKEN_START;
+        int start=TL_returnTokenAccordingToIndexAndTokenClass(token, "W_ASSIGNMENT_OPERATOR", 1).TOKEN_START;
         printf("%s\n",input_str);
         char *temp_str="";
         temp_str=Str_appendSpaceAhead(temp_str, start);
@@ -705,8 +829,8 @@ void TOKEN_checkError(struct TOKEN *token,char *input_str){
 }
 
 
-int TOKEN_numOfNoneWhitespaces(struct TOKEN *token){
-    int length=TOKEN_length(token);
+int TL_numOfNoneWhitespaces(struct TOKEN *token){
+    int length=TL_length(token);
     int row=1;
     int num=0;
     while (row<length) {
@@ -718,14 +842,14 @@ int TOKEN_numOfNoneWhitespaces(struct TOKEN *token){
     return num;
 }
 
-struct TOKEN *TOKEN_returnTokenWithoutWhitespaces(struct TOKEN *token){
+struct TOKEN *TL_returnTokenListWithoutWhitespaces(struct TOKEN *token){
     struct TOKEN *return_token;
-    TOKEN_initTOKEN(&return_token);
-    int length=TOKEN_length(token);
+    TL_initTokenList(&return_token);
+    int length=TL_length(token);
     int row=1;
     while (row<length) {
         if (strcmp("WHITESPACES", token[row].TOKEN_CLASS)!=0) {
-            TOKEN_addProperty(&return_token, token[row].TOKEN_CLASS, token[row].TOKEN_STRING, token[row].TOKEN_START, token[row].TOKEN_END);
+            TL_addProperty(&return_token, token[row].TOKEN_CLASS, token[row].TOKEN_STRING, token[row].TOKEN_START, token[row].TOKEN_END);
         }
         row++;
     }
@@ -741,13 +865,13 @@ struct TOKEN *subtoken(struct TOKEN *token, int from_index, int to_index){
     struct TOKEN *output_token;
     int i=from_index;
     for (; i<to_index; i++) {
-        TOKEN_addProperty(&output_token, token[i].TOKEN_CLASS, token[i].TOKEN_STRING, token[i].TOKEN_START, token[i].TOKEN_END);
+        TL_addProperty(&output_token, token[i].TOKEN_CLASS, token[i].TOKEN_STRING, token[i].TOKEN_START, token[i].TOKEN_END);
     }
     return output_token;
 }
 
 struct TOKEN TOKEN_nextToken(struct TOKEN *token, int index){
-    int length=TOKEN_length(token);
+    int length=TL_length(token);
     if (index+1==length) {
         struct TOKEN token_temp;
         token_temp.TOKEN_CLASS="None";
@@ -760,12 +884,19 @@ struct TOKEN TOKEN_nextToken(struct TOKEN *token, int index){
         return token[index+1];
 }
 
-void TOKEN_addToken(struct TOKEN **token, struct TOKEN add_token){
-    TOKEN_addProperty(token, add_token.TOKEN_CLASS, add_token.TOKEN_STRING, add_token.TOKEN_START, add_token.TOKEN_END);
+void TL_addToken(struct TOKEN **token, struct TOKEN add_token){
+    TL_addProperty(token, add_token.TOKEN_CLASS, add_token.TOKEN_STRING, add_token.TOKEN_START, add_token.TOKEN_END);
+}
+void TL_addTokenList(struct TOKEN **token, struct TOKEN *add_token_list){
+    int length_of_add_token_list=TL_length(add_token_list);
+    int i=1;
+    for (; i<length_of_add_token_list; i++) {
+        TL_addToken(token,add_token_list[i]);
+    }
 }
 
-char *TOKEN_toString(struct TOKEN *token){
-    int length=TOKEN_length(token);
+char *TL_toString(struct TOKEN *token){
+    int length=TL_length(token);
     int i=1;
     char *output="";
     for (; i<length; i++) {
@@ -785,7 +916,7 @@ struct TOKEN_ARRAY{
 void TA_init(struct TOKEN_ARRAY *token_array){
     (*token_array).length=1;
     (*token_array).token_list=(struct TOKEN **)malloc(sizeof(struct TOKEN *)*1);
-    TOKEN_initTOKEN(&((*token_array).token_list[0]));
+    TL_initTokenList(&((*token_array).token_list[0]));
 }
 
 int TA_length(struct TOKEN_ARRAY token_array){
@@ -794,14 +925,14 @@ int TA_length(struct TOKEN_ARRAY token_array){
 
 void TA_addToken(struct TOKEN_ARRAY *token_array, struct TOKEN token){
     int length=TA_length(*token_array);
-    TOKEN_addToken(&((*token_array).token_list[length-1]), token);
+    TL_addToken(&((*token_array).token_list[length-1]), token);
 }
 
 void TA_addTokenList(struct TOKEN_ARRAY *token_array, struct TOKEN *token_list){
     (*token_array).length=(*token_array).length+1;
     (*token_array).token_list=(struct TOKEN **)realloc((*token_array).token_list, sizeof(struct TOKEN *)*(*token_array).length);
     
-    int length_of_token_list=TOKEN_length(token_list);
+    int length_of_token_list=TL_length(token_list);
     int i=0;
     for (; i<length_of_token_list; i++) {
         TA_addToken(token_array, token_list[i]);

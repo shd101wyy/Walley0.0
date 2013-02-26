@@ -118,7 +118,7 @@ char *WALLEY_MATH_Infix_to_Postfix(struct TOKEN *token){
     char *output="";
     char **stack;
     Str_initStringList(&stack);
-    int length_of_token=TOKEN_length(token);
+    int length_of_token=TL_length(token);
     int row=1;
     
     int sign_order=0;

@@ -14,11 +14,14 @@
 //#include "walley_operator.h"
 #include "walley.h"
 int main(int argc, char **argv){
+    
+    
     ARGV=argv;
     ARGC=argc;
 
-    Str_initStringList(&INSTANCE_NAMES_LIST);
     
+    Str_initStringList(&INSTANCE_NAMES_LIST);
+    //TL_initTokenList(&VAR_VALUE_TO_BE_COMPLETE);
     ////char cwd[1000];
     ////getcwd(cwd, sizeof (cwd));
     ////printf("Current Working Directory%s\n\n\n\n\n",cwd);
@@ -262,7 +265,7 @@ def random(num1=0,num2=1):\\n\\\n\
             printf("Begin to test |%s|\n",param2);
             param2=toCString(param2);
             struct TOKEN *token=Walley_Lexica_Analysis(param2);
-            TOKEN_PrintTOKEN(token);
+            TL_PrintTOKEN(token);
         }
     }
     else if(argc==4){

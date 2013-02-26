@@ -196,7 +196,7 @@ int indexOfFinal(char *input_str, int first_index){
 
 struct TOKEN* Walley_MATH_Lexica_Analysis(char *input_str){
     struct TOKEN *token=NULL;
-    TOKEN_initTOKEN(&token);
+    TL_initTokenList(&token);
     int length=(int)strlen(input_str);
     int i=0;
     int start=0;
@@ -219,7 +219,7 @@ struct TOKEN* Walley_MATH_Lexica_Analysis(char *input_str){
                 end=i;
                 char *token_string=substr(input_str, start, end);
                 char *token_class=TOKEN_MATH_analyzeTokenClass(token_string);
-                TOKEN_addProperty(&token, token_class, token_string,start,end-1);
+                TL_addProperty(&token, token_class, token_string,start,end-1);
                 start=end;
                 
                 
@@ -243,7 +243,7 @@ struct TOKEN* Walley_MATH_Lexica_Analysis(char *input_str){
                 end=i;
                 char *token_string=substr(input_str, start, end);
                 char *token_class=TOKEN_MATH_analyzeTokenClass(token_string);
-                TOKEN_addProperty(&token, token_class, token_string,start,end-1);
+                TL_addProperty(&token, token_class, token_string,start,end-1);
                 start=end;
                 if (isSign(input_str[i])) {
                     type='s';
@@ -265,7 +265,7 @@ struct TOKEN* Walley_MATH_Lexica_Analysis(char *input_str){
                 end=i;
                 char *token_string=substr(input_str, start, end);
                 char *token_class=TOKEN_MATH_analyzeTokenClass(token_string);
-                TOKEN_addProperty(&token, token_class, token_string,start,end-1);
+                TL_addProperty(&token, token_class, token_string,start,end-1);
                 start=end;
                 if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
                     type='b';
@@ -282,7 +282,7 @@ struct TOKEN* Walley_MATH_Lexica_Analysis(char *input_str){
             end=i;
             char *token_string=substr(input_str, start, end);
             char *token_class=TOKEN_MATH_analyzeTokenClass(token_string);
-            TOKEN_addProperty(&token, token_class, token_string,start,end-1);
+            TL_addProperty(&token, token_class, token_string,start,end-1);
             start=end;
             if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
                 type='b';
@@ -309,7 +309,7 @@ struct TOKEN* Walley_MATH_Lexica_Analysis(char *input_str){
     if (start<end) {
         char *token_string=substr(input_str, start, end);
         char *token_class=TOKEN_MATH_analyzeTokenClass(token_string);
-        TOKEN_addProperty(&token, token_class, token_string,start,end-1);
+        TL_addProperty(&token, token_class, token_string,start,end-1);
     }
     
     
@@ -317,13 +317,13 @@ struct TOKEN* Walley_MATH_Lexica_Analysis(char *input_str){
 }
 
 /*
-int TOKEN_numOfTOKEN_CLASS(struct TOKEN *token,char *token_class){
+int TL_numOfTOKEN_CLASS(struct TOKEN *token,char *token_class){
     int row=0;
     int length=0;
     if (strcmp((token)->TOKEN_CLASS,"__size_of_array__")!=0) {
         printf("@@ |%s|\n",CURRENT_INPUT_STR);
         
-        printf("TOKEN_numOfTOKEN_CLASS..Can not find __size_of_array__");
+        printf("TL_numOfTOKEN_CLASS..Can not find __size_of_array__");
         exit(0);
     }
     else{
@@ -341,13 +341,13 @@ int TOKEN_numOfTOKEN_CLASS(struct TOKEN *token,char *token_class){
 */
 // index_of_token_class starts from 0.
 /*
-struct TOKEN TOKEN_returnTokenAccordingToIndexAndTokenClass(struct TOKEN *token,char *token_class, int index_of_token_class){
+struct TOKEN TL_returnTokenAccordingToIndexAndTokenClass(struct TOKEN *token,char *token_class, int index_of_token_class){
     int row=0;
     int length=0;
     if (strcmp((token)->TOKEN_CLASS,"__size_of_array__")!=0) {
         printf("@@ |%s|\n",CURRENT_INPUT_STR);
         
-        printf("TOKEN_numOfTOKEN_CLASS..Can not find __size_of_array__");
+        printf("TL_numOfTOKEN_CLASS..Can not find __size_of_array__");
         exit(0);
     }
     else{
@@ -364,19 +364,19 @@ struct TOKEN TOKEN_returnTokenAccordingToIndexAndTokenClass(struct TOKEN *token,
         row++;
     }
     
-    printf("Mistake occurred whiling calling function TOKEN_returnTokenAccordingToIndexAndTokenClass\nNo token found according to class %s and index %d",token_class,index_of_token_class);
+    printf("Mistake occurred whiling calling function TL_returnTokenAccordingToIndexAndTokenClass\nNo token found according to class %s and index %d",token_class,index_of_token_class);
     exit(0);
     
 }
 */
 
 /*
-int TOKEN_indexOfFirstNoneWhiteSpaceToken(struct TOKEN *token){
+int TL_indexOfFirstNoneWhiteSpaceToken(struct TOKEN *token){
     int length=0;
     if (strcmp((token)->TOKEN_CLASS,"__size_of_array__")!=0) {
         printf("@@ |%s|\n",CURRENT_INPUT_STR);
         
-        printf("TOKEN_numOfTOKEN_CLASS..Can not find __size_of_array__");
+        printf("TL_numOfTOKEN_CLASS..Can not find __size_of_array__");
         exit(0);
     }
     else{
@@ -395,12 +395,12 @@ int TOKEN_indexOfFirstNoneWhiteSpaceToken(struct TOKEN *token){
 */
 
 /*
-int TOKEN_length(struct TOKEN *token){
+int TL_length(struct TOKEN *token){
     int length=0;
     if (strcmp((token)->TOKEN_CLASS,"__size_of_array__")!=0) {
         printf("@@ |%s|\n",CURRENT_INPUT_STR);
         
-        printf("TOKEN_length..Can not find __size_of_array__");
+        printf("TL_length..Can not find __size_of_array__");
         exit(0);
     }
     else{
@@ -413,8 +413,8 @@ int TOKEN_length(struct TOKEN *token){
 
 
 
-int TOKEN_numOfNoneWhitespaces(struct TOKEN *token){
-    int length=TOKEN_length(token);
+int TL_numOfNoneWhitespaces(struct TOKEN *token){
+    int length=TL_length(token);
     int row=1;
     int num=0;
     while (row<length) {
@@ -426,10 +426,10 @@ int TOKEN_numOfNoneWhitespaces(struct TOKEN *token){
     return num;
 }
 
-struct TOKEN *TOKEN_returnTokenWithoutWhitespaces(struct TOKEN *token){
+struct TOKEN *TL_returnTokenListWithoutWhitespaces(struct TOKEN *token){
     struct TOKEN *return_token;
     TOKEN_initTOKEN(&return_token);
-    int length=TOKEN_length(token);
+    int length=TL_length(token);
     int row=1;
     while (row<length) {
         if (strcmp("WHITESPACES", token[row].TOKEN_CLASS)!=0) {
