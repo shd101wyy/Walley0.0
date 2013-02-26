@@ -233,42 +233,43 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
         }
         
     }
-    else if (EXPRESSION_INCOMPLETE==TRUE){
-        char *trim_input_str=trim(input_str);
-        // can become incomplete
-        if (trim_input_str[(int)strlen(trim_input_str)-1]=='>') {
-            EXPRESSION_TO_BE_COMPLETE=append(EXPRESSION_TO_BE_COMPLETE, " ");
-            EXPRESSION_TO_BE_COMPLETE=append(EXPRESSION_TO_BE_COMPLETE, trim_input_str);
-            Str_addString(&WALLEY_EXPRESSION, append(TEMP_FUNCTION_NAME,append("|",substr(EXPRESSION_TO_BE_COMPLETE,2,(int)strlen(EXPRESSION_TO_BE_COMPLETE)-1))));
-            EXPRESSION_INCOMPLETE=FALSE;
-            EXPRESSION_TO_BE_COMPLETE="";
-        }
-        
-        // can not become complete
-        else{
-            EXPRESSION_TO_BE_COMPLETE=append(EXPRESSION_TO_BE_COMPLETE, " ");
-            EXPRESSION_TO_BE_COMPLETE=append(EXPRESSION_TO_BE_COMPLETE, trim_input_str);
-        }
-    }
-    else if (RUN_EXPRESSION_INCOMPLETE==TRUE){
-        char *trim_input_str=trim(input_str);
-        int length_of_trim_input_str=(int)strlen(trim_input_str);
-        
-        // complete
-        if (trim_input_str[length_of_trim_input_str-1]=='>') {
-            RUN_EXPRESSION_TO_BE_COMPLETE=append(RUN_EXPRESSION_TO_BE_COMPLETE, " ");
-            RUN_EXPRESSION_TO_BE_COMPLETE=append(RUN_EXPRESSION_TO_BE_COMPLETE, trim_input_str);
-            RUN_EXPRESSION_INCOMPLETE=FALSE;
-            Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions, RUN_EXPRESSION_TO_BE_COMPLETE);
-            RUN_EXPRESSION_TO_BE_COMPLETE="";
-        }
-        
-        // not complete
-        else{
-            RUN_EXPRESSION_TO_BE_COMPLETE=append(RUN_EXPRESSION_TO_BE_COMPLETE, " ");
-            RUN_EXPRESSION_TO_BE_COMPLETE=append(RUN_EXPRESSION_TO_BE_COMPLETE, trim_input_str);
-        }
-    }
+     else if (EXPRESSION_INCOMPLETE==TRUE){
+     char *trim_input_str=trim(input_str);
+     // can become complete
+     if (trim_input_str[(int)strlen(trim_input_str)-1]=='}') {
+     EXPRESSION_TO_BE_COMPLETE=append(EXPRESSION_TO_BE_COMPLETE, " ");
+     EXPRESSION_TO_BE_COMPLETE=append(EXPRESSION_TO_BE_COMPLETE, trim_input_str);
+     Str_addString(&WALLEY_EXPRESSION, append(TEMP_FUNCTION_NAME,append("|",substr(EXPRESSION_TO_BE_COMPLETE,2,(int)strlen(EXPRESSION_TO_BE_COMPLETE)-1))));
+     EXPRESSION_INCOMPLETE=FALSE;
+     EXPRESSION_TO_BE_COMPLETE="";
+     }
+     
+     // can not become complete
+     else{
+     EXPRESSION_TO_BE_COMPLETE=append(EXPRESSION_TO_BE_COMPLETE, " ");
+     EXPRESSION_TO_BE_COMPLETE=append(EXPRESSION_TO_BE_COMPLETE, trim_input_str);
+     }
+     }
+     else if (RUN_EXPRESSION_INCOMPLETE==TRUE){
+     char *trim_input_str=trim(input_str);
+     int length_of_trim_input_str=(int)strlen(trim_input_str);
+     
+     // complete
+     if (trim_input_str[length_of_trim_input_str-1]=='}') {
+     RUN_EXPRESSION_TO_BE_COMPLETE=append(RUN_EXPRESSION_TO_BE_COMPLETE, " ");
+     RUN_EXPRESSION_TO_BE_COMPLETE=append(RUN_EXPRESSION_TO_BE_COMPLETE, trim_input_str);
+     RUN_EXPRESSION_INCOMPLETE=FALSE;
+     Walley_Run_For_Appointed_Var(struct_var, struct_settings, save_to_file, existing_file, FUNCTION_functions, RUN_EXPRESSION_TO_BE_COMPLETE);
+     RUN_EXPRESSION_TO_BE_COMPLETE="";
+     }
+     
+     // not complete
+     else{
+     RUN_EXPRESSION_TO_BE_COMPLETE=append(RUN_EXPRESSION_TO_BE_COMPLETE, " ");
+     RUN_EXPRESSION_TO_BE_COMPLETE=append(RUN_EXPRESSION_TO_BE_COMPLETE, trim_input_str);
+     }
+     }
+
      */
     if(1==0){
         
@@ -564,7 +565,7 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
                                  add num1 num2  # just add "add num1 num2" as expression
                                  */
                                 
-                                if ( trim_input_str[0]!='<'&&trim_input_str[1]!='@') {
+                                if ( trim_input_str[0]!='{') {
                                     // add exression...                                                   //problem here, I add trim. No problem before.
                                     Str_addString(&WALLEY_EXPRESSION, append(TEMP_FUNCTION_NAME,append("|",trim(input_str))));
                                 }
@@ -575,10 +576,10 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
                                 /*
                                  def add(num1,num2):
                                  exp:
-                                 <@add num1 num2>  # just add "add num1 num2" as expression
+                                 {add num1 num2}  # just add "add num1 num2" as expression
                                  */
                                 
-                                else if (trim_input_str[0]=='<'&&trim_input_str[1]=='@'&&trim_input_str[(int)strlen(trim_input_str)-1]=='>'){
+                                else if (trim_input_str[0]=='{'&&trim_input_str[(int)strlen(trim_input_str)-1]=='}'){
                                     Str_addString(&WALLEY_EXPRESSION, append(TEMP_FUNCTION_NAME,append("|",substr(trim_input_str, 2, (int)strlen(trim_input_str)-1))));
                                 }
                                 
@@ -588,10 +589,10 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
                                 /*
                                  def add(num1,num2):
                                  exp:
-                                 <@add
+                                 {add
                                  num1
                                  num2
-                                 >
+                                 }
                                  
                                  */
                                 else{
@@ -1293,12 +1294,12 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
                     else {
                         
                         // new code on Jan 6 to run
-                        // <@Hello
-                        // World>
+                        // {Hello
+                        // World}
                         // kind code
                         char *trim_input_str=trim(input_str);
                         
-                        if (trim_input_str[0]=='<'&&trim_input_str[1]=='@'&&trim_input_str[(int)strlen(trim_input_str)-1]!='>') {
+                        if (trim_input_str[0]=='{'&&trim_input_str[(int)strlen(trim_input_str)-1]!='}') {
                             RUN_EXPRESSION_INCOMPLETE=TRUE;
                             RUN_EXPRESSION_TO_BE_COMPLETE=input_str;
                         }
@@ -1307,9 +1308,9 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
                             // make print 'hello'----><print 'hello'>
                             int sentence_num=numOfSmallSentences(input_str);
                             if (sentence_num>1) {
-                                if (input_str[0]!='<') {
-                                    input_str=append("<@", input_str);
-                                    input_str=append(input_str, ">");
+                                if (input_str[0]!='{') {
+                                    input_str=append("{", input_str);
+                                    input_str=append(input_str, "}");
                                 }
                             }
                             

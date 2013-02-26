@@ -250,8 +250,8 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
     }
     else if (EXPRESSION_INCOMPLETE==TRUE){
         char *trim_input_str=trim(input_str);
-        // can become incomplete
-        if (trim_input_str[(int)strlen(trim_input_str)-1]=='>') {
+        // can become complete
+        if (trim_input_str[(int)strlen(trim_input_str)-1]=='}') {
             EXPRESSION_TO_BE_COMPLETE=append(EXPRESSION_TO_BE_COMPLETE, " ");
             EXPRESSION_TO_BE_COMPLETE=append(EXPRESSION_TO_BE_COMPLETE, trim_input_str);
             Str_addString(&WALLEY_EXPRESSION, append(TEMP_FUNCTION_NAME,append("|",substr(EXPRESSION_TO_BE_COMPLETE,2,(int)strlen(EXPRESSION_TO_BE_COMPLETE)-1))));
@@ -270,7 +270,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
         int length_of_trim_input_str=(int)strlen(trim_input_str);
         
         // complete
-        if (trim_input_str[length_of_trim_input_str-1]=='>') {
+        if (trim_input_str[length_of_trim_input_str-1]=='}') {
             RUN_EXPRESSION_TO_BE_COMPLETE=append(RUN_EXPRESSION_TO_BE_COMPLETE, " ");
             RUN_EXPRESSION_TO_BE_COMPLETE=append(RUN_EXPRESSION_TO_BE_COMPLETE, trim_input_str);
             RUN_EXPRESSION_INCOMPLETE=FALSE;
@@ -637,7 +637,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                                  add num1 num2  # just add "add num1 num2" as expression
                                  */
                                 
-                                if ( trim_input_str[0]!='<'&&trim_input_str[1]!='@') {
+                                if ( trim_input_str[0]!='{') {
                                     // add exression...                                                   //problem here, I add trim. No problem before.
                                     Str_addString(&WALLEY_EXPRESSION, append(TEMP_FUNCTION_NAME,append("|",trim(input_str))));
                                 }
@@ -648,10 +648,10 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                                 /*
                                  def add(num1,num2):
                                  exp:
-                                 <@add num1 num2>  # just add "add num1 num2" as expression
+                                 {add num1 num2}  # just add "add num1 num2" as expression
                                  */
                                 
-                                else if (trim_input_str[0]=='<'&&trim_input_str[1]=='@'&&trim_input_str[(int)strlen(trim_input_str)-1]=='>'){
+                                else if (trim_input_str[0]=='{'&&trim_input_str[(int)strlen(trim_input_str)-1]=='}'){
                                     Str_addString(&WALLEY_EXPRESSION, append(TEMP_FUNCTION_NAME,append("|",substr(trim_input_str, 2, (int)strlen(trim_input_str)-1))));
                                 }
                                 
@@ -661,10 +661,10 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                                 /*
                                  def add(num1,num2):
                                  exp:
-                                 <@add
+                                 {add
                                  num1
                                  num2
-                                 >
+                                 }
                                  
                                  */
                                 else{
@@ -1408,12 +1408,12 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                     else {
                         
                         // new code on Jan 6 to run
-                        // <@Hello
-                        // World>
+                        // {Hello
+                        // World}
                         // kind code
                         char *trim_input_str=trim(input_str);
                         
-                        if (trim_input_str[0]=='<'&&trim_input_str[1]=='@'&&trim_input_str[(int)strlen(trim_input_str)-1]!='>') {
+                        if (trim_input_str[0]=='{'&&trim_input_str[(int)strlen(trim_input_str)-1]!='}') {
                             RUN_EXPRESSION_INCOMPLETE=TRUE;
                             RUN_EXPRESSION_TO_BE_COMPLETE=input_str;
                         }
@@ -1422,9 +1422,9 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                             // make print 'hello'----><print 'hello'>
                             int sentence_num=numOfSmallSentences(input_str);
                             if (sentence_num>1) {
-                                if (input_str[0]!='<') {
-                                    input_str=append("<@", input_str);
-                                    input_str=append(input_str, ">");
+                                if (input_str[0]!='{') {
+                                    input_str=append("{", input_str);
+                                    input_str=append(input_str, "}");
                                 }
                             }
                             
@@ -2377,12 +2377,12 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
     //###############################################################################################################
     
     
-    while (count_str_not_in_string(input_str, "<@")!=0) {
+    while (count_str_not_in_string(input_str, "{")!=0) {
         
-        begin = find_from_behind_not_in_string(input_str, "<@");
-        end = find_from_index_not_in_string(input_str, ">", begin + 1);
+        begin = find_from_behind_not_in_string(input_str, "{");
+        end = find_from_index_not_in_string(input_str, "}", begin + 1);
         
-        char *replace_str = substr(input_str, begin + 2, end); //<@hello> get hello
+        char *replace_str = substr(input_str, begin + 2, end); //{hello} get hello
         if (stringIsEmpty(replace_str) == FALSE) {
             
             char *with_str = Walley_Translate_To_Function_From_Var(replace_str, bestMathSentenceForExpression(replace_str,WALLEY_EXPRESSION),struct_var);
