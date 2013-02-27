@@ -40,6 +40,8 @@ void TL_initTokenList(struct TOKEN **token){
     *token=(struct TOKEN*)malloc(sizeof(struct TOKEN)*1);
     (*token)->TOKEN_CLASS="__size_of_array__";
     (*token)->TOKEN_STRING="1";
+    (*token)->TOKEN_START=-1;
+    (*token)->TOKEN_END=-1;
 }
 
 void TL_addProperty(struct TOKEN **token,char *token_class, char *token_string, int token_start, int token_end){
@@ -944,6 +946,7 @@ struct TOKEN *TL_returnTokenListWithoutPunctuation(struct TOKEN *token_list){
     return output_token_list;
 }
 
+
 char** TL_returnStringListWithoutPunctuation(struct TOKEN *token_list){
     char **output_str_list;
     Str_initStringList(&output_str_list);
@@ -964,7 +967,6 @@ char** TL_returnStringListWithoutPunctuation(struct TOKEN *token_list){
 
     return output_str_list;
 }
-
 
 
 //####################################################################################
@@ -992,6 +994,7 @@ void TA_addToken(struct TOKEN_ARRAY *token_array, struct TOKEN token){
 void TA_addTokenList(struct TOKEN_ARRAY *token_array, struct TOKEN *token_list){
     (*token_array).length=(*token_array).length+1;
     (*token_array).token_list=(struct TOKEN **)realloc((*token_array).token_list, sizeof(struct TOKEN *)*(*token_array).length);
+    TL_initTokenList(&(*token_array).token_list[(*token_array).length-1]);
     
     int length_of_token_list=TL_length(token_list);
     int i=0;
@@ -999,8 +1002,50 @@ void TA_addTokenList(struct TOKEN_ARRAY *token_array, struct TOKEN *token_list){
         TA_addToken(token_array, token_list[i]);
     }
 }
+
+void TA_PrintTokenArray(struct TOKEN_ARRAY token_array){
+    int length=TA_length(token_array);
+    int i=0;
+    for (; i<length; i++) {
+        printf("%d =======\n",i);
+        TL_PrintTOKEN(token_array.token_list[i]);
+    }
+}
+
+void TA_initNewTokenList(struct TOKEN_ARRAY *token_array){
+    (*token_array).length=(*token_array).length+1;
+    (*token_array).token_list=(struct TOKEN **)realloc((*token_array).token_list, sizeof(struct TOKEN *)*(*token_array).length);
+    TL_initTokenList(&(*token_array).token_list[(*token_array).length-1]);
+
+}
+
 //###################################################################################
 
+//const char* W_PUNCTUATION;        : , ;
+//     1,i+1,a[i]
+//    token list 1 :1
+//               2 :i+1
+//               3 :a[i]
+struct TOKEN_ARRAY TL_returnTokenArrayWithoutPunctuation(struct TOKEN *token_list){
+    
+    struct TOKEN_ARRAY output_token_array;
+    TA_init(&output_token_array);
+    
+    int length=TL_length(token_list);
+    int i=1;
+    
+    
+    for (; i<length; i++) {
+        if (strcmp(token_list[i].TOKEN_CLASS, "W_PUNCTUATION")!=0) {
+            TA_addToken(&output_token_array, token_list[i]);
+        }
+        else{
+            TA_initNewTokenList(&output_token_array);
+        }
+    }
+    
+    return output_token_array;
+}
 
 
 void Walley_Print_Error(char *input_str,char *error_message,int error_start_index){
