@@ -21,6 +21,30 @@ void Walley_Parse_String_List(struct VAR **struct_var, struct VAR **struct_setti
 char *Walley_Run_One_Function_And_Return_Value_From_Var_2(char *input_str,struct VAR **struct_var, char ***FUNCTION_functions);
 char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token_list,struct VAR **struct_var, char ***FUNCTION_functions);
 void Walley_Eval_And_Update_Var_And_Value_To_Var_According_To_Token(struct VAR **struct_var,char ***FUNCTION_functions,struct TOKEN *var_name_token_list,struct TOKEN *var_value_token_list);
+
+char *Walley_Print_For_Token_List(struct VAR **struct_var, char ***FUNCTION_functions, struct TOKEN *token_list){
+    
+    char *input_str=Walley_Substitute_Var_And_Function_According_To_Token(&token_list, struct_var, FUNCTION_functions);
+    char *after_eval=input_str;
+    if (stringIsAlpha(input_str)==FALSE) {
+        Walley_Eval_With_Variable_From_Var(*struct_var,input_str);
+    }
+    char *output=toCString(after_eval);
+    // printf("%s\n",output);
+    //printf("output--->%s\n",output);
+    
+    if (find(output, "\\n")!=-1) {
+        output=replace(output, "\\n", "\n");
+    }
+    // printf("output--->%s\n",output);
+    
+    if(find(output,"\\\"")!=-1){
+        output=replace(output, "\\\"", "\"");
+    }
+    return output;
+}
+
+
 // x=Hi()
 // x is instance_name
 // Hi() is __class__
@@ -51,8 +75,11 @@ void Walley_Init_Class(struct VAR **struct_var, struct VAR **struct_settings, ch
         
         char *after_change=formatStringInClassWithExtendFromVar(*struct_var,CLASS_LIST,class_name,instance_name);
         //printf("#### AFTER CHANGE\n|%s|\n####\n",after_change);
-        
-        Walley_Parse_Simple_String(struct_var, struct_settings, existing_file,FUNCTION_functions, after_change);
+    
+        char **after_change_string_list=changeStringToStringList(after_change);
+    
+        Walley_Parse_String_List(struct_var, struct_settings, existing_file, FUNCTION_functions, after_change_string_list);
+    
         addInstanceNameToVar(&INSTANCE_NAMES_LIST,instance_name);
         
         
@@ -863,7 +890,8 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
                     //Var_changeValueOfVar(*struct_settings, "can_continue", "1", "int");
                 }
                 else if (strcmp(first_none_whitespace_token.TOKEN_STRING,"print")==0){
-                    char* temp_output = Walley_Print(struct_var,FUNCTION_functions, token_list[2].TOKEN_STRING);
+                    
+                    char* temp_output = Walley_Print_For_Token_List(struct_var,FUNCTION_functions, subtoken(token_list, 2, length_of_token_list));
                     if (PRINT_IN_WHILE_OR_FOR_LOOP==TRUE) {
                         PRINT_STRING_AFTER_LOOP=append(PRINT_STRING_AFTER_LOOP, temp_output);
                     }
@@ -874,12 +902,12 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
                     
                 }
                 else if (strcmp(first_none_whitespace_token.TOKEN_STRING,"println")==0){
-                    char* temp_output = Walley_Println(struct_var,FUNCTION_functions, token_list[2].TOKEN_STRING);
+                    char* temp_output = Walley_Print_For_Token_List(struct_var,FUNCTION_functions, subtoken(token_list, 2, length_of_token_list));
                     if (PRINT_IN_WHILE_OR_FOR_LOOP==TRUE) {
                         PRINT_STRING_AFTER_LOOP=append(PRINT_STRING_AFTER_LOOP, temp_output);
                     }
                     else{
-                        printf("%s", temp_output);
+                        printf("%s\n", temp_output);
                     }
                     
                 }
@@ -1263,11 +1291,12 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
                             //TL_PrintTOKEN(var_value);
                             
                             // for check class
-                            if (TL_length(var_value)==2) {
+                            int index_of_bracket=find(var_value[1].TOKEN_STRING, "(");
+                            if (TL_length(var_value)==2 && index_of_bracket!=-1) {
                                 char *check_var_value=var_value[1].TOKEN_STRING;
                                 // it is class
-                                if (checkWhetherSameClassExistedFromVar(CLASS_LIST, check_var_value)==TRUE) {
-                                    Walley_Init_Class(struct_var, struct_settings, existing_file, FUNCTION_functions, var_name, TL_toString(var_value));
+                                if (checkWhetherSameClassExistedFromVar(CLASS_LIST, substr(check_var_value,0,index_of_bracket))==TRUE) {
+                                    Walley_Init_Class(struct_var, struct_settings, existing_file, FUNCTION_functions, var_name, check_var_value);
                                 }
                                 // it is not class
                                 else{
@@ -1374,7 +1403,7 @@ void Walley_Parse_String_List(struct VAR **struct_var, struct VAR **struct_setti
 }
 
 char *Walley_Run_One_Function_And_Return_Value_From_Var_2(char *input_str,struct VAR **struct_var, char ***FUNCTION_functions){
-    
+            
     char *function_in_def="[]";
     
     char* return_var_name="None";
@@ -1452,7 +1481,7 @@ char *Walley_Run_One_Function_And_Return_Value_From_Var_2(char *input_str,struct
     int row_of_function=-1;
     int i=length_of_FUNCTION_functions-1;
     for (; i>=1; i--) {
-        if (find((*FUNCTION_functions)[i],temp_temp)!=-1) {
+        if (find((*FUNCTION_functions)[i],temp_temp)==0) {
             row_of_function=i;
             find_function=TRUE;
             break;
@@ -1784,37 +1813,7 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
         }
     }
 
-    /*
-    while (count_str_not_in_string(input_str, "{")!=0) {
-        
-        begin = find_from_behind_not_in_string(input_str, "{");
-        end = find_from_index_not_in_string(input_str, "}", begin + 1);
-        
-        char *replace_str = substr(input_str, begin + 2, end); //{hello} get hello
-        if (stringIsEmpty(replace_str) == FALSE) {
-            
-            char *with_str = Walley_Translate_To_Function_From_Var(replace_str, bestMathSentenceForExpression(replace_str,WALLEY_EXPRESSION),struct_var);
-            
-            
-            
-            input_str = replace_from_index_to_index(input_str, substr(input_str, begin, end+1), with_str, begin, end+1);
-            
-            
-        } else {
-            char *with_str="";
-            input_str = replace_from_index_to_index(input_str, substr(input_str, begin, end+1), with_str, begin, end+1);
-        }
-    }
-    */
-    
-    //printf("@@@@@@AFTER TRANSLATION, |%s|\n",input_str);
-    //###############################################################################################################
-    //###############################################################################################################
-    //###############################################################################################################
-    //###############################################################################################################
-    
-    
-    
+       
     for (i=1; i<length_of_token_list; i++) {
         // table or list
         if (strcmp((*token_list+i)->TOKEN_CLASS,"W_LIST_TABLE")==0) {
@@ -1825,26 +1824,8 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
         }
     }
     
+ 
     
-    
-    // invalid now
-    /*
-    // I add new code here to solve print(input_str='1') problem
-    // input_str='1' should not be run
-    if (isExpression(input_str)) {
-        // printf("%s IT IS EXPRESSION\n",input_str);
-        char *var_name=variableName(input_str);
-        char *var_value=variableValue(input_str);
-        
-        var_value=Walley_Substitute_Var_And_Function_Return_Value_From_Var(var_value, struct_var,FUNCTION_functions);
-        char *output=append(var_name, "=");
-        output=append(output, var_value);
-        return output;
-    }
-     */
-    
-   
-       
     struct TOKEN *output_token;
     TL_initTokenList(&output_token);
     
@@ -1868,6 +1849,7 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
                 SAVE_VAR_NAME_TO_CHECK_WHETHER_IT_IS_INSTANCE=token_string;
                 
                 char *var_value=Var_getValueOfVar(*struct_var, token_string);
+                
                 i=i+1;
                 Walley_Next(*token_list, &i, &var_value, struct_var, *FUNCTION_functions);
                 i=i-1;

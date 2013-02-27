@@ -1497,3 +1497,33 @@ char **Str_stringToStringList(char *input_str){
     return output_str_list;
 }
 
+
+// according to \\n and \n
+char **changeStringToStringList(char *input_str){
+    char **output_list;
+    Str_initStringList(&output_list);
+    int i=0;
+    int length=(int)strlen(input_str);
+    int start=0;
+    for (; i<length-1; i++) {
+        if (input_str[i]=='\n') {
+            char *temp_string=substr(input_str, start, i);
+            start=i+1;
+            if (stringIsEmpty(temp_string)==FALSE) {
+                Str_addString(&output_list, temp_string);
+            }
+        }
+        if (input_str[i]=='\\'&&input_str[i+1]=='n') {
+            char *temp_string=substr(input_str, start, i);
+            start=i+2;
+            if (stringIsEmpty(temp_string)==FALSE) {
+                Str_addString(&output_list, temp_string);
+            }
+        }
+    }
+    
+    return output_list;
+    
+}
+
+

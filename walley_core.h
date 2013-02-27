@@ -4573,7 +4573,40 @@ void Walley_Next(struct TOKEN *token, int *current_index, char **current_value, 
         }
     }
 
+    // W_ID
+    // x.age
     else{
-        
+        // here now has some problem
+        if (token[*current_index].TOKEN_STRING[0]=='.') {
+            if (find(token[*current_index+1].TOKEN_STRING, "(")==-1) {
+                char *output=Var_getValueOfVar(*struct_var, append(SAVE_VAR_NAME_TO_CHECK_WHETHER_IT_IS_INSTANCE, append(".",token[*current_index+1].TOKEN_STRING)));
+                if (strcmp(output, "None")==0) {
+                    *current_index=*current_index+2;
+                    return;
+                }
+                else{
+                    *current_value=output;
+                    *current_index=*current_index+2;
+                    Walley_Next(token, current_index, current_value, struct_var, FUNCTION_functions);
+                    
+                }
+                
+            }
+            else{
+                char *output=Walley_Run_One_Function_And_Return_Value_From_Var(append(append(SAVE_VAR_NAME_TO_CHECK_WHETHER_IT_IS_INSTANCE,"."), token[*current_index+1].TOKEN_STRING), struct_var, &FUNCTION_functions);
+                //printf("OUTPUT----> %s\n",output);
+                if (strcmp(output, "None")==0) {
+                    *current_index=*current_index+2;
+                    return;
+                }
+                else{
+                    *current_value=output;
+                    *current_index=*current_index+2;
+                    Walley_Next(token, current_index, current_value, struct_var, FUNCTION_functions);
+                    
+                }
+            }
+
+        }
     }
 }
