@@ -1771,6 +1771,19 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
     //###############################################################################################################
     //###############################################################################################################
     
+    for (i=1; i<length_of_token_list; i++) {
+        // table or list
+        if (strcmp((*token_list+i)->TOKEN_CLASS,"W_DICTIONARY")==0) {
+            char *inside=substr((*token_list+i)->TOKEN_STRING, 1, (int)strlen((*token_list+i)->TOKEN_STRING)-1);
+            char *best_match_sentence=bestMathSentenceForExpression(inside,WALLEY_EXPRESSION);
+            char *with_str = Walley_Translate_To_Function_From_Var(inside, best_match_sentence,struct_var);
+            struct TOKEN *temp_token_list=Walley_Lexica_Analysis(with_str);
+            inside=Walley_Substitute_Var_And_Function_According_To_Token(&temp_token_list, struct_var, FUNCTION_functions);
+            (*token_list+i)->TOKEN_STRING=inside;
+            (*token_list+i)->TOKEN_CLASS=TOKEN_analyzeTokenClass(inside);
+        }
+    }
+
     /*
     while (count_str_not_in_string(input_str, "{")!=0) {
         

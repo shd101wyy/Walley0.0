@@ -1895,9 +1895,11 @@ int Walley_Find_Similarity_Between_Two_Str_In_Order(char *sentence1, char *sente
 
 // the string in expresion should be "function|expression" kind
 // ("add 1,2","{{add num1 num2},{add num1 num2 num3}}")------>add num1 num2
-char *bestMathSentenceForExpression(char *input_sentence, char **expression){
+char *bestMathSentenceForExpression(char *input_sentence, char **expression){    
     int i=0;
+    
     input_sentence=cleanUpSentence(input_sentence);
+    
     int num_of_small_sentence_of_input_sentence=numOfSmallSentences(input_sentence);
     char *return_sentence="None";
     int similarity=0;

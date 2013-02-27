@@ -2190,10 +2190,10 @@ char *Walley_Translate_To_Function_From_Var(char *input_str, char *best_match_se
             output=append(output, "=");
             
             // New code here
-           // if (Var_Existed(struct_var, sentence_at_input_str)) {
-                
+            if (Var_Existed(*struct_var, sentence_at_input_str)) {
+            
                 sentence_at_input_str=Var_getValueOfVar(*struct_var, sentence_at_input_str);
-           // }
+           }
             
             output=append(output, sentence_at_input_str);
             if (i!=num_of_small_sentence-1) {

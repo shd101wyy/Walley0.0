@@ -76,7 +76,7 @@ const char* W_RELATION[]={"and","or"};//2
 //const char* W_NUMBER;      1234  12.4
 //const char* W_ID;          Hello123
 //const char* W_STRING;      'Hello' "Hello"
-//const char* W_DICTIONARY;  {"A":12}
+//const char* W_DICTIONARY;  {"A":12} // now it is for Expression, not dictionary anymore
 //const char* W_LIST_TABLE;   [1,2,3]  [["a"]=12,[0]=2]
 //const char* W_ASSIGNMENT_OPERATOR;  = sign
 //const char* W_PUNCTUATION;        : , ;
