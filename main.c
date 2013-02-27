@@ -281,12 +281,41 @@ def random(num1=0,num2=1):\\n\\\n\
             //remove(temp_file_name);
         }
 
+        
+        
         else if(strcmp(param1, "lex")==0){
             printf("Begin Lexical Analysis Test\n");
             printf("Begin to test |%s|\n",param2);
             param2=toCString(param2);
             struct TOKEN *token=Walley_Lexica_Analysis(param2);
             TL_PrintTOKEN(token);
+        }
+        else if(strcmp(param1, "parse")==0){
+            Walley_Initialize();
+            
+            
+            // Pre-Run file
+            
+            // Walley_Run_File("/Users/shd101wyy/Documents/workspace/xcode/Walley/Walley/out.wy");
+            // Walley_Run_File("/Users/shd101wyy/Documents/workspace/xcode/Walley/Walley/var.wy");
+            
+            // Change to
+            Walley_Run(string_in_out_wy);
+            
+            char *path="./";
+            char *file_name=param2;
+            if (find(param2, "/")!=-1) {
+                path=substr(param2, 0, find_from_behind(param2, "/")+1);
+                CURRENT_DIRECTORY=path;
+            }
+            
+            FIRST_RUNNING_FILE=file_name;
+            
+            Walley_Parse_File(file_name);
+            
+            
+            Walley_Finalize();
+
         }
     }
     else if(argc==4){

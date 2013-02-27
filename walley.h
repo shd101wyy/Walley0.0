@@ -164,6 +164,68 @@ void Walley_Run_File(char *file_name){
     }
     }
 }
+
+
+void Walley_Parse_File(char *file_name){
+    // printf("#### Walley_Run_File ####\n");
+    
+    file_name=removeBackSpace(file_name);
+    
+    if (strcmp(".wyc",substr(file_name,(int)strlen(file_name)-4,(int)strlen(file_name)))==0) {
+        char *string_in_file=changeBinaryToText(getStringFromFile(file_name));
+        FILE *temp_file=fopen("WALLEY_TEMP_TEMP_FILE.wy", "w");
+        fputs(string_in_file, temp_file);
+        fclose(temp_file);
+        Walley_Run_File("WALLEY_TEMP_TEMP_FILE.wy");
+        remove("WALLEY_TEMP_TEMP_FILE.wy");
+    }
+    // .wy format file
+    else {
+        
+        if(strcmp("wy",substr(file_name,(int)strlen(file_name)-2,(int)strlen(file_name)))!=0){
+            printf("File format wrong\n");
+            exit(1);
+        }
+        FILE *fp=fopen(file_name,"r");
+        if(fp==NULL){
+            printf("Failed to initialize\n");
+            printf("File not found\n");
+            exit(1);
+        } else {
+            
+            //Walley_Initialize();
+            
+            char arr[10000]="";
+            while ((fgets(arr, 10000, fp)) != NULL) {
+                
+                if(stringIsEmpty(removeNFromBack(arr)) || strcmp("",trim(removeNFromBack(arr)))==0 ||(int)strlen(arr)==0)
+                    continue;
+                else{
+                    // printf("arr----> |%s|\n");
+                    //strcat(output,arr);
+                    if((int)strlen(arr)==0)
+                        continue;
+                    char *temp_str=append("", arr);
+                    if(temp_str[(int)strlen(temp_str)-1]=='\n')
+                        temp_str=substr(temp_str,0,(int)strlen(temp_str)-1);
+                    
+                    if (strcmp(file_name, FIRST_RUNNING_FILE)==0) {
+                        TURN++;
+                    }
+                    
+                
+                    Walley_Parse_Simple_String(&VAR_var, &VAR_settings, file_name, &FUNCTION, temp_str);
+                    //Walley_Run_For_Appointed_Var(&VAR_var,&VAR_settings,&TEMP_FILE,file_name,&FUNCTION,temp_str);
+                }
+            }
+            
+            Walley_Parse_Simple_String(&VAR_var, &VAR_settings, file_name, &FUNCTION, "#end");
+            //Var_changeValueOfVar(&VAR_settings , "turn", "0", "int");
+            fclose(fp);
+        }
+    }
+}
+
 /*
 void Walley_Agent_Run_File(char *file_name) {
 

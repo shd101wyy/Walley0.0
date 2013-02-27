@@ -89,8 +89,6 @@ void Walley_Init_Class(struct VAR **struct_var, struct VAR **struct_settings, ch
             
             Walley_Run_One_Function_And_Return_Value_From_Var_2(init, struct_var, FUNCTION_functions);
         }
-        //printf("After Initializing\n");
-        
 }
 
 void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_settings, char* existing_file, char ***FUNCTION_functions, char *input_str){ //struct TOKEN *token_list) {
@@ -1259,10 +1257,10 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
                                 var_value=var_value_token_array.token_list[i];
                             }
                             
-                            printf("var_name-------\n");
-                            TL_PrintTOKEN(var_name);
-                            printf("var_value------\n");
-                            TL_PrintTOKEN(var_value);
+                            //printf("var_name-------\n");
+                            //TL_PrintTOKEN(var_name);
+                            //printf("var_value------\n");
+                            //TL_PrintTOKEN(var_value);
                             
                             // for check class
                             if (TL_length(var_value)==2) {
@@ -1355,7 +1353,7 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
                             }      
                              */
                             
-                            
+                            Walley_Substitute_Var_And_Function_According_To_Token(&token_list, struct_var, FUNCTION_functions);
                         }
                     }
                 }
@@ -1376,7 +1374,6 @@ void Walley_Parse_String_List(struct VAR **struct_var, struct VAR **struct_setti
 }
 
 char *Walley_Run_One_Function_And_Return_Value_From_Var_2(char *input_str,struct VAR **struct_var, char ***FUNCTION_functions){
-    char *global_var_back_up=GLOBAL_VAR;
     
     char *function_in_def="[]";
     
@@ -1576,35 +1573,26 @@ char *Walley_Run_One_Function_And_Return_Value_From_Var_2(char *input_str,struct
             //printf("----After remove space---> %s ---\n",temp);
             if(isFunctionFromVar(*FUNCTION_functions,temp)){
                 Walley_Parse_Simple_String(&TEMP_VAR_var, &TEMP_VAR_settings, "None", FUNCTION_functions, arr);
-
-                //Walley_Run_For_Appointed_Var(&TEMP_VAR_var, &TEMP_VAR_settings, &TEMP_TEMP_FILE, "FUNCTION", FUNCTION_functions, arr);
             }
-            else{
-                bool is_global_var=FALSE;
-                                
+            else{                                
                 // begin to define global var
                 if (find(trim(arr),"global ")==0) {
                     char *rest=trim(substr(trim(arr),7,(int)strlen(trim(arr))));
                     int num_of_var=count_str(rest, ",")+1;
                     int x=0;
                     for (; x<num_of_var; x++) {
-                        global_var=list_append(global_var, getParamAccordingToIndex(rest,x));
+                        char *global_var_name=getParamAccordingToIndex(rest,x);
+                        
+                        Walley_Update_Var_And_Var_Value_To_Var(&TEMP_VAR_var, global_var_name, Var_getValueOfVar(*struct_var, global_var_name));
+                        
+                        global_var=list_append(global_var,global_var_name);
                     }
-                    GLOBAL_VAR=global_var;
+                    row++;
+                    continue;
                 }
                 
-                // is global var
-                else if (is_global_var==TRUE){
-                    Walley_Parse_Simple_String(&TEMP_VAR_var, &TEMP_VAR_settings, "None",FUNCTION_functions,arr);
-                    char *var_name3 = variableName(arr);
-                    char *var_value3 = Var_getValueOfVar(TEMP_VAR_var, var_name3);
-                    
-                    Walley_Update_Var_And_Var_Value_To_Var(&VAR_var, var_name3, var_value3);
-                }
-                else{
-                    // printf("ELSE--->|%s|\n",(*FUNCTION_functions)[row]);
-                    Walley_Parse_Simple_String(&TEMP_VAR_var,&TEMP_VAR_settings,"None",FUNCTION_functions,arr);
-                }
+                
+                Walley_Parse_Simple_String(&TEMP_VAR_var,&TEMP_VAR_settings,"None",FUNCTION_functions,arr);
             }
             
         }
@@ -1741,9 +1729,16 @@ char *Walley_Run_One_Function_And_Return_Value_From_Var_2(char *input_str,struct
         a++;
     }
     
+    i=0;
+    int length_of_global_var=valueNumOfList(global_var);
+    for (; i<length_of_global_var; i++) {
+        char *global_var_name=valueOfListAtIndex(global_var, i);
+        Walley_Update_Var_And_Var_Value_To_Var(struct_var, global_var_name, Var_getValueOfVar(TEMP_VAR_var,global_var_name));
+    }
+    
+    
     copyInstanceValueBackToVar(TEMP_VAR_var, struct_var,INSTANCE_NAMES_LIST);
     function_in_def="";
-    GLOBAL_VAR=global_var_back_up;
     
     return return_value;
 }
@@ -2257,9 +2252,7 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
                 
                 //#################################################################
                 else {
-                    
-                    //// printf("HERE++++!!!!!\n");
-                    
+                                        
                     return_value = Walley_Run_One_Function_And_Return_Value_From_Var_2(function,struct_var,FUNCTION_functions);
                 }
                 
