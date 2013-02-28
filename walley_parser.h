@@ -120,10 +120,13 @@ void Walley_Init_Class(struct VAR **struct_var, struct VAR **struct_settings, ch
 
 void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_settings, char* existing_file, char ***FUNCTION_functions, char *input_str){ //struct TOKEN *token_list) {
     //printf("-----> %s\n",input_str);
+    
+    
+    
     struct TOKEN *token_list=Walley_Lexica_Analysis(input_str);
     token_list=TL_returnTokenListWithoutWhitespaces(token_list);
     
-   
+    
     // get token before #
     // eg x=12 #123
     // get x=12 only

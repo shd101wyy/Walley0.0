@@ -2210,6 +2210,7 @@ char *Walley_Translate_To_Function_From_Var(char *input_str, char *best_match_se
 
 // var_value is "shd101wyy123/shd101wyy", slice is [x.find("/"):]
 char *Walley_Slice(char *var_value, char *slice,struct VAR **struct_var, char ***FUNCTION_functions){
+    
     slice = trim(slice);
     
     if (strcmp(variableValueType(var_value), "table")==0) {
@@ -4573,6 +4574,14 @@ void Walley_Next(struct TOKEN *token, int *current_index, char **current_value, 
         }
     }
 
+    else if (strcmp(token_class, "W_NUMBER")==0){
+        //1[0]
+        if (strcmp(token[*current_index].TOKEN_CLASS, "W_LIST_TABLE")==0) {
+            Walley_Print_Error(CURRENT_INPUT_STR, "Can not assign number index, like 1[0]", token[*current_index].TOKEN_START);
+        }
+        else
+            return ;
+    }
     // W_ID
     // x.age
     else{

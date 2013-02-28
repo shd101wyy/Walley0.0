@@ -31,7 +31,7 @@ void TL_PrintTOKEN(struct TOKEN *token){
         length=atoi((token)->TOKEN_STRING);
     }
     while (row<length) {
-        printf("%s:|%s|:\n",token[row].TOKEN_CLASS,token[row].TOKEN_STRING);
+        printf("%s:|%s|:%d:%d\n",token[row].TOKEN_CLASS,token[row].TOKEN_STRING,token[row].TOKEN_START,token[row].TOKEN_END);
         row++;
     }
 }
