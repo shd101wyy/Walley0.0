@@ -507,20 +507,7 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
                         
                     }
                     
-                    LOOP_TURN--;
                     CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=TRUE;
-                    
-                    
-                    if (LOOP_TURN==0) {
-                        LOOP_TURN=0;
-                        
-                        // Finish Main Loop
-                        // Stop Collecting String
-                        PRINT_IN_WHILE_OR_FOR_LOOP=FALSE;
-                        printf("%s",PRINT_STRING_AFTER_LOOP);
-                        PRINT_STRING_AFTER_LOOP="";
-                        
-                    }
                     
                     
                 }
@@ -745,25 +732,10 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
                             
                         }
                         CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=TRUE;
-                        
-                        LOOP_TURN--;
-                        
                     }
                     else {
                         printf("#### For Sentence Only Support list Type At This Time\n");
                     }
-                    
-                    if (LOOP_TURN==0) {
-                        LOOP_TURN=0;
-                        
-                        // Finish Main Loop
-                        // Stop Collecting String
-                        PRINT_IN_WHILE_OR_FOR_LOOP=FALSE;
-                        printf("%s",PRINT_STRING_AFTER_LOOP);
-                        PRINT_STRING_AFTER_LOOP="";
-                        
-                    }
-                    
                     
                 }
             }
@@ -902,23 +874,16 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
                 else if (strcmp(first_none_whitespace_token.TOKEN_STRING,"print")==0){
                     
                     char* temp_output = Walley_Print_For_Token_List(struct_var,FUNCTION_functions, subtoken(token_list, 2, length_of_token_list));
-                    if (PRINT_IN_WHILE_OR_FOR_LOOP==TRUE) {
-                        PRINT_STRING_AFTER_LOOP=append(PRINT_STRING_AFTER_LOOP, temp_output);
-                    }
-                    else{
+                   
                         printf("%s", temp_output);
-                    }
                     
                     
                 }
                 else if (strcmp(first_none_whitespace_token.TOKEN_STRING,"println")==0){
                     char* temp_output = Walley_Print_For_Token_List(struct_var,FUNCTION_functions, subtoken(token_list, 2, length_of_token_list));
-                    if (PRINT_IN_WHILE_OR_FOR_LOOP==TRUE) {
-                        PRINT_STRING_AFTER_LOOP=append(PRINT_STRING_AFTER_LOOP, append(temp_output,"\n"));
-                    }
-                    else{
+                   
                         printf("%s\n", temp_output);
-                    }
+                    
                     
                 }
                 // add new symbolic math support
@@ -1954,24 +1919,18 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
                 else if (strcmp(func_name, "walley_println") == 0) {
                     char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
                     char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);                    char* temp_output = Walley_Println(struct_var,FUNCTION_functions, temp_value);
-                    if (PRINT_IN_WHILE_OR_FOR_LOOP==TRUE) {
-                        PRINT_STRING_AFTER_LOOP=append(PRINT_STRING_AFTER_LOOP, temp_output);
-                    }
-                    else{
+                    
                         printf("%s", temp_output);
-                    }
+                    
                     return_value="None";
                 }//#####################  print  ###################
                 else if (strcmp(func_name, "walley_print") == 0) {
                     char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
                     char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
                     char* temp_output = Walley_Print(struct_var,FUNCTION_functions, temp_value);
-                    if (PRINT_IN_WHILE_OR_FOR_LOOP==TRUE) {
-                        PRINT_STRING_AFTER_LOOP=append(PRINT_STRING_AFTER_LOOP, temp_output);
-                    }
-                    else{
+                   
                         printf("%s", temp_output);
-                    }
+                    
                     return_value="None";
                 }
                 else if(strcmp(func_name,"walley_run_str")==0 || strcmp(func_name,"walley_eval(")==0){
@@ -2692,12 +2651,8 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class_According_To_Token(struct VA
             SPACE_OF_FIRST_WHILE_SENTENCE=REQUIRED_SPACE;
             REQUIRED_SPACE = REQUIRED_SPACE + 4;
             
-            LOOP_TURN++;
             
-            
-            // Begin the while loop
-            // Begin to collect String
-            PRINT_IN_WHILE_OR_FOR_LOOP=TRUE;
+          
         }
         
         
@@ -2738,12 +2693,8 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class_According_To_Token(struct VA
         SPACE_OF_FIRST_FOR_SENTENCE=REQUIRED_SPACE;
         REQUIRED_SPACE = REQUIRED_SPACE + 4;
         
-        LOOP_TURN++;
         
-        
-        // Begin the for loop
-        // Begin to collect String
-        PRINT_IN_WHILE_OR_FOR_LOOP=TRUE;
+       
         
         
         // Write temp_i_in_for_sentence to __temp_for__  eg
