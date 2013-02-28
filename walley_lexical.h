@@ -73,6 +73,7 @@ const char W_WHITESPACES[]={' ','\n','\t'};//3
 const char* W_OPERATOR[]={"+","-","**","*","^","/","\\","%"};//8
 const char* W_JUDGESIGN[]={"<",">","<=",">=","==","!="};//6
 const char* W_RELATION[]={"and","or"};//2
+const char* W_TRUE_OR_FALSE[]={"TRUE","FALSE"};//2
 //const char* W_NUMBER;      1234  12.4
 //const char* W_ID;          Hello123
 //const char* W_STRING;      'Hello' "Hello"
@@ -85,6 +86,7 @@ const char* W_RELATION[]={"and","or"};//2
 //const char* W_LONG_ANNOTATION_LEFT  #~
 //const char* W_LONG_ANNOTATION_RIGHT ~#
 //const char* W_SHORT_ANNOTATION      #
+
 
 
 // 1.6
@@ -209,6 +211,14 @@ char * TOKEN_analyzeTokenClass(char *token_string){
             return "W_RELATION";
         }
     }
+    
+    length=2;
+    for (i=0; i<length; i++) {
+        if (strcmp(W_TRUE_OR_FALSE[i], token_string)==0) {
+            return "W_TRUE_OR_FALSE";
+        }
+    }
+    
     
     if (stringIsDigit(token_string)) {
         return "W_NUMBER";

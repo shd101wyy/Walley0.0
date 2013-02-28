@@ -1148,10 +1148,10 @@ char *substitueExistedVarValueFromVar(char* input_str,struct VAR struct_var[]){/
  */
 bool passConditionIfSentence(char *input_str){
     //// printf("#### passConditionIfSentence ####\n");
-    if (strcmp("TRUE", stringToUpperCase(input_str))==0) {
+    if (strcmp("TRUE", stringToUpperCase(input_str))==0||strcmp("1", input_str)==0) {
         return TRUE;
     }
-    if (strcmp("FALSE", stringToUpperCase(input_str))==0) {
+    if (strcmp("FALSE", stringToUpperCase(input_str))==0||strcmp("0", input_str)==0) {
         return FALSE;
     }
     input_str=trim(input_str);

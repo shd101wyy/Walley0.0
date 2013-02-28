@@ -3731,7 +3731,7 @@ char *Walley_Println(struct VAR **struct_var,char ***FUNCTION_functions, char *i
 
 bool Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(char *input_str, struct VAR **struct_var, char ***FUNCTION_functions){
     //printf("#### Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function ####\n");
-    //printf("%s\n",input_str);
+    printf("%s\n",input_str);
     // I did not consider the situation when and or or is in string
     //printf("%d\n",find(input_str," and "));
     input_str=cleanJudgeSentence(input_str);

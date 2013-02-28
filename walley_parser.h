@@ -21,6 +21,7 @@ void Walley_Parse_String_List(struct VAR **struct_var, struct VAR **struct_setti
 char *Walley_Run_One_Function_And_Return_Value_From_Var_2(char *input_str,struct VAR **struct_var, char ***FUNCTION_functions);
 char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token_list,struct VAR **struct_var, char ***FUNCTION_functions);
 void Walley_Eval_And_Update_Var_And_Value_To_Var_According_To_Token(struct VAR **struct_var,char ***FUNCTION_functions,struct TOKEN *var_name_token_list,struct TOKEN *var_value_token_list);
+bool Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function_According_To_Token(struct TOKEN *token_list, struct VAR **struct_var, char ***FUNCTION_functions);
 
 char *Walley_Print_For_Token_List(struct VAR **struct_var, char ***FUNCTION_functions, struct TOKEN *token_list){
     
@@ -430,7 +431,13 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
                                 Walley_Parse_String_List(struct_var, struct_settings,existing_file, FUNCTION_functions, If_copy.content[i]);
                                 break;
                             }
-                            bool can_run=Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(to_judge, struct_var, FUNCTION_functions);
+                            
+                            struct TOKEN *to_judge_token_list=Walley_Lexica_Analysis(to_judge);
+                            
+                            //printf("==========\n");
+                            //TL_PrintTOKEN(to_judge_token_list);
+                            
+                            bool can_run=Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function_According_To_Token(to_judge_token_list, struct_var, FUNCTION_functions);
                             if (can_run) {
                                 //printf("run if elif \n");
                                 Walley_Parse_String_List(struct_var, struct_settings,existing_file, FUNCTION_functions, If_copy.content[i]);
@@ -481,7 +488,6 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
                     char **temp_string_list_in_while_loop=STRING_IN_WHILE_LOOP;
                     Str_initStringList(&STRING_IN_WHILE_LOOP);
                     
-                    // while (Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(last_while_sentence2, struct_var,FUNCTION_functions) == TRUE) {
                     while (Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(temp_last_while_sentence, struct_var,FUNCTION_functions) == TRUE) {
                         
                         CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=TRUE;
@@ -918,7 +924,7 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
                 else if(strcmp(first_none_whitespace_token.TOKEN_STRING,"syms")==0){
                     struct TOKEN *var_token_list=subtoken(token_list, 2, length_of_token_list);
                     var_token_list=TL_returnTokenListWithoutPunctuation(var_token_list);
-                    TL_PrintTOKEN(var_token_list);
+                    //TL_PrintTOKEN(var_token_list);
                     int length_of_var_token_list=TL_length(var_token_list);
                     
                     int i=1;
@@ -1841,7 +1847,6 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
         char *token_string=(*token_list)[i].TOKEN_STRING;
         struct TOKEN next=TOKEN_nextToken(*token_list, i);
         
-        
         if (strcmp(token_class, "W_ID")==0) {
             
             // it is slice
@@ -2301,6 +2306,14 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
                 temp_token.TOKEN_STRING=token_string;
             }
         }
+        else if(strcmp(token_class, "W_TRUE_OR_FALSE")==0){
+            if (strcmp(token_string, "TRUE")==0) {
+                temp_token.TOKEN_STRING="1";
+            }
+            else{
+                temp_token.TOKEN_STRING="0";
+            }
+        }
         else {
             temp_token.TOKEN_STRING=token_string;
         }
@@ -2432,6 +2445,7 @@ void Walley_Eval_And_Update_Var_And_Value_To_Var_According_To_Token(struct VAR *
         
         
         char *var_name=TL_toString(var_name_token_list);
+                        
         char *var_value=Walley_Substitute_Var_And_Function_According_To_Token(&var_value_token_list, struct_var, FUNCTION_functions);
         
         //printf("#### The Variable Name is :%s\n", var_name);
@@ -2497,5 +2511,76 @@ void Walley_Eval_And_Update_Var_And_Value_To_Var_According_To_Token(struct VAR *
 
 
 
+bool Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function_According_To_Token(struct TOKEN *token_list, struct VAR **struct_var, char ***FUNCTION_functions){
+    // I did not consider the situation when and or or is in string
+    
+    //input_str=replace_not_in_string(input_str, " and ", "+++++");
+    //input_str=replace_not_in_string(input_str, " or ", "----");
+    
+    int lenght_of_token_list=TL_length(token_list);
+    int i=0;
+    for (i=1; i<lenght_of_token_list; i++) {
+        if (strcmp(token_list[i].TOKEN_STRING, "TRUE")==0) {
+            token_list[i].TOKEN_STRING="1";
+            token_list[i].TOKEN_CLASS="W_NUMBER";
+        }
+        if (strcmp(token_list[i].TOKEN_STRING, "FALSE")==0) {
+            token_list[i].TOKEN_STRING="0";
+            token_list[i].TOKEN_CLASS="W_NUMBER";
+        }
+    }
+    
+    
+    /*
+    if(find(input_str,"TRUE")!=-1){
+        //printf("Find And\n");
+        
+        if (strcmp(input_str, "TRUE")==0) {
+            input_str="1==1";
+        }
+        
+        else if(find_from_index(input_str,"==TRUE",find(input_str,"TRUE")-2)!=1){
+            input_str=replace(input_str,"TRUE","1==1");
+        } else {
+            input_str=replace(input_str,"TRUE","1");
+        }
+    }
+    
+    if(find(input_str,"FALSE")!=-1 ){
+        //printf("Find Or\n");
+        
+        if (strcmp(input_str, "FALSE")==0) {
+            input_str="0==1";
+        }
+        else if(find_from_index(input_str,"==FALSE",find(input_str,"FALSE")-2)!=1){
+            //printf("%d\n",find_from_index(input_str,"==FALSE",find(input_str,"FALSE")-2));
+            input_str=replace(input_str,"FALSE","0==1");
+            //printf("@%s\n",input_str);
+        } else {
+            input_str=replace(input_str,"FALSE","0");
+        }
+    }
+     */
+    //######### if not 3>4: #########
+    //############# Add Not #########
+    
+    //input_str=replace_not_in_string(input_str, "not ", "*****");
+    
+    //input_str=Walley_Substitute_Var_And_Function_Return_Value_From_Var(input_str,struct_var,FUNCTION_functions);
+    
+    //input_str=replace_not_in_string(input_str, "+++++", " and ");
+    //input_str=replace_not_in_string(input_str, "----", " or ");
+    //input_str=replace_not_in_string(input_str, "*****","not ");
+    
+    //input_str=replace_not_in_string(input_str, "TRUE==", "1==");
+    //input_str=replace_not_in_string(input_str, "FALSE==", "0==");
+    
+    char *after_substitute=Walley_Substitute_Var_And_Function_According_To_Token(&token_list, struct_var,FUNCTION_functions);
+    
+    //printf("after_substitute---> %s\n",after_substitute);
+    
+    bool output=judgeWithAndAndOrWithParenthesis(after_substitute);
+    return output;
+}
 
 
