@@ -21,6 +21,7 @@ void Walley_Parse_String_List(struct VAR **struct_var, struct VAR **struct_setti
 char *Walley_Run_One_Function_And_Return_Value_From_Var_2(char *input_str,struct VAR **struct_var, char ***FUNCTION_functions);
 char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token_list,struct VAR **struct_var, char ***FUNCTION_functions);
 void Walley_Eval_And_Update_Var_And_Value_To_Var_According_To_Token(struct VAR **struct_var,char ***FUNCTION_functions,struct TOKEN *var_name_token_list,struct TOKEN *var_value_token_list);
+void Walley_Judge_Run_Anotation_For_While_Def_Class_According_To_Token(struct VAR **struct_var,struct VAR **struct_settings,char ***FUNCTION_functions, struct TOKEN *token_list);
 bool Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function_According_To_Token(struct TOKEN *token_list, struct VAR **struct_var, char ***FUNCTION_functions);
 
 char *Walley_Print_For_Token_List(struct VAR **struct_var, char ***FUNCTION_functions, struct TOKEN *token_list){
@@ -959,7 +960,7 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
                         printf("");
                     }
                     else{
-                        Walley_Judge_Run_Anotation_For_While_Def_Class(struct_var, struct_settings, FUNCTION_functions,input_str,token_list);
+                        Walley_Judge_Run_Anotation_For_While_Def_Class_According_To_Token(struct_var, struct_settings, FUNCTION_functions,token_list);
                     }
                     
                 }// ##################################### CHECK RETURN IN FUNCTION, CHECK WHETHER IT CAN RUN OR NOT
@@ -2581,6 +2582,190 @@ bool Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function_Accord
     
     bool output=judgeWithAndAndOrWithParenthesis(after_substitute);
     return output;
+}
+
+
+void Walley_Judge_Run_Anotation_For_While_Def_Class_According_To_Token(struct VAR **struct_var,struct VAR **struct_settings,char ***FUNCTION_functions, struct TOKEN *token_list) {
+    
+    struct TOKEN first_none_whitespace_token=token_list[1];
+    int length_of_token_list=TL_length(token_list);
+    
+    if (strcmp(first_none_whitespace_token.TOKEN_STRING,"class")==0){
+        CLASS_NUM++;
+        if (HAVE_INIT_CLASS_LIST==FALSE) {
+            Str_initStringList(&INSTANCE_NAMES_LIST);
+            CLASS_initCLASSList(&CLASS_LIST);
+            HAVE_INIT_CLASS_LIST=TRUE;
+        }
+        NOW_WRITTING_CLASS=TRUE;
+        SPACE_OF_FIRST_CLASS_SENTENCE=REQUIRED_SPACE;
+        REQUIRED_SPACE=REQUIRED_SPACE+4;
+        
+        
+        // class X:
+        //  1    23
+        // class x extends Y:
+        //  1    2  3      45
+        char *class_name=token_list[2].TOKEN_STRING;
+        char *class_mother;
+        if (length_of_token_list==6) {
+            class_mother=token_list[4].TOKEN_STRING;
+        }
+        else{
+            class_mother="None";
+        }
+        CLASS_addProperty(&CLASS_LIST, class_name, class_mother, "#Begin to define class...\n");
+        //CLASS_PrintCLASS(CLASS_LIST);
+    }
+    // ##############  Function  ##############################
+    else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "def") == 0) {
+        // def add(num1,num2) :
+        //  1   2             3
+        SPACE_OF_FIRST_DEF_SENTENCE = REQUIRED_SPACE;
+        REQUIRED_SPACE = REQUIRED_SPACE + 4;
+        
+        NOW_WRITTING_FUNCTION = TRUE;
+        
+        int index_of_left_bracket=find(token_list[2].TOKEN_STRING, "(");
+        int index_of_right_bracket=find_from_behind(token_list[2].TOKEN_STRING,")");
+        if (index_of_left_bracket==-1||index_of_right_bracket==-1) {
+            Walley_Print_Error(CURRENT_INPUT_STR, "Define function wrong..\nFormat def add(num1,num2):\nNeed ()", token_list[2].TOKEN_START);
+        }
+        
+        char *func_name = substr(token_list[2].TOKEN_STRING, 0, index_of_left_bracket);
+        char *func_param_str = substr(token_list[2].TOKEN_STRING, index_of_left_bracket+1, index_of_right_bracket);
+        // bool has_same_function_name = checkWhetherSameFunctionNameExistsFromVar(func_name);
+        
+        TEMP_FUNCTION_NAME=func_name;
+        TEMP_FUNCTION_PARAMETER=func_param_str;
+        
+        
+        writeFunctionIntoVar(func_name, func_param_str,FUNCTION_functions);
+        Str_addString(FUNCTION_functions, "#~Begin");
+        
+        
+        if (strcmp(func_param_str, "None") == 0) {
+            Str_addString(FUNCTION_functions, "##Finish Init Params");
+        } else {
+            writeFunctionParameterOneByOneToVar(func_param_str,FUNCTION_functions);
+            Str_addString(FUNCTION_functions, "##Finish Init Params");
+        }
+    }//################## Judge Whether this whether an if sentence ##########################
+    //======= New Version of if sentence ===========
+    else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "if") == 0 ){
+        NOW_WRITTING_IF=TRUE;
+        SPACE_OF_FIRST_IF_SENTENCE=CURRENT_SPACE;
+        REQUIRED_SPACE=SPACE_OF_FIRST_IF_SENTENCE+4;
+        
+
+        // if x == 2 :
+        //  1 2  3 4 5
+        
+        Str_initStringList(&IF_ELIF_ELSE.if_elif_else);
+        
+        //char *string_in_if=trim(substr(trim_input_str, find(trim_input_str,"if ")+3, find_from_behind(trim_input_str, ":")));
+        char *string_in_if=TL_toString(subtoken(token_list, 2, length_of_token_list-1));
+        
+        Str_addString(&IF_ELIF_ELSE.if_elif_else,string_in_if);
+        
+        IF_ELIF_ELSE.content=(char***)malloc(sizeof(char**)*(INDEX_OF_IF_ELIF_ELSE+1));
+        Str_initStringList(&IF_ELIF_ELSE.content[0]);
+        
+        
+    }
+    
+    //#################### While Sentence ##################################
+    else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "while") == 0) {
+        
+        // while x < 2 :
+        //  1    2 3 4 5
+        
+        char *last_while_sentence =TL_toString(subtoken(token_list, 2, length_of_token_list-1));
+        LAST_WHILE_SENTENCE=last_while_sentence;
+        
+        bool can_run_while = Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(last_while_sentence, struct_var,FUNCTION_functions);
+        if (can_run_while == FALSE) {
+            //// printf("Can Not Run While");
+            NOW_WRITTING_WHILE = FALSE;
+        } else {
+            NOW_WRITTING_WHILE = TRUE;
+            SPACE_OF_FIRST_WHILE_SENTENCE=REQUIRED_SPACE;
+            REQUIRED_SPACE = REQUIRED_SPACE + 4;
+            
+            LOOP_TURN++;
+            
+            
+            // Begin the while loop
+            // Begin to collect String
+            PRINT_IN_WHILE_OR_FOR_LOOP=TRUE;
+        }
+        
+        
+        
+    }        //#################### For Sentence #####################################
+    else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "for") == 0) {// && removeBackSpace(input_str)[(int) strlen(removeBackSpace(input_str)) - 1] == ':') {
+        //printf("#### Find For ####\n");
+        
+        // for i in range(5) :
+        //  1  2  3  4       5
+        
+        if (length_of_token_list!=6) {
+            Walley_Print_Error(CURRENT_INPUT_STR, "Error.  For statement wrong\nTry 'for i in range(5):' format\n", 0) ;
+            printf("Error.  For statement wrong\n");
+        }
+        
+        if (strcmp(token_list[3].TOKEN_STRING,"in")!=0) {
+            Walley_Print_Error(CURRENT_INPUT_STR, "Error. 'in' is needed in for statement\n", token_list[3].TOKEN_START);
+        }
+        
+        
+        //char *temp_i = substr(input_str, find(input_str, "for ") + 4, find(input_str, " in"));
+        //temp_i = removeAheadSpace(removeBackSpace(temp_i));
+        char *temp_i=token_list[2].TOKEN_STRING;
+        //char *in_what = substr(input_str, find(input_str, " in ") + 4, (int) strlen(removeBackSpace(input_str)) - 1);
+        char *in_what=token_list[4].TOKEN_STRING;
+        in_what = Walley_Substitute_Var_And_Function_Return_Value_From_Var(in_what, struct_var,FUNCTION_functions);
+        I_VALUE_AFTER_IN=in_what;
+        I_IN_FOR_LOOP=temp_i;
+        //printf("i is |%s|, in_what is |%s|\n", temp_i, in_what);
+        NOW_WRITTING_FOR = TRUE;
+        
+        if (strcmp(variableValueType(I_VALUE_AFTER_IN), "string") == 0) {
+            I_VALUE_AFTER_IN = changeStringToList(I_VALUE_AFTER_IN);
+        }
+        
+        
+        SPACE_OF_FIRST_FOR_SENTENCE=REQUIRED_SPACE;
+        REQUIRED_SPACE = REQUIRED_SPACE + 4;
+        
+        LOOP_TURN++;
+        
+        
+        // Begin the for loop
+        // Begin to collect String
+        PRINT_IN_WHILE_OR_FOR_LOOP=TRUE;
+        
+        
+        // Write temp_i_in_for_sentence to __temp_for__  eg
+        // for i in [1,2,3,4]:     write [1,2,3,4] to __temp_for__
+        
+    }
+    else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "switch")==0){
+        SPACE_OF_FIRST_SWITCH_SENTENCE = REQUIRED_SPACE;
+        REQUIRED_SPACE = REQUIRED_SPACE + 4;
+        
+        NOW_WRITTING_SWITCH = TRUE;
+        
+
+        // switch x :
+        //  1     2 3
+        
+        char *switch_object=token_list[2].TOKEN_STRING;
+        SWITCH_OBJECT=trim(switch_object);
+        
+    }
+    
+    
 }
 
 
