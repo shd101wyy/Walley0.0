@@ -489,7 +489,7 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
                     char **temp_string_list_in_while_loop=STRING_IN_WHILE_LOOP;
                     Str_initStringList(&STRING_IN_WHILE_LOOP);
                     
-                    while (Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function(temp_last_while_sentence, struct_var,FUNCTION_functions) == TRUE) {
+                    while (Walley_Judge_With_And_And_Or_With_Parenthesis_And_Variables_Function_According_To_Token(Walley_Lexica_Analysis(temp_last_while_sentence), struct_var,FUNCTION_functions) == TRUE) {
                         
                         CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK=TRUE;
                         
@@ -914,7 +914,7 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
                 else if (strcmp(first_none_whitespace_token.TOKEN_STRING,"println")==0){
                     char* temp_output = Walley_Print_For_Token_List(struct_var,FUNCTION_functions, subtoken(token_list, 2, length_of_token_list));
                     if (PRINT_IN_WHILE_OR_FOR_LOOP==TRUE) {
-                        PRINT_STRING_AFTER_LOOP=append(PRINT_STRING_AFTER_LOOP, temp_output);
+                        PRINT_STRING_AFTER_LOOP=append(PRINT_STRING_AFTER_LOOP, append(temp_output,"\n"));
                     }
                     else{
                         printf("%s\n", temp_output);
