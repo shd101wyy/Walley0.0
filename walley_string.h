@@ -1522,6 +1522,10 @@ char **changeStringToStringList(char *input_str){
         }
     }
     
+    char *final_string=substr(input_str, start, (int)strlen(input_str));
+    if (stringIsEmpty(final_string)==FALSE) {
+        Str_addString(&output_list, final_string);
+    }
     return output_list;
     
 }

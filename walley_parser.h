@@ -769,7 +769,11 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
                     SPACE_OF_FIRST_SWITCH_SENTENCE=0;
                     
                     //printf("TO RUN :|\n%s|\nspace is %d\n",copy_SENTENCE_OF_SWITCH,SPACE_OF_FIRST_SWITCH_SENTENCE);
-                    Walley_Parse_Simple_String(struct_var, struct_settings, existing_file, FUNCTION_functions, copy_SENTENCE_OF_SWITCH);
+                    
+                    char **copy_sentence_to_run_str_list=changeStringToStringList(copy_SENTENCE_OF_SWITCH);
+                                        
+                    Walley_Parse_String_List(struct_var, struct_settings, existing_file, FUNCTION_functions, copy_sentence_to_run_str_list);
+                    
                     
                     REQUIRED_SPACE=CURRENT_SPACE;
                     
@@ -1986,9 +1990,11 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
                     walley_show_var(*struct_var);
                     return_value="None";
                 }
-                else if(strcmp(func_name,"walley_quit_program")==0){
+                
+                else if(strcmp(func_name, "walley_quit_program")==0){
                     walley_quit_program();
                 }
+                
                 else if(strcmp(func_name,"walley_get_current_terminal_commands")==0){
                     return_value=walley_get_current_terminal_commands();;
                 }
