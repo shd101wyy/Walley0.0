@@ -652,7 +652,7 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
                                  */
                                 
                                 else if (trim_input_str[0]=='{'&&trim_input_str[(int)strlen(trim_input_str)-1]=='}'){
-                                    Str_addString(&WALLEY_EXPRESSION, append(TEMP_FUNCTION_NAME,append("|",substr(trim_input_str, 2, (int)strlen(trim_input_str)-1))));
+                                    Str_addString(&WALLEY_EXPRESSION, append(TEMP_FUNCTION_NAME,append("|",substr(trim_input_str, 1, (int)strlen(trim_input_str)-1))));
                                 }
                                 
                                 

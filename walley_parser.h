@@ -560,7 +560,7 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
                                 
                                 
                                 char *trim_input_str=trim(input_str);
-                                //printf("-->|%s|\n",trim_input_str);
+                                printf("-->|%s|\n",trim_input_str);
                                 
                                 
                                 // basic expression without boundary
@@ -586,7 +586,7 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
                                  */
                                 
                                 else if (trim_input_str[0]=='{'&&trim_input_str[(int)strlen(trim_input_str)-1]=='}'){
-                                    Str_addString(&WALLEY_EXPRESSION, append(TEMP_FUNCTION_NAME,append("|",substr(trim_input_str, 2, (int)strlen(trim_input_str)-1))));
+                                    Str_addString(&WALLEY_EXPRESSION, append(TEMP_FUNCTION_NAME,append("|",substr(trim_input_str, 1, (int)strlen(trim_input_str)-1))));
                                 }
                                 
                                 
