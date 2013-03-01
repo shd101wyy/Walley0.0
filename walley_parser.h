@@ -281,7 +281,7 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
         }
         
     }
-     else if (EXPRESSION_INCOMPLETE==TRUE){
+    else if (EXPRESSION_INCOMPLETE==TRUE){
      char *trim_input_str=trim(input_str);
      // can become complete
      if (trim_input_str[(int)strlen(trim_input_str)-1]=='}') {
@@ -298,7 +298,7 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
      EXPRESSION_TO_BE_COMPLETE=append(EXPRESSION_TO_BE_COMPLETE, trim_input_str);
      }
      }
-     else if (RUN_EXPRESSION_INCOMPLETE==TRUE){
+    else if (RUN_EXPRESSION_INCOMPLETE==TRUE){
      char *trim_input_str=trim(input_str);
      int length_of_trim_input_str=(int)strlen(trim_input_str);
      
@@ -1356,7 +1356,6 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
                                 Walley_Eval_With_Variable_From_Var(*struct_var, input_str);
                             }      
                              */
-                            
                             Walley_Substitute_Var_And_Function_According_To_Token(&token_list, struct_var, FUNCTION_functions);
                         }
                     }
@@ -1793,6 +1792,11 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
         // table or list
         if (strcmp((*token_list+i)->TOKEN_CLASS,"W_LIST_TABLE")==0) {
             char *inside=substr((*token_list+i)->TOKEN_STRING, 1, (int)strlen((*token_list+i)->TOKEN_STRING)-1);
+            
+            // solve [] --> [1] problem
+            if (stringIsEmpty(inside)) {
+                continue;
+            }
             struct TOKEN *temp_token_list=Walley_Lexica_Analysis(inside);
             inside=Walley_Substitute_Var_And_Function_According_To_Token(&temp_token_list, struct_var, FUNCTION_functions);
             (*token_list+i)->TOKEN_STRING=append("[", append(inside, "]"));
@@ -1820,6 +1824,8 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
             // x[0][0]
             if (strcmp(next.TOKEN_CLASS,"W_LIST_TABLE")==0||next.TOKEN_STRING[0]=='.') {
                 
+                USER_NAME=token_string;
+                
                 SAVE_VAR_NAME_TO_CHECK_WHETHER_IT_IS_INSTANCE=token_string;
                 
                 char *var_value=Var_getValueOfVar(*struct_var, token_string);
@@ -1830,6 +1836,10 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
                 temp_token.TOKEN_STRING=var_value;
             }
             
+            // solve x=[a=12,b=13] a undefined var problem
+            else if (strcmp(next.TOKEN_CLASS, "W_ASSIGNMENT_OPERATOR")==0){
+                temp_token.TOKEN_STRING=token_string;
+            }
             // it is just var
             else if (find((*token_list)[i].TOKEN_STRING,"(")==-1) {
                 temp_token.TOKEN_STRING=Var_getValueOfVar(*struct_var, token_string);
@@ -2408,6 +2418,7 @@ void Walley_Eval_And_Update_Var_And_Value_To_Var_According_To_Token(struct VAR *
                         
         char *var_value=Walley_Substitute_Var_And_Function_According_To_Token(&var_value_token_list, struct_var, FUNCTION_functions);
         
+    
         //printf("#### The Variable Name is :%s\n", var_name);
         //printf("#### The Variable Value is :%s\n", var_value);
         //printf("#### The Variable Value Type is :%s\n", var_value_type);
@@ -2679,7 +2690,9 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class_According_To_Token(struct VA
         char *temp_i=token_list[2].TOKEN_STRING;
         //char *in_what = substr(input_str, find(input_str, " in ") + 4, (int) strlen(removeBackSpace(input_str)) - 1);
         char *in_what=token_list[4].TOKEN_STRING;
-        in_what = Walley_Substitute_Var_And_Function_Return_Value_From_Var(in_what, struct_var,FUNCTION_functions);
+        
+        struct TOKEN *temp_token_list=Walley_Lexica_Analysis(in_what);
+        in_what = Walley_Substitute_Var_And_Function_According_To_Token(&temp_token_list, struct_var,FUNCTION_functions);
         I_VALUE_AFTER_IN=in_what;
         I_IN_FOR_LOOP=temp_i;
         //printf("i is |%s|, in_what is |%s|\n", temp_i, in_what);

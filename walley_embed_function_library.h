@@ -1236,6 +1236,7 @@ char *Walley_Run_Special_Function_From_Var(char *function, struct VAR **struct_v
     } else {
         user_value=user;
     }
+        
     char *user_function_parameter = substr(user_function, find(user_function, "(") + 1, (int) strlen(removeBackSpace(user_function)) - 1); // ----->"Hi"  which is inside parenthesis
 
     int num_of_params = numOfParameters(user_function_parameter);
@@ -1296,13 +1297,12 @@ char *Walley_Run_Special_Function_From_Var(char *function, struct VAR **struct_v
             //printf("#### FIND APPEND\n");
             //printf("user value %s user_function_parameter %s\n",user_value,user_function_parameter);
             return_value = list_append(user_value, user_function_parameter);
-            //changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name, user, return_value);
-            Var_changeValueOfVar(struct_var, user, return_value, "list");
             
-            //// printf("#### FINISH APPEND ####\n");
+            Walley_Update_Var_And_Var_Value_To_Var(struct_var, USER_NAME, return_value);
+
         } else if (find(user_function, "remove_at_index(") == 0) {
             return_value = list_remove_at_index(user_value, user_function_parameter);
-            Walley_Update_Var_And_Var_Value_To_Var(struct_var, user, return_value);
+            Walley_Update_Var_And_Var_Value_To_Var(struct_var, USER_NAME, return_value);
         } else if (find(user_function, "length(") == 0) {
             return_value = list_length(user_value);
         } else if (find(user_function, "count(") == 0) {
@@ -1311,7 +1311,7 @@ char *Walley_Run_Special_Function_From_Var(char *function, struct VAR **struct_v
             return_value= list_remove_element(user_value,user_function_parameter);
             //changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name, user, return_value);
             //Var_changeValueOfVar(struct_var, user, return_value, "list");
-            Walley_Update_Var_And_Var_Value_To_Var(struct_var, user, return_value);
+            Walley_Update_Var_And_Var_Value_To_Var(struct_var, USER_NAME, return_value);
 
         }
     }        // Special function for dictionary

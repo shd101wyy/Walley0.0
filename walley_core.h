@@ -1522,7 +1522,7 @@ void Walley_Run_For_Appointed_Var_String_List(struct VAR **struct_var, struct VA
 // Not modify
 void Walley_Update_Var_And_Var_Value_To_Var(struct VAR **struct_var, char *var_name, char *var_value){
     // printf("#### Walley_Update_Var_And_Var_Value_To_File ####\n");
-    // printf("var_name %s var_value %s\n",var_name,var_value);
+    //printf("var_name %s var_value %s\n",var_name,var_value);
     char *var_value_type = variableValueType(var_value);
     bool has_same_var_name = Var_Existed(*struct_var, var_name);
     
@@ -2557,6 +2557,8 @@ char *Walley_Substitute_Var_And_Function_Return_Value_From_Var(char* input_str,s
             // x[0]
             // x[0][0]
             if (strcmp(next.TOKEN_CLASS,"W_LIST_TABLE")==0||next.TOKEN_STRING[0]=='.') {
+                
+                USER_NAME=token_string;
                 
                 SAVE_VAR_NAME_TO_CHECK_WHETHER_IT_IS_INSTANCE=token_string;
                 
