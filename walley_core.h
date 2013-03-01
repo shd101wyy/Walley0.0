@@ -1661,6 +1661,9 @@ void Walley_Update_Var_And_Var_Value_To_Var(struct VAR **struct_var, char *var_n
         // x[0].a=12 x[0] is instance, so do not run code below
         else if (find_not_in_string(var_name,"[")!=-1 && find(var_name, ".")==-1){
             char *ahead=substr(var_name, 0, find_not_in_string(var_name, "["));
+            
+            
+            
             char *string_index=substr(var_name, find_not_in_string(var_name, "["), (int)strlen(var_name));
             char *temp_var_value=Var_getValueOfVar(*struct_var, ahead);
             if (strcmp(variableValueType(temp_var_value), "table")==0) {
@@ -1673,6 +1676,9 @@ void Walley_Update_Var_And_Var_Value_To_Var(struct VAR **struct_var, char *var_n
 
                 Var_addProperty(struct_var, ahead, var_value, "table");
 
+            }
+            else{
+                Walley_Print_Error(CURRENT_INPUT_STR, "Var Name Illegal", 0);
             }
             
         }

@@ -68,6 +68,7 @@ def random(num1=0,num2=1):\n\
         //Walley_Run_File("/Users/shd101wyy/Documents/workspace/xcode/Walley/Walley/var.wy");
      
         // Change to
+        /*
         
         Walley_Run(string_in_out_wy);
         Walley_Run("print(\"Welcome to Walley's World\")");
@@ -81,6 +82,22 @@ def random(num1=0,num2=1):\n\
         }
         
         Walley_Finalize();
+         */
+        printf("Use Walley_Parse_Simple_String which is still under development\n");
+        Walley_Initialize();
+        //Walley_Parse(string_in_out_wy);
+        Walley_Parse("print \"Welcome to Walley's World\"");
+        while (TRUE) {
+            printf("\n>>> ");
+            char input_str[10000];
+            gets(input_str);
+            if (strcmp(input_str, "exit()") == 0)
+                break;
+            Walley_Parse(input_str);
+        }
+        
+        Walley_Finalize();
+
     }
     else if (argc == 2) {
         char *param = argv[1];
@@ -129,6 +146,7 @@ def random(num1=0,num2=1):\n\
                 Walley_Finalize();
         }
         else {
+            /*
             Walley_Initialize();
             
             
@@ -159,6 +177,25 @@ def random(num1=0,num2=1):\n\
             
             
             Walley_Finalize();
+             */
+            Walley_Initialize();
+            
+            Walley_Run(string_in_out_wy);
+            
+            char *path="./";
+            char *file_name=param;
+            if (find(param, "/")!=-1) {
+                path=substr(param, 0, find_from_behind(param, "/")+1);
+                CURRENT_DIRECTORY=path;
+            }
+            
+            FIRST_RUNNING_FILE=file_name;
+            
+            Walley_Parse_File(file_name);
+            
+            
+            Walley_Finalize();
+
         }
     }
     else if (argc == 3){
@@ -293,13 +330,6 @@ def random(num1=0,num2=1):\\n\\\n\
         else if(strcmp(param1, "parse")==0){
             Walley_Initialize();
             
-            
-            // Pre-Run file
-            
-            // Walley_Run_File("/Users/shd101wyy/Documents/workspace/xcode/Walley/Walley/out.wy");
-            // Walley_Run_File("/Users/shd101wyy/Documents/workspace/xcode/Walley/Walley/var.wy");
-            
-            // Change to
             Walley_Run(string_in_out_wy);
             
             char *path="./";
