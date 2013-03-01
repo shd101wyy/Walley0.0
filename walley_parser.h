@@ -1852,7 +1852,15 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
                 
                 char *return_value;
                 
-                char *func_name=substr(function, 0, find(function,"("));
+                int index_of_left_bracket=find(function,"(");
+                
+                char *func_name=substr(function, 0, index_of_left_bracket);
+                
+                char *param_str=substr(function, index_of_left_bracket+1, (int) strlen(function) - 1);
+                
+                struct TOKEN *param_token_list=Walley_Lexica_Analysis(param_str);
+                
+                param_str=Walley_Substitute_Var_And_Function_According_To_Token(&param_token_list, struct_var, FUNCTION_functions);
                 
                 //int index_of_dot=find_from_behind_not_in_str_list_dict_parenthesis(function, ".");
                 /*
@@ -1889,55 +1897,35 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
                  */
                 //################### Embeded Function ###############################################################
                 if (strcmp(func_name, "int") ==0) {
-                    char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
-                    char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
-                    temp_value = Walley_Eval_With_Variable_From_Var(*struct_var, temp_value);
-                    return_value = to_int(temp_value);
+                    return_value = to_int(param_str);
                 } else if (strcmp(func_name, "double") ==0) {
-                    char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
-                    char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
-                    temp_value = Walley_Eval_With_Variable_From_Var(*struct_var, temp_value);
-                    return_value = to_double(temp_value);
+                    return_value = to_double(param_str);
                 } else if (strcmp(func_name, "d") ==0) {
-                    char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
-                    char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
-                    temp_value = Walley_Eval_With_Variable_From_Var(*struct_var, temp_value);
-                    return_value = to_decimal(temp_value);
+                    return_value = to_decimal(param_str);
                 } else if (strcmp(func_name, "f") ==0) {
                     WALLEY_SUBSTITUTION_CAN_JUST_EVAL_IN_THE_END=FALSE;
-                    char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
-                    char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
-                    temp_value = eval_for_fraction_with_alpha(temp_value);
+                    char *temp_value = eval_for_fraction_with_alpha(param_str);
                     return_value = to_fraction(temp_value);
                     WALLEY_SUBSTITUTION_CAN_JUST_EVAL_IN_THE_END=TRUE;
                 } else if (strcmp(func_name, "nstr") ==0) {
                     //// printf("Find nstr(");
-                    char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
-                    char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
-                    temp_value = Walley_Eval_With_Variable_From_Var(*struct_var, temp_value);
-                    return_value = to_nstr(temp_value);
+                    return_value = to_nstr(param_str);
                 } else if (strcmp(func_name, "str")==0) {
-                    
-                    char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
-                    char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
-                    temp_value = Walley_Eval_With_Variable_From_Var(*struct_var, temp_value);
-                    return_value = to_string(temp_value);
+                    return_value = to_string(param_str);
                     
                     //printf("HERE return_value %s\n",return_value);
                 }
                 //#####################  println  ###################
                 else if (strcmp(func_name, "walley_println") == 0) {
-                    char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
-                    char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);                    char* temp_output = Walley_Println(struct_var,FUNCTION_functions, temp_value);
+                   
+                    char* temp_output = Walley_Println(struct_var,FUNCTION_functions, param_str);
                     
-                        printf("%s", temp_output);
+                    printf("%s", temp_output);
                     
                     return_value="None";
                 }//#####################  print  ###################
                 else if (strcmp(func_name, "walley_print") == 0) {
-                    char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
-                    char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
-                    char* temp_output = Walley_Print(struct_var,FUNCTION_functions, temp_value);
+                    char* temp_output = Walley_Print(struct_var,FUNCTION_functions, param_str);
                    
                         printf("%s", temp_output);
                     
@@ -1991,9 +1979,7 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
                     
                     
                     
-                    char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
-                    char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
-                    Walley_Parse_Simple_String(&VAR_VAR_FOR_EMBED, &VAR_SETTINGS_FOR_EMBED, "None", &FUNCTION_FOR_EMBED, toCString(temp_value));
+                    Walley_Parse_Simple_String(&VAR_VAR_FOR_EMBED, &VAR_SETTINGS_FOR_EMBED, "None", &FUNCTION_FOR_EMBED, toCString(param_str));
                     return_value="None";
                 }
                 else if(strcmp(func_name,"walley_show_var")==0){
@@ -2017,10 +2003,7 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
                     if (fraction_mode==TRUE) {
                         return_value=function;
                     } else {
-                        char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
-                        char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
-                        temp_value = Walley_Eval_With_Variable_From_Var(*struct_var, temp_value);
-                        return_value = math_sin(temp_value);
+                        return_value = math_sin(param_str);
                     }
                     
                     
@@ -2030,65 +2013,44 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
                         return_value=function;
                     } else {
                         
-                        char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
-                        char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
-                        temp_value = Walley_Eval_With_Variable_From_Var(*struct_var, temp_value);
-                        return_value = math_cos(temp_value);
+                        return_value = math_cos(param_str);
                     }
                 } else if (strcmp(func_name, "tan")==0) {
                     bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
                     if (fraction_mode==TRUE) {
                         return_value=function;
                     } else {
-                        
-                        char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
-                        char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
-                        temp_value = Walley_Eval_With_Variable_From_Var(*struct_var, temp_value);
-                        return_value = math_tan(temp_value);
+                        return_value = math_tan(param_str);
                     }
                 } else if (strcmp(func_name, "cot")==0) {
                     bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
                     if (fraction_mode==TRUE) {
                         return_value=function;
                     } else {
-                        
-                        char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
-                        char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
-                        temp_value = Walley_Eval_With_Variable_From_Var(*struct_var, temp_value);
-                        return_value = math_cot(temp_value);
+                        return_value = math_cot(param_str);
                     }
                 } else if (strcmp(func_name, "tan")==0) {
                     bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
                     if (fraction_mode==TRUE) {
                         return_value=function;
                     } else {
-                        
-                        char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
-                        char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
-                        temp_value = Walley_Eval_With_Variable_From_Var(*struct_var, temp_value);
-                        return_value = math_tan(temp_value);
+                
+                        return_value = math_tan(param_str);
                     }
                 } else if (strcmp(func_name, "sec")==0) {
                     bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
                     if (fraction_mode==TRUE) {
                         return_value=function;
                     } else {
-                        
-                        char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
-                        char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
-                        temp_value = Walley_Eval_With_Variable_From_Var(*struct_var, temp_value);
-                        return_value = math_sec(temp_value);
+                        return_value = math_sec(param_str);
                     }
                 } else if (strcmp(func_name, "csc")==0) {
                     bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
                     if (fraction_mode==TRUE) {
                         return_value=function;
                     } else {
-                        
-                        char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
-                        char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
-                        temp_value = Walley_Eval_With_Variable_From_Var(*struct_var, temp_value);
-                        return_value = math_csc(temp_value);
+                       
+                        return_value = math_csc(param_str);
                     }
                 }  else if (strcmp(func_name, "exp")==0) {
                     bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
@@ -2096,101 +2058,58 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
                         return_value=function;
                     } else {
                         
-                        char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
-                        char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
-                        temp_value = Walley_Eval_With_Variable_From_Var(*struct_var, temp_value);
-                        return_value = math_exp(temp_value);
+                        return_value = math_exp(param_str);
                     }
                 }else if (strcmp(func_name, "log10")==0) {
                     bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
                     if (fraction_mode==TRUE) {
                         return_value=function;
                     } else {
-                        
-                        char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
-                        char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
-                        temp_value = Walley_Eval_With_Variable_From_Var(*struct_var, temp_value);
-                        return_value = math_log10(temp_value);
+                        return_value = math_log10(param_str);
                     }
                 }
                 
                 
                 else if (strcmp(func_name,"range")==0){
-                    char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
-                    char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
-                    return_value = math_range(temp_value);
+                    return_value = math_range(param_str);
                 }
                 
                 //########################### End Basic Math Function #######################################
                 
                 
                 else if (strcmp(func_name, "type")==0) {
-                    char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
-                    char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
-                    temp_value = Walley_Eval_With_Variable_From_Var(*struct_var, temp_value);
-                    return_value = var_value_type(temp_value);
+                    return_value = var_value_type(param_str);
                     //// printf("Find type() and return value is %s\n", return_value);
                 } else if (strcmp(func_name, "num")==0) {
-                    char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
-                    char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
-                    temp_value = Walley_Eval_With_Variable_From_Var(*struct_var, temp_value);
-                    return_value = to_num(temp_value);
+                    return_value = to_num(param_str);
                 } else if (strcmp(func_name, "time")==0) {
-                    //char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
-                    //char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
-                    //temp_value = Walley_Eval_With_Variable_From_Var(struct_var, temp_value);
-                    //return_value = simple_time(temp_value);
                     return_value = simple_time();
                 } else if (strcmp(func_name, "file_readlines")==0) {
-                    char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
-                    char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
-                    temp_value = Walley_Eval_With_Variable_From_Var(*struct_var, temp_value);
-                    return_value = file_readlines(temp_value);
+                    return_value = file_readlines(param_str);
                 } else if (strcmp(func_name, "file_addstrtofile")==0) {
-                    char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
-                    char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
-                    temp_value = Walley_Eval_With_Variable_From_Var(*struct_var, temp_value);
-                    return_value = file_addstrtofile(temp_value);
+                    return_value = file_addstrtofile(param_str);
                 }
                 else if (strcmp(func_name, "file_writelines") == 0) {
-                    char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
-                    char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
-                    temp_value = Walley_Eval_With_Variable_From_Var(*struct_var, temp_value);
-                    char *file_name = substr(temp_value, 0, find_not_in_string(temp_value, ","));
-                    char *lines = substr(temp_value, find_not_in_string(temp_value, ",") + 1, (int) strlen(temp_value));
+                   
+                    char *file_name = substr(param_str, 0, find_not_in_string(param_str, ","));
+                    char *lines = substr(param_str, find_not_in_string(param_str, ",") + 1, (int) strlen(param_str));
                     file_name = toCString(file_name);
                     lines=toCString(lines);
                     return_value = file_writelines(file_name,lines);
                 } else if (strcmp(func_name, "remove_file") == 0) {
-                    char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
-                    char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
-                    temp_value = Walley_Eval_With_Variable_From_Var(*struct_var, temp_value);
-                    return_value = file_removefile(temp_value);
+                    return_value = file_removefile(param_str);
                 } else if (strcmp(func_name, "files_indir") == 0) {
-                    char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
-                    char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
-                    temp_value = Walley_Eval_With_Variable_From_Var(*struct_var, temp_value);
-                    return_value = file_readFileNameInDirectory(temp_value);
+                   
+                    return_value = file_readFileNameInDirectory(param_str);
                 } else if (strcmp(func_name, "create_file") == 0) {
-                    char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
-                    char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
-                    temp_value = Walley_Eval_With_Variable_From_Var(*struct_var, temp_value);
-                    return_value = file_createfile(temp_value);
+                    
+                    return_value = file_createfile(param_str);
                 } else if (strcmp(func_name, "walley_system") == 0) {
-                    char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
-                    char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
-                    temp_value = Walley_Eval_With_Variable_From_Var(*struct_var, temp_value);
-                    return_value = walley_system(temp_value);
+                    return_value = walley_system(param_str);
                 } else if (strcmp(func_name, "walley_system_return_str") == 0) {
-                    char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
-                    char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
-                    temp_value = Walley_Eval_With_Variable_From_Var(*struct_var, temp_value);
-                    return_value = walley_system_return_str(temp_value);
+                    return_value = walley_system_return_str(param_str);
                 } else if (strcmp(func_name, "input") == 0) {
-                    char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
-                    char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var,FUNCTION_functions);
-                    temp_value = Walley_Eval_With_Variable_From_Var(*struct_var, temp_value);
-                    return_value = var_input(temp_value);
+                    return_value = var_input(param_str);
                 } else if(strcmp(func_name,"walley_fraction_mode")==0){
                     Var_changeValueOfVar(&VAR_settings, "fraction_mode","1", "int");
                     
