@@ -1828,11 +1828,17 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
             // x[0][0]
             if (strcmp(next.TOKEN_CLASS,"W_LIST_TABLE")==0||next.TOKEN_STRING[0]=='.') {
                 
+                struct TOKEN *temp_token_list;
+                TL_initTokenList(&temp_token_list);
+                TL_addToken(&temp_token_list, (*token_list)[i]);
+                
+                token_string=Walley_Substitute_Var_And_Function_According_To_Token(&temp_token_list, struct_var, FUNCTION_functions);
+                
                 USER_NAME=token_string;
                 
                 SAVE_VAR_NAME_TO_CHECK_WHETHER_IT_IS_INSTANCE=token_string;
                 
-                char *var_value=Var_getValueOfVar(*struct_var, token_string);
+                char *var_value=token_string;//Var_getValueOfVar(*struct_var, token_string);
                 
                 i=i+1;
                 Walley_Next(*token_list, &i, &var_value, struct_var, *FUNCTION_functions);
