@@ -989,7 +989,7 @@ char *Walley_Math_Eval(char *input_str, char judge){
             int index_of_right=indexOfMostOutterBracket(input_str, index_of_left);
             char *replace_str=substr(input_str, index, index_of_right+1);
             char *with_str=append("MATHH_", intToCString(i));
-            input_str=replace_from_index_to_index(input_str, replace_str, with_str, index, index_of_right+1);
+            input_str=replace_not_in_string(input_str, replace_str, with_str);
             replace_str_list[i]=append(replace_str, append("#", with_str));
             i++;
         }
@@ -999,7 +999,7 @@ char *Walley_Math_Eval(char *input_str, char judge){
             int index_of_right=indexOfMostOutterBracket(input_str, index_of_left);
             char *replace_str=substr(input_str, index, index_of_right+1);
             char *with_str=append("MATHH_", intToCString(i));
-            input_str=replace_from_index_to_index(input_str, replace_str, with_str, index, index_of_right+1);
+            input_str=replace_not_in_string(input_str, replace_str, with_str);
             replace_str_list[i]=append(replace_str, append("#", with_str));
             i++;
         }
@@ -1009,7 +1009,7 @@ char *Walley_Math_Eval(char *input_str, char judge){
             int index_of_right=indexOfMostOutterBracket(input_str, index_of_left);
             char *replace_str=substr(input_str, index, index_of_right+1);
             char *with_str=append("MATHH_", intToCString(i));
-            input_str=replace_from_index_to_index(input_str, replace_str, with_str, index, index_of_right+1);
+            input_str=replace_not_in_string(input_str, replace_str, with_str);
             replace_str_list[i]=append(replace_str, append("#", with_str));
             i++;
         }
@@ -1019,7 +1019,7 @@ char *Walley_Math_Eval(char *input_str, char judge){
             int index_of_right=indexOfMostOutterBracket(input_str, index_of_left);
             char *replace_str=substr(input_str, index, index_of_right+1);
             char *with_str=append("MATHH_", intToCString(i));
-            input_str=replace_from_index_to_index(input_str, replace_str, with_str, index, index_of_right+1);
+            input_str=replace_not_in_string(input_str, replace_str, with_str);
             replace_str_list[i]=append(replace_str, append("#", with_str));
             i++;
         }
@@ -1029,7 +1029,7 @@ char *Walley_Math_Eval(char *input_str, char judge){
             int index_of_right=indexOfMostOutterBracket(input_str, index_of_left);
             char *replace_str=substr(input_str, index, index_of_right+1);
             char *with_str=append("MATHH_", intToCString(i));
-            input_str=replace_from_index_to_index(input_str, replace_str, with_str, index, index_of_right+1);
+            input_str=replace_not_in_string(input_str, replace_str, with_str);
             replace_str_list[i]=append(replace_str, append("#", with_str));
             i++;
         }
@@ -1039,7 +1039,7 @@ char *Walley_Math_Eval(char *input_str, char judge){
             int index_of_right=indexOfMostOutterBracket(input_str, index_of_left);
             char *replace_str=substr(input_str, index, index_of_right+1);
             char *with_str=append("MATHH_", intToCString(i));
-            input_str=replace_from_index_to_index(input_str, replace_str, with_str, index, index_of_right+1);
+            input_str=replace_not_in_string(input_str, replace_str, with_str);
             replace_str_list[i]=append(replace_str, append("#", with_str));
             i++;
         }
@@ -1049,7 +1049,7 @@ char *Walley_Math_Eval(char *input_str, char judge){
             int index_of_right=indexOfMostOutterBracket(input_str, index_of_left);
             char *replace_str=substr(input_str, index, index_of_right+1);
             char *with_str=append("MATHH_", intToCString(i));
-            input_str=replace_from_index_to_index(input_str, replace_str, with_str, index, index_of_right+1);
+            input_str=replace_not_in_string(input_str, replace_str, with_str);
             replace_str_list[i]=append(replace_str, append("#", with_str));
             i++;
         }
@@ -1059,7 +1059,7 @@ char *Walley_Math_Eval(char *input_str, char judge){
             int index_of_right=indexOfMostOutterBracket(input_str, index_of_left);
             char *replace_str=substr(input_str, index, index_of_right+1);
             char *with_str=append("MATHH_", intToCString(i));
-            input_str=replace_from_index_to_index(input_str, replace_str, with_str, index, index_of_right+1);
+            input_str=replace_not_in_string(input_str, replace_str, with_str);
             replace_str_list[i]=append(replace_str, append("#", with_str));
             i++;
         }
