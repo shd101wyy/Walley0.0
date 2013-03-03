@@ -1862,7 +1862,6 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
                 
                 char *function = token_string;
                 
-                char *return_value;
                 
                 int index_of_left_bracket=find(function,"(");
                 
@@ -1874,13 +1873,14 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
                     temp_token.TOKEN_STRING=Walley_Eval(token_string);
                 }
                 else{
-                    
+                    char *return_value;
+
                     char *param_str=substr(function, index_of_left_bracket+1, (int) strlen(function) - 1);
                     
                     struct TOKEN *param_token_list=Walley_Lexica_Analysis(param_str);
                     
                     param_str=Walley_Substitute_Var_And_Function_According_To_Token(&param_token_list, struct_var, FUNCTION_functions);
-                    
+                                        
                     //int index_of_dot=find_from_behind_not_in_str_list_dict_parenthesis(function, ".");
                     /*
                      if (find(substr(function, 0, find(function, "(")), ".") != -1 && charIsInString(function, index_of_dot) == FALSE) {
@@ -2022,7 +2022,7 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
                     else if (strcmp(func_name, "sin")==0) {
                         bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
                         if (fraction_mode==TRUE) {
-                            return_value=function;
+                            return_value=append(func_name, append("(", append(param_str, ")")));
                         } else {
                             return_value = math_sin(param_str);
                         }
@@ -2031,7 +2031,7 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
                     } else if (strcmp(func_name, "cos")==0) {
                         bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
                         if (fraction_mode==TRUE) {
-                            return_value=function;
+                            return_value=append(func_name, append("(", append(param_str, ")")));
                         } else {
                             
                             return_value = math_cos(param_str);
@@ -2039,21 +2039,21 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
                     } else if (strcmp(func_name, "tan")==0) {
                         bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
                         if (fraction_mode==TRUE) {
-                            return_value=function;
+                            return_value=append(func_name, append("(", append(param_str, ")")));
                         } else {
                             return_value = math_tan(param_str);
                         }
                     } else if (strcmp(func_name, "cot")==0) {
                         bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
                         if (fraction_mode==TRUE) {
-                            return_value=function;
+                            return_value=append(func_name, append("(", append(param_str, ")")));
                         } else {
                             return_value = math_cot(param_str);
                         }
                     } else if (strcmp(func_name, "tan")==0) {
                         bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
                         if (fraction_mode==TRUE) {
-                            return_value=function;
+                            return_value=append(func_name, append("(", append(param_str, ")")));
                         } else {
                     
                             return_value = math_tan(param_str);
@@ -2061,14 +2061,14 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
                     } else if (strcmp(func_name, "sec")==0) {
                         bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
                         if (fraction_mode==TRUE) {
-                            return_value=function;
+                            return_value=append(func_name, append("(", append(param_str, ")")));
                         } else {
                             return_value = math_sec(param_str);
                         }
                     } else if (strcmp(func_name, "csc")==0) {
                         bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
                         if (fraction_mode==TRUE) {
-                            return_value=function;
+                            return_value=append(func_name, append("(", append(param_str, ")")));
                         } else {
                            
                             return_value = math_csc(param_str);
@@ -2076,7 +2076,7 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
                     }  else if (strcmp(func_name, "exp")==0) {
                         bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
                         if (fraction_mode==TRUE) {
-                            return_value=function;
+                            return_value=append(func_name, append("(", append(param_str, ")")));
                         } else {
                             
                             return_value = math_exp(param_str);
@@ -2084,7 +2084,7 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
                     }else if (strcmp(func_name, "log10")==0) {
                         bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
                         if (fraction_mode==TRUE) {
-                            return_value=function;
+                            return_value=append(func_name, append("(", append(param_str, ")")));
                         } else {
                             return_value = math_log10(param_str);
                         }
@@ -2246,7 +2246,6 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
     
     
     
-    
     if (WALLEY_SUBSTITUTION_CAN_JUST_EVAL_IN_THE_END==TRUE) {
         if (stringIsAlpha(output)==FALSE) {
             output=Walley_Eval_All_From_Var(*struct_var, output);
@@ -2254,7 +2253,7 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
             output=Walley_Eval_With_Variable_From_Var(*struct_var, output);
         }
     }
-    
+
     
     //printf("Walley_Substitute_Var_And_Function_Return_Value_From_File !!!!!!input %s  output is %s\n",input_str,output);
     return output;

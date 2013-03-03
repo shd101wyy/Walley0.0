@@ -978,13 +978,113 @@ char *Walley_Math_Eval(char *input_str, char judge){
         input_str=append("0+",input_str);
     }
     
+    char **replace_str_list;
+    Str_initStringList(&replace_str_list);
+    int i=1;
+
+    
+    // change sin(1/4) to MATHH_1 mark
+    if (judge=='f') {
+        while (count_str(input_str, "sin(")!=0) {
+            int index=find(input_str, "sin(");
+            int index_of_left=find_from_index(input_str, "(", index);
+            int index_of_right=indexOfMostOutterBracket(input_str, index_of_left);
+            char *replace_str=substr(input_str, index, index_of_right+1);
+            char *with_str=append("MATHH_", intToCString(i));
+            input_str=replace_from_index_to_index(input_str, replace_str, with_str, index, index_of_right+1);
+            replace_str_list[i]=append(replace_str, append("#", with_str));
+            i++;
+        }
+        while (count_str(input_str, "cos(")!=0) {
+            int index=find(input_str, "cos(");
+            int index_of_left=find_from_index(input_str, "(", index);
+            int index_of_right=indexOfMostOutterBracket(input_str, index_of_left);
+            char *replace_str=substr(input_str, index, index_of_right+1);
+            char *with_str=append("MATHH_", intToCString(i));
+            input_str=replace_from_index_to_index(input_str, replace_str, with_str, index, index_of_right+1);
+            replace_str_list[i]=append(replace_str, append("#", with_str));
+            i++;
+        }
+        while (count_str(input_str, "tan(")!=0) {
+            int index=find(input_str, "tan(");
+            int index_of_left=find_from_index(input_str, "(", index);
+            int index_of_right=indexOfMostOutterBracket(input_str, index_of_left);
+            char *replace_str=substr(input_str, index, index_of_right+1);
+            char *with_str=append("MATHH_", intToCString(i));
+            input_str=replace_from_index_to_index(input_str, replace_str, with_str, index, index_of_right+1);
+            replace_str_list[i]=append(replace_str, append("#", with_str));
+            i++;
+        }
+        while (count_str(input_str, "cot(")!=0) {
+            int index=find(input_str, "cot(");
+            int index_of_left=find_from_index(input_str, "(", index);
+            int index_of_right=indexOfMostOutterBracket(input_str, index_of_left);
+            char *replace_str=substr(input_str, index, index_of_right+1);
+            char *with_str=append("MATHH_", intToCString(i));
+            input_str=replace_from_index_to_index(input_str, replace_str, with_str, index, index_of_right+1);
+            replace_str_list[i]=append(replace_str, append("#", with_str));
+            i++;
+        }
+        while (count_str(input_str, "sec(")!=0) {
+            int index=find(input_str, "sec(");
+            int index_of_left=find_from_index(input_str, "(", index);
+            int index_of_right=indexOfMostOutterBracket(input_str, index_of_left);
+            char *replace_str=substr(input_str, index, index_of_right+1);
+            char *with_str=append("MATHH_", intToCString(i));
+            input_str=replace_from_index_to_index(input_str, replace_str, with_str, index, index_of_right+1);
+            replace_str_list[i]=append(replace_str, append("#", with_str));
+            i++;
+        }
+        while (count_str(input_str, "csc(")!=0) {
+            int index=find(input_str, "csc(");
+            int index_of_left=find_from_index(input_str, "(", index);
+            int index_of_right=indexOfMostOutterBracket(input_str, index_of_left);
+            char *replace_str=substr(input_str, index, index_of_right+1);
+            char *with_str=append("MATHH_", intToCString(i));
+            input_str=replace_from_index_to_index(input_str, replace_str, with_str, index, index_of_right+1);
+            replace_str_list[i]=append(replace_str, append("#", with_str));
+            i++;
+        }
+        while (count_str(input_str, "exp(")!=0) {
+            int index=find(input_str, "exp(");
+            int index_of_left=find_from_index(input_str, "(", index);
+            int index_of_right=indexOfMostOutterBracket(input_str, index_of_left);
+            char *replace_str=substr(input_str, index, index_of_right+1);
+            char *with_str=append("MATHH_", intToCString(i));
+            input_str=replace_from_index_to_index(input_str, replace_str, with_str, index, index_of_right+1);
+            replace_str_list[i]=append(replace_str, append("#", with_str));
+            i++;
+        }
+        while (count_str(input_str, "log10(")!=0) {
+            int index=find(input_str, "log10(");
+            int index_of_left=find_from_index(input_str, "(", index);
+            int index_of_right=indexOfMostOutterBracket(input_str, index_of_left);
+            char *replace_str=substr(input_str, index, index_of_right+1);
+            char *with_str=append("MATHH_", intToCString(i));
+            input_str=replace_from_index_to_index(input_str, replace_str, with_str, index, index_of_right+1);
+            replace_str_list[i]=append(replace_str, append("#", with_str));
+            i++;
+        }
+
+    }
+    
     struct TOKEN *token=Walley_MATH_Lexica_Analysis(input_str);
         
     char *postfix=WALLEY_MATH_Infix_to_Postfix(token);
         
     // fraction
     if (judge=='f') {
-        return Walley_Math_Parser_Fraction(postfix);
+        char *output=Walley_Math_Parser_Fraction(postfix);
+        int a=1;
+        for (a=1; a<i; a++) {
+            char *replace_str_a=replace_str_list[a];
+            int index_of_mark=find(replace_str_a ,"#");
+            char *replace_str=substr(replace_str_a, 0, index_of_mark);
+            char *with_str=substr(replace_str_a, index_of_mark+1, (int)strlen(replace_str_a));
+            output=replace(output,with_str,replace_str);
+        }
+
+        return output;;
     }
     // decimal
     else{
