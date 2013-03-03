@@ -794,8 +794,6 @@ char *Walley_Math_Parser_Decimal(char *input_str){
             char *value1=Str_PopString(&stack);
             
             if (stack[0]==NULL) {
-                printf("HERE\n");
-
                 return append("-", cleanDotZeroAfterNum(value2));
             }
             
