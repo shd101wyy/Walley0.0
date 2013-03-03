@@ -485,31 +485,41 @@ char* Walley_Eval(char *input_str){
                 
                 // 0.8+2 return 2.8  8/10+2 return 14/5
                 if (find(input_str,".")!=-1) {
-                    
+                    /*
                     char *ocp;
                     matho_parse("set fraction 0", &ocp);
                     matho_process("set fraction 0", &ocp);
                     
                     return Walley_Mathomatic_Parse_For_Decimal(input_str);
+                     */
+                    return Walley_Math_Eval(input_str, 'd');
+
                 }
                 else{
                     
+                    /*
                     char *ocp;
                     matho_parse("set fraction 1", &ocp);
                     matho_process("set fraction 1", &ocp);
                     
                     // I changed the code to use mathomatic
                     output=Walley_Mathomatic_Parse_For_Fraction(input_str);
+                     */
+                    return Walley_Math_Eval(input_str, 'f');
+
                 }
             }
             else{
-                
+                /*
                 char *ocp;
                 matho_parse("set fraction 0", &ocp);
                 matho_process("set fraction 0", &ocp);
                 
                 // I changed the code here to use mathomatic
                 output=Walley_Mathomatic_Parse_For_Decimal(input_str);
+                 */
+                return Walley_Math_Eval(input_str, 'd');
+
             }
 
         }
@@ -811,7 +821,7 @@ char* Walley_Eval_All_From_Var(struct VAR struct_var[],char *input_str){
     
     int m=0;
     for (m=0; m<(int)strlen(input_str); m++) {
-        if (isJudgeSign(input_str[m])==TRUE && charIsInString(input_str, m)==FALSE) {
+        if (isJudgeSign(input_str,m)==TRUE && charIsInString(input_str, m)==FALSE) {
             return input_str;
         }
     }
@@ -1011,7 +1021,7 @@ void anaylizeExistedVariablesInExpression(char *input_str){
             finish_find_var=TRUE;
             
         }
-        if(find_alpha==TRUE && ((isJudgeSign(input_str[i])) || input_str[i]==')')){
+        if(find_alpha==TRUE && ((isJudgeSign(input_str,i)) || input_str[i]==')')){
             find_alpha=FALSE;
             end=i;
             //printf("end %d\n",end);
@@ -1095,7 +1105,7 @@ char *substitueExistedVarValueFromVar(char* input_str,struct VAR struct_var[]){/
             finish_find_var=TRUE;
             
         }
-        if(find_alpha==TRUE && ((isJudgeSign(input_str[i])) || input_str[i]==')')){
+        if(find_alpha==TRUE && ((isJudgeSign(input_str,i)) || input_str[i]==')')){
             find_alpha=FALSE;
             end=i;
             //printf("--end-- %d\n",end);
@@ -1183,7 +1193,7 @@ bool passConditionIfSentence(char *input_str){
         }
         
         
-        if(isJudgeSign(input_str[i])==TRUE && find_var==TRUE && charIsInString(input_str,i)==FALSE){
+        if(isJudgeSign(input_str,i)==TRUE && find_var==TRUE && charIsInString(input_str,i)==FALSE){
             //printf("Find var is %d\n",find_var);
             //printf("Find Judge Sign at index %d\n",i);
             first_str=substr(input_str,begin,i);

@@ -359,6 +359,176 @@ char *CLASS_stringInClass(struct CLASS *class_list,char *class_name){
     printf("Error.. Can not find required string_in_class %s\n",class_name);
     exit(0);
 }
+//==============================================================================
+//===================== Math Data ==============================================
+
+// coefficient
+// value
+// power
+
+// 3*x^3
+// coefficient 3
+// value x
+// power 3
+
+// 9
+// coefficient 9
+// value 0       // 0 means it is number not symbol
+// power 1
+
+
+struct Math_Data{
+    char *coefficient;
+    char *value;
+    char *power;
+};
+
+
+struct Math_Data_List{
+    int length;
+    struct Math_Data *math_data_list;
+};
+
+
+// MDL IS MATH DATA LIST
+void MDL_init(struct Math_Data_List *mdl){
+    (*mdl).length=0;
+    (*mdl).math_data_list=(struct Math_Data*)malloc(sizeof(struct Math_Data)*1);
+}
+
+void MDL_addProperty(struct Math_Data_List *mdl,char *coefficient, char *value, char *power){
+    int length=(*mdl).length;
+    if (length==0) {
+        (*mdl).math_data_list[0].coefficient=coefficient;
+        (*mdl).math_data_list[0].value=value;
+        (*mdl).math_data_list[0].power=power;
+        (*mdl).length=1;
+    }
+    else{
+        (*mdl).length=length+1;
+        length=length+1;
+        (*mdl).math_data_list=(struct Math_Data*)realloc((*mdl).math_data_list, sizeof(struct Math_Data)*length);
+        (*mdl).math_data_list[length-1].coefficient=coefficient;
+        (*mdl).math_data_list[length-1].value=value;
+        (*mdl).math_data_list[length-1].power=power;
+    }
+}
+
+void MDL_addMathData(struct Math_Data_List *mdl, struct Math_Data math_data){
+    MDL_addProperty(mdl, math_data.coefficient, math_data.value, math_data.power);
+}
+
+
+void MDL_PrintMathDataList(struct Math_Data_List mdl){
+    int length=mdl.length;
+    int i=0;
+    for (;i<length;i++) {
+        printf("%d -> %s:%s:%s\n",i,mdl.math_data_list[i].coefficient,mdl.math_data_list[i].value,mdl.math_data_list[i].power);
+    }
+}
+
+// MDA is MDL Array
+struct Math_Data_Array{
+    int length;
+    struct Math_Data_List *mdl;
+};
+void MDA_init(struct Math_Data_Array *mda){
+    (*mda).length=0;
+    (*mda).mdl=(struct Math_Data_List*)malloc(sizeof(struct Math_Data_List)*1);
+    MDL_init(&((*mda).mdl[0]));
+}
+
+void MDA_addMathDataList(struct Math_Data_Array *mda, struct Math_Data_List mdl){
+    int length=(*mda).length;
+    if (length==0) {
+        (*mda).length=1;
+        (*mda).mdl[0]=mdl;
+    }
+    else{
+        (*mda).length=(*mda).length+1;
+        (*mda).mdl=(struct Math_Data_List*)realloc((*mda).mdl, sizeof(struct Math_Data_List)*((*mda).length));
+        (*mda).mdl[(*mda).length-1]=mdl;
+    }
+}
+
+struct Math_Data_List MDA_pop(struct Math_Data_Array *mda){
+    int length=(*mda).length;
+    (*mda).length=length-1;
+    struct Math_Data_List return_mdl=(*mda).mdl[length-1];
+    (*mda).mdl=(struct Math_Data_List*)realloc((*mda).mdl, sizeof(struct Math_Data_List)*((*mda).length));
+    
+    return return_mdl;
+}
+
+char *MDL_changeMathDataListToString(struct Math_Data_List mdl){
+    char *output_str="";
+    int length=mdl.length;
+    int i=0;
+    for (;i<length ; i++) {
+        struct Math_Data left_md=mdl.math_data_list[i];
+        int j=i;
+        int smallest_md_index=i;
+        char *smallest_string=left_md.value;
+        for (; j<length; j++) {
+            if (strcmp(smallest_string, mdl.math_data_list[j].value)>0) {
+                smallest_string=mdl.math_data_list[j].value;
+                smallest_md_index=j;
+            }
+        }
+        
+        // swap
+        mdl.math_data_list[i]=mdl.math_data_list[smallest_md_index];
+        mdl.math_data_list[smallest_md_index]=left_md;
+    }
+    
+    //printf("Finishing Sorting\n");
+    //MDL_PrintMathDataList(mdl);
+    
+    i=0;
+    for(i=0;i<length;i++){
+        char *coef=mdl.math_data_list[i].coefficient;
+        char *value=mdl.math_data_list[i].value;
+        char *power=mdl.math_data_list[i].power;
+        if(strcmp(value,"0")==0){
+            output_str=append(output_str, coef);
+            if(strcmp(power, "1")!=0){
+                if(stringIsDigit(power)){
+                    output_str=append(output_str, append("^", power));
+                }
+                else{
+                    output_str=append(output_str, append("^(", append(power,")")));
+                }
+                
+            }
+        }
+        else{
+            if(strcmp(coef, "1")!=0){
+                if(strcmp(coef, "-1")==0){
+                    output_str=append(output_str, "-");
+                }
+                else{
+                    output_str=append(output_str, append(coef,"*"));
+                }
+            }
+            output_str=append(output_str, value);
+            if(strcmp(power, "1")!=0){
+                if(stringIsDigit(power)){
+                    output_str=append(output_str, append("^", power));
+                }
+                else{
+                    output_str=append(output_str, append("^(", append(power,")")));
+                }
+            }
+        }
+        if(i!=length-1)
+            output_str=append(output_str, "+");
+    }
+    output_str=replace(output_str, "+-", "-");
+    //printf("OUTPUT_STR-----> %s\n",output_str);
+    return output_str;
+}
+
+
 
 
 

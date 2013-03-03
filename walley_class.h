@@ -145,7 +145,7 @@ char *formatStringInClass(char *instance_name, char *string_in_class){
         if (index_of_self==-1) {
             break;
         }
-        if (index_of_self==0||string_in_class[index_of_self-1]==' '||isSign(string_in_class[index_of_self-1])||isJudgeSign(string_in_class[index_of_self-1])) {
+        if (index_of_self==0||string_in_class[index_of_self-1]==' '||isSign(string_in_class[index_of_self-1])||isJudgeSign(string_in_class,index_of_self-1)) {
             string_in_class=replace_from_index_to_index(string_in_class, "self.", append(instance_name, "."), index_of_self, index_of_self+5);
         }
         

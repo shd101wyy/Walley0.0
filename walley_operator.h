@@ -86,20 +86,47 @@ bool isSign(char sign){
     return is_sign;
 }
 
-bool isJudgeSign(char sign){
-    //printf("input %c\n",sign);
-    bool is_sign=FALSE;
-    if(sign=='='||
-       //sign=='>='||
-       //sign=='<='||
-       sign=='>'||
-       sign=='<'||
-       sign=='!'){
-        //sign=='^')
-        is_sign=TRUE;
+/*
+ 
+ ==
+ >=
+ <=
+ >
+ <
+ !=
+ 
+ */
+bool isJudgeSign(char *input_str, int index){
+    int length=(int)strlen(input_str);
+    if (index+1==length) {
+        if (input_str[index]=='>'||input_str[index]=='<') {
+            return TRUE;
+        }
+        else
+            return FALSE;
     }
-    return is_sign;
+    else{
+        if (input_str[index]=='='&&input_str[index+1]=='=') {
+            return TRUE;
+        }
+        else if (input_str[index]=='>'&&input_str[index+1]=='=') {
+            return TRUE;
+        }
+        else if (input_str[index]=='<'&&input_str[index+1]=='=') {
+            return TRUE;
+        }
+        else if(input_str[index]=='>')
+            return TRUE;
+        else if(input_str[index]=='<')
+            return TRUE;
+        else if(input_str[index]=='!'&&input_str[index+1]=='=')
+            return TRUE;
+        else
+            return FALSE;
+    }
+    return FALSE;
 }
+
 bool isFirstOrderSign(char sign){
     bool is_first_order_sign=FALSE;
     if(

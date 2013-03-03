@@ -8,7 +8,7 @@
 
 #include "walley_string.h"
 bool isSign(char sign);
-bool isJudgeSign(char sign);
+bool isJudgeSign(char *input_str, int index);
 
 struct TOKEN{
     char *TOKEN_CLASS;
@@ -91,7 +91,7 @@ const char* W_TRUE_OR_FALSE[]={"TRUE","FALSE"};//2
 
 // 1.6
 // 012 ---> FALSE
-char *isW_Dot(char *input_str, int index_of_dot){
+bool isW_Dot(char *input_str, int index_of_dot){
     if (input_str[index_of_dot]!='.') {
         return FALSE;
     }
@@ -107,7 +107,7 @@ char *isW_Dot(char *input_str, int index_of_dot){
 }
 
 // check if it is # #~ or ~#
-char *isW_Annotation(char *input_str, int index_of_dot){
+bool isW_Annotation(char *input_str, int index_of_dot){
     if (input_str[index_of_dot]!='#'&&input_str[index_of_dot]!='~') {
         return FALSE;
     }
@@ -131,8 +131,26 @@ char *isW_Annotation(char *input_str, int index_of_dot){
     
     return FALSE;
 }
+/*
+bool isW_Assignment_Operator(char *input_str, int index_of_equa){
+    if (input_str[index_of_equa]!='=') {
+        return FALSE;
+    }
+    int length=(int)strlen(input_str);
 
-
+    if (index_of_equa+1==length) {
+        return TRUE;
+    }
+    else{
+        if (input_str[index_of_equa+1]!='=') {
+            return TRUE;
+        }
+        else{
+            return FALSE;
+        }
+    }
+}
+*/
 char * TOKEN_analyzeTokenClass(char *token_string){
     if (strcmp(token_string, "#")==0) {
         return "W_SHORT_ANNOTATION";
@@ -380,7 +398,7 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
                 i=start;
             }
             
-            if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
+            if (isJudgeSign(input_str,i)||isSign(input_str[i])) {
                 type='s';
             }
             else if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
@@ -407,7 +425,7 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
             char *token_class="W_DOT";
             TL_addProperty(&token, token_class, token_string,i-1,i);
             start=i;
-            if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
+            if (isJudgeSign(input_str,i)||isSign(input_str[i])) {
                 type='s';
             }
             else if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
@@ -442,7 +460,7 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
             i=final_index+1;
             start=i;
             
-            if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
+            if (isJudgeSign(input_str,i)||isSign(input_str[i])) {
                 type='s';
             }
             else if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
@@ -464,9 +482,9 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
         }
         else if (type=='i'){
             //if (isalpha(input_str[i])||isdigit(input_str[i])||input_str[i]=='_') {
-            if (charIsInParenthesis(input_str, i)==TRUE||(input_str[i]!=' '&&input_str[i]!='\n'&&input_str[i]!='\t'&&isJudgeSign(input_str[i])==FALSE&&isSign(input_str[i])==FALSE&&
+            if (charIsInParenthesis(input_str, i)==TRUE||(input_str[i]!=' '&&input_str[i]!='\n'&&input_str[i]!='\t'&&isJudgeSign(input_str,i)==FALSE&&isSign(input_str[i])==FALSE&&
                 input_str[i]!='"'&&input_str[i]!='\''&&input_str[i]!='{'&&input_str[i]!='['
-                &&input_str[i]!=':'&&input_str[i]!=','&&input_str[i]!=';'&&isW_Dot(input_str, i)==FALSE&&isW_Annotation(input_str, i)==FALSE)) {
+                &&input_str[i]!=':'&&input_str[i]!=','&&input_str[i]!=';'&&isW_Dot(input_str, i)==FALSE&&isW_Annotation(input_str, i)==FALSE&&input_str[i]!='=')) {
                 continue;
             }
             else{
@@ -477,7 +495,7 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
                 start=end;
                 
                 
-                if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
+                if (isJudgeSign(input_str,i)||isSign(input_str[i])) {
                     type='s';
                 }
                 else if (input_str[i]=='"') {
@@ -520,7 +538,7 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
                 char *token_class=TOKEN_analyzeTokenClass(token_string);
                 TL_addProperty(&token, token_class, token_string,start,end-1);
                 start=end;
-                if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
+                if (isJudgeSign(input_str,i)||isSign(input_str[i])) {
                     type='s';
                 }
                 else if (input_str[i]=='"') {
@@ -554,7 +572,7 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
         }
         
         else if(type=='s'){
-            if (isSign(input_str[i])==TRUE||isJudgeSign(input_str[i])==TRUE) {
+            if (isSign(input_str[i])==TRUE||isJudgeSign(input_str,i)==TRUE||input_str[i]=='=') {
                 continue;
             }
             else{
@@ -607,7 +625,7 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
             }
             TL_addProperty(&token, "W_PUNCTUATION", charToString(input_str[i-1]),i-1,i-1);
             start=i;
-            if (isJudgeSign(input_str[i])||isSign(input_str[i])) {
+            if (isJudgeSign(input_str,i)||isSign(input_str[i])) {
                 type='s';
             }
             else if (input_str[i]=='"') {

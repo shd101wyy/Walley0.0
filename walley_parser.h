@@ -375,6 +375,8 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
             struct TOKEN first_none_whitespace_token=token_list[1];
             
             
+            //TL_PrintTOKEN(token_list);
+            
                        
             //################## Now Run If #######################################
             if (NOW_WRITTING_IF == TRUE  && CAN_RUN_BASIC_INPUT_IF_CONTINUE_OR_BREAK==TRUE) {
@@ -1866,301 +1868,309 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
                 
                 char *func_name=substr(function, 0, index_of_left_bracket);
                 
-                char *param_str=substr(function, index_of_left_bracket+1, (int) strlen(function) - 1);
-                
-                struct TOKEN *param_token_list=Walley_Lexica_Analysis(param_str);
-                
-                param_str=Walley_Substitute_Var_And_Function_According_To_Token(&param_token_list, struct_var, FUNCTION_functions);
-                
-                //int index_of_dot=find_from_behind_not_in_str_list_dict_parenthesis(function, ".");
-                /*
-                 if (find(substr(function, 0, find(function, "(")), ".") != -1 && charIsInString(function, index_of_dot) == FALSE) {
-                 //// printf("It is instance function\n");
-                 char *user = substr(function, 0, index_of_dot);
-                 //printf("user---> %s  func---> %s\n",user,function);
-                 bool instance_existed = checkWhetherSameInstanceExistedFromVar(INSTANCE_NAMES_LIST, user);
-                 bool var_existed = Var_Existed(*struct_var,user);
-                 
-                 bool only_var_existed = var_existed;
-                 
-                 char *user_value=Walley_Substitute_Var_And_Function_Return_Value_From_Var(user, struct_var,FUNCTION_functions);
-                 char *function_temp=replace_not_in_string(function, user, user_value);
-                 
-                 
-                 if (strcmp(variableValueType(user_value), "string")==0||strcmp(variableValueType(user_value), "list")==0) {
-                 var_existed=TRUE;
-                 }
-                 
-                 if (instance_existed == FALSE && var_existed==TRUE){
-                 if (only_var_existed==TRUE) {
-                 return_value=Walley_Run_Special_Function_From_Var(function, struct_var);
-                 } else {
-                 return_value = Walley_Run_Special_Function_From_Var(function_temp, struct_var);
-                 }
-                 }
-                 else {
-                 return_value = Walley_Run_One_Function_And_Return_Value_From_Var(function, &VAR_var,FUNCTION_functions);
-                 
-                 }
-                 
-                 }
-                 */
-                //################### Embeded Function ###############################################################
-                if (strcmp(func_name, "int") ==0) {
-                    return_value = to_int(param_str);
-                } else if (strcmp(func_name, "double") ==0) {
-                    return_value = to_double(param_str);
-                } else if (strcmp(func_name, "d") ==0) {
-                    return_value = to_decimal(param_str);
-                } else if (strcmp(func_name, "f") ==0) {
-                    WALLEY_SUBSTITUTION_CAN_JUST_EVAL_IN_THE_END=FALSE;
-                    char *temp_value = eval_for_fraction_with_alpha(param_str);
-                    return_value = to_fraction(temp_value);
-                    WALLEY_SUBSTITUTION_CAN_JUST_EVAL_IN_THE_END=TRUE;
-                } else if (strcmp(func_name, "nstr") ==0) {
-                    //// printf("Find nstr(");
-                    return_value = to_nstr(param_str);
-                } else if (strcmp(func_name, "str")==0) {
-                    return_value = to_string(param_str);
-                    
-                    //printf("HERE return_value %s\n",return_value);
+                // not function but like (3+4)*5
+                // (3+4)
+                if (stringIsEmpty(func_name)) {
+                    temp_token.TOKEN_STRING=Walley_Eval(token_string);
                 }
-                //#####################  println  ###################
-                else if (strcmp(func_name, "walley_println") == 0) {
-                   
-                    char* temp_output = Walley_Println(struct_var,FUNCTION_functions, param_str);
+                else{
                     
-                    printf("%s", temp_output);
+                    char *param_str=substr(function, index_of_left_bracket+1, (int) strlen(function) - 1);
                     
-                    return_value="None";
-                }//#####################  print  ###################
-                else if (strcmp(func_name, "walley_print") == 0) {
-                    char* temp_output = Walley_Print(struct_var,FUNCTION_functions, param_str);
-                   
-                        printf("%s", temp_output);
+                    struct TOKEN *param_token_list=Walley_Lexica_Analysis(param_str);
                     
-                    return_value="None";
-                }
-                else if(strcmp(func_name,"walley_run_str")==0 || strcmp(func_name,"walley_eval(")==0){
-                    if (HAS_INIT_WALLEY_RUN_STR==FALSE) {
-                        HAS_INIT_WALLEY_RUN_STR=TRUE;
+                    param_str=Walley_Substitute_Var_And_Function_According_To_Token(&param_token_list, struct_var, FUNCTION_functions);
+                    
+                    //int index_of_dot=find_from_behind_not_in_str_list_dict_parenthesis(function, ".");
+                    /*
+                     if (find(substr(function, 0, find(function, "(")), ".") != -1 && charIsInString(function, index_of_dot) == FALSE) {
+                     //// printf("It is instance function\n");
+                     char *user = substr(function, 0, index_of_dot);
+                     //printf("user---> %s  func---> %s\n",user,function);
+                     bool instance_existed = checkWhetherSameInstanceExistedFromVar(INSTANCE_NAMES_LIST, user);
+                     bool var_existed = Var_Existed(*struct_var,user);
+                     
+                     bool only_var_existed = var_existed;
+                     
+                     char *user_value=Walley_Substitute_Var_And_Function_Return_Value_From_Var(user, struct_var,FUNCTION_functions);
+                     char *function_temp=replace_not_in_string(function, user, user_value);
+                     
+                     
+                     if (strcmp(variableValueType(user_value), "string")==0||strcmp(variableValueType(user_value), "list")==0) {
+                     var_existed=TRUE;
+                     }
+                     
+                     if (instance_existed == FALSE && var_existed==TRUE){
+                     if (only_var_existed==TRUE) {
+                     return_value=Walley_Run_Special_Function_From_Var(function, struct_var);
+                     } else {
+                     return_value = Walley_Run_Special_Function_From_Var(function_temp, struct_var);
+                     }
+                     }
+                     else {
+                     return_value = Walley_Run_One_Function_And_Return_Value_From_Var(function, &VAR_var,FUNCTION_functions);
+                     
+                     }
+                     
+                     }
+                     */
+                    //################### Embeded Function ###############################################################
+                    if (strcmp(func_name, "int") ==0) {
+                        return_value = to_int(param_str);
+                    } else if (strcmp(func_name, "double") ==0) {
+                        return_value = to_double(param_str);
+                    } else if (strcmp(func_name, "d") ==0) {
+                        return_value = to_decimal(param_str);
+                    } else if (strcmp(func_name, "f") ==0) {
+                        WALLEY_SUBSTITUTION_CAN_JUST_EVAL_IN_THE_END=FALSE;
+                        char *temp_value = eval_for_fraction_with_alpha(param_str);
+                        return_value = to_fraction(temp_value);
+                        WALLEY_SUBSTITUTION_CAN_JUST_EVAL_IN_THE_END=TRUE;
+                    } else if (strcmp(func_name, "nstr") ==0) {
+                        //// printf("Find nstr(");
+                        return_value = to_nstr(param_str);
+                    } else if (strcmp(func_name, "str")==0) {
+                        return_value = to_string(param_str);
                         
-                        Var_initVar(&VAR_VAR_FOR_EMBED);
-                        Var_initVar(&VAR_SETTINGS_FOR_EMBED);
-                        
-                        Str_initStringList(&TEMP_FILE_FOR_EMBED);
-                        Str_initStringList(&FUNCTION_FOR_EMBED);
-                        Str_initStringList(&WALLEY_EXPRESSION_FOR_EMBED);
-                        //AS_NAME="";
-                        //matho_init();
-                        
-                        //################ Initialize some necessary expression ##########################################################
-                        Str_addString(&WALLEY_EXPRESSION_FOR_EMBED, "walley_show_var|show var");
-                        Str_addString(&WALLEY_EXPRESSION_FOR_EMBED, "walley_decimal_mode|decimal mode");
-                        Str_addString(&WALLEY_EXPRESSION_FOR_EMBED, "walley_fraction_mode|fraction mode");
-                        Str_addString(&WALLEY_EXPRESSION_FOR_EMBED, "walley_is_fraction_mode|is fraction mode");                        //################################################################################################################
-                        
-                        
-                        
-                        Walley_Initialize_Var(&VAR_VAR_FOR_EMBED);
-                        Walley_Initialize_Settings(&VAR_SETTINGS_FOR_EMBED);
-                        Str_addString(&TEMP_FILE_FOR_EMBED, "#Temp File In Order To Run goto");
-                        
-                        char *string_in_out_wy="def print(input_str):\n\
-                        exp:\n\
-                        print input_str\n\
-                        walley_print(input_str)\n\
-                        \n\
-                        def println(input_str):\n\
-                        exp:\n\
-                        println input_str\n\
-                        walley_println(input_str)\n\
-                        \n\
-                        def random(num1=0,num2=1):\n\
-                        exp:\n\
-                        random from num1 to num2\n\
-                        decimal mode\n\
-                        output=walley_random()*(num2-num1)+num1\n\
-                        return output";
-                        
-                        Walley_Parse_Simple_String(&VAR_VAR_FOR_EMBED, &VAR_SETTINGS_FOR_EMBED, "None", &FUNCTION_FOR_EMBED, string_in_out_wy);
-                        //Walley_Run_For_Appointed_Var(&VAR_VAR_FOR_EMBED, &VAR_SETTINGS_FOR_EMBED, &TEMP_FILE_FOR_EMBED, "None", &FUNCTION_FOR_EMBED, string_in_out_wy);
+                        //printf("HERE return_value %s\n",return_value);
                     }
-                    
-                    
-                    
-                    Walley_Parse_Simple_String(&VAR_VAR_FOR_EMBED, &VAR_SETTINGS_FOR_EMBED, "None", &FUNCTION_FOR_EMBED, toCString(param_str));
-                    return_value="None";
-                }
-                else if(strcmp(func_name,"walley_show_var")==0){
-                    walley_show_var(*struct_var);
-                    return_value="None";
-                }
-                
-                else if(strcmp(func_name, "walley_quit_program")==0){
-                    walley_quit_program();
-                }
-                
-                else if(strcmp(func_name,"walley_get_current_terminal_commands")==0){
-                    return_value=walley_get_current_terminal_commands();;
-                }
-                else if(strcmp(func_name,"walley_exit")==0){
-                    exit(0);
-                }
-                
-                // Under fraction mode, sin cos tan will not be calculated......
-                //########################### Basic Math Function #######################################
-                else if (strcmp(func_name, "sin")==0) {
-                    bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
-                    if (fraction_mode==TRUE) {
-                        return_value=function;
-                    } else {
-                        return_value = math_sin(param_str);
-                    }
-                    
-                    
-                } else if (strcmp(func_name, "cos")==0) {
-                    bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
-                    if (fraction_mode==TRUE) {
-                        return_value=function;
-                    } else {
-                        
-                        return_value = math_cos(param_str);
-                    }
-                } else if (strcmp(func_name, "tan")==0) {
-                    bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
-                    if (fraction_mode==TRUE) {
-                        return_value=function;
-                    } else {
-                        return_value = math_tan(param_str);
-                    }
-                } else if (strcmp(func_name, "cot")==0) {
-                    bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
-                    if (fraction_mode==TRUE) {
-                        return_value=function;
-                    } else {
-                        return_value = math_cot(param_str);
-                    }
-                } else if (strcmp(func_name, "tan")==0) {
-                    bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
-                    if (fraction_mode==TRUE) {
-                        return_value=function;
-                    } else {
-                
-                        return_value = math_tan(param_str);
-                    }
-                } else if (strcmp(func_name, "sec")==0) {
-                    bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
-                    if (fraction_mode==TRUE) {
-                        return_value=function;
-                    } else {
-                        return_value = math_sec(param_str);
-                    }
-                } else if (strcmp(func_name, "csc")==0) {
-                    bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
-                    if (fraction_mode==TRUE) {
-                        return_value=function;
-                    } else {
+                    //#####################  println  ###################
+                    else if (strcmp(func_name, "walley_println") == 0) {
                        
-                        return_value = math_csc(param_str);
-                    }
-                }  else if (strcmp(func_name, "exp")==0) {
-                    bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
-                    if (fraction_mode==TRUE) {
-                        return_value=function;
-                    } else {
+                        char* temp_output = Walley_Println(struct_var,FUNCTION_functions, param_str);
                         
-                        return_value = math_exp(param_str);
+                        printf("%s", temp_output);
+                        
+                        return_value="None";
+                    }//#####################  print  ###################
+                    else if (strcmp(func_name, "walley_print") == 0) {
+                        char* temp_output = Walley_Print(struct_var,FUNCTION_functions, param_str);
+                       
+                            printf("%s", temp_output);
+                        
+                        return_value="None";
                     }
-                }else if (strcmp(func_name, "log10")==0) {
-                    bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
-                    if (fraction_mode==TRUE) {
-                        return_value=function;
-                    } else {
-                        return_value = math_log10(param_str);
+                    else if(strcmp(func_name,"walley_run_str")==0 || strcmp(func_name,"walley_eval(")==0){
+                        if (HAS_INIT_WALLEY_RUN_STR==FALSE) {
+                            HAS_INIT_WALLEY_RUN_STR=TRUE;
+                            
+                            Var_initVar(&VAR_VAR_FOR_EMBED);
+                            Var_initVar(&VAR_SETTINGS_FOR_EMBED);
+                            
+                            Str_initStringList(&TEMP_FILE_FOR_EMBED);
+                            Str_initStringList(&FUNCTION_FOR_EMBED);
+                            Str_initStringList(&WALLEY_EXPRESSION_FOR_EMBED);
+                            //AS_NAME="";
+                            //matho_init();
+                            
+                            //################ Initialize some necessary expression ##########################################################
+                            Str_addString(&WALLEY_EXPRESSION_FOR_EMBED, "walley_show_var|show var");
+                            Str_addString(&WALLEY_EXPRESSION_FOR_EMBED, "walley_decimal_mode|decimal mode");
+                            Str_addString(&WALLEY_EXPRESSION_FOR_EMBED, "walley_fraction_mode|fraction mode");
+                            Str_addString(&WALLEY_EXPRESSION_FOR_EMBED, "walley_is_fraction_mode|is fraction mode");                        //################################################################################################################
+                            
+                            
+                            
+                            Walley_Initialize_Var(&VAR_VAR_FOR_EMBED);
+                            Walley_Initialize_Settings(&VAR_SETTINGS_FOR_EMBED);
+                            Str_addString(&TEMP_FILE_FOR_EMBED, "#Temp File In Order To Run goto");
+                            
+                            char *string_in_out_wy="def print(input_str):\n\
+                            exp:\n\
+                            print input_str\n\
+                            walley_print(input_str)\n\
+                            \n\
+                            def println(input_str):\n\
+                            exp:\n\
+                            println input_str\n\
+                            walley_println(input_str)\n\
+                            \n\
+                            def random(num1=0,num2=1):\n\
+                            exp:\n\
+                            random from num1 to num2\n\
+                            decimal mode\n\
+                            output=walley_random()*(num2-num1)+num1\n\
+                            return output";
+                            
+                            Walley_Parse_Simple_String(&VAR_VAR_FOR_EMBED, &VAR_SETTINGS_FOR_EMBED, "None", &FUNCTION_FOR_EMBED, string_in_out_wy);
+                            //Walley_Run_For_Appointed_Var(&VAR_VAR_FOR_EMBED, &VAR_SETTINGS_FOR_EMBED, &TEMP_FILE_FOR_EMBED, "None", &FUNCTION_FOR_EMBED, string_in_out_wy);
+                        }
+                        
+                        
+                        
+                        Walley_Parse_Simple_String(&VAR_VAR_FOR_EMBED, &VAR_SETTINGS_FOR_EMBED, "None", &FUNCTION_FOR_EMBED, toCString(param_str));
+                        return_value="None";
                     }
+                    else if(strcmp(func_name,"walley_show_var")==0){
+                        walley_show_var(*struct_var);
+                        return_value="None";
+                    }
+                    
+                    else if(strcmp(func_name, "walley_quit_program")==0){
+                        walley_quit_program();
+                    }
+                    
+                    else if(strcmp(func_name,"walley_get_current_terminal_commands")==0){
+                        return_value=walley_get_current_terminal_commands();;
+                    }
+                    else if(strcmp(func_name,"walley_exit")==0){
+                        exit(0);
+                    }
+                    
+                    // Under fraction mode, sin cos tan will not be calculated......
+                    //########################### Basic Math Function #######################################
+                    else if (strcmp(func_name, "sin")==0) {
+                        bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
+                        if (fraction_mode==TRUE) {
+                            return_value=function;
+                        } else {
+                            return_value = math_sin(param_str);
+                        }
+                        
+                        
+                    } else if (strcmp(func_name, "cos")==0) {
+                        bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
+                        if (fraction_mode==TRUE) {
+                            return_value=function;
+                        } else {
+                            
+                            return_value = math_cos(param_str);
+                        }
+                    } else if (strcmp(func_name, "tan")==0) {
+                        bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
+                        if (fraction_mode==TRUE) {
+                            return_value=function;
+                        } else {
+                            return_value = math_tan(param_str);
+                        }
+                    } else if (strcmp(func_name, "cot")==0) {
+                        bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
+                        if (fraction_mode==TRUE) {
+                            return_value=function;
+                        } else {
+                            return_value = math_cot(param_str);
+                        }
+                    } else if (strcmp(func_name, "tan")==0) {
+                        bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
+                        if (fraction_mode==TRUE) {
+                            return_value=function;
+                        } else {
+                    
+                            return_value = math_tan(param_str);
+                        }
+                    } else if (strcmp(func_name, "sec")==0) {
+                        bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
+                        if (fraction_mode==TRUE) {
+                            return_value=function;
+                        } else {
+                            return_value = math_sec(param_str);
+                        }
+                    } else if (strcmp(func_name, "csc")==0) {
+                        bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
+                        if (fraction_mode==TRUE) {
+                            return_value=function;
+                        } else {
+                           
+                            return_value = math_csc(param_str);
+                        }
+                    }  else if (strcmp(func_name, "exp")==0) {
+                        bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
+                        if (fraction_mode==TRUE) {
+                            return_value=function;
+                        } else {
+                            
+                            return_value = math_exp(param_str);
+                        }
+                    }else if (strcmp(func_name, "log10")==0) {
+                        bool fraction_mode=atoi(Var_getValueOfVar(VAR_settings, "fraction_mode"));
+                        if (fraction_mode==TRUE) {
+                            return_value=function;
+                        } else {
+                            return_value = math_log10(param_str);
+                        }
+                    }
+                    
+                    
+                    else if (strcmp(func_name,"range")==0){
+                        return_value = math_range(param_str);
+                    }
+                    
+                    //########################### End Basic Math Function #######################################
+                    
+                    
+                    else if (strcmp(func_name, "type")==0) {
+                        return_value = var_value_type(param_str);
+                        //// printf("Find type() and return value is %s\n", return_value);
+                    } else if (strcmp(func_name, "num")==0) {
+                        return_value = to_num(param_str);
+                    } else if (strcmp(func_name, "time")==0) {
+                        return_value = simple_time();
+                    } else if (strcmp(func_name, "file_readlines")==0) {
+                        return_value = file_readlines(param_str);
+                    } else if (strcmp(func_name, "file_addstrtofile")==0) {
+                        return_value = file_addstrtofile(param_str);
+                    }
+                    else if (strcmp(func_name, "file_writelines") == 0) {
+                       
+                        char *file_name = substr(param_str, 0, find_not_in_string(param_str, ","));
+                        char *lines = substr(param_str, find_not_in_string(param_str, ",") + 1, (int) strlen(param_str));
+                        file_name = toCString(file_name);
+                        lines=toCString(lines);
+                        return_value = file_writelines(file_name,lines);
+                    } else if (strcmp(func_name, "remove_file") == 0) {
+                        return_value = file_removefile(param_str);
+                    } else if (strcmp(func_name, "files_indir") == 0) {
+                       
+                        return_value = file_readFileNameInDirectory(param_str);
+                    } else if (strcmp(func_name, "create_file") == 0) {
+                        
+                        return_value = file_createfile(param_str);
+                    } else if (strcmp(func_name, "walley_system") == 0) {
+                        return_value = walley_system(param_str);
+                    } else if (strcmp(func_name, "walley_system_return_str") == 0) {
+                        return_value = walley_system_return_str(param_str);
+                    } else if (strcmp(func_name, "input") == 0) {
+                        return_value = var_input(param_str);
+                    } else if(strcmp(func_name,"walley_fraction_mode")==0){
+                        Var_changeValueOfVar(&VAR_settings, "fraction_mode","1", "int");
+                        
+                        //char *ocp;
+                        //matho_parse("set fraction 1", &ocp);
+                        //matho_process("set fraction 1", &ocp);
+                        
+                        
+                        return_value="None";
+                    } else if(strcmp(func_name,"walley_decimal_mode")==0){
+                        Var_changeValueOfVar(&VAR_settings, "fraction_mode","0", "int");
+                        
+                        //char *ocp;
+                        //matho_parse("set fraction 0", &ocp);
+                        //matho_process("set fraction 0", &ocp);
+                        
+                        return_value="None";
+                        
+                    } else if(strcmp(func_name,"walley_is_fraction_mode")==0){
+                        return_value=walley_is_fraction_mode();
+                    }
+                    else if(strcmp(func_name,"walley_random")==0){
+                        //char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
+                        //char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var);
+                        //temp_value = Walley_Eval_With_Variable_From_Var(struct_var, temp_value);
+                        return_value=walley_random();
+                    }
+                    
+                    
+                    
+                    
+                    
+                    //#################################################################
+                    else {
+                                            
+                        return_value = Walley_Run_One_Function_And_Return_Value_From_Var_2(function,struct_var,FUNCTION_functions);
+                    }
+                    
+                    temp_token.TOKEN_STRING=return_value;
                 }
-                
-                
-                else if (strcmp(func_name,"range")==0){
-                    return_value = math_range(param_str);
-                }
-                
-                //########################### End Basic Math Function #######################################
-                
-                
-                else if (strcmp(func_name, "type")==0) {
-                    return_value = var_value_type(param_str);
-                    //// printf("Find type() and return value is %s\n", return_value);
-                } else if (strcmp(func_name, "num")==0) {
-                    return_value = to_num(param_str);
-                } else if (strcmp(func_name, "time")==0) {
-                    return_value = simple_time();
-                } else if (strcmp(func_name, "file_readlines")==0) {
-                    return_value = file_readlines(param_str);
-                } else if (strcmp(func_name, "file_addstrtofile")==0) {
-                    return_value = file_addstrtofile(param_str);
-                }
-                else if (strcmp(func_name, "file_writelines") == 0) {
-                   
-                    char *file_name = substr(param_str, 0, find_not_in_string(param_str, ","));
-                    char *lines = substr(param_str, find_not_in_string(param_str, ",") + 1, (int) strlen(param_str));
-                    file_name = toCString(file_name);
-                    lines=toCString(lines);
-                    return_value = file_writelines(file_name,lines);
-                } else if (strcmp(func_name, "remove_file") == 0) {
-                    return_value = file_removefile(param_str);
-                } else if (strcmp(func_name, "files_indir") == 0) {
-                   
-                    return_value = file_readFileNameInDirectory(param_str);
-                } else if (strcmp(func_name, "create_file") == 0) {
-                    
-                    return_value = file_createfile(param_str);
-                } else if (strcmp(func_name, "walley_system") == 0) {
-                    return_value = walley_system(param_str);
-                } else if (strcmp(func_name, "walley_system_return_str") == 0) {
-                    return_value = walley_system_return_str(param_str);
-                } else if (strcmp(func_name, "input") == 0) {
-                    return_value = var_input(param_str);
-                } else if(strcmp(func_name,"walley_fraction_mode")==0){
-                    Var_changeValueOfVar(&VAR_settings, "fraction_mode","1", "int");
-                    
-                    //char *ocp;
-                    //matho_parse("set fraction 1", &ocp);
-                    //matho_process("set fraction 1", &ocp);
-                    
-                    
-                    return_value="None";
-                } else if(strcmp(func_name,"walley_decimal_mode")==0){
-                    Var_changeValueOfVar(&VAR_settings, "fraction_mode","0", "int");
-                    
-                    //char *ocp;
-                    //matho_parse("set fraction 0", &ocp);
-                    //matho_process("set fraction 0", &ocp);
-                    
-                    return_value="None";
-                    
-                } else if(strcmp(func_name,"walley_is_fraction_mode")==0){
-                    return_value=walley_is_fraction_mode();
-                }
-                else if(strcmp(func_name,"walley_random")==0){
-                    //char *temp1 = substr(function, find(function, "(") + 1, (int) strlen(function) - 1);
-                    //char *temp_value = Walley_Substitute_Var_And_Function_Return_Value_From_Var(temp1, struct_var);
-                    //temp_value = Walley_Eval_With_Variable_From_Var(struct_var, temp_value);
-                    return_value=walley_random();
-                }
-                
-                
-                
-                
-                
-                //#################################################################
-                else {
-                                        
-                    return_value = Walley_Run_One_Function_And_Return_Value_From_Var_2(function,struct_var,FUNCTION_functions);
-                }
-                
-                temp_token.TOKEN_STRING=return_value;
             }
         }
         
@@ -2223,6 +2233,7 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
         
         temp_token.TOKEN_CLASS=TOKEN_analyzeTokenClass(temp_token.TOKEN_STRING);
         TL_addToken(&output_token, temp_token);
+        
     }
     
     

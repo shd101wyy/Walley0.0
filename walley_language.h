@@ -173,7 +173,7 @@ char *cleanUpSentence(char *input_str){
                 continue;
             }
             //else if(isSign(input_str[i])==TRUE && has_found_space==FALSE){
-            else if (isJudgeSign(input_str[i])==TRUE && has_found_space==FALSE){
+            else if (isJudgeSign(input_str,i)==TRUE && has_found_space==FALSE){
                 //temp[index_of_temp]=' ';
                 //index_of_temp+=1;
                 temp[index_of_temp]=input_str[i];
@@ -185,11 +185,11 @@ char *cleanUpSentence(char *input_str){
                 has_found_space=TRUE;
                 continue;
             }
-            else if (isJudgeSign(input_str[i])==TRUE && has_found_space==TRUE){
+            else if (isJudgeSign(input_str,i)==TRUE && has_found_space==TRUE){
                 //temp[index_of_temp]=' ';
                 //index_of_temp+=1;
                 index_of_temp=index_of_temp-1;
-                if (isJudgeSign(temp[index_of_temp])) {
+                if (isJudgeSign(temp,index_of_temp)) {
                     index_of_temp=index_of_temp+1;
                 }
                 temp[index_of_temp]=input_str[i];

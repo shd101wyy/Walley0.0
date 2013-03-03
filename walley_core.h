@@ -408,7 +408,6 @@ void Walley_Run_For_Appointed_Var(struct VAR **struct_var, struct VAR **struct_s
             struct TOKEN *token=Walley_Lexica_Analysis(input_str);
             token=TL_returnTokenListWithoutWhitespaces(token);
             TOKEN_checkError(token, input_str);
-            //int length_of_token=TOKEN_length(token);
             struct TOKEN first_none_whitespace_token=token[1];
             
             
