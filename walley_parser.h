@@ -2247,6 +2247,7 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
     
     
     if (WALLEY_SUBSTITUTION_CAN_JUST_EVAL_IN_THE_END==TRUE) {
+   
         if (stringIsAlpha(output)==FALSE) {
             output=Walley_Eval_All_From_Var(*struct_var, output);
         }else {

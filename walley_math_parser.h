@@ -1083,6 +1083,9 @@ char *Walley_Math_Parser_Fraction(char *input_str){
 // judge f --> fraction
 // ..... d --> decimal
 char *Walley_Math_Eval(char *input_str, char judge){
+    if (stringIsDigit(input_str)) {
+        return input_str;
+    }
     if (input_str[0]=='-') {
         input_str=append("0",input_str);
     }
