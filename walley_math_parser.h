@@ -135,12 +135,7 @@ struct Math_Data changeValueToMathDate(char *value){
 }
 
 void MDL_operator_for_decimal(struct Math_Data_List *mdl, struct Math_Data md, char sign){
-   // printf("MDL_operator_for_decimal\n");
-   // MDL_PrintMathDataList(*mdl);
-   // printf("========\n");
-   // printf("%s: %s: %s:\n%c\n",md.coefficient,md.value,md.power,sign);
-   // printf("========\n");
-    
+       
     int length=(*mdl).length;
     if (sign=='+' || sign=='-') {
         
@@ -171,28 +166,56 @@ void MDL_operator_for_decimal(struct Math_Data_List *mdl, struct Math_Data md, c
                         char *temp_value=(*mdl).math_data_list[length-1].value;
                         struct TOKEN *tl=Walley_MATH_Lexica_Analysis(temp_value);
                         int length_of_tl=TL_length(tl);
-                        int i=0;
-                        int smallest_index=0;
-                        bool can_be_smaller_one=FALSE;
-                        for (; i<length_of_tl; i++) {
-                            if (strcmp("W_ID",tl[i].TOKEN_CLASS)==0) {
-                                if (strcmp(tl[i].TOKEN_STRING, md.value)>0) {
-                                    smallest_index=tl[i].TOKEN_START;
-                                    can_be_smaller_one=TRUE;
-                                    break;
-                                }
-                            }
-                        }
                         
-                        if (can_be_smaller_one==FALSE) {
-                            (*mdl).math_data_list[length-1].value=append((*mdl).math_data_list[length-1].value, append("*", md.value));
-                        }
-                        else{
-                            if (smallest_index==0) {
-                                (*mdl).math_data_list[length-1].value=append(append(md.value,"*"),(*mdl).math_data_list[length-1].value);
+                        //a*a
+                        if (length_of_tl==2) {
+                            if (strcmp(md.value,(*mdl).math_data_list[length-1].value)==0) {
+                                (*mdl).math_data_list[length-1].power=cleanDotZeroAfterNum(numToCString(Walley_Operator(atof((*mdl).math_data_list[length-1].power), atof(md.power), '+')));
                             }
                             else{
-                                (*mdl).math_data_list[length-1].value=append(substr(temp_value, 0, smallest_index), append(md.value, append("*",substr(temp_value, smallest_index, (int)strlen(temp_value)))));
+                                int i=1;
+                                int smallest_end_index=0;
+                                bool can_be_smaller_one=FALSE;
+                                for (; i<length_of_tl; i++) {
+                                    if (strcmp("W_ID",tl[i].TOKEN_CLASS)==0) {
+                                        if (strcmp(tl[i].TOKEN_STRING, md.value)<=0) {
+                                            smallest_end_index=tl[i].TOKEN_END+1;
+                                            can_be_smaller_one=TRUE;
+                                            break;
+                                        }
+                                    }
+                                }
+                                
+                                if (can_be_smaller_one==FALSE) {
+                                    (*mdl).math_data_list[length-1].value=append((*mdl).math_data_list[length-1].value, append("*", md.value));
+                                }
+                                else{
+                                    
+                                    (*mdl).math_data_list[length-1].value=append(substr(temp_value, 0, smallest_end_index), append("*", append(md.value,substr(temp_value, smallest_end_index, (int)strlen(temp_value)))));
+                                }
+                                
+                            }
+                        }
+                        else{
+                            int i=1;
+                            int smallest_end_index=0;
+                            bool can_be_smaller_one=FALSE;
+                            for (; i<length_of_tl; i++) {
+                                if (strcmp("W_ID",tl[i].TOKEN_CLASS)==0) {
+                                    if (strcmp(tl[i].TOKEN_STRING, md.value)<=0) {
+                                        smallest_end_index=tl[i].TOKEN_END+1;
+                                        can_be_smaller_one=TRUE;
+                                        break;
+                                    }
+                                }
+                            }
+                            
+                            if (can_be_smaller_one==FALSE) {
+                                (*mdl).math_data_list[length-1].value=append((*mdl).math_data_list[length-1].value, append("*", md.value));
+                            }
+                            else{
+                                
+                                (*mdl).math_data_list[length-1].value=append(substr(temp_value, 0, smallest_end_index), append("*", append(md.value,substr(temp_value, smallest_end_index, (int)strlen(temp_value)))));
                             }
                         }
                         
@@ -202,38 +225,74 @@ void MDL_operator_for_decimal(struct Math_Data_List *mdl, struct Math_Data md, c
                     else{
                         // b/b
                         if (strcmp(md.value, (*mdl).math_data_list[length-1].value)==0) {
-                            (*mdl).math_data_list[length-1].value="0";
+                            (*mdl).math_data_list[length-1].power=cleanDotZeroAfterNum(numToCString(Walley_Operator(atof((*mdl).math_data_list[length-1].power), atof(md.power), '-')));
+                            if (strcmp("0", (*mdl).math_data_list[length-1].power)==0) {
+                                (*mdl).math_data_list[length-1].power="1";
+                                (*mdl).math_data_list[length-1].coefficient="1";
+                                (*mdl).math_data_list[length-1].value="0";
+                                
+                            }
                         }
                         else{
                             char *temp_value=(*mdl).math_data_list[length-1].value;
                             struct TOKEN *tl=Walley_MATH_Lexica_Analysis(temp_value);
                             int length_of_tl=TL_length(tl);
-                            int i=0;
-                            int smallest_index=0;
-                            bool can_be_smaller_one=FALSE;
-                            for (; i<length_of_tl; i++) {
-                                if (strcmp("W_ID",tl[i].TOKEN_CLASS)==0) {
-                                    if (strcmp(tl[i].TOKEN_STRING, md.value)>0) {
-                                        smallest_index=tl[i].TOKEN_START;
-                                        can_be_smaller_one=TRUE;
-                                        break;
-                                    }
+                            if (length_of_tl==2) {
+                                if (strcmp(md.value,(*mdl).math_data_list[length-1].value)==0) {
+                                    (*mdl).math_data_list[length-1].power=cleanDotZeroAfterNum(numToCString(Walley_Operator(atof((*mdl).math_data_list[length-1].power), atof(md.power), '-')));
                                 }
+                                else{
+                                    int i=1;
+                                    int smallest_end_index=0;
+                                    bool can_be_smaller_one=FALSE;
+                                    for (; i<length_of_tl; i++) {
+                                        if (strcmp("W_ID",tl[i].TOKEN_CLASS)==0) {
+                                            if (strcmp(tl[i].TOKEN_STRING, md.value)<=0) {
+                                                smallest_end_index=tl[i].TOKEN_END+1;
+                                                can_be_smaller_one=TRUE;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    
+                                    if (can_be_smaller_one==FALSE) {
+                                        (*mdl).math_data_list[length-1].value=append((*mdl).math_data_list[length-1].value, append("/", md.value));
+                                    }
+                                    else{
+                                        char *append_power=append("^(", append((*mdl).math_data_list[length-1].power, ")"));
+                                        if (strcmp((*mdl).math_data_list[length-1].power, "1")==0) {
+                                            append_power="";
+                                        }
+                                        (*mdl).math_data_list[length-1].value=append(substr(temp_value, 0, smallest_end_index),append(append_power,append("/", append(md.value,substr(temp_value, smallest_end_index, (int)strlen(temp_value))))));
+                                        (*mdl).math_data_list[length-1].power="1";
+                                    }
+                                    
+                                }
+                                
                             }
                             
-                            if (can_be_smaller_one==FALSE) {
-                                (*mdl).math_data_list[length-1].value=append((*mdl).math_data_list[length-1].value, append("/", md.value));
-                            }
                             else{
-                                if (smallest_index==0) {
+                                int i=1;
+                                int smallest_end_index=0;
+                                bool can_be_smaller_one=FALSE;
+                                for (; i<length_of_tl; i++) {
+                                    if (strcmp("W_ID",tl[i].TOKEN_CLASS)==0) {
+                                        if (strcmp(tl[i].TOKEN_STRING, md.value)<=0) {
+                                            smallest_end_index=tl[i].TOKEN_END+1;
+                                            can_be_smaller_one=TRUE;
+                                            break;
+                                        }
+                                    }
+                                }
+                                
+                                if (can_be_smaller_one==FALSE) {
                                     (*mdl).math_data_list[length-1].value=append((*mdl).math_data_list[length-1].value, append("/", md.value));
                                 }
                                 else{
-                                    (*mdl).math_data_list[length-1].value=append(substr(temp_value, 0, smallest_index), append(md.value, append("/",substr(temp_value, smallest_index, (int)strlen(temp_value)))));
+                                    (*mdl).math_data_list[length-1].value=append(substr(temp_value, 0, smallest_end_index), append("/", append(md.value,substr(temp_value, smallest_end_index, (int)strlen(temp_value)))));
                                 }
+                                
                             }
-                            
-                            
                             
                         }
                     }
@@ -293,18 +352,9 @@ void MDL_operator_for_decimal(struct Math_Data_List *mdl, struct Math_Data md, c
         }
     }
     
-   // printf("output=======\n");
-   // MDL_PrintMathDataList(*mdl);
-   // printf("\n\n");
-    
 }
 
 void MDL_operator_for_fraction(struct Math_Data_List *mdl, struct Math_Data md, char sign){
-    // printf("MDL_operator_for_decimal\n");
-    // MDL_PrintMathDataList(*mdl);
-    // printf("========\n");
-    // printf("%s: %s: %s:\n%c\n",md.coefficient,md.value,md.power,sign);
-    // printf("========\n");
     
     int length=(*mdl).length;
     if (sign=='+' || sign=='-') {
@@ -315,8 +365,7 @@ void MDL_operator_for_fraction(struct Math_Data_List *mdl, struct Math_Data md, 
             // find same symbol or number
             if (strcmp((*mdl).math_data_list[i].value,md.value)==0) {
                 find_same_symbol=TRUE;
-                (*mdl).math_data_list[i].coefficient=Walley_Operator_For_Fraction((*mdl).math_data_list[i].coefficient, md.coefficient, sign);
-                //(*mdl).math_data_list[i].coefficient= cleanDotZeroAfterNum(numToCString(Walley_Operator(atof((*mdl).math_data_list[i].coefficient), atof(md.coefficient), sign)));
+                (*mdl).math_data_list[i].coefficient= Walley_Operator_For_Fraction((*mdl).math_data_list[i].coefficient, md.coefficient, sign);
             }
         }
         if (find_same_symbol==FALSE) {
@@ -330,8 +379,6 @@ void MDL_operator_for_fraction(struct Math_Data_List *mdl, struct Math_Data md, 
         
         if (length==1) {
             (*mdl).math_data_list[length-1].coefficient=Walley_Operator_For_Fraction((*mdl).math_data_list[length-1].coefficient, md.coefficient, sign);
-
-            // (*mdl).math_data_list[length-1].coefficient=cleanDotZeroAfterNum(numToCString(Walley_Operator(atof((*mdl).math_data_list[length-1].coefficient), atof(md.coefficient), sign)));
             if (stringHasAlpha(md.value)==TRUE) {
                 if (stringHasAlpha((*mdl).math_data_list[length-1].value)==TRUE) {
                     
@@ -339,28 +386,56 @@ void MDL_operator_for_fraction(struct Math_Data_List *mdl, struct Math_Data md, 
                         char *temp_value=(*mdl).math_data_list[length-1].value;
                         struct TOKEN *tl=Walley_MATH_Lexica_Analysis(temp_value);
                         int length_of_tl=TL_length(tl);
-                        int i=0;
-                        int smallest_index=0;
-                        bool can_be_smaller_one=FALSE;
-                        for (; i<length_of_tl; i++) {
-                            if (strcmp("W_ID",tl[i].TOKEN_CLASS)==0) {
-                                if (strcmp(tl[i].TOKEN_STRING, md.value)>0) {
-                                    smallest_index=tl[i].TOKEN_START;
-                                    can_be_smaller_one=TRUE;
-                                    break;
-                                }
-                            }
-                        }
                         
-                        if (can_be_smaller_one==FALSE) {
-                            (*mdl).math_data_list[length-1].value=append((*mdl).math_data_list[length-1].value, append("*", md.value));
-                        }
-                        else{
-                            if (smallest_index==0) {
-                                (*mdl).math_data_list[length-1].value=append(append(md.value,"*"),(*mdl).math_data_list[length-1].value);
+                        //a*a
+                        if (length_of_tl==2) {
+                            if (strcmp(md.value,(*mdl).math_data_list[length-1].value)==0) {
+                                (*mdl).math_data_list[length-1].power=Walley_Operator_For_Fraction((*mdl).math_data_list[length-1].power, md.power, '+');
                             }
                             else{
-                                (*mdl).math_data_list[length-1].value=append(substr(temp_value, 0, smallest_index), append(md.value, append("*",substr(temp_value, smallest_index, (int)strlen(temp_value)))));
+                                int i=1;
+                                int smallest_end_index=0;
+                                bool can_be_smaller_one=FALSE;
+                                for (; i<length_of_tl; i++) {
+                                    if (strcmp("W_ID",tl[i].TOKEN_CLASS)==0) {
+                                        if (strcmp(tl[i].TOKEN_STRING, md.value)<=0) {
+                                            smallest_end_index=tl[i].TOKEN_END+1;
+                                            can_be_smaller_one=TRUE;
+                                            break;
+                                        }
+                                    }
+                                }
+                                
+                                if (can_be_smaller_one==FALSE) {
+                                    (*mdl).math_data_list[length-1].value=append((*mdl).math_data_list[length-1].value, append("*", md.value));
+                                }
+                                else{
+                                    
+                                    (*mdl).math_data_list[length-1].value=append(substr(temp_value, 0, smallest_end_index), append("*", append(md.value,substr(temp_value, smallest_end_index, (int)strlen(temp_value)))));
+                                }
+                                
+                            }
+                        }
+                        else{
+                            int i=1;
+                            int smallest_end_index=0;
+                            bool can_be_smaller_one=FALSE;
+                            for (; i<length_of_tl; i++) {
+                                if (strcmp("W_ID",tl[i].TOKEN_CLASS)==0) {
+                                    if (strcmp(tl[i].TOKEN_STRING, md.value)<=0) {
+                                        smallest_end_index=tl[i].TOKEN_END+1;
+                                        can_be_smaller_one=TRUE;
+                                        break;
+                                    }
+                                }
+                            }
+                            
+                            if (can_be_smaller_one==FALSE) {
+                                (*mdl).math_data_list[length-1].value=append((*mdl).math_data_list[length-1].value, append("*", md.value));
+                            }
+                            else{
+                                
+                                (*mdl).math_data_list[length-1].value=append(substr(temp_value, 0, smallest_end_index), append("*", append(md.value,substr(temp_value, smallest_end_index, (int)strlen(temp_value)))));
                             }
                         }
                         
@@ -370,38 +445,74 @@ void MDL_operator_for_fraction(struct Math_Data_List *mdl, struct Math_Data md, 
                     else{
                         // b/b
                         if (strcmp(md.value, (*mdl).math_data_list[length-1].value)==0) {
-                            (*mdl).math_data_list[length-1].value="0";
+                            (*mdl).math_data_list[length-1].power=Walley_Operator_For_Fraction((*mdl).math_data_list[length-1].power, md.power, '-');
+                            if (strcmp("0", (*mdl).math_data_list[length-1].power)==0) {
+                                (*mdl).math_data_list[length-1].power="1";
+                                (*mdl).math_data_list[length-1].coefficient="1";
+                                (*mdl).math_data_list[length-1].value="0";
+                                
+                            }
                         }
                         else{
                             char *temp_value=(*mdl).math_data_list[length-1].value;
                             struct TOKEN *tl=Walley_MATH_Lexica_Analysis(temp_value);
                             int length_of_tl=TL_length(tl);
-                            int i=0;
-                            int smallest_index=0;
-                            bool can_be_smaller_one=FALSE;
-                            for (; i<length_of_tl; i++) {
-                                if (strcmp("W_ID",tl[i].TOKEN_CLASS)==0) {
-                                    if (strcmp(tl[i].TOKEN_STRING, md.value)>0) {
-                                        smallest_index=tl[i].TOKEN_START;
-                                        can_be_smaller_one=TRUE;
-                                        break;
-                                    }
+                            if (length_of_tl==2) {
+                                if (strcmp(md.value,(*mdl).math_data_list[length-1].value)==0) {
+                                    (*mdl).math_data_list[length-1].power=Walley_Operator_For_Fraction((*mdl).math_data_list[length-1].power, md.power, '-');
                                 }
+                                else{
+                                    int i=1;
+                                    int smallest_end_index=0;
+                                    bool can_be_smaller_one=FALSE;
+                                    for (; i<length_of_tl; i++) {
+                                        if (strcmp("W_ID",tl[i].TOKEN_CLASS)==0) {
+                                            if (strcmp(tl[i].TOKEN_STRING, md.value)<=0) {
+                                                smallest_end_index=tl[i].TOKEN_END+1;
+                                                can_be_smaller_one=TRUE;
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    
+                                    if (can_be_smaller_one==FALSE) {
+                                        (*mdl).math_data_list[length-1].value=append((*mdl).math_data_list[length-1].value, append("/", md.value));
+                                    }
+                                    else{
+                                        char *append_power=append("^(", append((*mdl).math_data_list[length-1].power, ")"));
+                                        if (strcmp((*mdl).math_data_list[length-1].power, "1")==0) {
+                                            append_power="";
+                                        }
+                                        (*mdl).math_data_list[length-1].value=append(substr(temp_value, 0, smallest_end_index),append(append_power,append("/", append(md.value,substr(temp_value, smallest_end_index, (int)strlen(temp_value))))));
+                                        (*mdl).math_data_list[length-1].power="1";
+                                    }
+                                    
+                                }
+                                
                             }
                             
-                            if (can_be_smaller_one==FALSE) {
-                                (*mdl).math_data_list[length-1].value=append((*mdl).math_data_list[length-1].value, append("/", md.value));
-                            }
                             else{
-                                if (smallest_index==0) {
+                                int i=1;
+                                int smallest_end_index=0;
+                                bool can_be_smaller_one=FALSE;
+                                for (; i<length_of_tl; i++) {
+                                    if (strcmp("W_ID",tl[i].TOKEN_CLASS)==0) {
+                                        if (strcmp(tl[i].TOKEN_STRING, md.value)<=0) {
+                                            smallest_end_index=tl[i].TOKEN_END+1;
+                                            can_be_smaller_one=TRUE;
+                                            break;
+                                        }
+                                    }
+                                }
+                                
+                                if (can_be_smaller_one==FALSE) {
                                     (*mdl).math_data_list[length-1].value=append((*mdl).math_data_list[length-1].value, append("/", md.value));
                                 }
                                 else{
-                                    (*mdl).math_data_list[length-1].value=append(substr(temp_value, 0, smallest_index), append(md.value, append("/",substr(temp_value, smallest_index, (int)strlen(temp_value)))));
+                                    (*mdl).math_data_list[length-1].value=append(substr(temp_value, 0, smallest_end_index), append("/", append(md.value,substr(temp_value, smallest_end_index, (int)strlen(temp_value)))));
                                 }
+                                
                             }
-                            
-                            
                             
                         }
                     }
@@ -461,9 +572,6 @@ void MDL_operator_for_fraction(struct Math_Data_List *mdl, struct Math_Data md, 
         }
     }
     
-    // printf("output=======\n");
-    // MDL_PrintMathDataList(*mdl);
-    // printf("\n\n");
 }
 
 /*
@@ -1072,7 +1180,14 @@ char *Walley_Math_Eval(char *input_str, char judge){
         
     // fraction
     if (judge=='f') {
+        // first time calculation
         char *output=Walley_Math_Parser_Fraction(postfix);
+        
+        // second time calculation
+        token=Walley_MATH_Lexica_Analysis(output);
+        postfix=WALLEY_MATH_Infix_to_Postfix(token);
+        output=Walley_Math_Parser_Fraction(postfix);
+        
         int a=1;
         for (a=1; a<i; a++) {
             char *replace_str_a=replace_str_list[a];
@@ -1086,6 +1201,14 @@ char *Walley_Math_Eval(char *input_str, char judge){
     }
     // decimal
     else{
-        return Walley_Math_Parser_Decimal(postfix);
+        // first time calculation
+        char *output=Walley_Math_Parser_Decimal(postfix);
+        
+        // second time calculation
+        token=Walley_MATH_Lexica_Analysis(output);
+        postfix=WALLEY_MATH_Infix_to_Postfix(token);
+        output=Walley_Math_Parser_Decimal(postfix);
+        
+        return output;
     }
 }
