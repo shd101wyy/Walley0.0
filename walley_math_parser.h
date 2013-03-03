@@ -973,6 +973,9 @@ char *Walley_Math_Parser_Decimal(char *input_str){
     }
     
     char *output=MDL_changeMathDataListToString(MDA.mdl[0]);
+    if (stringIsEmpty(output)) {
+        output=Str_PopString(&stack);
+    }
     //return cleanDotZeroAfterNum(Str_PopString(&stack));
     return output;
 }
@@ -1070,6 +1073,9 @@ char *Walley_Math_Parser_Fraction(char *input_str){
     }
     
     char *output=MDL_changeMathDataListToString(MDA.mdl[0]);
+    if (stringIsEmpty(output)) {
+        output=Str_PopString(&stack);
+    }
     //return cleanDotZeroAfterNum(Str_PopString(&stack));
     return output;
 }
@@ -1182,7 +1188,7 @@ char *Walley_Math_Eval(char *input_str, char judge){
     if (judge=='f') {
         // first time calculation
         char *output=Walley_Math_Parser_Fraction(postfix);
-        
+                
         // second time calculation
         token=Walley_MATH_Lexica_Analysis(output);
         postfix=WALLEY_MATH_Infix_to_Postfix(token);
