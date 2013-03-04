@@ -332,7 +332,7 @@ void MDL_operator_for_decimal(struct Math_Data_List *mdl, struct Math_Data md, c
             if (strcmp(md.value, "0")==0) {
                 // a^3
                 (*mdl).math_data_list[length-1].power=md.coefficient;
-                
+                (*mdl).math_data_list[length-1].coefficient=cleanDotZeroAfterNum(numToCString(Walley_Operator(atof((*mdl).math_data_list[length-1].coefficient), atof(md.coefficient), sign)));
             }
             else{
                 (*mdl).math_data_list[length-1].power=md.value;
@@ -552,7 +552,7 @@ void MDL_operator_for_fraction(struct Math_Data_List *mdl, struct Math_Data md, 
             if (strcmp(md.value, "0")==0) {
                 // a^3
                 (*mdl).math_data_list[length-1].power=md.coefficient;
-                
+                (*mdl).math_data_list[length-1].coefficient=Walley_Operator_For_Fraction((*mdl).math_data_list[length-1].coefficient, md.coefficient, sign);
             }
             else{
                 (*mdl).math_data_list[length-1].power=md.value;
