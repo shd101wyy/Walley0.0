@@ -1869,7 +1869,7 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
                 
                 // not function but like (3+4)*5
                 // (3+4)
-                if (stringIsEmpty(func_name)) {
+                if (function[0]=='(') {
                     temp_token.TOKEN_STRING=Walley_Eval(token_string);
                 }
                 else{
