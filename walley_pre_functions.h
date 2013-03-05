@@ -35,7 +35,7 @@ typedef int bool;
 #define FALSE 0
 
 
-#define USING_MATHOMATIC 0
+#define USING_MATHOMATIC 1
 
 int main(int argc, char **argv);
 

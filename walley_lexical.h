@@ -284,6 +284,24 @@ int indexOfFinal(char *input_str, int first_index){
         }
     
     }
+    // (
+    else if(first_char=='('){
+        int left=1;
+        int right=0;
+        for (; i<length; i++) {
+            if (input_str[i]=='('&&charIsInString(input_str, i)==FALSE) {
+                left++;
+            }
+            if (input_str[i]==')'&&charIsInString(input_str, i)==FALSE) {
+                right++;
+            }
+            if (left==right) {
+                return i;
+            }
+        }
+        
+    }
+
     // {
     else{
         int left=1;
