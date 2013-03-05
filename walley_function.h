@@ -485,40 +485,40 @@ char* Walley_Eval(char *input_str){
                 
                 // 0.8+2 return 2.8  8/10+2 return 14/5
                 if (find(input_str,".")!=-1) {
-                    /*
+                    
                     char *ocp;
                     matho_parse("set fraction 0", &ocp);
                     matho_process("set fraction 0", &ocp);
                     
                     return Walley_Mathomatic_Parse_For_Decimal(input_str);
-                     */
-                    return Walley_Math_Eval(input_str, 'd');
+                     
+                    //return Walley_Math_Eval(input_str, 'd');
 
                 }
                 else{
                     
-                    /*
+                    
                     char *ocp;
                     matho_parse("set fraction 1", &ocp);
                     matho_process("set fraction 1", &ocp);
                     
                     // I changed the code to use mathomatic
                     output=Walley_Mathomatic_Parse_For_Fraction(input_str);
-                     */
-                    return Walley_Math_Eval(input_str, 'f');
+                    
+                    //return Walley_Math_Eval(input_str, 'f');
 
                 }
             }
             else{
-                /*
+                
                 char *ocp;
                 matho_parse("set fraction 0", &ocp);
                 matho_process("set fraction 0", &ocp);
                 
                 // I changed the code here to use mathomatic
                 output=Walley_Mathomatic_Parse_For_Decimal(input_str);
-                 */
-                return Walley_Math_Eval(input_str, 'd');
+                
+                //return Walley_Math_Eval(input_str, 'd');
 
             }
 

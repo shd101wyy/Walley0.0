@@ -133,7 +133,7 @@ struct Math_Data changeValueToMathDate(char *value){
     }
     return md;
 }
-
+/*
 void MDL_operator_for_decimal(struct Math_Data_List *mdl, struct Math_Data md, char sign){
        
     int length=(*mdl).length;
@@ -573,7 +573,7 @@ void MDL_operator_for_fraction(struct Math_Data_List *mdl, struct Math_Data md, 
     }
     
 }
-
+*/
 /*
  char *Walley_Math_Operator(char *value1, char *value2, char sign){
  printf("decimal %s %s %c\n",value1,value2,sign);
@@ -872,12 +872,14 @@ void MDL_operator_for_fraction(struct Math_Data_List *mdl, struct Math_Data md, 
  }
  }
  */
-
+char *Walley_Math_Operator(char *value1, char *value2, char sign){
+    return cleanDotZeroAfterNum(numToCString(Walley_Operator(atof(value1), atof(value2), sign)));
+}
 
 // only supports decimal now
 // the input_str is the postfix notation
 char *Walley_Math_Parser_Decimal(char *input_str){
-    MDA_init(&MDA);
+    //MDA_init(&MDA);
     // MDA_0
     // MDA_1
     // MDA_2
@@ -905,6 +907,7 @@ char *Walley_Math_Parser_Decimal(char *input_str){
                 return append("-", cleanDotZeroAfterNum(value2));
             }
             
+            /*
             char *output_str;
             if (find(value1, "MDA_")==0 && find(value2, "MDA_")==0) {
                 // printf("\nThey Are Both MDA\n");
@@ -958,6 +961,9 @@ char *Walley_Math_Parser_Decimal(char *input_str){
                 output_str=append("MDA_", intToCString(MDA.length-1));
                 
             }
+             */
+            
+            char *output_str=Walley_Math_Operator(value1,value2, sign);
             // printf("----> %s\n",output_str);
             Str_addString(&stack, output_str);
             
@@ -980,11 +986,13 @@ char *Walley_Math_Parser_Decimal(char *input_str){
     return output;
 }
 
-
+char *Walley_Math_Operator_For_Fraction(char *value1, char *value2, char sign){
+    return Walley_Operator_For_Fraction(value1, value2, sign);
+}
 
 
 char *Walley_Math_Parser_Fraction(char *input_str){
-    MDA_init(&MDA);
+    //MDA_init(&MDA);
     
     int start=0;
     int end=find(input_str, " ");
@@ -1006,7 +1014,7 @@ char *Walley_Math_Parser_Fraction(char *input_str){
                 return append("-", cleanDotZeroAfterNum(value2));
             }
             
-            char *output_str;
+            /*char *output_str;
             if (find(value1, "MDA_")==0 && find(value2, "MDA_")==0) {
                 // printf("\nThey Are Both MDA\n");
                 int mda_index1=atoi(substr(value1, 4, (int)strlen(value1)));
@@ -1058,7 +1066,10 @@ char *Walley_Math_Parser_Fraction(char *input_str){
                 output_str=append("MDA_", intToCString(MDA.length-1));
                 
             }
+                              */
+            
             // printf("----> %s\n",output_str);
+            char *output_str=Walley_Math_Operator_For_Fraction(value1,value2, temp_str[0]);
             Str_addString(&stack, output_str);
             
         }
@@ -1193,9 +1204,9 @@ char *Walley_Math_Eval(char *input_str, char judge){
         char *output=Walley_Math_Parser_Fraction(postfix);
                 
         // second time calculation
-        token=Walley_MATH_Lexica_Analysis(output);
-        postfix=WALLEY_MATH_Infix_to_Postfix(token);
-        output=Walley_Math_Parser_Fraction(postfix);
+        //token=Walley_MATH_Lexica_Analysis(output);
+        //postfix=WALLEY_MATH_Infix_to_Postfix(token);
+        //output=Walley_Math_Parser_Fraction(postfix);
         
         int a=1;
         for (a=1; a<i; a++) {
@@ -1214,9 +1225,9 @@ char *Walley_Math_Eval(char *input_str, char judge){
         char *output=Walley_Math_Parser_Decimal(postfix);
         
         // second time calculation
-        token=Walley_MATH_Lexica_Analysis(output);
-        postfix=WALLEY_MATH_Infix_to_Postfix(token);
-        output=Walley_Math_Parser_Decimal(postfix);
+        //token=Walley_MATH_Lexica_Analysis(output);
+        //postfix=WALLEY_MATH_Infix_to_Postfix(token);
+        //output=Walley_Math_Parser_Decimal(postfix);
         
         return output;
     }
