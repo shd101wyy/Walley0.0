@@ -1520,13 +1520,75 @@ void Walley_Run_For_Appointed_Var_String_List(struct VAR **struct_var, struct VA
 
 // Not modify
 void Walley_Update_Var_And_Var_Value_To_Var(struct VAR **struct_var, char *var_name, char *var_value){
-    // printf("#### Walley_Update_Var_And_Var_Value_To_File ####\n");
-    //printf("var_name %s var_value %s\n",var_name,var_value);
+    printf("#### Walley_Update_Var_And_Var_Value_To_File ####\n");
+    printf("var_name %s var_value %s\n",var_name,var_value);
+    
+    // var name type
+    // 1 x
+    // 2 x[0]
+    // 3 x.a or x[0].a
+    
+    int index_of_left_bracket=find_not_in_string(var_name, "[");
+    int index_of_right_bracket=find_from_behind_not_in_string(var_name, "]");
+    // type 1 var_name
+    if (index_of_left_bracket==-1) {
+        if (Var_Existed(*struct_var, var_name)) {
+            Var_changeValueOfVar(struct_var, var_name, var_value, variableValueType(var_value));
+        }
+        else{
+            if ((variableValueType(var_value),"table")==0) {
+                Table_updateTableToStructVar(struct_var, var_name, var_value);
+            }
+            else{
+                Var_addProperty(struct_var, var_name, var_value, variableValueType(var_value));
+            }
+        }
+    }
+    // type 2 var_name
+    else if(index_of_right_bracket==(int)strlen(var_name)-1){
+        char *ahead_name=substr(var_name, 0, index_of_left_bracket);
+        if (Var_Existed(*struct_var, ahead_name)==FALSE) {
+            Walley_Print_Error(CURRENT_INPUT_STR, "Invalid var name", 0);
+        }
+        else{
+            // list
+            if (isListElementForVar(*struct_var,var_name)) {
+                changeTheOneVarValueFromItsInitialOneFromVarForList(struct_var, var_name, var_value);
+            }
+            // table
+            else{
+                char *ahead=ahead_name;
+                char *string_index=substr(var_name, index_of_left_bracket, (int)strlen(var_name));
+                char *temp_var_value=Var_getValueOfVar(*struct_var, ahead);
+                //if (strcmp(variableValueType(temp_var_value), "table")==0) {
+                    var_value=Table_addValueOrChangeValue(temp_var_value, string_index, var_value);
+                    Var_changeValueOfVar(struct_var, ahead, var_value, "table");
+                //}
+                
+            }
+        }
+    }
+    // type 3 var_name
+    else{
+        if (Var_Existed(*struct_var, var_name)) {
+            Var_changeValueOfVar(struct_var, var_name, var_value, variableValueType(var_value));
+        }
+        else{
+            if ((variableValueType(var_value),"table")==0) {
+                Table_updateTableToStructVar(struct_var, var_name, var_value);
+            }
+            else{
+                Var_addProperty(struct_var, var_name, var_value, variableValueType(var_value));
+            }
+        }
+    }
+    
+    /*
     char *var_value_type = variableValueType(var_value);
     bool has_same_var_name = Var_Existed(*struct_var, var_name);
     
     if (has_same_var_name == TRUE) {
-
+        
         char *previous_var_value=Var_getValueOfVar(*struct_var,var_name);
         char *previous_var_value_type=variableValueType(previous_var_value);
         
@@ -1538,7 +1600,8 @@ void Walley_Update_Var_And_Var_Value_To_Var(struct VAR **struct_var, char *var_n
             //printf("Value type List, change the whole value of list to file\n");
             else  if(strcmp(previous_var_value_type,"list")==0)
                 //changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name, var_name, var_value);
-            changeTheWholeVarValueFromItsInitialOneFromVarForList(struct_var, var_name, var_value);
+                //changeTheWholeVarValueFromItsInitialOneFromVarForList(struct_var, var_name, var_value);
+                Var_changeValueOfVar(struct_var, var_name, var_value, "list");
             else{
                 //Walley_Remove_Variable_And_Value_From_File(file_var_name,var_name);
                 Var_removeVar(struct_var, var_name);
@@ -1563,6 +1626,7 @@ void Walley_Update_Var_And_Var_Value_To_Var(struct VAR **struct_var, char *var_n
         else {
             // Eg a[0] is one element of list a
             if (isListElementForVar(*struct_var, var_name)) {
+                printf("IS ELEMENT FROM VAR\n");
                 //changeTheOneVarValueFromItsInitialOneFromFileForList(file_var_name, var_name, var_value);
                 changeTheOneVarValueFromItsInitialOneFromVarForList(struct_var, var_name, var_value);
             }
@@ -1608,7 +1672,6 @@ void Walley_Update_Var_And_Var_Value_To_Var(struct VAR **struct_var, char *var_n
             }
         }
     }
-    
     
     // Does not have the same var name
     else {
@@ -1688,6 +1751,7 @@ void Walley_Update_Var_And_Var_Value_To_Var(struct VAR **struct_var, char *var_n
             Var_addProperty(struct_var, var_name, var_value, var_value_type);
         }
     }
+     */
 }
 
 /*

@@ -16,6 +16,10 @@
 int main(int argc, char **argv){
     
     
+    //printf("%d\n",List_checkWhetherIndexAvailable("[1,[3,4],2]","[3]"));
+    
+    //exit(0);
+    
     ARGV=argv;
     ARGC=argc;
     

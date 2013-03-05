@@ -6,17 +6,39 @@
  */
 
 #include "walley_file_operation.h"
+int valueNumOfList(char *list);
 //#################### valueOfListAtIndex("[1,2,3,4]",0)---->1
 char *valueOfListAtIndex(char *list,int index){
-    if(find(list,"[")==-1 || find(list,"]")==-1)
-        printf("Mistake occurred while calling function valueOfListAtIndex\nInput %sis not a list\n",list);
+       
+    if(list[0]!='[')
+        Walley_Print_Error(list, "List need [", 0);
+    
+    if (indexOfFinal(list, 0)==-1) {
+        Walley_Print_Error(list, "List need ]",(int)strlen(list));
+    }
+    
     list=trim(list);
     list=substr(list,1,(int)strlen(list)-1);
+    
+        
+    struct TOKEN *tl=Walley_Lexica_Analysis(list);
+    struct TOKEN_ARRAY ta=TL_returnTokenArrayWithoutPunctuation(tl);
+    if (index>=ta.length) {
+        Walley_Print_Error(append("[",append(list,"]")) ,"Index out of boundary", (int)strlen(append("[",append(list,"]"))));
+    }
+    return ta.token_list[index][1].TOKEN_STRING;
+
+    //============================
+
+
+    /*
     char *temp=(char*)malloc(sizeof(char)*(2+(int)strlen(list)));
     strcpy(temp,",");
     strcat(temp,list);
     temp[1+(int)strlen(list)]=0;
+     */
     /* For Example [1,2]--->,1,2*/
+    /*
     list=temp;
     
     int num_of_comma=count_str_not_in_str_list_dict(list,",");
@@ -44,13 +66,40 @@ char *valueOfListAtIndex(char *list,int index){
     }
     if(strcmp(output,"")==0)
         output="None";
-    return output;
+     */
+    
+    
+    //return output;
     
 }
 
 //#################### valueOfListAtIndexString("[1,[2],3,4]","[1][0]")---->2
 char *valueOfListAtIndexString(char *list,char *index_str){
     //printf("1");
+    
+    if(list[0]!='[')
+        Walley_Print_Error(list, "List need [", 0);
+    
+    if (indexOfFinal(list, 0)==-1) {
+        Walley_Print_Error(list, "List need ]",(int)strlen(list));
+    }
+
+    // change [1][0] to [1,0]
+    index_str=replace(index_str, "][", ",");
+    int length_of_index=valueNumOfList(index_str);
+    
+    int i=0;
+    char *temp_list;
+    for (; i<length_of_index; i++) {
+        char *index_s=valueOfListAtIndex(index_str, i);
+        int index=atoi(index_s);
+        temp_list=valueOfListAtIndex(list, index);
+        list=temp_list;
+    }
+    return temp_list;
+    
+    
+    /*
     char *index_str_temp=substr(index_str,find(index_str,"[")+1,find(index_str,"]"));
     int index=atoi(index_str_temp);
     if(find(list,"[")==-1 || find(list,"]")==-1){
@@ -74,9 +123,10 @@ char *valueOfListAtIndexString(char *list,char *index_str){
     strcpy(temp,",");
     strcat(temp,list);
     temp[1+(int)strlen(list)]=0;
+     */
     /* For Example [1,2]--->,1,2
                    [1,[2,3],3]--->,1,[2,3],3*/
-    
+    /*
     list=temp;
     
     int num_of_comma=count_str(list,",");
@@ -130,8 +180,10 @@ char *valueOfListAtIndexString(char *list,char *index_str){
             output=valueOfListAtIndexString(output,temp_temp);         
         }
     }
-    return output;
+     */
+   // return output;
 }
+
 
 //#################### valueOfListAtIndexStringAndReturnBeginAndEnd("[1,[2],3,4]","[1][0]")---->4
 void valueOfListAtIndexStringAndReturnBeginAndEnd(int begin_end[],char *list,char *index_str){
@@ -227,20 +279,22 @@ int valueNumOfList(char *list){
         return 0;
     }
     
-    if(find_not_in_string(list,"[")==-1 || find_not_in_string(list,"]")==-1){
-        printf("@@ |%s|\n",CURRENT_INPUT_STR);
-
-        printf("Mistake occurred while calling function valueNumOfList\nInput |%s| is not a list\n",list);
-        exit(0);
-    }
-    if(count_str_not_in_string(list,"[")!=count_str_not_in_string(list,"]")){
-        printf("@@ |%s|\n",CURRENT_INPUT_STR);
-
-        printf("Mistake occurred while calling function valueNumOfList\nInput |%s| is not a list because the num of [ %d and ] %d is different\n",list,count_str_not_in_string(list,"["),count_str_not_in_string(list,"]"));
-        exit(0);  
+    if(list[0]!='[')
+        Walley_Print_Error(list, "List need [", 0);
+    
+    if (indexOfFinal(list, 0)==-1) {
+        Walley_Print_Error(list, "List need ]",(int)strlen(list));
     }
     
+    list=trim(list);
+    list=substr(list,1,(int)strlen(list)-1);
     
+    
+    struct TOKEN *tl=Walley_Lexica_Analysis(list);
+    struct TOKEN_ARRAY ta=TL_returnTokenArrayWithoutPunctuation(tl);
+
+    return ta.length;
+    /*
     list=removeBackSpace(list);
     list=removeAheadSpace(list);
     list=substr(list,1,(int)strlen(list)-1);
@@ -275,6 +329,7 @@ int valueNumOfList(char *list){
     }
     num-=1;
     return num;
+    */
 }
 
 char *ModifyVarValue(char *var_value){
@@ -388,7 +443,8 @@ void formatStringForListInOrderToWtiteToVar(struct VAR **struct_var,char *var_na
 
 //######### Write List to Var using an appointed format.
 void writeVarNameAndVarValueIntoAppointedVarForList(struct VAR **struct_var,char *var_name,char *var_value) {
-    formatStringForListInOrderToWtiteToVar(struct_var, var_name, var_value);
+    //formatStringForListInOrderToWtiteToVar(struct_var, var_name, var_value);
+    Var_addProperty(struct_var, var_name, var_value, variableValueType(var_value));
 }
 
 
@@ -442,17 +498,7 @@ void changeTheOneVarValueFromItsInitialOneFromVarForList(struct VAR **struct_var
     
     //FILE *fp;
     int row=0;
-    int length=0;
-    if (strcmp((*struct_var)->var_name,"__size_of_array__")!=0) {
-        printf("@@ |%s|\n",CURRENT_INPUT_STR);
-
-        printf("Can not find __size_of_array__");
-        exit(0);
-    }
-    else{
-        length=atoi((*struct_var)->var_value);
-    }
-
+    int length=Var_length(*struct_var);
     while (row<length) {
         char *var_name_in_file = (*struct_var+row)->var_name;
         if(strcmp(var_name_in_file, var_name) == 0){
@@ -478,30 +524,63 @@ void changeTheOneVarValueFromItsInitialOneFromVarForList(struct VAR **struct_var
     
 }
 
+// ([1,[1,2]],[1][1])---> TRUE
+bool List_checkWhetherIndexAvailable(char *list, char *index_str){
+    //printf("1");
+    
+    if(list[0]!='[')
+        Walley_Print_Error(list, "List need [", 0);
+    
+    if (indexOfFinal(list, 0)==-1) {
+        Walley_Print_Error(list, "List need ]",(int)strlen(list));
+    }
+    
+    // change [1][0] to [1,0]
+    index_str=replace(index_str, "][", ",");
+    int length_of_index=valueNumOfList(index_str);
+    
+    int i=0;
+    char *temp_list;
+    for (; i<length_of_index; i++) {
+        char *index_s=valueOfListAtIndex(index_str, i);
+        int index=atoi(index_s);
+        if (strcmp(variableValueType(list), "list")!=0) {
+            return FALSE;
+        }
+        list=substr(list, 1, (int)strlen(list)-1);
+        struct TOKEN *tl=Walley_Lexica_Analysis(list);
+        struct TOKEN_ARRAY ta=TL_returnTokenArrayWithoutPunctuation(tl);
+        if (index>=ta.length) {
+            return FALSE;
+        }
+        temp_list=ta.token_list[index][1].TOKEN_STRING;
+        
+        list=temp_list;
+    }
+    return TRUE;
+
+}
+
 /*
  isListElement try to find out whether a[0] kind of var_name is existed in file in order to use function 
  * changeTheOneVarValueFromItsInitialOneFromFileForList
  * eg: isListElement("__walley__.wy","a[1]");
  */
 bool isListElementForVar(struct VAR *struct_var, char *var_name){
-    if (find_not_in_string(var_name, "[")==-1 || find(var_name, ".")!=-1) {
+    
+    int index_of_left_bracket=find_not_in_string(var_name,"[");
+    if (index_of_left_bracket==-1 || find(var_name, ".")!=-1) {
         return FALSE;
     }
-    char *list_var_name=substr(var_name,0,find_not_in_string(var_name,"["));//a[0]-->a
+    char *list_var_name=substr(var_name,0,index_of_left_bracket);//a[0]-->a
+    char *list_index=substr(var_name, index_of_left_bracket, (int)strlen(var_name));
     list_var_name=removeAheadSpace(list_var_name);
     bool find_var_name=FALSE;
     int row=0;
     
-    int length=0;
-    if (strcmp((struct_var)->var_name,"__size_of_array__")!=0) {
-        printf("@@ |%s|\n",CURRENT_INPUT_STR);
-
-        printf("Can not find __size_of_array__");
-        exit(0);
-    }
-    else{
-        length=atoi((struct_var)->var_value);
-    }
+    int length=Var_length(struct_var);
+    
+    char *list_value="";
     
     
     //while (struct_var[row].var_name!=NULL) {
@@ -509,12 +588,15 @@ bool isListElementForVar(struct VAR *struct_var, char *var_name){
         char *temp_var_name=struct_var[row].var_name;
         if(strcmp(temp_var_name,list_var_name)==0){
             find_var_name=TRUE;
+            list_value=struct_var[row].var_value;
             break;
         }
         row++;
-
     }
-    return find_var_name;
+    if (find_var_name==FALSE) {
+        return FALSE;
+    }
+    return List_checkWhetherIndexAvailable(list_value, list_index);
 }
 
 /*

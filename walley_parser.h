@@ -1372,6 +1372,8 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
         
     }
     
+    Var_PrintVar(*struct_var);
+    
 }
 
 void Walley_Parse_String_List(struct VAR **struct_var, struct VAR **struct_settings, char *existing_file, char ***FUNCTION_functions, char **input_str){

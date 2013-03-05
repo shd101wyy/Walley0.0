@@ -131,7 +131,7 @@ bool isW_Annotation(char *input_str, int index_of_dot){
     
     return FALSE;
 }
-/*
+
 bool isW_Assignment_Operator(char *input_str, int index_of_equa){
     if (input_str[index_of_equa]!='=') {
         return FALSE;
@@ -150,7 +150,7 @@ bool isW_Assignment_Operator(char *input_str, int index_of_equa){
         }
     }
 }
-*/
+
 char * TOKEN_analyzeTokenClass(char *token_string){
     if (strcmp(token_string, "#")==0) {
         return "W_SHORT_ANNOTATION";
@@ -324,6 +324,7 @@ int indexOfFinal(char *input_str, int first_index){
     //exit(0);
 }
 
+
 int TL_length(struct TOKEN *token){
     int length=0;
     if (strcmp((token)->TOKEN_CLASS,"__size_of_array__")!=0) {
@@ -349,6 +350,7 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
     char type='i'; // 'i' for id, 'b' for blank 's' for judge sign or sign(operator),'t' for "" '' [] {} type, 'c' for :
                    // 'd' for dot
                    // 'a' for annotation
+                   // 'e' for assignment operator =
                 
     char t=' ';
     i=1;
@@ -380,7 +382,9 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
     if (isW_Annotation(input_str, 0)) {
         type='a';
     }
-    
+    if (isW_Assignment_Operator(input_str, 0)) {
+        type='e';
+    }
     for(;i<length;i++){
         //printf("%c\n",input_str[i]);
         if (type=='a') {
@@ -432,6 +436,9 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
             else if(isW_Annotation(input_str, i)){
                 type='a';
             }
+            else if(isW_Assignment_Operator(input_str, i)){
+                type='e';
+            }
             else{
                 type='i';
             }
@@ -459,11 +466,41 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
             else if(isW_Annotation(input_str, i)){
                 type='a';
             }
+            else if(isW_Assignment_Operator(input_str, i)){
+                type='e';
+            }
             else{
                 type='i';
             }
 
         }
+        else if (type=='e') {
+            char *token_string="=";
+            char *token_class="W_ASSIGNMENT_OPERATOR";
+            TL_addProperty(&token, token_class, token_string,i-1,i);
+            start=i;
+            if (isJudgeSign(input_str,i)||isSign(input_str[i])) {
+                type='s';
+            }
+            else if (input_str[i]==' '||input_str[i]=='\n'||input_str[i]=='\t') {
+                type='b';
+            }
+            else if(input_str[i]==':'||input_str[i]==';'||input_str[i]==',')
+                type='c';
+            else if(input_str[i]=='"'||input_str[i]=='\''||input_str[i]=='P'||input_str[i]=='[')
+                type='t';
+            else if(isW_Dot(input_str, i)){
+                type='d';
+            }
+            else if(isW_Annotation(input_str, i)){
+                type='a';
+            }
+            else{
+                type='i';
+            }
+            
+        }
+
         else if(type=='t'){
             start=i-1;
             int final_index=indexOfFinal(input_str, i-1);
@@ -493,6 +530,9 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
             }
             else if(isW_Annotation(input_str, i)){
                 type='a';
+            }
+            else if(isW_Assignment_Operator(input_str, i)){
+                type='e';
             }
             else{
                 type='i';
@@ -540,6 +580,9 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
                 else if(isW_Annotation(input_str, i)){
                     type='a';
                 }
+                else if(isW_Assignment_Operator(input_str, i)){
+                    type='e';
+                }
                 else{
                     type='b';
                 }
@@ -583,6 +626,9 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
                 else if(isW_Annotation(input_str, i)){
                     type='a';
                 }
+                else if(isW_Assignment_Operator(input_str, i)){
+                    type='e';
+                }
                 else{
                     type='i';
                 }
@@ -625,6 +671,9 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
                 }
                 else if(isW_Annotation(input_str, i)){
                     type='a';
+                }
+                else if(isW_Assignment_Operator(input_str, i)){
+                    type='e';
                 }
                 else{
                     type='i';
@@ -672,6 +721,9 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
             }
             else if(isW_Annotation(input_str, i)){
                 type='a';
+            }
+            else if(isW_Assignment_Operator(input_str, i)){
+                type='e';
             }
             else
                 type='i';
