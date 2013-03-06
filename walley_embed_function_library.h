@@ -1331,3 +1331,109 @@ char *Walley_Run_Special_Function_From_Var(char *function, struct VAR **struct_v
 }
 
 
+
+//                                      "Hello"           find                "H"  
+char *Walley_Run_Special_Function(char *user_value, char *user_function, char *func_params, struct VAR **struct_var) {
+    //################### Special Function #########################################################
+    /*
+     * eg x="Hello"-----> x.find("He")----->0
+     */
+    //printf("#### Walley_Run_Special_Function ####\n");
+    //// printf("FUNCTION %s, FILE_VAR_NAME %s\n",function,file_var_name);
+    char *return_value;
+    
+    char *user_function_parameter = func_params;
+    int num_of_params = numOfParameters(user_function_parameter);
+    //// printf("user---->%s\nuser_function---->%s\nuser_value---->%s\nuser_function_parameter %s\n---->num_of_param %d\n",user,user_function,user_value,user_function_parameter,num_of_params);
+    // Special function for String
+    if (strcmp("string", variableValueType(user_value)) == 0) {
+        if (strcmp(user_function, "find") == 0) {
+            if (num_of_params == 1)
+                return_value = string_find(user_value, user_function_parameter);
+            else if (num_of_params == 2)
+                return_value = string_find_from_index(user_value, user_function_parameter);
+            else{
+                char *function=append(user_value, append(".", append(user_function, append("(", append(func_params, ")")))));
+                printf("%s\n",function);
+                int index_of_dot=find_from_behind_not_in_str_list_dict_parenthesis(function, ".");
+                printf("%s^\n",Str_appendSpaceAhead("", index_of_dot));
+                printf("Error, find() only needs 2 params\n");
+                exit(0);
+            }
+        } else if (strcmp(user_function, "replace") == 0) {
+            if (num_of_params==2) {
+                return_value=string_replace(user_value, user_function_parameter);
+            }
+            else if(num_of_params==3){
+                return_value=string_replace_from_index(user_value, user_function_parameter);
+            }
+            else{
+            char *function=append(user_value, append(".", append(user_function, append("(", append(func_params, ")")))));
+            printf("%s\n",function);
+            printf("Error, replace() needs 2 or 3 params\n");
+            exit(0);
+            }
+        } else if (strcmp(user_function, "count") == 0) {
+            return_value = string_count_str(user_value, user_function_parameter);
+        } else if (strcmp(user_function, "split") == 0) {
+            return_value = string_split(user_value, user_function_parameter);
+        } else if (strcmp(user_function,"length")==0){
+            //// printf("****** %s\n",user_value);
+            return_value=string_length(user_value);
+        } else if (strcmp(user_function,"trim")==0){
+            return_value=string_trim(user_value);
+        } else if (strcmp(user_function,"isdigit")==0){
+            return_value=string_isdigit(user_value);
+        } else if (strcmp(user_function,"isalpha")==0){
+            return_value=string_isalpha(user_value);
+        } else if (strcmp(user_function,"toupper")==0){
+            return_value=string_toupper(user_value);
+        } else if (strcmp(user_function,"tolower")==0){
+            return_value=string_tolower(user_value);
+        } else if (strcmp(user_function,"isupper")==0){
+            return_value=string_isupper(user_value);
+        } else if (strcmp(user_function,"islower")==0){
+            return_value=string_islower(user_value);
+        } else if (strcmp(user_function,"reverse")==0){
+            return_value=string_reverse(user_value);
+        } else {
+            printf("This Special Function for String eg. x.find('x') is still under development\n");
+        }
+    }        // Special function for list
+    else if (strcmp("list", variableValueType(user_value)) == 0) {
+        if (strcmp(user_function, "append") == 0) {
+            //printf("#### FIND APPEND\n");
+            //printf("user value %s user_function_parameter %s\n",user_value,user_function_parameter);
+            return_value = list_append(user_value, user_function_parameter);
+            
+            Walley_Update_Var_And_Var_Value_To_Var(struct_var, USER_NAME, return_value);
+            
+        } else if (strcmp(user_function, "remove_at_index") == 0) {
+            return_value = list_remove_at_index(user_value, user_function_parameter);
+            Walley_Update_Var_And_Var_Value_To_Var(struct_var, USER_NAME, return_value);
+        } else if (strcmp(user_function, "length") == 0) {
+            return_value = list_length(user_value);
+        } else if (strcmp(user_function, "count") == 0) {
+            return_value = list_count(user_value, user_function_parameter);
+        } else if (strcmp(user_function,"remove_element")==0){
+            return_value= list_remove_element(user_value,user_function_parameter);
+            //changeTheWholeVarValueFromItsInitialOneFromFileForList(file_var_name, user, return_value);
+            //Var_changeValueOfVar(struct_var, user, return_value, "list");
+            Walley_Update_Var_And_Var_Value_To_Var(struct_var, USER_NAME, return_value);
+            
+        }
+    }        // Special function for dictionary
+    else if (strcmp("dictionary", variableValueType(user_value)) == 0) {
+        if (strcmp(user_function, "key") == 0) {
+            return_value = dict_key(user_value);
+        } else if (strcmp(user_function, "keys") == 0) {
+            return_value = dict_key(user_value);
+        }
+    }
+    else{
+        printf("Error\n");
+        exit(2);
+    }
+    //// printf("RETURN VALUE %s\n",return_value);
+    return return_value;
+}

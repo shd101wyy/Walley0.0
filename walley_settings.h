@@ -123,6 +123,8 @@ char *SAVE_VAR_NAME_TO_CHECK_WHETHER_IT_IS_INSTANCE="";
 
 char *USER_NAME=""; // for x.append(3) where x=[1,2,3].. then upload [1,2,3,3] to x.. Save x to USER_NAME
 
+char *RETURN_VALUE=""; // RETURN_VALUE is the value that need to be returned from function
+
 // For if elif sentence
 /*
 int SPACE_OF_FIRST_IF_ELIF_ELSE_SENTENCE=0;

@@ -30,9 +30,13 @@ def matrix_str(mat):
     return nstr(output)
 
 def matrix(param1,param2):
-    if type(param1)=='int':
+    println "1-->"+param1
+    println "2-->"+param2
+    if type(param1)=="int":
+        println "It is INT"
         return matrix_num(param1,param2)
     else:
+        println "IT IS NOT INT"
         return matrix_str(param1)
 
 def matrix_add(mat1,mat2):
@@ -72,7 +76,7 @@ def matrix_dot_mult(mat1,mat2):
 
 def matrix_transpose(mat1):
     exp:
-        <@mat1 transpose>
+        {mat1 transpose}
     row=mat1.length()
     col=mat1[0].length()
     output=matrix(col,row)
@@ -191,3 +195,6 @@ def matrix_lu(mat):
     output.append(l)
     output.append(u)
     return output
+
+println "Finish run this file"
+print "---->"+matrix(3,4)
