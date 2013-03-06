@@ -844,10 +844,7 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
                     //
                 }
             }
-            //#####################################################################################
-            char temp5[10];
-            sprintf(temp5, "%d", can_run_basic_input);
-            Var_changeValueOfVar(struct_settings , "can_run_basic_input", append("",temp5), "int");
+           
             //##########################################################################################################
             //##########################################################################################################
             //##########################################################################################################
@@ -1431,79 +1428,7 @@ char *Walley_Run_One_Function_And_Return_Value_From_Var(char *input_str,struct V
             row++;
             continue;
         }
-        
-        /*
-        if (find_function == TRUE && strcmp("return", substr(trim(arr), 0, 6)) == 0) {
-            
-            printf("FIND RETURN ---> %s\n",arr);
-            //find_return=TRUE;
-            // printf("\n\n\n\n\n--------Find Return--------\n");
-            // printf("|%s|\n",arr);
-            char *temp_arr=removeNFromBack(arr);
-            Walley_Parse_Simple_String(&TEMP_VAR_var, &TEMP_VAR_settings, "None", FUNCTION_functions, temp_arr);
-            //Walley_Run_For_Appointed_Var(&TEMP_VAR_var, &TEMP_VAR_settings, &TEMP_TEMP_FILE, "FUNCTION", FUNCTION_functions,temp_arr);
-            
-            
-            bool can_get_return=atoi(Var_getValueOfVar(TEMP_VAR_settings, "can_run_basic_input"));
-            
-            
-            if (can_get_return==FALSE) {
-                row++;
-                continue;
-            }
-            
-            finish = TRUE;
-            return_var_name = substr(arr, find(arr, "return") + 7, (int) strlen(arr));
-            return_var_name =trim(return_var_name);
-            if (return_var_name[(int) strlen(return_var_name) - 1] == '\n') {
-                return_var_name = substr(return_var_name, 0, (int) strlen(return_var_name) - 1);
-            }
-            //printf("Return Var Name is :|%s|\n",return_var_name);
-            break;
-        }
-        */
-        
-        /*
-        if (find(arr, temp_temp) != -1) {
-            // printf("Find Function\n");
-            //printf("arr is |%s|, temp_temp is |%s|\n",arr,temp_temp);
-            int index_of_temp_temp=find(arr,temp_temp);
-            if ((index_of_temp_temp>=1&&arr[index_of_temp_temp-1]!=' ') && index_of_temp_temp!=0) {
-                
-            }
-            else{
-                int row2=row;
-                while (TRUE) {
-                    row=row2;
-                    row2=row2+1;
-                    bool find_another_function=FALSE;
-                    while (row2<length_of_FUNCTION_functions) {
-                        if (find((*FUNCTION_functions)[row2],temp_temp)!=-1) {
-                            
-                            index_of_temp_temp=find((*FUNCTION_functions)[row2],temp_temp);
-                            if ((index_of_temp_temp>=1&&(*FUNCTION_functions)[row2][index_of_temp_temp-1]!=' ') && index_of_temp_temp!=0) {
-                                row2++;
-                                continue;
-                            }
-                            
-                            
-                            row=row2;
-                            find_another_function=TRUE;
-                            break;
-                        }
-                        row2++;
-                    }
-                    if (find_another_function==FALSE) {
-                        break;
-                    }
-                }
-                
-                find_function = TRUE;
-            }
-            
-            
-        }
-        */
+     
         
         
         if (find_function == TRUE && find(arr, "#~End") == 0) {
