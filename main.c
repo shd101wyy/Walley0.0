@@ -95,6 +95,9 @@ def random(num1=0,num2=1):\n\
         Walley_Initialize();
         //Walley_Parse(string_in_out_wy);
         Walley_Parse("print \"Welcome to Walley's World\"");
+        
+        Walley_Parse_String_List_Default(TO_RUN);
+        
         while (TRUE) {
             printf("\n>>> ");
             char input_str[10000];
@@ -128,6 +131,8 @@ def random(num1=0,num2=1):\n\
             printf("walley exec [file_name]           ---->create exectuable file by using gcc\n");
             printf("walley exec [file_name] [include 'walley.h' path]         ---->create exectuable file by using gcc\n");
             printf("walley lex [string]               ---->lex analysis test");
+            printf("walley torun [file_name]          ---->format string from file to get string list");
+            
         }
         else if (strcmp(param,"test")==0){
             printf("begin test!");
@@ -334,6 +339,13 @@ def random(num1=0,num2=1):\\n\\\n\
             param2=toCString(param2);
             struct TOKEN *token=Walley_Lexica_Analysis(param2);
             TL_PrintTOKEN(token);
+        }
+        else if(strcmp(param1, "torun")==0){
+            printf("Begin to get TO_RUN string list\n");
+            printf("From file |%s|\n",param2);
+            param2=toCString(param2);
+            
+            Walley_Tool_get_TO_RUN_From_File(param2);
         }
         else if(strcmp(param1, "parse")==0){
             Walley_Initialize();

@@ -1527,7 +1527,7 @@ void Walley_Update_Var_And_Var_Value_To_Var(struct VAR **struct_var, char *var_n
     // 1 x
     // 2 x[0]
     // 3 x.a or x[0].a
-    
+       
     int index_of_left_bracket=find_not_in_string(var_name, "[");
     int index_of_right_bracket=find_from_behind_not_in_string(var_name, "]");
     // type 1 var_name
@@ -1553,6 +1553,7 @@ void Walley_Update_Var_And_Var_Value_To_Var(struct VAR **struct_var, char *var_n
     else if(index_of_right_bracket==(int)strlen(var_name)-1){
         char *ahead_name=substr(var_name, 0, index_of_left_bracket);
         if (Var_Existed(*struct_var, ahead_name)==FALSE) {
+            printf("ahead_name %s\n",ahead_name);
             Walley_Print_Error(CURRENT_INPUT_STR, "Invalid var name", 0);
         }
         else{

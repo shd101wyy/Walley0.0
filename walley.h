@@ -24,6 +24,11 @@ void Walley_Parse(char *input_str){
     char *existing_file="None";
     Walley_Parse_Simple_String(&VAR_var,&VAR_settings,existing_file,&FUNCTION,input_str);
 }
+
+void Walley_Parse_String_List_Default(char **input_str_list){
+    char *existing_file="None";
+    Walley_Parse_String_List(&VAR_var,&VAR_settings,existing_file,&FUNCTION,input_str_list);
+}
 /*
 void Walley_Agent_Run(char *input_str,char *existing_file){
    //// printf("#### Walley_Agent_Run ####\n");

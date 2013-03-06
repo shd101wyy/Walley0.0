@@ -1843,9 +1843,10 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
                 TL_initTokenList(&temp_token_list);
                 TL_addToken(&temp_token_list, (*token_list)[i]);
                 
-                token_string=Walley_Substitute_Var_And_Function_According_To_Token(&temp_token_list, struct_var, FUNCTION_functions);
-                
                 USER_NAME=token_string;
+
+                token_string=Walley_Substitute_Var_And_Function_According_To_Token(&temp_token_list, struct_var, FUNCTION_functions);
+                                
                 
                 SAVE_VAR_NAME_TO_CHECK_WHETHER_IT_IS_INSTANCE=token_string;
                 
@@ -1853,6 +1854,7 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
                 
                 i=i+1;
                 Walley_Next(*token_list, &i, &var_value, struct_var, *FUNCTION_functions);
+                
                 i=i-1;
                 temp_token.TOKEN_STRING=var_value;
             }
@@ -2276,7 +2278,15 @@ void Walley_Eval_And_Update_Var_And_Value_To_Var_According_To_Token(struct VAR *
     // new code here on Jan 12 to solve x[i][j]=x[i][j]+3, replace var_name x[i][j] problem
     int i=0;
     
+    
+    // change [1,2;3,4] to [[1,2],[3,4]]
+    for (i=1; i<length_of_var_value_token_list; i++) {
+        if (strcmp("W_LIST_TABLE", (var_value_token_list+i)->TOKEN_CLASS)==0) {
+            (var_value_token_list+i)->TOKEN_STRING=ModifyVarValue((var_value_token_list+i)->TOKEN_STRING);
+        }
+    }
 
+    
     for (i=1; i<length_of_var_name_token_list; i++) {
         // table or list
         if (strcmp((var_name_token_list+i)->TOKEN_CLASS,"W_LIST_TABLE")==0) {

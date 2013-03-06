@@ -682,6 +682,7 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
         }
         
         else if(type=='c'){
+            /*
             if (input_str[i-1]==';') {
                 printf("%s\n",input_str);
                 char *temp_str="";
@@ -690,6 +691,7 @@ struct TOKEN* Walley_Lexica_Analysis(char *input_str){
                 printf("Error. Walley does not need ; in sentence\n");
                 exit(0);
             }
+             */
             TL_addProperty(&token, "W_PUNCTUATION", charToString(input_str[i-1]),i-1,i-1);
             start=i;
             if (isJudgeSign(input_str,i)||isSign(input_str[i])) {

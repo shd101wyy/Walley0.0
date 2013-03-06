@@ -533,6 +533,84 @@ char *MDL_changeMathDataListToString(struct Math_Data_List mdl){
 }
 
 
+//==============================================================================================
+void Walley_Tool_get_TO_RUN_From_File(char *file_name){
+    FILE *fp;
+    char arr[10000]="";
 
+    char **str_list;
+    Str_initStringList(&str_list);
+    
+    
+    
+    if ((fp = fopen(file_name, "r")) == NULL) {
+        printf("@@ |%s|\n",CURRENT_INPUT_STR);
+        
+        perror("File open error!\n");
+        exit(1);
+    }    
+    while ((fgets(arr, 10000, fp)) != NULL) {
+        if (stringIsEmpty(arr)) {
+            continue;
+        }
+        char *arr_arr=removeNFromBack(arr);
+        Str_addString(&str_list, arr_arr);
+    }
+    
+    printf("================ COPY TO_RUN ==============\n");
+    char *output_str="char *TO_RUN[]={\n";
+    int i=0;
+    int length=Str_length(str_list);
+    for (i=0; i<length; i++) {
+        str_list[i]=replace(str_list[i], "\"", "\\\"");
+        output_str=append(output_str,append("\"", append(str_list[i], "\"")));
+        if (i+1!=length) {
+            output_str=append(output_str, ",\n");
+        }
+    }
+    output_str=append(output_str, "\n};");
+    printf("%s\n",output_str);
+    fclose(fp);
+}
+
+char *TO_RUN[]={
+"34",
+"def add(num1,num2):",
+"    return num1+num2",
+"def matrix_add(mat1,mat2):",
+"    output=mat1",
+"    for i in range(output.length()):",
+"        for j in range(output[0].length()):",
+"            output[i][j]=output[i][j]+mat2[i][j]",
+"    return output",
+"def matrix_minus(mat1,mat2):",
+"    output=mat1",
+"    for i in range(output.length()):",
+"        for j in range(output[0].length()):",
+"            output[i][j]=output[i][j]-mat2[i][j]",
+"    return output",
+    
+"def matrix_mult(mat1,mat2):",
+"    mat1_row=mat1.length()",
+"    mat2_col=mat2[0].length()",
+"    r_row=mat1_row",
+"    r_col=mat2_col",
+"    output=matrix(r_row,r_col)",
+"    for i in range(r_row):",
+"        for j in range(r_col):",
+"            for k in range(mat1[0].length()):",
+"                output[i][j]=output[i][j]+mat1[i][k]*mat2[k][j]",
+"    return output",
+    
+"def matrix_dot_mult(mat1,mat2):",
+"    mat1_row=mat1.length()",
+"    mat1_col=mat1[0].length()",
+"    output=matrix(mat1_row,mat1_col)",
+"    for i in range(mat1_row):",
+"        for j in range(mat1_col):",
+"            output[i][j]=mat1[i][j]*mat2[i][j]",
+"    return output"
+
+};
 
 
