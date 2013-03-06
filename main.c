@@ -17,7 +17,7 @@ int main(int argc, char **argv){
     
     
     //printf("%d\n",List_checkWhetherIndexAvailable("[1,[3,4],2]","[3]"));
-    
+    //printf("%s\n",Table_formatTable("[a=12]"));
     //exit(0);
     
     ARGV=argv;

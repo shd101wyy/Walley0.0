@@ -58,7 +58,6 @@ char *Table_formatTable(char *input_str){
     int i=0;
     for (; i<num_of_element; i++) {
         char *inside=valueOfListAtIndex(input_str, i);
-        // printf("-->%s\n",inside);
         if (find_not_in_str_list_dict(inside, "=")==-1) {
             if(inside[0]=='[')
                 inside=Table_formatTable(inside);

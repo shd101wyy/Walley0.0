@@ -1520,8 +1520,8 @@ void Walley_Run_For_Appointed_Var_String_List(struct VAR **struct_var, struct VA
 
 // Not modify
 void Walley_Update_Var_And_Var_Value_To_Var(struct VAR **struct_var, char *var_name, char *var_value){
-    printf("#### Walley_Update_Var_And_Var_Value_To_File ####\n");
-    printf("var_name %s var_value %s\n",var_name,var_value);
+    //printf("#### Walley_Update_Var_And_Var_Value_To_File ####\n");
+    //printf("var_name %s var_value %s\n",var_name,var_value);
     
     // var name type
     // 1 x
@@ -1533,10 +1533,15 @@ void Walley_Update_Var_And_Var_Value_To_Var(struct VAR **struct_var, char *var_n
     // type 1 var_name
     if (index_of_left_bracket==-1) {
         if (Var_Existed(*struct_var, var_name)) {
-            Var_changeValueOfVar(struct_var, var_name, var_value, variableValueType(var_value));
+            if ((variableValueType(var_value),"table")==0) {
+                Table_updateTableToStructVar(struct_var, var_name, var_value);
+            }
+            else{
+                Var_changeValueOfVar(struct_var, var_name, var_value, variableValueType(var_value));
+            }
         }
         else{
-            if ((variableValueType(var_value),"table")==0) {
+            if (strcmp(variableValueType(var_value),"table")==0) {
                 Table_updateTableToStructVar(struct_var, var_name, var_value);
             }
             else{
@@ -1574,7 +1579,7 @@ void Walley_Update_Var_And_Var_Value_To_Var(struct VAR **struct_var, char *var_n
             Var_changeValueOfVar(struct_var, var_name, var_value, variableValueType(var_value));
         }
         else{
-            if ((variableValueType(var_value),"table")==0) {
+            if (strcmp(variableValueType(var_value),"table")==0) {
                 Table_updateTableToStructVar(struct_var, var_name, var_value);
             }
             else{

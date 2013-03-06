@@ -22,11 +22,16 @@ char *valueOfListAtIndex(char *list,int index){
     
         
     struct TOKEN *tl=Walley_Lexica_Analysis(list);
+    
+    
     struct TOKEN_ARRAY ta=TL_returnTokenArrayWithoutPunctuation(tl);
+    
+    
     if (index>=ta.length) {
         Walley_Print_Error(append("[",append(list,"]")) ,"Index out of boundary", (int)strlen(append("[",append(list,"]"))));
     }
-    return ta.token_list[index][1].TOKEN_STRING;
+    return TL_toString(ta.token_list[index]);
+    //return ta.token_list[index][1].TOKEN_STRING;
 
     //============================
 
@@ -543,6 +548,9 @@ bool List_checkWhetherIndexAvailable(char *list, char *index_str){
     char *temp_list;
     for (; i<length_of_index; i++) {
         char *index_s=valueOfListAtIndex(index_str, i);
+        if (stringIsDigit(index_s)==FALSE) {
+            return FALSE;
+        }
         int index=atoi(index_s);
         if (strcmp(variableValueType(list), "list")!=0) {
             return FALSE;
@@ -553,7 +561,8 @@ bool List_checkWhetherIndexAvailable(char *list, char *index_str){
         if (index>=ta.length) {
             return FALSE;
         }
-        temp_list=ta.token_list[index][1].TOKEN_STRING;
+        //temp_list=ta.token_list[index][1].TOKEN_STRING;
+        temp_list=TL_toString(ta.token_list[index]);
         
         list=temp_list;
     }

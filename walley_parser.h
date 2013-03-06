@@ -1372,7 +1372,7 @@ void Walley_Parse_Simple_String(struct VAR **struct_var, struct VAR **struct_set
         
     }
     
-    Var_PrintVar(*struct_var);
+    //Var_PrintVar(*struct_var);
     
 }
 
@@ -1818,6 +1818,9 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
     
     struct TOKEN temp_token;
     
+       
+    bool has_assignment_operator=FALSE;
+    
     i=1;
     for (; i<length_of_token_list; i++) {
         
@@ -1825,7 +1828,11 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
         char *token_string=(*token_list)[i].TOKEN_STRING;
         struct TOKEN next=TOKEN_nextToken(*token_list, i);
         
-        if (strcmp(token_class, "W_ID")==0) {
+        if (strcmp(token_class, "W_ASSIGNMENT_OPERATOR")==0) {
+            has_assignment_operator=TRUE;
+            temp_token.TOKEN_STRING="=";
+        }
+        else if (strcmp(token_class, "W_ID")==0) {
             
             // it is slice
             // x[0]
@@ -2247,9 +2254,7 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
     char *output=TL_toString(output_token);
     
     
-    
-    if (WALLEY_SUBSTITUTION_CAN_JUST_EVAL_IN_THE_END==TRUE) {
-   
+    if (WALLEY_SUBSTITUTION_CAN_JUST_EVAL_IN_THE_END==TRUE && has_assignment_operator==FALSE) {
         if (stringIsAlpha(output)==FALSE) {
             output=Walley_Eval_All_From_Var(*struct_var, output);
         }else {
@@ -2257,7 +2262,7 @@ char *Walley_Substitute_Var_And_Function_According_To_Token(struct TOKEN **token
         }
     }
 
-    
+
     //printf("Walley_Substitute_Var_And_Function_Return_Value_From_File !!!!!!input %s  output is %s\n",input_str,output);
     return output;
 }
@@ -2278,6 +2283,7 @@ void Walley_Eval_And_Update_Var_And_Value_To_Var_According_To_Token(struct VAR *
             char *inside=substr((var_name_token_list+i)->TOKEN_STRING, 1, (int)strlen((var_name_token_list+i)->TOKEN_STRING)-1);
             struct TOKEN *temp_token_list=Walley_Lexica_Analysis(inside);
             inside=Walley_Substitute_Var_And_Function_According_To_Token(&temp_token_list, struct_var, FUNCTION_functions);
+
             (var_name_token_list+i)->TOKEN_STRING=append("[", append(inside, "]"));
         }
     }
@@ -2359,7 +2365,7 @@ void Walley_Eval_And_Update_Var_And_Value_To_Var_According_To_Token(struct VAR *
         
         
         char *var_name=TL_toString(var_name_token_list);
-                        
+        
         char *var_value=Walley_Substitute_Var_And_Function_According_To_Token(&var_value_token_list, struct_var, FUNCTION_functions);
         
     

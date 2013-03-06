@@ -728,7 +728,11 @@ char* Walley_Eval_With_Variable_From_Var(struct VAR var[], char *input_str) {
     } else if (strcmp("dictionary", variableValueType(input_str)) == 0) { // It doesn't work, I do not why
         //printf("It is list\n");
         return input_str;
-    } else if (stringIsDigit(input_str) == TRUE)
+    } else if (strcmp("table", variableValueType(input_str)) == 0) { // It doesn't work, I do not why
+        //printf("It is list\n");
+        return input_str;
+    }
+    else if (stringIsDigit(input_str) == TRUE)
         return Walley_Eval(input_str);
     
     // solve a:"Hello" return ":"Hello" problem
