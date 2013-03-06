@@ -72,8 +72,8 @@ def random(num1=0,num2=1):\n\
         
         // Pre-Run file
      
-        //Walley_Run_File("/Users/shd101wyy/Documents/workspace/xcode/Walley/Walley/out.wy");
-        //Walley_Run_File("/Users/shd101wyy/Documents/workspace/xcode/Walley/Walley/var.wy");
+        //Walley_Parse_File("/Users/shd101wyy/Documents/workspace/xcode/Walley/Walley/out.wy");
+        //Walley_Parse_File("/Users/shd101wyy/Documents/workspace/xcode/Walley/Walley/var.wy");
      
         // Change to
         /*
@@ -165,8 +165,8 @@ def random(num1=0,num2=1):\n\
             
             // Pre-Run file
      
-            // Walley_Run_File("/Users/shd101wyy/Documents/workspace/xcode/Walley/Walley/out.wy");
-            // Walley_Run_File("/Users/shd101wyy/Documents/workspace/xcode/Walley/Walley/var.wy");
+            // Walley_Parse_File("/Users/shd101wyy/Documents/workspace/xcode/Walley/Walley/out.wy");
+            // Walley_Parse_File("/Users/shd101wyy/Documents/workspace/xcode/Walley/Walley/var.wy");
      
             // Change to
             Walley_Run(string_in_out_wy);
@@ -186,14 +186,14 @@ def random(num1=0,num2=1):\n\
             
             FIRST_RUNNING_FILE=file_name;
             
-            Walley_Run_File(file_name);
+            Walley_Parse_File(file_name);
             
             
             Walley_Finalize();
              */
             Walley_Initialize();
             
-            Walley_Run(string_in_out_wy);
+            Walley_Parse_String_List_Default(changeStringToStringList(string_in_out_wy));
             
             char *path="./";
             char *file_name=param;
@@ -301,7 +301,7 @@ def random(num1=0,num2=1):\\n\\\n\
     //#######################\n\
     Walley_Initialize();\n\
     Walley_Run(string_in_out_wy);\n\
-    Walley_Run_File(FILE_NAME);\n\
+    Walley_Parse_File(FILE_NAME);\n\
     Walley_Finalize();\n\
             \n\
     // insert code here...\n\
@@ -350,7 +350,7 @@ def random(num1=0,num2=1):\\n\\\n\
         else if(strcmp(param1, "parse")==0){
             Walley_Initialize();
             
-            Walley_Run(string_in_out_wy);
+            Walley_Parse_String_List_Default(changeStringToStringList(string_in_out_wy));
             
             char *path="./";
             char *file_name=param2;
@@ -419,7 +419,7 @@ def random(num1=0,num2=1):\\n\\\n\
             //#######################\n\
     Walley_Initialize();\n\
     Walley_Run(string_in_out_wy);\n\
-    Walley_Run_File(FILE_NAME);\n\
+    Walley_Parse_File(FILE_NAME);\n\
     Walley_Finalize();\n\
             \n\
     // insert code here...\n\

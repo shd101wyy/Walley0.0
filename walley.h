@@ -15,10 +15,7 @@
     Walley_Run_For_Appointed_File(file_name,setting_file,temp_file_name,existing_file,input_str);
     
 }*/
-void Walley_Run(char *input_str){
-    char *existing_file="None";
-    Walley_Run_For_Appointed_Var(&VAR_var,&VAR_settings,&TEMP_FILE,existing_file,&FUNCTION,input_str);
-}
+
 
 void Walley_Parse(char *input_str){
     char *existing_file="None";
@@ -44,135 +41,10 @@ void Walley_Agent_Run(char *input_str,char *existing_file){
     Walley_Agent_Respond(WALLEY_LANGUAGE_FILE,WALLEY_SIMILARITY_FILE,WALLEY_VERB_FILE,VAR_var,VAR_settings,TEMP_FILE,existing_file,input_str);
 
 }*/
-void Walley_Run_File(char *file_name){
-   // printf("#### Walley_Run_File ####\n");
-        
-    file_name=removeBackSpace(file_name);
-    
-    if (strcmp(".wyc",substr(file_name,(int)strlen(file_name)-4,(int)strlen(file_name)))==0) {
-        char *string_in_file=changeBinaryToText(getStringFromFile(file_name));
-        FILE *temp_file=fopen("WALLEY_TEMP_TEMP_FILE.wy", "w");
-        fputs(string_in_file, temp_file);
-        fclose(temp_file);
-        Walley_Run_File("WALLEY_TEMP_TEMP_FILE.wy");
-        remove("WALLEY_TEMP_TEMP_FILE.wy");
-    }
-    // .wy format file
-    else {
-    
-    if(strcmp("wy",substr(file_name,(int)strlen(file_name)-2,(int)strlen(file_name)))!=0){
-        printf("File format wrong\n");
-        exit(1);
-    }
-    /*
-    char *str_in_wy = getStringFromFile(file_name);
-
-    FILE *fp = fopen(file_name, "w");
-    if(fp==NULL){
-        printf("Failed to initialize");
-        exit(1);
-    }
-    char input_message[1000] = "";
-    strcat(input_message, "###### Done! ######\n");
-    fputs(str_in_wy, fp);
-    fputs(input_message, fp);
-    fclose(fp);
-    **/
-    FILE *fp=fopen(file_name,"r");
-   // printf("Here\n");
-    if(fp==NULL){
-        printf("Failed to initialize\n");
-        printf("File not found\n");
-        exit(1);
-    } else {
-        
-        //Walley_Initialize();
-
-        char arr[10000]="";
-        //char output[1000]="";
-        /**
-        while ((fgets(arr, 1000, fp)) != NULL) {
-            //char *temp=substr(arr,0,(int)strlen(arr)-1);
-            char *temp=removeBackSpace(arr);
-            //if (find(arr,"\n")!=-1){
-            if (arr[(int)strlen(arr)-1]=='\n'){
-                temp=substr(arr,0,(int)strlen(arr)-1);
-                //printf("Find \\n\n");
-            }
-            //printf("## char is %c \n ##",arr[(int)strlen(arr)-1]);
-            printf("## Arr is '%s' ##\n",temp);
-            //printf("## Length of arr is %d\n ##",(int)strlen(temp));
-            Walley_Run(temp);
-        }*/
-        while ((fgets(arr, 10000, fp)) != NULL) {
-            
-            if(stringIsEmpty(removeNFromBack(arr)) || strcmp("",trim(removeNFromBack(arr)))==0 ||(int)strlen(arr)==0)
-                continue;
-            else{
-               // printf("arr----> |%s|\n");
-                //strcat(output,arr);
-                if((int)strlen(arr)==0)
-                    continue;
-                /*
-                char *temp_str=malloc(sizeof(char)*((int)strlen(arr)+1));
-                int a=0;
-                for(a=0;a<(int)strlen(arr);a++){
-                    temp_str[a]=arr[a];
-                }
-                temp_str[(int)strlen(temp_str)]=0;
-                temp_str=removeBackSpace(temp_str);
-                //printf("^^^^^^%c\n",(temp_str[(int)strlen(temp_str)-1]));
-                if(temp_str[(int)strlen(temp_str)-1]=='\n')
-                    temp_str=substr(temp_str,0,(int)strlen(temp_str)-1);
-                        */
-                char *temp_str=append("", arr);
-                if(temp_str[(int)strlen(temp_str)-1]=='\n')
-                    temp_str=substr(temp_str,0,(int)strlen(temp_str)-1);
-                
-                //Walley_Run(temp_str);
-                //if(stringIsEmpty(temp_str)==FALSE)
-               // printf("temp_str---->|%s|\n",temp_str);
-                //Walley_Run_Third_Generation("__walley__.wy","__walley_settings__.wy","__walley_file__.wy",file_name,temp_str);
-                
-                
-                // new code here on Dec 10
-                if (strcmp(file_name, FIRST_RUNNING_FILE)==0) {
-                    TURN++;
-                }
-                
-                /*
-                //##################################################################
-                // for auto clean var
-                int turn = atoi(Var_getValueOfVar(VAR_settings , "turn"));
-                turn=turn+1;
-                Var_changeValueOfVar(VAR_settings , "turn", numToCString(turn), "int");
-                //###################################################################*/
-                
-                Walley_Run_For_Appointed_Var(&VAR_var,&VAR_settings,&TEMP_FILE,file_name,&FUNCTION,temp_str);
-            }
-        }
-        //char *output_output=malloc(sizeof(char)*(int)strlen(output));
-        //strcat(output_output,output);
-        //printf("output_output is \n--------\n%s\n--------\n",output_output);
-        //if(find(output_output,"\n\n")!=-1);
-        //output_output=replace(output_output,"\n\n","\n");
-        //Walley_Run(output_output);
-        //Walley_Finalize();
-        //fclose(fp);
-        //fp = fopen(file_name, "w");
-        //fputs(str_in_wy, fp);
-        //fputs(input_message, fp);
-        //Walley_Run_For_Appointed_File("__walley__.wy","__walley_settings__.wy","__walley_file__.wy",file_name,"#end");
-        Walley_Run_For_Appointed_Var(&VAR_var,&VAR_settings,&TEMP_FILE,file_name,&FUNCTION,"#end");
-        Var_changeValueOfVar(&VAR_settings , "turn", "0", "int");
-        fclose(fp);
-    }
-    }
-}
 
 
 void Walley_Parse_File(char *file_name){
-    // printf("#### Walley_Run_File ####\n");
+    // printf("#### Walley_Parse_File ####\n");
     
     file_name=removeBackSpace(file_name);
     
@@ -181,7 +53,7 @@ void Walley_Parse_File(char *file_name){
         FILE *temp_file=fopen("WALLEY_TEMP_TEMP_FILE.wy", "w");
         fputs(string_in_file, temp_file);
         fclose(temp_file);
-        Walley_Run_File("WALLEY_TEMP_TEMP_FILE.wy");
+        Walley_Parse_File("WALLEY_TEMP_TEMP_FILE.wy");
         remove("WALLEY_TEMP_TEMP_FILE.wy");
     }
     // .wy format file
@@ -236,8 +108,8 @@ void Walley_Agent_Run_File(char *file_name) {
 
     file_name = removeBackSpace(file_name);
     if (strcmp("wy", substr(file_name, (int) strlen(file_name) - 2, (int) strlen(file_name))) == 0) {
-       //// printf("#### Walley_Run_File ####\n");
-        Walley_Run_File(file_name);
+       //// printf("#### Walley_Parse_File ####\n");
+        Walley_Parse_File(file_name);
     }
     else if (strcmp("wi", substr(file_name, (int) strlen(file_name) - 2, (int) strlen(file_name))) != 0) {
         printf("File format wrong\n");
