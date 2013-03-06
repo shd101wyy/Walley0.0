@@ -189,7 +189,38 @@ char *valueOfListAtIndexString(char *list,char *index_str){
    // return output;
 }
 
+//#################### valueOfListAtIndexStringAndReturnBeginAndEnd("[1,[2],3,4]","[1][0]")---->4,5
+void valueOfListAtIndexStringAndReturnBeginAndEnd(int begin_end[],char *list,char *index_str){
+    // index_str [0][1]
+    index_str=replace(index_str, "][", ",");
+    //         -->[0,1]
+    int length_of_index_string=valueNumOfList(index_str);
+    int i=0;
+    int begin=0;
+    int end=0;
+    for (; i<length_of_index_string; i++) {
+        char *index_s=valueOfListAtIndex(index_str, i);
+        int index=atoi(index_s);
+        list=substr(list, 1, (int)strlen(list)-1);
+        struct TOKEN *tl=Walley_Lexica_Analysis(list);
+       
+        struct TOKEN_ARRAY ta=TL_returnTokenArrayWithoutPunctuation(tl);
+        
+                
+        begin=begin+ta.token_list[index][1].TOKEN_START;
+        end=ta.token_list[index][1].TOKEN_END-ta.token_list[index][1].TOKEN_START;
+        begin+=1;
+        list=TL_toString(ta.token_list[index]);
+    }
 
+    end=end+begin+1;
+    
+    begin_end[0]=begin;
+    begin_end[1]=end;
+    
+}
+
+/*
 //#################### valueOfListAtIndexStringAndReturnBeginAndEnd("[1,[2],3,4]","[1][0]")---->4
 void valueOfListAtIndexStringAndReturnBeginAndEnd(int begin_end[],char *list,char *index_str){
         
@@ -212,8 +243,8 @@ void valueOfListAtIndexStringAndReturnBeginAndEnd(int begin_end[],char *list,cha
     list=removeBackSpace(list);
     list=removeAheadSpace(list);
     list=substr(list,1,(int)strlen(list)-1);
-    /* For Example [1,2]--->,1,2
-                   [1,[2,3],3]--->,1,[2,3],3*/
+    // For Example [1,2]--->,1,2
+    //               [1,[2,3],3]--->,1,[2,3],3
     
     list=append(",", list);
     
@@ -277,7 +308,7 @@ void valueOfListAtIndexStringAndReturnBeginAndEnd(int begin_end[],char *list,cha
         }
     }
 }
-
+*/
 
 int valueNumOfList(char *list){
     if (strcmp(list, "[]")==0) {
@@ -446,15 +477,17 @@ void formatStringForListInOrderToWtiteToVar(struct VAR **struct_var,char *var_na
      
 }
 
+/*
 //######### Write List to Var using an appointed format.
 void writeVarNameAndVarValueIntoAppointedVarForList(struct VAR **struct_var,char *var_name,char *var_value) {
     //formatStringForListInOrderToWtiteToVar(struct_var, var_name, var_value);
     Var_addProperty(struct_var, var_name, var_value, variableValueType(var_value));
 }
-
+*/
 
 //########## Use this function only when the same var name list exits ########
 /*This function will change the whole value of the list*/
+/*
 void changeTheWholeVarValueFromItsInitialOneFromVarForList(struct VAR **struct_var, char *var_name, char *var_value){
     // printf("#### changeTheWholeVarValueFromItsInitialOneFromFileForList ####\n");
     
@@ -469,22 +502,10 @@ void changeTheWholeVarValueFromItsInitialOneFromVarForList(struct VAR **struct_v
     else{
         length=atoi((*struct_var)->var_value);
     }
-    /*
-    //struct VAR temp_var[];
-    char *temp_var_name=append(var_name, "[");
-    while (row<length) {
-        if (strcmp(var_name,(*struct_var+row)->var_name)==0 || find((*struct_var+row)->var_name, temp_var_name)==0) {
-            Var_removeVar(struct_var, (*struct_var+row)->var_name);
-            length--;
-            row--;
-        }
-        row++;
-    }
-   */
     Var_removeVar(struct_var, var_name);
     writeVarNameAndVarValueIntoAppointedVarForList(struct_var, var_name, var_value);
 }
-
+*/
 /*Change one var value
  eg put a[0] or a[0][0] into var_name
  * will change the value of a[0]
@@ -493,11 +514,14 @@ void changeTheOneVarValueFromItsInitialOneFromVarForList(struct VAR **struct_var
     //printf("###### changeTheOneVarValueFromItsInitialOneFromFileForList ######\n");
     change_var_name=removeBackSpace(change_var_name);
     change_var_name=removeAheadSpace(change_var_name);
-    char *var_name=substr(change_var_name,0,find_not_in_string(change_var_name,"["));
+    
+    int index_of_left_bracket=find_not_in_string(change_var_name,"[");
+    char *var_name=substr(change_var_name,0,index_of_left_bracket);
     char *var_value;
     
-    char *index=substr(change_var_name,find_not_in_string(change_var_name,"["),(int)strlen(change_var_name));
+    char *index=substr(change_var_name,index_of_left_bracket,(int)strlen(change_var_name));
     index=removeBackSpace(index);
+    
     // eg now index =[1][2][3];
     
     
@@ -513,6 +537,7 @@ void changeTheOneVarValueFromItsInitialOneFromVarForList(struct VAR **struct_var
         row++;
     }
     
+    
     //eg now index = [1][0]
     // var_value=[1,[2,3],3]
     char *original_value=valueOfListAtIndexString(var_value,index);
@@ -525,8 +550,8 @@ void changeTheOneVarValueFromItsInitialOneFromVarForList(struct VAR **struct_var
     int end=begin_end[1];
     
     char *change_change=replace_from_index_to_index(var_value,original_value,to_var_value,begin,end+1);
-    changeTheWholeVarValueFromItsInitialOneFromVarForList(struct_var, var_name, change_change);
-    
+    //changeTheWholeVarValueFromItsInitialOneFromVarForList(struct_var, var_name, change_change);
+    Var_changeValueOfVar(struct_var, var_name, change_change, variableValueType(change_change));
 }
 
 // ([1,[1,2]],[1][1])---> TRUE

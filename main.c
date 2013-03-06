@@ -18,6 +18,10 @@ int main(int argc, char **argv){
     
     //printf("%d\n",List_checkWhetherIndexAvailable("[1,[3,4],2]","[3]"));
     //printf("%s\n",Table_formatTable("[a=12]"));
+    //int begin_end[2];
+    //begin_end[0]=0;
+    //begin_end[1]=0;
+    //valueOfListAtIndexStringAndReturnBeginAndEnd(begin_end, "[0,[11,344],22]", "[2]");
     //exit(0);
     
     ARGV=argv;
