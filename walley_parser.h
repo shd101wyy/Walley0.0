@@ -2541,19 +2541,36 @@ void Walley_Judge_Run_Anotation_For_While_Def_Class_According_To_Token(struct VA
     else if (strcmp(first_none_whitespace_token.TOKEN_STRING, "def") == 0) {
         // def add(num1,num2) :
         //  1   2             3
+        // def a . add(num1,num2) :
+        // 1   2 3  4             5  length is 6
         SPACE_OF_FIRST_DEF_SENTENCE = REQUIRED_SPACE;
         REQUIRED_SPACE = REQUIRED_SPACE + 4;
         
         NOW_WRITTING_FUNCTION = TRUE;
         
-        int index_of_left_bracket=find(token_list[2].TOKEN_STRING, "(");
-        int index_of_right_bracket=find_from_behind(token_list[2].TOKEN_STRING,")");
-        if (index_of_left_bracket==-1||index_of_right_bracket==-1) {
-            Walley_Print_Error(CURRENT_INPUT_STR, "Define function wrong..\nFormat def add(num1,num2):\nNeed ()", token_list[2].TOKEN_START);
-        }
         
-        char *func_name = substr(token_list[2].TOKEN_STRING, 0, index_of_left_bracket);
-        char *func_param_str = substr(token_list[2].TOKEN_STRING, index_of_left_bracket+1, index_of_right_bracket);
+        int index_of_left_bracket=find(token_list[length_of_token_list-2].TOKEN_STRING, "(");
+        int index_of_right_bracket=find_from_behind(token_list[length_of_token_list-2].TOKEN_STRING,")");
+        if (index_of_left_bracket==-1||index_of_right_bracket==-1) {
+            Walley_Print_Error(CURRENT_INPUT_STR, "Define function wrong..\nFormat def add(num1,num2):\nNeed ()", token_list[length_of_token_list-2].TOKEN_START);
+        }
+
+        
+        // fet func_name
+        // x.init() ---> x.init
+        // add()  -----> add
+        char *func_name = substr(token_list[length_of_token_list-2].TOKEN_STRING, 0, index_of_left_bracket);
+        struct TOKEN *temp_tl=subtoken(token_list, 2, length_of_token_list-2);
+        char *append_str="";
+        int length_of_temp_tl=TL_length(temp_tl);
+        int i=1;
+        for (; i<length_of_temp_tl; i++) {
+            append_str=append(append_str,temp_tl[i].TOKEN_STRING);
+        }
+        func_name=append(append_str,func_name);
+        
+        
+        char *func_param_str = substr(token_list[length_of_token_list-2].TOKEN_STRING, index_of_left_bracket+1, index_of_right_bracket);
         // bool has_same_function_name = checkWhetherSameFunctionNameExistsFromVar(func_name);
         
         TEMP_FUNCTION_NAME=func_name;
