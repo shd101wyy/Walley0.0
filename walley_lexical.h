@@ -981,8 +981,8 @@ struct TOKEN TOKEN_nextToken(struct TOKEN *token, int index){
         struct TOKEN token_temp;
         token_temp.TOKEN_CLASS="None";
         token_temp.TOKEN_STRING="None";
-        token_temp.TOKEN_START="None";
-        token_temp.TOKEN_END="None";
+        token_temp.TOKEN_START=0;
+        token_temp.TOKEN_END=0;
         return token_temp;
     }
     else
